@@ -1,0 +1,17 @@
+# ignore anything ending in a tilde
+*~
+
+# ignore flex and bison intermediate files
+lex.yy.c
+*.tab.c
+*.tab.h
+
+# my usual nonsense
+res
+res.bat
+*.zip
+*.log
+
+SciTE property files
+*.properties
+
