@@ -16,10 +16,10 @@ int main()
 {
 	int softsynthfd;
 	int sdsock;
-	in sockstate = 0;
+	int i, sockstate = 0;
 	int err, bytesRead;
 	int nSDMethod, nPort;
-	struct timeval softsynthTimeout;
+	struct timeval softsynthtimeout;
 	//char buf[BUFFER_SIZE];
 
 	/* will receive either host name or path to unix socket */
@@ -70,10 +70,10 @@ int main()
 	while(1)
 	{
 		/*
-		* select returns 0 if timeout, 1 if activity possible, -1 if error. */
+		* select returns 0 if timeout, 1 if activity possible, -1 if error.
 		* note that -1 means error in the select function call, not the same as checking the errorFDS for error conditions
 		*/
-		err = select(FD_SETSIZE, &readFDS, NULL, &errorFDS, &sstimeout);
+		err = select(FD_SETSIZE, &readFDS, NULL, &errorFDS, &softsynthtimeout);
 		if (err < 0)
 		{
 			perror("select");
@@ -102,7 +102,7 @@ int main()
 			{
 				if ( i == softsynthfd)
 					printf("Read from soft synth possible\n");
-				if ( i == sock)
+				if ( i == sdsock)
 					/* read from server socket possible */
 			} // readfds set
 			//if (FD_ISSET(i, &writeFDS))

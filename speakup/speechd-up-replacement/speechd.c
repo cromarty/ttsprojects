@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "speechd.h"
+
 
 int read_speechd_address_var(char *host, int *nPort)
 {
