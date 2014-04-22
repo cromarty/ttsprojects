@@ -93,9 +93,13 @@ int main()
 			if (FD_ISSET(i, &errorFDS))
 			{
 				if (i == softsynthfd)
+				{
 					/* some kind of error associated with the soft synth file descriptor */
+				}
 				if (i == sdsock)
+				{
 					/* some kind of error with the server socket */
+				}
 			} // check error set
 			/* check read set */
 			if (FD_ISSET(i, &readFDS))
