@@ -55,7 +55,8 @@ int read_softsynth(int softsynthfd)
 		return 0;
 	}
 	/* we have bytesread bytes */
-	parse_buffer(buf);
+	//parse_buffer(buf);
+	printf("Read %d bytes from soft synth\nData: %s\n", bytesread, buf);
 	return bytesread;
 } // end read_soft_synth
 
