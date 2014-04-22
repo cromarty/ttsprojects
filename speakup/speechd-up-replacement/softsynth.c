@@ -7,16 +7,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include "softsynth.h"
 
-#define BUFFER_SIZE 1024
-#define SS_NONBLOCK 1
-#define SS_SEC_TIMEOUT 0
-#define SS_USEC_TIMEOUT 500000
-
-#define SD_COMM_METHOD_ERROR -1
-#define SD_COMM_METHOD_UNKNOWN 0
-#define SD_COMM_METHOD_UNIX 1
-#define SD_COMM_METHOD_INET 2
 
 int open_softsynth(int ssFlags)
 {
@@ -45,4 +37,36 @@ int close_softsynth(int ss)
 	return close(ss);
 } // end close_softsynth
 
+int read_softsynth(int softsynthfd)
+{
+	char buf[BUFFER_SIZE];
+	int bytesread;
+	int err;
 
+	memset(buf, 0, BUFFER_SIZE);
+
+	bytesread = read(softsynthfd, buf, BUFFER_SIZE - 1);
+	if (bytesread < 0)
+		return -1;
+
+	if (bytesread == 0)
+	{
+		/* end of file, not likely with the soft synth */
+		return 0;
+	}
+	/* we have bytesread bytes */
+	parse_buffer(buf);
+	return bytesread;
+} // end read_soft_synth
+
+
+int parse_buffer(const char *buf)
+{
+	int buflen, i;
+	buflen = strlen(buf);
+
+	for ( i = 0 ; i < buflen ; i++ )
+	{
+	}
+
+} // end parse_buffer

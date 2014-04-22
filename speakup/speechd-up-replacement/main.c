@@ -4,83 +4,112 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/stat.h>
-#include <fcntl.h>
+//#include <fcntl.h>
 #include <unistd.h>
 
 #include "net.h"
-#include "speakup.h"
+#include "softsynth.h"
 #include "speechd.h"
-
-#define BUFFER_SIZE 1024
-#define SS_NONBLOCK 1
-#define SS_SEC_TIMEOUT 0
-#define SS_USEC_TIMEOUT 500000
-
-#define SD_COMM_METHOD_ERROR -1
-#define SD_COMM_METHOD_UNKNOWN 0
-#define SD_COMM_METHOD_UNIX 1
-#define SD_COMM_METHOD_INET 2
 
 
 int main()
 {
-	int ss, err, bytesRead;
-	int nMethod, nPort;
-	char host[1024];
+	int softsynthfd;
+	int sdsock;
+	in sockstate = 0;
+	int err, bytesRead;
+	int nSDMethod, nPort;
+	struct timeval softsynthTimeout;
+	//char buf[BUFFER_SIZE];
 
+	/* will receive either host name or path to unix socket */
+	char host[1024];
 	memset(host, 0, 1024);
+
+	/* read, write  and error file descriptors for select */
+	fd_set readFDS, writeFDS, errorFDS;
+
+	/* only for inet_socket */
 	nPort = 0;
 
-	nMethod = read_speechd_address_var(host, &nPort);
-	if ( nMethod == SD_COMM_METHOD_ERROR )
+	/* get the communication method from the SPEECHD_ADDRESS environment variable */
+	nSDMethod = read_speechd_address_var(host, &nPort);
+	if ( ( nSDMethod == SD_COMM_METHOD_ERROR ) || ( nSDMethod == SD_COMM_METHOD_UNKNOWN ) )
 	{
 		printf("error in read_speechd_address_var\n");
 		return 1;
 	}
 
-	fd_set readFDS, errorFDS;
-	struct timeval ssTimeOut;
-	char *buf = malloc(BUFFER_SIZE);
-
-	ss = open_softsynth(SS_NONBLOCK);
-	if (ss == -1)
+	softsynthfd = open_softsynth(SS_NONBLOCK);
+	if (softsynthfd == -1)
 	{
 		perror("open_softsynth");
 		return 1;
 	}
 
-	printf("Successfully opened soft synth\n");
+	softsynthtimeout.tv_sec = SS_SEC_TIMEOUT;
+	softsynthtimeout.tv_usec = SS_USEC_TIMEOUT;
 
-	ssTimeOut.tv_sec = SS_SEC_TIMEOUT;
-	ssTimeOut.tv_usec = SS_USEC_TIMEOUT;
-
+	/*
+	* zero and set read and error file descriptors for select
+	*
+	* readFDS - will watch softsynth fd and sd socket
+	* writeFDS - will watch sd socket
+	* errorFDS - will watch softsynth and sd sock
+	*/
 	FD_ZERO(&readFDS);
-	FD_SET(0, &readFDS);
+	FD_SET(softsynthfd, &readFDS);
+	//FD_SET(sdsock, &readFDS);
+	//FD_ZERO(&writeFDS);
+	//FD_SET(sdsock, &writeFDS);
 	FD_ZERO(&errorFDS);
-	FD_SET(0, &errorFDS);
+	FD_SET(softsynthfd, &errorFDS);
+	//FD_SET(sdsock, &errorFDS);
 
-	err = select(1, &readFDS, NULL, &errorFDS, &ssTimeOut);
-	if (err = -1)
+	/* start the read loop */
+	while(1)
 	{
-		perror("select");
-		close_softsynth(ss);
-	}
-	if (FD_ISSET(0, &errorFDS))
-	{
-		printf("Some kind of error in select\n");
-		close_softsynth(ss);
-		return 1;
-	}
-	if (err == 0)
-	{
-		printf("No data available after five seconds\n");
-		close_softsynth(ss);
-		return 0;
-	}
-	printf("There is data\n");
-	bytesRead = read(ss, buf, 32);
-	printf("Read %d bytes from soft synth\n", bytesRead);
-	printf("Data: %s\n", buf);
-	close_softsynth(ss);
+		/*
+		* select returns 0 if timeout, 1 if activity possible, -1 if error. */
+		* note that -1 means error in the select function call, not the same as checking the errorFDS for error conditions
+		*/
+		err = select(FD_SETSIZE, &readFDS, NULL, &errorFDS, &sstimeout);
+		if (err < 0)
+		{
+			perror("select");
+			close_softsynth(softsynthfd);
+			/* should close socket here too */
+			return 1;
+		}
+		if (err == 0)
+		{
+			/* time out, continue the loop */
+			continue;
+		}
+		/* activity possible */
+		for ( i = 0 ; i < FD_SETSIZE ; ++i )
+		{
+			/* check the error set first */
+			if (FD_ISSET(i, &errorFDS))
+			{
+				if (i == softsynthfd)
+					/* some kind of error associated with the soft synth file descriptor */
+				if (i == sdsock)
+					/* some kind of error with the server socket */
+			} // check error set
+			/* check read set */
+			if (FD_ISSET(i, &readFDS))
+			{
+				if ( i == softsynthfd)
+					printf("Read from soft synth possible\n");
+				if ( i == sock)
+					/* read from server socket possible */
+			} // readfds set
+			//if (FD_ISSET(i, &writeFDS))
+			//	/* write to server socket possible */
+		} // for
+	} // while
+	close_softsynth(softsynthfd);
+	// close the socket here too
 	return 0;
 }
