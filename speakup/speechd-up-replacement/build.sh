@@ -1,3 +1,4 @@
+#!/bin/bash
 
 gcc -o testsdu \
 main.c \
