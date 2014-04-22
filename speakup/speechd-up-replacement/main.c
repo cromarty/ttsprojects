@@ -73,7 +73,7 @@ int main()
 		* select returns 0 if timeout, 1 if activity possible, -1 if error.
 		* note that -1 means error in the select function call, not the same as checking the errorFDS for error conditions
 		*/
-		err = select(FD_SETSIZE, &readFDS, NULL, &errorFDS, &softsynthtimeout);
+		err = select(FD_SETSIZE, &readFDS, NULL, &errorFDS, NULL);
 		if (err < 0)
 		{
 			perror("select");
@@ -105,11 +105,11 @@ int main()
 			if (FD_ISSET(i, &readFDS))
 			{
 				if ( i == softsynthfd)
-					printf("Read from soft synth possible\n");
+					err = read_softsynth(softsynthfd);
 				if ( i == sdsock)
-{
+				{
 					/* read from server socket possible */
-}
+				}
 			} // readfds set
 			//if (FD_ISSET(i, &writeFDS))
 			//	/* write to server socket possible */

@@ -55,8 +55,8 @@ int read_softsynth(int softsynthfd)
 		return 0;
 	}
 	/* we have bytesread bytes */
-	//parse_buffer(buf);
-	printf("Read %d bytes from soft synth\nData: %s\n", bytesread, buf);
+	printf("Read %d bytes\n", bytesread);
+	err = parse_buffer(buf);
 	return bytesread;
 } // end read_soft_synth
 
@@ -68,6 +68,8 @@ int parse_buffer(const char *buf)
 
 	for ( i = 0 ; i < buflen ; i++ )
 	{
+		if (buf[i] < 32)
+			printf("Control character: %d\n", buf[i]);
 	}
-
+	return 0;
 } // end parse_buffer
