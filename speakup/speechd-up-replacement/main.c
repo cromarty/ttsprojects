@@ -107,7 +107,9 @@ int main()
 				if ( i == softsynthfd)
 					printf("Read from soft synth possible\n");
 				if ( i == sdsock)
+{
 					/* read from server socket possible */
+}
 			} // readfds set
 			//if (FD_ISSET(i, &writeFDS))
 			//	/* write to server socket possible */
