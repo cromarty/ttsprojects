@@ -22,7 +22,7 @@ int main()
 	int softsynthfd;
 	int sdsock;
 	int i, sockstate = 0;
-	int err, bytesRead;
+	int err, bytesread;
 	int nSDMethod, nPort;
 	struct timeval softsynthtimeout;
 	//char buf[BUFFER_SIZE];
