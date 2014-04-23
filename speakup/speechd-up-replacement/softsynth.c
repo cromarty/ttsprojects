@@ -72,7 +72,7 @@ int parse_softsynth_buffer(int bytesleft)
 	int bytesparsed = 0;
 	char head;
 
-	bufdatalen = RING_BUFFER_DATA(softbuffer);
+	bufdatalen = RING_BUFFER_DATA_SIZE(softbuffer);
 	if (bufdatalen < 0)
 		return -1;
 
@@ -89,7 +89,13 @@ int parse_softsynth_buffer(int bytesleft)
 		switch(head)
 		{
 			case DTLK_COMMAND:
-				printf("command: %c\n", head);
+				printf("command: %d\n", head);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				bytesparsed++;
+				break;
+			case DTLK_IDX:
+				printf("Idx: %d\n", head);
 				err = RING_BUFFER_SPIN(softbuffer, 1);
 				bytesleft--;
 				bytesparsed++;
@@ -102,6 +108,54 @@ int parse_softsynth_buffer(int bytesleft)
 				break;
 			case DTLK_STOP:
 				printf("Stop: %c\n", head);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				bytesparsed++;
+				break;
+			case DTLK_PUNCTUATION:
+				printf("Punctuation: %c\n", head);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				bytesparsed++;
+				break;
+			case DTLK_FREQUENCY:
+				printf("Frequency: %c\n", head);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				bytesparsed++;
+				break;
+			case DTLK_VOICE:
+				printf("Voice: %c\n", head);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				bytesparsed++;
+				break;
+			case DTLK_VOLUME:
+				printf("Volume: %c\n", head);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				bytesparsed++;
+				break;
+			case DTLK_PITCH:
+				printf("Pitch: %c\n", head);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				bytesparsed++;
+				break;
+			case DTLK_RATE:
+				printf("Rate: %c\n", head);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				bytesparsed++;
+				break;
+			case DTLK_VOLUME:
+				printf("Volume: %c\n", head);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				bytesparsed++;
+				break;
+			case DTLK_UNKNOWN:
+				printf("Unknown: %c\n", head);
 				err = RING_BUFFER_SPIN(softbuffer, 1);
 				bytesleft--;
 				bytesparsed++;
