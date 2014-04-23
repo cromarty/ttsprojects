@@ -69,7 +69,7 @@ int read_softsynth(int softsynthfd)
 int parse_softsynth_buffer(int bytesleft)
 {
 	int bufdatalen;
-	int removebytes = 0;
+	int bytesparsed = 0;
 	char *head = RING_BUFFER_HEAD(softbuffer);
 	char *tail = RING_BUFFER_TAIL(softbuffer);
 	char head;
@@ -94,23 +94,27 @@ int parse_softsynth_buffer(int bytesleft)
 				printf("command: %c\n", head);
 				res = RING_BUFFER_SPIN(softbuffer, 1);
 				bytesleft--;
+				bytesparsed++;
 				break;
 			case DTLK_INDEX:
 				printf("Index: %c\n", head);
 				res = RING_BUFFER_SPIN(softbuffer, 1);
 				bytesleft--;
+				bytesparsed++;
 				break;
 			case DTLK_STOP:
 				printf("Stop: %c\n", head);
 				res = RING_BUFFER_SPIN(softbuffer, 1);
 				bytesleft--;
+				bytesparsed++;
 				break;
 			default:
 				res = RING_BUFFER_SPIN(softbuffer, 1);
 				bytesleft--;
+				bytesparsed++;
 			}
 	} // while(bytesleft)
 
-	return 0;
+	return bytesparsed;
 
 } // end parse_softsynth_buffer

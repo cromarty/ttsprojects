@@ -114,8 +114,12 @@ int main()
 			{
 				if ( i == softsynthfd)
 				{
-					err = read_softsynth(softsynthfd);
-					parse_softsynth_buffer();
+					bytesread = read_softsynth(softsynthfd);
+					if (bytesread < 0)
+					{
+						/* bad juju */
+					}
+					err = parse_softsynth_buffer(bytesread);
 				}
 				if ( i == sdsock)
 				{
