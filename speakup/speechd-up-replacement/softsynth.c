@@ -7,7 +7,12 @@
 #include <fcntl.h>
 #include <unistd.h>
 
+#include "main.h"
 #include "softsynth.h"
+#include "ringbuffer.h"
+
+extern softbuffer;
+extern sockwritebuffer;
 
 
 int open_softsynth(int ssFlags)
@@ -39,13 +44,13 @@ int close_softsynth(int ss)
 
 int read_softsynth(int softsynthfd)
 {
-	char buf[BUFFER_SIZE];
-	int bytesread;
-	int err;
+	int bufferspace, bytesread, err;
+	char tempbuf[SOFT_SYNTH_BUFFER_SIZE];
 
-	memset(buf, 0, BUFFER_SIZE);
+	memset(tempbuf, 0, SOFT_SYNTH_BUFFER_SIZE);
+	bufferspace = RING_BUFFER_FREE_SPACE(softbuffer);
 
-	bytesread = read(softsynthfd, buf, BUFFER_SIZE - 1);
+	bytesread = read(softsynthfd, tempbuf, bufferspace);
 	if (bytesread < 0)
 		return -1;
 
@@ -54,21 +59,58 @@ int read_softsynth(int softsynthfd)
 		/* end of file, not likely with the soft synth */
 		return 0;
 	}
-	/* we have bytesread bytes */
-	err = parse_buffer(buf);
-	return bytesread;
+	/* we have bytesread bytes, put them in the ring buffer */
+	err = ringbuffer_write(softbuffer, tempbuf, bytesread);
+	return ( err == -1 ? -2 : bytesread);
+
 } // end read_soft_synth
 
 
-int parse_buffer(const char *buf)
+int parse_softsynth_buffer(int bytesleft)
 {
-	int buflen, i;
-	buflen = strlen(buf);
+	int bufdatalen;
+	int removebytes = 0;
+	char *head = RING_BUFFER_HEAD(softbuffer);
+	char *tail = RING_BUFFER_TAIL(softbuffer);
+	char head;
 
-	for ( i = 0 ; i < buflen ; i++ )
+	bufdatalen = RING_BUFFER_DATA(softbuffer);
+	if (bufdatalen < 0)
+		return -1;
+
+	/*
+	* we're not going to take data out of the ring buffer until we complete each coherent chunk.
+	* this is because the read may have ended at a place where it splits a command.
+	* if the available data ends where it would split a command, move the buffer head pointer up to
+	* just before the start of the split command and leave it there to process next time round
+	* note that we don't actually remove data from the ring anyway, just manipulate the head and tail pointers
+	*/
+	while(bytesleft)
 	{
-		if (buf[i] < 32)
-			printf("%d\n", buf[i]);
-	}
+		head = RING_BUFFER_PEEK(softbuffer);
+		switch(head)
+		{
+			case DTLK_COMMAND:
+				printf("command: %c\n", head);
+				res = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				break;
+			case DTLK_INDEX:
+				printf("Index: %c\n", head);
+				res = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				break;
+			case DTLK_STOP:
+				printf("Stop: %c\n", head);
+				res = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+				break;
+			default:
+				res = RING_BUFFER_SPIN(softbuffer, 1);
+				bytesleft--;
+			}
+	} // while(bytesleft)
+
 	return 0;
-} // end parse_buffer
+
+} // end parse_softsynth_buffer

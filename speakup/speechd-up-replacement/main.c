@@ -4,12 +4,17 @@
 #include <sys/types.h>
 #include <sys/time.h>
 #include <sys/stat.h>
-//#include <fcntl.h>
 #include <unistd.h>
 
+#include "main.h"
 #include "net.h"
 #include "softsynth.h"
 #include "speechd.h"
+#include "ringbuffer.h"
+
+ringbuffer *softbuffer;
+ringbuffer *sockreadbuffer;
+ringbuffer *sockwritebuffer;
 
 
 int main()
@@ -32,6 +37,9 @@ int main()
 	/* only for inet_socket */
 	nPort = 0;
 
+	softbuffer = ringbuffer_init(SOFT_SYNTH_BUFFER_SIZE);
+	sockreadbuffer = ringbuffer_init(SOCK_READ_BUFFER_SIZE);
+	sockwritebuffer = ringbuffer_init(SOCK_WRITE_BUFFER_SIZE);
 	/* get the communication method from the SPEECHD_ADDRESS environment variable */
 	nSDMethod = read_speechd_address_var(host, &nPort);
 	if ( ( nSDMethod == SD_COMM_METHOD_ERROR ) || ( nSDMethod == SD_COMM_METHOD_UNKNOWN ) )
@@ -105,7 +113,10 @@ int main()
 			if (FD_ISSET(i, &readFDS))
 			{
 				if ( i == softsynthfd)
+				{
 					err = read_softsynth(softsynthfd);
+					parse_softsynth_buffer();
+				}
 				if ( i == sdsock)
 				{
 					/* read from server socket possible */

@@ -22,8 +22,14 @@ int ringbuffer_write(ringbuffer *buffer, char *data, int length);
 #define RING_BUFFER_EMPTY(B) (RING_BUFFER_DATA_SIZE((B)) == 0)
 #define RING_BUFFER_HEAD(B) ((B)->buffer + (B)->head)
 #define RING_BUFFER_TAIL(B) ((B)->buffer + (B)->tail)
-#define RINGBUFFER_COMMIT_READ(B, A) ((B)->head = ((B)->head + (A)) % (B)->length)
-#define RINGBUFFER_COMMIT_WRITE(B, A) ((B)->tail = ((B)->tail + (A)) % (B)->length)
+#define RING_BUFFER_COMMIT_READ(B, A) ((B)->head = ((B)->head + (A)) % (B)->length)
+#define RING_BUFFER_COMMIT_WRITE(B, A) ((B)->tail = ((B)->tail + (A)) % (B)->length)
+#define RING_BUFFER_HEAD_POS(B)  ((B)->head)
+#define RING_BUFFER_TAIL_POS(B)  ((B)->tail)
+#define RING_BUFFER_SPIN(B, A)  (A > RING_BUFFER_DATA_SIZE(B) ? -1 : RING_BUFFER_COMMIT_READ(B, A))
+#define RING_BUFFER_PEEK(B)   ((B)->buffer[(B)->head])
+
+
 
 #endif
 

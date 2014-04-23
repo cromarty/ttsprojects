@@ -1,0 +1,11 @@
+#ifndef MAIN_H
+#define MAIN_H
+
+#define SOFT_SYNTH_BUFFER_SIZE 1024
+#define SOCK_READ_BUFFER_SIZE 1024
+#define SOCK_WRITE_BUFFER_SIZE 1024
+
+
+#endif
+
+

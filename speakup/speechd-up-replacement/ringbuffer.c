@@ -35,7 +35,7 @@ int ringbuffer_write(ringbuffer *buffer, char *data, int length)
 	    return -1;
 }
 
-    RINGBUFFER_COMMIT_WRITE(buffer, length);
+    RING_BUFFER_COMMIT_WRITE(buffer, length);
 
     return length;
 
@@ -53,7 +53,7 @@ if (result == NULL)
 		return-1;
 
 
-    RINGBUFFER_COMMIT_READ(buffer, amount);
+    RING_BUFFER_COMMIT_READ(buffer, amount);
 
     if(buffer->tail == buffer->head)
         buffer->head = buffer->tail = 0;
