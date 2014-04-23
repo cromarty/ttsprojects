@@ -7,7 +7,7 @@
 #define SS_USEC_TIMEOUT 500000
 
 #define DTLK_COMMAND 0x01
-#define DTLK_INDEX 0x0a
+#define DTLK_IDX 0x0a
 #define DTLK_STOP 0x18
 
 
@@ -17,7 +17,7 @@
 */
 #define DTLK_SPACE 0x20
 #define DTLK_RESET 0x48
-#deefine DTLK_INDEX 0x69
+#define DTLK_INDEX 0x69
 #define DTLK_PUNCTUATION 0x62
 #define DTLK_FREQUENCY 0x66
 #define DTLK_RATE 0x73

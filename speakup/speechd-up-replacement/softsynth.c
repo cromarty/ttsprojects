@@ -11,7 +11,7 @@
 #include "softsynth.h"
 #include "ringbuffer.h"
 
-extern softbuffer;
+extern ringbuffer *softbuffer;
 extern sockwritebuffer;
 
 
@@ -68,10 +68,8 @@ int read_softsynth(int softsynthfd)
 
 int parse_softsynth_buffer(int bytesleft)
 {
-	int bufdatalen;
+	int bufdatalen, err;
 	int bytesparsed = 0;
-	char *head = RING_BUFFER_HEAD(softbuffer);
-	char *tail = RING_BUFFER_TAIL(softbuffer);
 	char head;
 
 	bufdatalen = RING_BUFFER_DATA(softbuffer);
@@ -92,24 +90,24 @@ int parse_softsynth_buffer(int bytesleft)
 		{
 			case DTLK_COMMAND:
 				printf("command: %c\n", head);
-				res = RING_BUFFER_SPIN(softbuffer, 1);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
 				bytesleft--;
 				bytesparsed++;
 				break;
 			case DTLK_INDEX:
 				printf("Index: %c\n", head);
-				res = RING_BUFFER_SPIN(softbuffer, 1);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
 				bytesleft--;
 				bytesparsed++;
 				break;
 			case DTLK_STOP:
 				printf("Stop: %c\n", head);
-				res = RING_BUFFER_SPIN(softbuffer, 1);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
 				bytesleft--;
 				bytesparsed++;
 				break;
 			default:
-				res = RING_BUFFER_SPIN(softbuffer, 1);
+				err = RING_BUFFER_SPIN(softbuffer, 1);
 				bytesleft--;
 				bytesparsed++;
 			}
