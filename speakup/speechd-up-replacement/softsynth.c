@@ -86,6 +86,79 @@ int parse_softsynth_buffer(int bytesleft)
 	while(bytesleft)
 	{
 		head = RING_BUFFER_PEEK(softbuffer);
+		if (head < DTLK_SPACE)
+		{
+			err = parse_softsynth_command(&bytesparsed, &bytesleft, head);
+			if (err < 0)
+			{
+				/*
+				* err of less than zero indicates parse_softsynth_command was not able to complete the command before it
+				* hit the end of the available data.  the pointer will be left at the start of the command
+				* so it will be at the head of the buffer next time around.
+				*/
+				return bytesparsed;
+			}
+			/* in parse_softsynth_command_payload we must have got a complete command and dispatched it */
+			continue;
+		}
+	} // while(bytesleft)
+
+	return bytesparsed;
+
+} // end parse_softsynth_buffer
+
+int parse_softsynth_command(int *bytesparsed, int *bytesleft, char head)
+{
+	switch(head)
+	{
+		case DTLK_COMMAND:
+			err = parse_softsynth_command_payload(bytesparsed, bytesleft), head;
+			/*
+			* here err of < 0 means the end of the available buffer was reached before the command was complete,
+			* so we will return the error code to parse_softsynth_buffer which will abort and leave the command prefix in the buffer for next time around the loop.
+		* don't spin the buffer here
+			*/
+		case DTLK_IDX:
+			err = RING_BUFFER_SPIN(softbuffer, 1);
+		*bytesparsed++;
+		*bytesleft--;
+		break;
+		case DTLK_STOP:
+			/* execute a ssip stop */
+			err = RING_BUFFER_SPIN(softbuffer, 1);
+			*bytesparsed++;
+			*bytesleft--;
+			break;
+		default:
+			/* i don't know what this command means */
+			err = RING_BUFFER_SPIN(softbuffer, 1);
+			*bytesparsed++;
+			*bytesleft--;
+	}
+	return err;
+
+} // end parse_softsynth_command
+
+int parse_softsynth_command_payload(int *bytesparsed, int *bytesleft, head)
+{
+	char param[32];
+	int ptr = 0;
+	int backup = 0;
+	int err;
+	memset(param, 0, 32);
+
+	err = RING_BUFFER_SPIN(softbuffer, 1);
+	/*
+	* the backup counter will be used to reset the buffer head pointer,
+	* and the bytesparsed and bytesleft counters
+	* if we hit the end of the buffer before the command payload is complete.
+	*/
+	backup++;
+	*bytesparsed++
+	*bytesleft--;
+	while( (*bytesleft > 0 ) && ( head > DTLK_SPACE ) )
+	{
+		param[ptr] = head;
 		switch(head)
 		{
 			case DTLK_COMMAND:
@@ -148,12 +221,6 @@ int parse_softsynth_buffer(int bytesleft)
 				bytesleft--;
 				bytesparsed++;
 				break;
-			case DTLK_VOLUME:
-				printf("Volume: %c\n", head);
-				err = RING_BUFFER_SPIN(softbuffer, 1);
-				bytesleft--;
-				bytesparsed++;
-				break;
 			case DTLK_UNKNOWN:
 				printf("Unknown: %c\n", head);
 				err = RING_BUFFER_SPIN(softbuffer, 1);
@@ -165,8 +232,8 @@ int parse_softsynth_buffer(int bytesleft)
 				bytesleft--;
 				bytesparsed++;
 			}
-	} // while(bytesleft)
 
-	return bytesparsed;
 
-} // end parse_softsynth_buffer
+
+} // end parse_softsynth_command
+
