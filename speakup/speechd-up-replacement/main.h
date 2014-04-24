@@ -2,9 +2,10 @@
 #define MAIN_H
 
 #define SOFT_SYNTH_BUFFER_SIZE 1024
+#ifdef SPEECHD_CLIENT
 #define SOCK_READ_BUFFER_SIZE 1024
 #define SOCK_WRITE_BUFFER_SIZE 1024
-
+#endif
 
 #endif
 

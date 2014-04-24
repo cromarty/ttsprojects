@@ -9,35 +9,43 @@
 #include "main.h"
 #include "net.h"
 #include "softsynth.h"
+#ifdef SPEECHD_CLIENT
 #include "speechd.h"
+#endif
 #include "ringbuffer.h"
 
 ringbuffer *softbuffer;
+#ifdef SPEECHD_CLIENT
 ringbuffer *sockreadbuffer;
 ringbuffer *sockwritebuffer;
+#endif
 
 
 int main()
 {
-	int softsynthfd;
-	int sdsock;
-	int i, sockstate = 0;
-	int err, bytesread;
+	int softsynthfd, i;
+#ifdef SPEECHD_CLIENT
+	int sdsock, sockstate = 0;
 	int nSDMethod, nPort;
-	struct timeval softsynthtimeout;
-	//char buf[BUFFER_SIZE];
+#endif
 
+	int err, bytesread;
+
+#ifdef SPEECHD_CLIENT
 	/* will receive either host name or path to unix socket */
 	char host[1024];
 	memset(host, 0, 1024);
+	/* only for inet_socket */
+	nPort = 0;
+#endif
 
 	/* read, write  and error file descriptors for select */
 	fd_set readFDS, writeFDS, errorFDS;
 
-	/* only for inet_socket */
-	nPort = 0;
 
 	softbuffer = ringbuffer_init(SOFT_SYNTH_BUFFER_SIZE);
+
+#ifdef SPEECHD_CLIENT
 	sockreadbuffer = ringbuffer_init(SOCK_READ_BUFFER_SIZE);
 	sockwritebuffer = ringbuffer_init(SOCK_WRITE_BUFFER_SIZE);
 	/* get the communication method from the SPEECHD_ADDRESS environment variable */
@@ -47,6 +55,7 @@ int main()
 		printf("error in read_speechd_address_var\n");
 		return 1;
 	}
+#endif
 
 	softsynthfd = open_softsynth(SS_NONBLOCK);
 	if (softsynthfd == -1)
@@ -54,9 +63,6 @@ int main()
 		perror("open_softsynth");
 		return 1;
 	}
-
-	softsynthtimeout.tv_sec = SS_SEC_TIMEOUT;
-	softsynthtimeout.tv_usec = SS_USEC_TIMEOUT;
 
 	/*
 	* zero and set read and error file descriptors for select
@@ -104,10 +110,12 @@ int main()
 				{
 					/* some kind of error associated with the soft synth file descriptor */
 				}
+#ifdef SPEECHD_CLIENT
 				if (i == sdsock)
 				{
 					/* some kind of error with the server socket */
 				}
+#endif
 			} // check error set
 			/* check read set */
 			if (FD_ISSET(i, &readFDS))
@@ -121,16 +129,22 @@ int main()
 					}
 					err = parse_softsynth_buffer(bytesread);
 				}
+#ifdef SPEECHD_CLIENT
 				if ( i == sdsock)
 				{
 					/* read from server socket possible */
 				}
+#endif
 			} // readfds set
-			//if (FD_ISSET(i, &writeFDS))
-			//	/* write to server socket possible */
+#ifdef SPEECHD_CLIENT
+			if (FD_ISSET(i, &writeFDS))
+				/* write to server socket possible */
+#endif
 		} // for
 	} // while
 	close_softsynth(softsynthfd);
-	// close the socket here too
+#ifdef SPEECHD_CLIENT
+	close the socket here too
+#endif
 	return 0;
 }
