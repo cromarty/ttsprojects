@@ -69,12 +69,17 @@ int ringbuffer_read(ringbuffer *buffer, char *target, int amount)
 
 }
 
-int ringbuffer_peek(ringbuffer *buffer, char *c)
+int ringbuffer_peek(ringbuffer *buffer, char *c, int offset)
 {
+	int idx;
 	if (buffer->head == buffer->tail)
 		return -1;
 
-	*c = buffer->buffer[buffer->head];
+	if (offset > buffer->length)
+		return -1;
+
+	idx = (buffer->head + offset) % buffer->length;
+	*c = buffer->buffer[idx];
 	return 0;
 }
 

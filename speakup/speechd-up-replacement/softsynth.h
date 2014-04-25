@@ -19,6 +19,12 @@
 #define DTLK_UNKNOWN 0x78
 #define DTLK_VOICE 0x6f
 
+typedef struct dtlkcmd {
+	int type;
+	int set;
+	int relative;
+} dtlkcommand;
+
 int open_softsynth(int ssFlags);
 int close_softsynth(int ss);
 int read_softsynth(int softsynthfd);

@@ -518,13 +518,7 @@ DoubleTalk hardware interface
      the same rate as the data file). The volume is controlled by the TTS
      synthesizer's volume parameter (in the TTS window).
 
-
-
-
-
-
-
-     RC SYSTEMS                      - 6 -                 DOUBLETALK PC/LT
+RC SYSTEMS                      - 6 -                 DOUBLETALK PC/LT
 
 
 
