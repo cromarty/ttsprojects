@@ -5,156 +5,97 @@
 
 #include "ringbuffer.h"
 
-#define BUF_LEN 1024
+#define BUF_LEN 50
 
-void print_specs(ringbuffer *rb, char *msg) {
-	int head, tail, isfull, isempty;
-	head = RING_BUFFER_HEAD(rb);
-	tail = RING_BUFFER_TAIL(rb);
-	isfull = RING_BUFFER_IS_FULL(rb);
-	isempty = RING_BUFFER_IS_EMPTY(rb);
-	printf("----------------------------------------\n");
+
+void print_results(ringbuffer *rb, int res, char *msg) {
+	int head, tail;
+	int isfull, isempty;
+	int freespace, usedspace;
+	head = rb->head;
+	tail = rb->tail;
+	isfull = ringbuffer_isfull(rb);;
+	isempty = ringbuffer_isempty(rb);
+	freespace = ringbuffer_freespace(rb);
+	usedspace = ringbuffer_usedspace(rb);
+
+	printf("===================\n");
 	printf("%s\n", msg);
-	printf("Data length: %d\n", RING_BUFFER_DATA_SIZE(rb));
-	printf("Full: %d Empty: %d\n", isfull, isempty);
-	printf("Free space: %d\n", RING_BUFFER_FREE_SPACE(rb));
+	printf("-------------------\n");
+	printf("Result code: %d\n", res);
 	printf("Head: %d Tail: %d\n", head, tail);
-	printf("----------------------------------------\n\n");
+	printf("Full: %d Empty: %d\n", isfull, isempty);
+	printf("Free space: %d Used space: %d\n", freespace, usedspace);
+	printf("==================\n\n");
 	return;
 }
 
-
-
-int main()
-{
+int main() {
 	ringbuffer *rb;
-	int res, bytesread;
-	int zro;
+	char readdata[BUF_LEN+1];
+	int err = 0;
+	int offset;
+	int zeros;
 	char c;
-	char bigbuf[BUF_LEN*2];
-	char smallbuf[BUF_LEN/2];
 	rb = ringbuffer_init(BUF_LEN);
 	if (rb == NULL) {
-		printf("Initialisation of ring buffer failed\n");
+		printf("Failed in ringbuffer_init\n");
 		return 1;
 	}
-	printf("Testing the RING_BUFFER_SIZE macro...\n");
-	res = RING_BUFFER_SIZE(rb);
-	printf("The size of the buffer is: %d\n", res);
-	print_specs(rb, "After init:");
-	printf("Attempt to peek before there is any data...\n");
-	res = ringbuffer_peek(rb, &c);
-	if (res < 0) {
-		printf("Attempt to peek before any data failed\n");
+	print_results(rb, err, "After initialise");
+	offset = 0;
+	err = ringbuffer_peek(rb, &c, offset);
+	print_results(rb, err, "Peek at empty buffer");
+	if (err < 0) {
 	} else {
-		printf("Attempt to peek before any data worked! There is something wrong\n");
+		printf("Result codefrom attempt to peek at first character of empty buffer was not < 0, this is an error\n");
 		return 1;
 	}
-	res = ringbuffer_write(rb, "ABCDEFGHIJKLMNOPQRSTUVWXYZ", 26);
-	if (res == -1) {
-		printf("Failed write\n");
+	err = ringbuffer_write(rb, "111111111122222222223333333333", 30);
+	print_results(rb, err, "After first write of 30 bytes");
+	if (err < 0) {
+		printf("First write failed\n");
 		return 1;
 	}
-	printf("Write succeeded: %d\n", res);
-	print_specs(rb, "After write:");
-	printf("Attempt to peek at head of buffer...\n");
-	res = ringbuffer_peek(rb, &c);
-	if (res < 0) {
-		printf("Attempt to peek at head of buffer failed\n");
-		return 1;
-	}
-	printf("Found %c at head of buffer\n", c);
-	res = ringbuffer_read(rb, smallbuf, 10);
-	if (res < 0) {
-		printf("Read failed\n");
-		return 1;
-	}
-	printf("Read succeeded: %s\n", smallbuf);
-	print_specs(rb, "After read:");
-	printf("Spinning by 1 byte...\n");
-	res = RING_BUFFER_SPIN(rb, 1);
-	if (res < 0) {
-		printf("Spin failed: %d\n", res);
-		return 1;
-	}
-	printf("Head after Spin: %d\n", res);
-	print_specs(rb, "After spin:");
-	printf("Try to spin by more than data size...\n");
-	res = RING_BUFFER_SPIN(rb, 200);
-	if (res < 0) {
-		printf("Spin failed\n");
+	err = ringbuffer_write(rb, "444444444455555555556666666666", 30);
+	if (err < 0) {
+		printf("Result after second write, trying to write too many bytes for free space: %d, this is correct\n", err);
 	} else {
-		printf("Bad spin worked! Something wrong\n");
+		printf("Result after attempt to write too many bytes for free space: %d, this is an error\n");
 		return 1;
 	}
-	printf("opening /dev/zero to get some data...\n");
-	zro = open("/dev/zero", O_RDONLY);
-	if (zro < 0) {
-		printf("Opening /dev/zero failed\n");
+	err = ringbuffer_read(rb, readdata, 20);
+	print_results(rb, err, "Second read, first 20 of 30 bytes");
+	err = ringbuffer_write(rb, "777777777788888888889999999999", 30);
+	print_results(rb, err, "Result of third write, should wrap");
+	if (err < 0) {
+		printf("Third write (wrapping) returned: %d, this is an error\n", err);
 		return 1;
-	}
-	memset(bigbuf, 0, BUF_LEN*2);
-	bytesread = 0;
-	while(bytesread <= BUF_LEN) {
-		memset(smallbuf, 0, BUF_LEN/2);
-		res = read(zro, smallbuf, 500);
-		if (res < 0) {
-			printf("Read from /dev/zero failed\n");
-			return 1;
-		}
-		printf("Read %d bytes from /dev/zero\n", res);
-		bytesread += res;
-		strcat(bigbuf, smallbuf);
-	}
-	printf("Read a total of %d bytes from /dev/zero\n", bytesread);
-	printf("Size of data to try to write to ring buffer: %d\n", bytesread);
-	printf("Attempting to write more than the size of the buffer...\n");
-	res = ringbuffer_write(rb, bigbuf, bytesread);
-	if (res < 0) {
-		printf("Attempt to write more than the buffer size failed: %d\n", res);
 	} else {
-		printf("Attempt at bad write worked!  Something wrong: %d\n", res);
+		printf("Third write (wrapping) returned: %d, this is correct\n");
+	}
+	offset = 2;
+	err = ringbuffer_peek(rb, &c, offset);
+	print_results(rb, err, "Peek at second character of non-empty buffer");
+	err = ringbuffer_slurp(rb, readdata);
+	print_results(rb, err, "After slurp of non-empty buffer");
+	zeros = open("/dev/zero", O_RDONLY);
+	if (zeros < 0) {
+		printf("Failed to open /dev/zero");
 		return 1;
 	}
-	printf("Trying to read more than the size of the buffer...\n");
-	res = ringbuffer_read(rb, bigbuf, 1200);
-	if (res < 0) {
-		printf("Attempt to read more than the buffer size failed\n");
+	err = read(zeros, readdata, BUF_LEN);
+	if (err != BUF_LEN) {
+		printf("Failed to read from /dev/zero");
+		close(zeros);
+		return 1;
+	}
+	err = ringbuffer_write(rb, readdata, BUF_LEN);
+	if (err < 0) {
+		printf("Failed wrapped write of zeros to buffer, this is an error\n");
 	} else {
-		printf("Attempt to read more than the buffer size worked, something wrong\n");
-		return 1;
+		printf("Wrapped write returned: %d\n", err);
 	}
-	printf("Trying to read more than available data, but less than the buffer size...\n");
-	res = RING_BUFFER_DATA_SIZE(rb);
-	res = ringbuffer_read(rb, bigbuf, res+1);
-	if (res < 0) {
-		printf("Attempt to read more than the available data failed\n");
-	} else {
-		printf("Attempt to read more than the available data worked! Something wrong\n");
-		return 1;
-	}
-	print_specs(rb, "Before flush:\n");
-	printf("Testing the RING_BUFFER_FLUSH macro...\n");
-	RING_BUFFER_FLUSH(rb);
-	print_specs(rb, "At end of tests:\n");
-	printf("Writing some data to the buffer so we can test the slurp function...\n");
-	res = ringbuffer_write(rb, "Elephant", strlen("Elephant"));
-	if (res < 0) {
-		printf("Failed the write before the slurp test\n");
-		return 1;
-	}
-	print_specs(rb, "Before slurp test:");
-	printf("Slurping...\n");
-	memset(smallbuf, 0, BUF_LEN/2);
-		res = ringbuffer_slurp(rb, smallbuf);
-		if (res < 0) {
-			printf("Failed in slurp test\n");
-		return 1;
-	}
-	printf("Slurped: %s\n", smallbuf);
-	print_specs(rb, "After slurp test");
-	printf("Freeing the buffer...\n");
-	ringbuffer_destroy(rb);
-	printf("Tests complete\n");
+	close(zeros);
 	return 0;
 }
