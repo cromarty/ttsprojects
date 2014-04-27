@@ -73,18 +73,18 @@ int read_softsynth(int softsynthfd)
 int parse_softsynth_buffer(int bytesleft) {
 	int err, mult;
 	int bytesparsed = 0;
-	int offset, cmdlen;
+	int offset;
 	char c;
 	char cmdbuf[32];
 	char textbuf[1024];
 
-	memset(cmdbuf, 0, 32);
+
 	memset(textbuf, 0, 1024);
 
 	/*
 	* We won't actually remove bytes from the ring buffer, it is faster and more flexible to just manipulate the head
 	* pointer, which is an integer index into the buffer.
-	* Need to be careful with the RING_BUFFER_SPIN macro because it does not check
+	* Need to be careful with the ringbuffer_spin macro because it does not check
 	* whether it tries to spin forward past the tail or backwards past the head of the buffer.
 	* Use the offset integer variable to keep count of how many bytes past the head we are peeking, and hence how many
 	* bytes to spin the ring buffer when a command or a chunk of text is completed.
@@ -94,117 +94,104 @@ int parse_softsynth_buffer(int bytesleft) {
 	*/
 
 	while(bytesleft) {
-		offset = cmdlen = 0;
-		/* peek at the next byte */
+		offset = 0;
 		err = ringbuffer_peek(softbuffer, &c, offset);
 
 		if (c == DTLK_STOP) {
-			/* A stop command, which has no further parameter associated with it, spin out and continue */
-			printf("stop command\n");
-			err = RING_BUFFER_SPIN(softbuffer, 1);
-			bytesparsed++; bytesleft--;
+			printf("Command: STOP\n");
+			err = ringbuffer_spin(softbuffer, (offset+1));
+			bytesparsed += (offset+1); bytesleft -= (offset+1);
 			continue;
 		}
-//==== cmdlen and offset still zero
+
 		if (c == DTLK_COMMAND) {
-			offset = cmdlen = 1;
-			/* peek ahead one byte */
+			offset++;
 			err = ringbuffer_peek(softbuffer, &c, offset);
-			cmdbuf[cmdlen-1] = c;
 			if (c == 0x40) {
 				/* reset */
-				cmdlen++;
-//==== cmdlen now 2
-				printf("reset command\n");
-				err = RING_BUFFER_SPIN(softbuffer, cmdlen);
-				bytesparsed +=cmdlen ; bytesleft -= cmdlen;
+				cmdbuf[0] = c;
+				cmdbuf[1] = 0;
+				err = ringbuffer_spin(softbuffer, (offset+1));
+				bytesparsed += (offset+1) ; bytesleft -= (offset+1);
+				printf("Command: %s\n", cmdbuf);
 				continue;
 			}
-// correct to here
-//===== cmdlen now 2
-//==== offset now 1
+
 			switch(c)
 			{
 				case 0x2b: /* + */
 					mult = 1;
-					cmdlen++;
+					offset++;
 					break;
 				case 0x2d: /* - */
 					mult = -1;
-					cmdlen++;
+					offset++;
 					break;
 				default: /* not a sign */
 					mult = 0;
 					break;
 			} // switch
 
-			if ( mult != 0) {
-				/* move the offset pointer so we can peek ahead of the sign */
-				offset++;
-			}
-//===== offset now 2 if sign else 1
+			cmdbuf[offset-1] = c;
+			if (bytesleft <= offset)
+				break;
+
 			err = ringbuffer_peek(softbuffer, &c, offset);
 
 			/* while we have bytes left and they are digits */
 			while( bytesleft && ( c >= 0x30 ) && (c <= 0x39 ) ) {
-//===== offset now 2 if sign else 1
-				cmdlen++;
 				cmdbuf[offset-1] = c;
 				offset++;
+				if (bytesleft <= offset)
+					break;
 				err = ringbuffer_peek(softbuffer, &c, offset);
 			} // while bytesleft and digit
 
 			/* if we have run out of bytes before the command is completed by the last alpha character, break out of the parse loop and leave the command for next time */
-			if (bytesleft <= cmdlen)
+			if (bytesleft <= offset)
 				break;
 
 			/* now get the actual command character */
-// we should have a struct for a command and just put the c in 'type'
 			switch(c)
 			{
 				case 0x42: /* B */
 				case 0x62: /* b */
-					dtlkcmd->type = c;
 					break;
 				case 0x46: /* F */
 				case 0x66: /* f */
-					dtlkcmd->type = c;
 					break;
 				case 0x4f: /* O */
 				case 0x6f: /* o */
-					dtlkcmd->type = c;
 					break;
 				case 0x50: /* P * */
 				case 0x70: /* p */
-					dtlkcmd->type = c;
 					break;
 				case 0x53: /* S */
 				case 0x73: /* s */
-					dtlkcmd->type = c;
 				case 0x56: /* V */
 				case 0x76: /* v */
-					dtlkcmd->type = c;
 					break;
 				case 0x58: /* X */
 				case 0x78: /* x */
-					dtlkcmd->type = c;
 					break;
 				default:
 					/* what */
+					break;
 		} // switch
-
-		/* finally we have hit the end of the command, spin the ring buffer by the length of the command string */
-		err = RING_BUFFER_SPIN(softbuffer, cmdlen);
-		bytesparsed += cmdlen; bytesleft -= cmdlen;
+		cmdbuf[offset-1] = c;
+		cmdbuf[offset] = 0;
+		err = ringbuffer_spin(softbuffer, (offset+1));
+		bytesparsed += (offset+1); bytesleft -= (offset+1);
+		printf("Command: %s\n", cmdbuf);
 		continue;
 		} // c == DTLK_COMMAND
 
 		/* something other than a command */
-		err = RING_BUFFER_SPIN(softbuffer, 1);
+		err = ringbuffer_spin(softbuffer, 1);
 		bytesparsed++; bytesleft--;
 
 	} // while(bytesleft)
-
+	printf("Out of bytes\n");
 	return bytesparsed;
 
 } // end parse_softsynth_buffer
