@@ -7,10 +7,10 @@
 #define DTLK_COMMAND 0x01
 #define DTLK_STOP 0x18
 
-
-#define DTLK_SPACE 0x20
 #define DTLK_RESET 0x48
-#define DTLK_INDEX 0x69
+#define DTLK_PLUS_SIGN 0x2b
+#define DTLK_MINUS_SIGN 0x2d
+
 #define DTLK_PITCH 0x70
 #define DTLK_PUNCTUATION 0x62
 #define DTLK_FREQUENCY 0x66
@@ -22,7 +22,7 @@
 typedef struct dtlkcmd {
 	int type;
 	int set;
-	int relative;
+	int rel;
 } dtlkcommand;
 
 int open_softsynth(int ssFlags);

@@ -1,11 +1,11 @@
 #!/bin/bash
 
 gcc -o testsdu \
-main.c \
-net.c \
-softsynth.c \
-speechd.c \
-ringbuffer.c
+ -g main.c \
+ -g net.c \
+ -g softsynth.c \
+ -g speechd.c \
+ -g ringbuffer.c
 
 
 

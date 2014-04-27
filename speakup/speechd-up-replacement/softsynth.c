@@ -107,8 +107,7 @@ int parse_softsynth_buffer(int bytesleft) {
 		if (c == DTLK_COMMAND) {
 			offset++;
 			err = ringbuffer_peek(softbuffer, &c, offset);
-			if (c == 0x40) {
-				/* reset */
+			if (c == DTLK_RESET) {
 				cmdbuf[0] = c;
 				cmdbuf[1] = 0;
 				err = ringbuffer_spin(softbuffer, (offset+1));
@@ -119,11 +118,11 @@ int parse_softsynth_buffer(int bytesleft) {
 
 			switch(c)
 			{
-				case 0x2b: /* + */
+				case DTLK_PLUS_SIGN:
 					mult = 1;
 					offset++;
 					break;
-				case 0x2d: /* - */
+				case DTLK_MINUS_SIGN:
 					mult = -1;
 					offset++;
 					break;
@@ -154,30 +153,25 @@ int parse_softsynth_buffer(int bytesleft) {
 			/* now get the actual command character */
 			switch(c)
 			{
-				case 0x42: /* B */
-				case 0x62: /* b */
+				case DTLK_PUNCTUATION: /* b */
 					break;
-				case 0x46: /* F */
-				case 0x66: /* f */
+				case DTLK_FREQUENCY: /* f */
 					break;
-				case 0x4f: /* O */
-				case 0x6f: /* o */
+				case DTLK_VOICE: /* o */
 					break;
-				case 0x50: /* P * */
-				case 0x70: /* p */
+				case DTLK_PITCH: /* p */
 					break;
-				case 0x53: /* S */
-				case 0x73: /* s */
-				case 0x56: /* V */
-				case 0x76: /* v */
+				case DTLK_RATE: /* s */
 					break;
-				case 0x58: /* X */
-				case 0x78: /* x */
+				case DTLK_VOLUME: /* v */
+					break;
+				case DTLK_UNKNOWN: /* x */
 					break;
 				default:
 					/* what */
 					break;
 		} // switch
+
 		cmdbuf[offset-1] = c;
 		cmdbuf[offset] = 0;
 		err = ringbuffer_spin(softbuffer, (offset+1));
