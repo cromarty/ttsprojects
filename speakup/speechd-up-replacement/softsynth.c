@@ -165,7 +165,7 @@ int parse_softsynth_buffer(int bytesleft) {
 					break;
 				case DTLK_VOLUME: /* v */
 					break;
-				case DTLK_UNKNOWN: /* x */
+				case DTLK_TONE: /* x */
 					break;
 				default:
 					/* what */

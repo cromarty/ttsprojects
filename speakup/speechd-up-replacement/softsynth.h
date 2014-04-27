@@ -16,7 +16,7 @@
 #define DTLK_FREQUENCY 0x66
 #define DTLK_RATE 0x73
 #define DTLK_VOLUME 0x76
-#define DTLK_UNKNOWN 0x78
+#define DTLK_TONE 0x78
 #define DTLK_VOICE 0x6f
 
 typedef struct dtlkcmd {
