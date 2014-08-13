@@ -1,22 +1,8 @@
-/*****************************************************************************
-*                                                                            *
-*  ex-1.c                                                                    *
-*  ======                                                                    *
-*                                                                            *
-*  Description: Illustrates using a linked list (see Chapter 5).             *
-*                                                                            *
-*****************************************************************************/
-
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "list.h"
 
-/*****************************************************************************
-*                                                                            *
-*  ------------------------------ print_list ------------------------------  *
-*                                                                            *
-*****************************************************************************/
 
 static void print_list(const LLIST_T *list) {
 
@@ -24,12 +10,6 @@ LLIST_ENTRY_T           *element;
 
 int                *data,
                    i;
-
-/*****************************************************************************
-*                                                                            *
-*  Display the linked list.                                                  *
-*                                                                            *
-*****************************************************************************/
 
 fprintf(stdout, "LLIST_T size is %d\n", list_size(list));
 
@@ -52,10 +32,12 @@ while (1) {
 
 return;
 
-}
-void buggeroff(void *data) {
+} // end print_list
+
+void free_function(void *data) {
 free(data);
-}
+
+} // end free_function
 
 int main(int argc, char **argv) {
 
@@ -65,19 +47,11 @@ LLIST_ENTRY_T           *element;
 int                *data, *data2,
                    i;
 
-
-list_init(&list, buggeroff);
-
-/*****************************************************************************
-*                                                                            *
-*  Perform some linked list operations.                                      *
-*                                                                            *
-*****************************************************************************/
+list_init(&list, free_function);
 
 element = list_head(&list);
 
 for (i = 10; i > 0; i--) {
-
    if ((data = (int *)malloc(sizeof(int))) == NULL)
       return 1;
 
@@ -158,15 +132,9 @@ fprintf(stdout, "Testing list_is_tail...Value=%d (1=OK)\n", i);
 i = list_is_tail(list_head(&list));
 fprintf(stdout, "Testing list_is_tail...Value=%d (0=OK)\n", i);
 
-/*****************************************************************************
-*                                                                            *
-*  Destroy the linked list.                                                  *
-*                                                                            *
-*****************************************************************************/
-
 fprintf(stdout, "Destroying the list\n");
 list_destroy(&list);
 
 return 0;
 
-}
+} // end main
