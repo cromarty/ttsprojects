@@ -59,22 +59,128 @@ static OMX_ERRORTYPE omx_wait_for_command_complete(OMX_COMPONENT_T*component, OM
 	return OMX_ErrorTimeout;
 } // end omx_wait_for_command_complete
 
-OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, OMX_U32 port,  uint64_t wait) {
+
+OMX_ERRORTYPE omx_event_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_EVENTTYPE event, OMX_U32 data1, OMX_U32 data2, OMX_PTR event_data) {
+	if (app_data == NULL)
+		return OMX_ErrorNone;
+
+	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
+	const char *event_str;
+
+	switch (event) {
+		case OMX_EventCmdComplete: 
+			switch(data1) {
+			case OMX_CommandStateSet: event_str = "OMX_EventCmdComplete: cmd=OMX_CommandStateSet"; break;
+			case OMX_CommandFlush: event_str = "OMX_EventCmdComplete: cmd=OMX_CommandFlush"; break;
+			case OMX_CommandPortDisable: event_str = "OMX_EventCmdComplete: cmd=OMX_CommandPortDisable"; break;
+			case OMX_CommandPortEnable: event_str = "OMX_EventCmdComplete: cmd=OMX_CommandPortEnable"; break;
+			case OMX_CommandMarkBuffer: event_str = "OMX_EventCmdComplete: cmd=OMX_CommandMarkBuffer"; break;
+			default:
+				event_str = "OMX_EventCmdComplete: cmd=??";
+			} 
+			break;	
+		case OMX_EventError: event_str = "OMX_EventError"; 
+				omxShowState(component);
+				break;	
+		case OMX_EventMark: event_str = "OMX_EventMark"; break;	
+		case OMX_EventPortSettingsChanged: 
+			event_str = "OMX_EventPortSettingsChanged";
+			component->portSettingChanged = 1;
+			logInfo(LOG_OMX, "%s: component->portSettingChanged = 1.\n", component->componentName);
+			break;	
+		case OMX_EventBufferFlag: event_str = "OMX_EventBufferFlag"; break;	
+		case OMX_EventResourcesAcquired: event_str = "OMX_EventResourcesAcquired"; break;	
+		case OMX_EventComponentResumed: event_str = "OMX_EventComponentResumed"; break;	
+		case OMX_EventDynamicResourcesAvailable: event_str = "OMX_EventDynamicResourcesAvailable"; break;	
+		case OMX_EventPortFormatDetected: event_str = "OMX_EventPortFormatDetected"; break;	
+		case OMX_EventKhronosExtensions: event_str = "OMX_EventKhronosExtensions"; break;	
+		case OMX_EventVendorStartUnused: event_str = "OMX_EventVendorStartUnused"; break;	
+		case OMX_EventParamOrConfigChanged: event_str = "OMX_EventParamOrConfigChanged"; break;
+		default:	
+			event_str = "Unknown OMX event";
+			break;
+	}
+
+
+	struct OMX_EVENT_T *event = malloc(sizeof(struct OMX_EVENT_T));
+	if (event == NULL)
+		return OMX_ErrorNone;
+
+	event->eEvent = eEvent;
+	event->data1 = data1;
+	event->data2 = data2;
+	event->pEventData = event_data;
+	omx_add_event(component, event);
+	return OMX_ErrorNone;
+} // end omx_event_callback
+
+OMX_ERRORTYPE omx_empty_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_BUFFERHEADERTYPE *buffer) {
+	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
+
+	if (component) {
+		pthread_mutex_lock(&component->inputMutex);
+
+		buffer->nFilledLen = 0;
+		buffer->nOffset = 0;
+
+		if (component->inputBufferHdr == NULL) {
+			component->inputBufferHdr = createSimpleListItem(pBuffer);
+			component->inputBufferHdrEnd = component->inputBufferHdr;
+		} else {
+			addObjectToSimpleList(component->inputBufferHdrEnd, pBuffer);
+			component->inputBufferHdrEnd = component->inputBufferHdrEnd->next;
+		}
+
+		pthread_cond_broadcast(&component->inputBufferCond);
+		pthread_mutex_unlock(&component->inputMutex);
+	}
+
+	return OMX_ErrorNone;
+
+} // end omx_empty_buffer_done_callback
+
+OMX_ERRORTYPE omx_fill_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_BUFFERHEADERTYPE* buffer) {
+	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
+
+	if (component) {
+		pthread_mutex_lock(&component->inputMutex);
+		buffer->nFilledLen      = 0;
+		buffer->nOffset         = 0;
+
+		if (component->inputBufferHdr == NULL) {
+			component->inputBufferHdr = createSimpleListItem(pBuffer);
+			component->inputBufferHdrEnd = component->inputBufferHdr;
+		} else {
+			addObjectToSimpleList(component->inputBufferHdrEnd, pBuffer);
+			component->inputBufferHdrEnd = component->inputBufferHdrEnd->next;
+		}
+
+		pthread_cond_broadcast(&component->inputBufferCond);
+
+		pthread_mutex_unlock(&component->inputMutex);
+	}
+
+	return OMX_ErrorNone;
+
+} // end omx_fill_buffer_done_callback
+
+
+OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, uint64_t wait) {
 	OMX_ERRORTYPE omx_err = OMX_ErrorNone;
 
 	OMX_PARAM_PORTDEFINITIONTYPE portdef;
 	OMX_INIT_STRUCTURE(portdef);
-	portdef.nPortIndex = port;
+	portdef.nPortIndex = component->port;
 
 	omx_err = OMX_GetParameter(component->handle, OMX_IndexParamPortDefinition, &portdef);
 
 	if(portdef.bEnabled == OMX_FALSE) {
-		omx_err = OMX_SendCommand(component->handle, OMX_CommandPortEnable, port, NULL);
-		if(omx_err != OMX_ErrorNone) {
+		omx_err = OMX_SendCommand(component->handle, OMX_CommandPortEnable, component->port, NULL);
+		if(omx_err != OMX_ErrorNone)
 			return omx_err;
-		}
+
 		if(wait) {
-			omx_err = omxWaitForCommandComplete(component, OMX_CommandPortEnable, port, 1000);
+			omx_err = omxWaitForCommandComplete(component, OMX_CommandPortEnable, component->port, 1000);
 		}
 	}
 
@@ -83,25 +189,25 @@ OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, OMX_U32 port,  uint64_
 
 
 
-OMX_ERRORTYPE omx_disable_port(OMX_COMPONENT_T *component, OMX_U32 port, uint64_t wait) {
+OMX_ERRORTYPE omx_disable_port(OMX_COMPONENT_T *component, uint64_t wait) {
 	OMX_ERRORTYPE omx_err = OMX_ErrorNone;
 
 	OMX_PARAM_PORTDEFINITIONTYPE portdef;
 	OMX_INIT_STRUCTURE(portdef);
-	portdef.nPortIndex = port;
+	portdef.nPortIndex = component->port;
 
 	omx_err = OMX_GetParameter(component->handle, OMX_IndexParamPortDefinition, &portdef);
-	if (omx_err != OMX_ErrorNone) {
+	if (omx_err != OMX_ErrorNone)
 		return omx_err;
-	}
+
 	if(portdef.bEnabled == OMX_TRUE) {
-		omx_err = OMX_SendCommand(component->handle, OMX_CommandPortDisable, port, NULL);
-		if(omx_err != OMX_ErrorNone) {
+		omx_err = OMX_SendCommand(component->handle, OMX_CommandPortDisable, component->port, NULL);
+		if(omx_err != OMX_ErrorNone)
 			return omx_err;
-		}
-		if(wait) {
-			omx_err = omxWaitForCommandComplete(component, OMX_CommandPortDisable, port, 1000);
-		}
+
+		if(wait)
+			omx_err = omx_wait_for_command_complete(component, OMX_CommandPortDisable, component->port, 1000);
+
 	}
 
 	return omx_err;
@@ -200,7 +306,7 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 		buffer->nOffset = 0;
 		buffer->pAppPrivate = (void*)i; 
 
-		component->buffer_hdr_end = component->buffer_hdr_end->next;
+		//component->buffer_hdr_end = component->buffer_hdr_end->next;
 	} // end for
 
 	// now wait for the enable command to complete
@@ -222,6 +328,7 @@ OMX_ERRORTYPE omx_free_buffers(OMX_COMPONENT_T *component) {
 	}
 	return OMX_ErrorNone;
 } // end omx_free_buffers
+
 
 
 
@@ -294,9 +401,9 @@ OMX_ERRORTYPE omx_set_volume(OMX_COMPONENT_T *component, unsigned int vol) {
 	volume.sVolume.nValue = vol;
 
 	omx_err = OMX_SetParameter(component->handle, OMX_IndexConfigAudioVolume, &volume);
-	if (omx_err != OMX_ErrorNone) {
+	if (omx_err != OMX_ErrorNone)
 		return omx_err;
-	}
+
 	return OMX_ErrorNone;
 } // end omx_set_volume
 
@@ -306,27 +413,25 @@ OMX_ERRORTYPE omx_init_audio_render_component(OMX_COMPONENT_T *component, char *
 	OMX_ERRORTYPE omx_err;
 	memset (component, 0, sizeof(OMX_COMPONENT_T));
 
-	pthread_mutex_init (&component->comp_mutex, NULL);
-	//pthread_cond_init (&component->cmd_queue_count_cv, NULL);
-	//component->buf_notempty = 1;
-	//pthread_cond_init (&component->buf_notempty_cv, NULL);
-	//pthread_cond_init (&component->eos_cv, NULL);
-	//pthread_mutex_init (&component->eos_mutex, NULL);
+	component->port = 100;
 
-	component->callbacks.EventHandler = omx_event_handler;
-	component->callbacks.EmptyBufferDone = omx_empty_buffer_done;
-	component->callbacks.FillBufferDone = omx_fill_buffer_done;
+	pthread_mutex_init (&component->comp_mutex, NULL);
+	pthread_mutex_init(&component->comp_evq_mutex, NULL);
+
+	component->callbacks.EventHandler = omx_event_callback;
+	component->callbacks.EmptyBufferDone = omx_empty_buffer_done_callback;
+	component->callbacks.FillBufferDone = omx_fill_buffer_done_callback;
+
+	list_init(&component->buffer_list);
+	queue_init(&component->event_queue);
 
 	omx_err = OMX_GetHandle(&component->handle, compname, component, &component->callbacks);
-	if (omx_err != OMX_ErrorNone) { 
+	if (omx_err != OMX_ErrorNone)
 		return omx_err;
-}
 
-	//omx_disable_all_ports (component);
-	omx_err = omx_disable_port(component, component->port, 5000);
-	if (omx_error != OMX_ErrorNone) {
+	omx_err = omx_disable_port(component, 5000);
+	if (omx_error != OMX_ErrorNone)
 		return omx_err;
-	}
 
 	return OMX_ErrorNone;
 } // end omx_init_audio_render_component

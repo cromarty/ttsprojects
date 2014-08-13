@@ -5,6 +5,8 @@
 #include <IL/OMX_Audio.h>
 #include <IL/OMX_Broadcom.h>
 
+#include "list.h"
+#include "queue.h"
 
 typedef struct {
 	OMX_HANDLETYPE handle;
@@ -13,8 +15,10 @@ typedef struct {
 	OMX_U32 buffer_count;
 	OMX_U32 buffer_size;
 	OMX_CALLBACKTYPE callbacks;
-	OMX_BUFFERHEADERTYPE *buffer_hdr_end;
+	LLIST_T buffer_list;
+	QUEUE_T event_queue;
 	pthread_mutex_t comp_mutex;
+	pthread_mutex_t comp_evq_mutex;
 } OMX_COMPONENT_T;
 
 
