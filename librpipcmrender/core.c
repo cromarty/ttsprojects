@@ -13,6 +13,10 @@
 #include <IL/OMX_Broadcom.h>
 #include <pthread.h>
 
+#include "rpipcmrender.h"
+#include "list.h"
+#include "queue.h"
+
 #define OMX_INIT_STRUCTURE(a) \
 	memset(&(a), 0, sizeof(a)); \
 	(a).nSize = sizeof(a); \
@@ -20,17 +24,6 @@
 	(a).nVersion.s.nVersionMinor = OMX_VERSION_MINOR; \
 	(a).nVersion.s.nRevision = OMX_VERSION_REVISION; \
 	(a).nVersion.s.nStep = OMX_VERSION_STEP
-
-typedef struct {
-	OMX_HANDLETYPE handle;
-	OMX_U32 port;
-	OMX_U32 alignment;
-	OMX_U32 buffer_count;
-	OMX_U32 buffer_size;
-	OMX_CALLBACKTYPE callbacks;
-	OMX_BUFFERHEADERTYPE *buffer_hdr_end;
-	pthread_mutex_t comp_mutex;
-} OMX_COMPONENT_T;
 
 
 
@@ -337,50 +330,6 @@ OMX_ERRORTYPE omx_init_audio_render_component(OMX_COMPONENT_T *component, char *
 
 	return OMX_ErrorNone;
 } // end omx_init_audio_render_component
-
-
-
-int main() {
-	OMX_ERRORTYPE omx_err;
-	OMX_COMPONENT_T component;
-	bcm_host_init();
-
-	omx_err = OMX_Init();
-	if (omx_err != OMX_ErrorNone) {
-		printf("Failed OMX_Init\n");
-		return omx_err;
-	}
-
-	omx_err = omx_init_audio_render_component(&component, "OMX.broadcom.audio_render");
-	if (omx_err != OMX_ErrorNone) {
-		printf("Failed in omx_init_audio_render_component\n");
-		return omx_err;
-	}
-	omx_err = omx_set_pcm_parameters(&component, 22050, 1, 24, "local");
-	if (omx_err != OMX_ErrorNone) {
-		printf("Failed to set pcm parameters\n");
-		return omx_err;
-	}
-	omx_err = omx_alloc_buffers(&component);
-	if (omx_err != OMX_ErrorNone) {
-		printf("Failed to allocate buffers\n");
-		return omx_err;
-	}
-	omx_err = omx_set_volume(&component, 100);
-	if (omx_err != OMX_ErrorNone) {
-		printf("Failed to set volume\n");
-		return omx_err;
-	}
-	omx_free_buffers(&component, 100);
-	return 0;
-}
-
-
-
-
-
-
-
 
 
 
