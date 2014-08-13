@@ -32,20 +32,14 @@ return;
 }
 
 int main(int argc, char **argv) {
-
 QUEUE_T              queue;
-
-int                *data,
-                   i;
-
+int                *data, i;
 
 queue_init(&queue, free);
-
 
 fprintf(stdout, "Enqueuing 10 elements\n");
 
 for (i = 0; i < 10; i++) {
-
    if ((data = (int *)malloc(sizeof(int))) == NULL)
       return 1;
 
@@ -61,7 +55,6 @@ print_queue(&queue);
 fprintf(stdout, "Dequeuing 5 elements\n");
 
 for (i = 0; i < 5; i++) {
-
    if (queue_dequeue(&queue, (void **)&data) == 0)
       free(data);
    else
