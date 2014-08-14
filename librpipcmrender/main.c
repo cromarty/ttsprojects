@@ -40,13 +40,13 @@ debug_log(stdout, "After init audio component\n");
 		debug_log(stdout,"Failed to set pcm parameters\n");
 		return omx_err;
 	}
-/*
+
 	omx_err = omx_alloc_buffers(&component);
 	if (omx_err != OMX_ErrorNone) {
 		debug_log(stdout,"Failed to allocate buffers\n");
 		return omx_err;
 	}
-*/
+
 	omx_err = omx_set_volume(&component, 100);
 	if (omx_err != OMX_ErrorNone) {
 		debug_log(stdout,"Failed to set volume\n");
@@ -56,13 +56,4 @@ debug_log(stdout, "After init audio component\n");
 
 	return 0;
 }
-
-
-
-
-
-
-
-
-
 

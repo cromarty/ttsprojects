@@ -437,6 +437,8 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 	OMX_PARAM_PORTDEFINITIONTYPE portdef;
 	size_t i;
 
+	debug_log(stdout, "Entered omx_alloc_buffers\n");
+
 	if(!component->handle)
 		return OMX_ErrorUndefined;
 
@@ -444,8 +446,10 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 	portdef.nPortIndex = component->port;
 
 	omx_err = OMX_GetParameter(component->handle, OMX_IndexParamPortDefinition, &portdef);
-	if(omx_err != OMX_ErrorNone)
+	if(omx_err != OMX_ErrorNone) {
+		debug_log(stdout, "Failed in OMX_GetParameter inside omx_alloc_buffers\n");
 		return omx_err;
+	}
 
 	if(omx_get_state(component) != OMX_StateIdle) {
 		if(omx_get_state(component) != OMX_StateLoaded)
@@ -456,8 +460,10 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 
 	// enable port but don't wait
 	omx_err = omx_enable_port(component, 0);
-	if(omx_err != OMX_ErrorNone)
+	if(omx_err != OMX_ErrorNone) {
+		debug_log(stdout, "Error returned from omx_enable_port inside omx_alloc_buffers. Error string: %s\n", error_type_string(omx_err));
 		return omx_err;
+	}
 
 	component->alignment = portdef.nBufferAlignment;
 	component->buffer_count = portdef.nBufferCountActual;
@@ -466,8 +472,10 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 	for (i = 0; i < portdef.nBufferCountActual; i++) {
 		OMX_BUFFERHEADERTYPE *buffer = NULL;
 		omx_err = OMX_AllocateBuffer(component->handle, &buffer, component->port, NULL, component->buffer_size);
-		if(omx_err != OMX_ErrorNone)
+		if(omx_err != OMX_ErrorNone) {
+		debug_log(stdout, "Failed in OMX_AllocBuffer inside omx_alloc_buffers. Error string: %s\n", error_type_string(omx_err));
 			return omx_err;
+	}
 
 		buffer->nInputPortIndex = component->port;
 		buffer->nFilledLen = 0;
@@ -479,8 +487,10 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 
 	// now wait for the enable command to complete
 	omx_err = wait_for_command_complete(component, OMX_CommandPortEnable, component->port, 50000); 
-	if(omx_err != OMX_ErrorNone)
+	if(omx_err != OMX_ErrorNone) {
+
 		return omx_err;
+	}
 
 	return omx_err;
 } // end omx_alloc_buffers
