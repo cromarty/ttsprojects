@@ -16,6 +16,7 @@
 #include "rpipcmrender.h"
 #include "list.h"
 #include "queue.h"
+#include "debug.h"
 
 #define OMX_INIT_STRUCTURE(a) \
 	memset(&(a), 0, sizeof(a)); \
@@ -43,20 +44,20 @@ static uint64_t time_now_microseconds() {
 
 
 static int get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event_, QUEUE_T *event_queue) {
-	printf("In get_event\n");
+	debug_log(stdout, "In get_event\n");
 
 	pthread_mutex_lock(&component->event_queue_mutex);
 
 	if (queue_is_empty(event_queue)) {
-		printf("Queue is empty at entry to get_event\n");
+		debug_log(stdout, "Queue is empty at entry to get_event\n");
 		pthread_mutex_unlock(&component->event_queue_mutex);
 		event_ = NULL;
 		return -1;
 	}
 
-	printf("About to dequeue event\n");
+	debug_log(stdout, "About to dequeue event\n");
 	queue_dequeue(event_queue, (void*)event_ );
-	printf("After dequeue event\n");
+	debug_log(stdout, "After dequeue event\n");
 
 	if (queue_is_empty(event_queue)) {
 		pthread_mutex_unlock(&component->event_queue_mutex);
@@ -64,7 +65,7 @@ static int get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event_, QUE
 	}
 
 	pthread_mutex_unlock(&component->event_queue_mutex);
-	printf("About to exit get_event\n");
+	debug_log(stdout, "About to exit get_event\n");
 	return 1; // there are more events in the queue
 
 } // end get_event
@@ -76,7 +77,7 @@ static OMX_ERRORTYPE wait_for_command_complete(OMX_COMPONENT_T*component, OMX_U3
 	if (component == NULL)
 		return OMX_EventError;
 
-	printf("In wait_for_command_complete\n");
+	debug_log(stdout, "In wait_for_command_complete\n");
 
 	uint64_t start_time = time_now_microseconds();
 
@@ -84,7 +85,7 @@ static OMX_ERRORTYPE wait_for_command_complete(OMX_COMPONENT_T*component, OMX_U3
 	if (event == NULL)
 		return OMX_EventError;
 
-	printf("Before do loop\n");
+	debug_log(stdout, "Before do loop\n");
 
 	// We can't just exit if the event queue is empty until the timeout is exceeded.
 	// This is because the event might arrive in the queue while we're in this loop
@@ -92,13 +93,13 @@ static OMX_ERRORTYPE wait_for_command_complete(OMX_COMPONENT_T*component, OMX_U3
 		queue_state = get_event(component, event, &component->command_complete_event_queue);
 		if (queue_state > -1) {
 			if (event) {
-printf("We have an event in the do loop\n");
+debug_log(stdout, "We have an event in the do loop\n");
 return OMX_ErrorNone;
 			} // if event
 		} // end if get_event
 	} while (((time_now_microseconds() - start_time) < timeout) || (event != NULL));
 
-	printf("After do loop in get_event\n");
+	debug_log(stdout, "After do loop in get_event\n");
 
 	return OMX_ErrorTimeout;
 } // end wait_for_command_complete
@@ -210,20 +211,20 @@ OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, uint64_t wait) {
 
 OMX_ERRORTYPE omx_disable_port(OMX_COMPONENT_T *component, uint64_t wait) {
 	OMX_ERRORTYPE omx_err = OMX_ErrorNone;
-printf("In omx_disable_port\n");
+debug_log(stdout, "In omx_disable_port\n");
 	OMX_PARAM_PORTDEFINITIONTYPE portdef;
 	OMX_INIT_STRUCTURE(portdef);
 	portdef.nPortIndex = component->port;
-printf("About to get port definition\n");
+debug_log(stdout, "About to get port definition\n");
 	omx_err = OMX_GetParameter(component->handle, OMX_IndexParamPortDefinition, &portdef);
 	if (omx_err != OMX_ErrorNone)
 		return omx_err;
-printf("After getting port definition\n");
+debug_log(stdout, "After getting port definition\n");
 	if(portdef.bEnabled == OMX_TRUE) {
 		omx_err = OMX_SendCommand(component->handle, OMX_CommandPortDisable, component->port, NULL);
 		if(omx_err != OMX_ErrorNone)
 			return omx_err;
-printf("Before wait\n");
+debug_log(stdout, "Before wait\n");
 		if(wait)
 			omx_err = wait_for_command_complete(component, OMX_CommandPortDisable, component->port, 1000);
 
@@ -442,12 +443,12 @@ OMX_ERRORTYPE omx_init_audio_render_component(OMX_COMPONENT_T *component, char *
 	list_init(&component->buffer_list, free);
 	queue_init(&component->command_complete_event_queue, free);
 	queue_init(&component->other_event_queue, free);
-printf("Successfully initialised list and queue\n");
+debug_log(stdout, "Successfully initialised list and queue\n");
 
 	omx_err = OMX_GetHandle(&component->handle, compname, component, &component->callbacks);
 	if (omx_err != OMX_ErrorNone)
 		return omx_err;
-printf("After GetHandle\n"); 
+debug_log(stdout, "After GetHandle\n"); 
 
 	omx_err = omx_disable_port(component, 5000);
 	if (omx_err != OMX_ErrorNone)
