@@ -18,15 +18,24 @@ typedef struct {
 	LLIST_T buffer_list;
 	QUEUE_T event_queue;
 	pthread_mutex_t comp_mutex;
-	pthread_mutex_t comp_evq_mutex;
+	pthread_mutex_t event_queue_mutex;
 } OMX_COMPONENT_T;
 
 
+struct OMX_EVENT_T {
+	OMX_EVENTTYPE event;
+	OMX_U32 data1;
+	OMX_U32 data2;
+	OMX_PTR event_data;
+};
 
-OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, OMX_U32 port, uint64_t wait);
-OMX_ERRORTYPE omx_disable_port(OMX_COMPONENT_T *component, OMX_U32 port, uint64_t wait);
+
+
+OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, uint64_t wait);
+OMX_ERRORTYPE omx_disable_port(OMX_COMPONENT_T *component, uint64_t wait);
 OMX_STATETYPE omx_get_state(OMX_COMPONENT_T *component);
 OMX_ERRORTYPE omx_set_state(OMX_COMPONENT_T *component, OMX_STATETYPE state, uint64_t timeout);
+int omx_get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event);
 OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component);
 OMX_ERRORTYPE omx_free_buffers(OMX_COMPONENT_T *component);
 OMX_ERRORTYPE omx_set_pcm_parameters(OMX_COMPONENT_T *component, int samplerate, int channels, int bitdepth, char *dest);

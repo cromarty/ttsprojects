@@ -36,6 +36,10 @@ QUEUE_T              queue;
 int                *data, i;
 
 queue_init(&queue, free);
+	if (queue_is_empty(&queue))
+		fprintf(stdout, "Queue is empty\n");
+	else
+		fprintf(stdout, "Queue is not empty\n");
 
 fprintf(stdout, "Enqueuing 10 elements\n");
 
@@ -51,6 +55,11 @@ for (i = 0; i < 10; i++) {
 }
 
 print_queue(&queue);
+	fprintf(stdout, "Checking if the queue is empty\n");
+	if (queue_is_empty(&queue))
+		fprintf(stdout, "Queue is empty\n");
+	else
+		fprintf(stdout, "Queue is not empty\n");
 
 fprintf(stdout, "Dequeuing 5 elements\n");
 
@@ -104,6 +113,11 @@ if ((data = queue_peek(&queue)) != NULL)
    fprintf(stdout, "Peeking at an empty queue...Value=%03d\n", *data);
 else
    fprintf(stdout, "Peeking at an empty queue...Value=NULL\n");
+	fprintf(stdout, "Checking to see if the queue is empty\n"); 
+	if (queue_is_empty(&queue))
+		fprintf(stdout, "Queue is empty\n");
+	else
+		fprintf(stdout, "Queue is not empty\n");
 
 fprintf(stdout, "Destroying the queue\n");
 queue_destroy(&queue);

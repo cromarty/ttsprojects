@@ -48,6 +48,10 @@ int                *data, *data2,
                    i;
 
 list_init(&list, free_function);
+	if (list_is_empty(&list)) 
+		fprintf(stdout, "List is empty\n");
+	else
+		fprintf(stdout, "List is not empty\n");
 
 element = list_head(&list);
 
@@ -61,6 +65,11 @@ for (i = 10; i > 0; i--) {
       return 1;
 
 }
+	if (list_is_empty(&list))
+		fprintf(stdout, "List is empty\n");
+	else
+		fprintf(stdout, "List is not empty\n");
+
 data2 = (int*)malloc(sizeof(int));
 *data2 = 333;
 list_append(&list, data2);
@@ -75,7 +84,7 @@ for (i = 0; i < 7; i++)
 data = list_data(element);
 fprintf(stdout, "Removing an element after the one containing %03d\n", *data);
 
-if (list_rem_next(&list, element, (void **)&data) != 0)
+if (list_remove_next(&list, element, (void **)&data) != 0)
    return 1;
 
 print_list(&list);
@@ -91,7 +100,7 @@ print_list(&list);
 fprintf(stdout, "Removing an element after the first element\n");
 
 element = list_head(&list);
-if (list_rem_next(&list, element, (void **)&data) != 0)
+if (list_remove_next(&list, element, (void **)&data) != 0)
    return 1;
 
 print_list(&list);
@@ -110,7 +119,7 @@ element = list_head(&list);
 element = list_next(element);
 element = list_next(element);
 
-if (list_rem_next(&list, element, (void **)&data) != 0)
+if (list_remove_next(&list, element, (void **)&data) != 0)
    return 1;
 
 print_list(&list);
@@ -131,6 +140,10 @@ i = list_is_tail(list_tail(&list));
 fprintf(stdout, "Testing list_is_tail...Value=%d (1=OK)\n", i);
 i = list_is_tail(list_head(&list));
 fprintf(stdout, "Testing list_is_tail...Value=%d (0=OK)\n", i);
+	if (list_is_empty(&list))
+		fprintf(stdout, "List is empty\n");
+	else
+	fprintf(stdout, "List is not empty\n");
 
 fprintf(stdout, "Destroying the list\n");
 list_destroy(&list);

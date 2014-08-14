@@ -26,6 +26,9 @@
 	(a).nVersion.s.nStep = OMX_VERSION_STEP
 
 
+static int min(int val1, int val2) {
+	return ( val1 < val2 ? val1 : val2 );
+} // end min 
 
 static uint64_t time_now_microseconds() {
 	struct timespec now;
@@ -43,15 +46,15 @@ static OMX_ERRORTYPE omx_wait_for_command_complete(OMX_COMPONENT_T*component, OM
 	uint64_t start_time = time_now_microseconds();
 
 	struct OMX_EVENT_T *event = NULL;
-	const char *event_str;
+	//const char *event_str;
 
 	do {
 		if (event != NULL) {
 			free(event);
 		}
-		if (omx_get_event(component, &event) > -1) {
+		if (omx_get_event(component, event) > -1) {
 			if (event) {
-				arse(event->eEvent);
+				//arse(event->eEvent);
 			} // if (event)
 		} // if (omxGetEvent(component, &event) > -1)
 	} while (((time_now_microseconds() - start_time) < timeout) || (event != NULL));
@@ -60,14 +63,14 @@ static OMX_ERRORTYPE omx_wait_for_command_complete(OMX_COMPONENT_T*component, OM
 } // end omx_wait_for_command_complete
 
 
-OMX_ERRORTYPE omx_event_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_EVENTTYPE event, OMX_U32 data1, OMX_U32 data2, OMX_PTR event_data) {
+OMX_ERRORTYPE omx_event_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_EVENTTYPE event_, OMX_U32 data1, OMX_U32 data2, OMX_PTR event_data) {
 	if (app_data == NULL)
 		return OMX_ErrorNone;
 
 	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
 	const char *event_str;
 
-	switch (event) {
+	switch (event_) {
 		case OMX_EventCmdComplete: 
 			switch(data1) {
 			case OMX_CommandStateSet: event_str = "OMX_EventCmdComplete: cmd=OMX_CommandStateSet"; break;
@@ -80,13 +83,11 @@ OMX_ERRORTYPE omx_event_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OM
 			} 
 			break;	
 		case OMX_EventError: event_str = "OMX_EventError"; 
-				omxShowState(component);
+				//omxShowState(component);
 				break;	
 		case OMX_EventMark: event_str = "OMX_EventMark"; break;	
 		case OMX_EventPortSettingsChanged: 
 			event_str = "OMX_EventPortSettingsChanged";
-			component->portSettingChanged = 1;
-			logInfo(LOG_OMX, "%s: component->portSettingChanged = 1.\n", component->componentName);
 			break;	
 		case OMX_EventBufferFlag: event_str = "OMX_EventBufferFlag"; break;	
 		case OMX_EventResourcesAcquired: event_str = "OMX_EventResourcesAcquired"; break;	
@@ -106,11 +107,11 @@ OMX_ERRORTYPE omx_event_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OM
 	if (event == NULL)
 		return OMX_ErrorNone;
 
-	event->eEvent = eEvent;
+	event->event = event_;
 	event->data1 = data1;
 	event->data2 = data2;
-	event->pEventData = event_data;
-	omx_add_event(component, event);
+	event->event_data = event_data;
+		queue_enqueue(&component->event_queue, (void*)event);
 	return OMX_ErrorNone;
 } // end omx_event_callback
 
@@ -118,11 +119,11 @@ OMX_ERRORTYPE omx_empty_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR 
 	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
 
 	if (component) {
-		pthread_mutex_lock(&component->inputMutex);
+		//pthread_mutex_lock(&component->inputMutex);
 
 		buffer->nFilledLen = 0;
 		buffer->nOffset = 0;
-
+/*
 		if (component->inputBufferHdr == NULL) {
 			component->inputBufferHdr = createSimpleListItem(pBuffer);
 			component->inputBufferHdrEnd = component->inputBufferHdr;
@@ -130,15 +131,15 @@ OMX_ERRORTYPE omx_empty_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR 
 			addObjectToSimpleList(component->inputBufferHdrEnd, pBuffer);
 			component->inputBufferHdrEnd = component->inputBufferHdrEnd->next;
 		}
-
-		pthread_cond_broadcast(&component->inputBufferCond);
-		pthread_mutex_unlock(&component->inputMutex);
+*/
+		//pthread_cond_broadcast(&component->inputBufferCond);
+		//pthread_mutex_unlock(&component->inputMutex);
 	}
 
 	return OMX_ErrorNone;
 
 } // end omx_empty_buffer_done_callback
-
+/*
 OMX_ERRORTYPE omx_fill_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_BUFFERHEADERTYPE* buffer) {
 	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
 
@@ -163,6 +164,7 @@ OMX_ERRORTYPE omx_fill_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR a
 	return OMX_ErrorNone;
 
 } // end omx_fill_buffer_done_callback
+*/
 
 
 OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, uint64_t wait) {
@@ -180,7 +182,7 @@ OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, uint64_t wait) {
 			return omx_err;
 
 		if(wait) {
-			omx_err = omxWaitForCommandComplete(component, OMX_CommandPortEnable, component->port, 1000);
+			omx_err = omx_wait_for_command_complete(component, OMX_CommandPortEnable, component->port, 1000);
 		}
 	}
 
@@ -234,14 +236,14 @@ OMX_STATETYPE omx_get_state(OMX_COMPONENT_T *component) {
 
 
 
-OMX_ERRORTYPE omx_set_state(struct OMX_COMPONENT_T *component, OMX_STATETYPE state, uint64_t timeout) {
+OMX_ERRORTYPE omx_set_state(OMX_COMPONENT_T *component, OMX_STATETYPE state, uint64_t timeout) {
 	OMX_ERRORTYPE omx_err = OMX_ErrorNone;
 	OMX_STATETYPE state_actual = OMX_StateMax;
 
 	if (!component)
 		return OMX_ErrorNone;
 
-	if(!component->handle)
+	if( ! component->handle)
 		return OMX_ErrorUndefined;
 
 	state_actual = omx_get_state(component);
@@ -253,13 +255,39 @@ OMX_ERRORTYPE omx_set_state(struct OMX_COMPONENT_T *component, OMX_STATETYPE sta
 		if(omx_err == OMX_ErrorSameState) {
 			omx_err = OMX_ErrorNone;
 		}
-		if (wait) {
+		if (timeout) {
 			omx_err = omx_wait_for_command_complete(component, OMX_CommandStateSet, state, timeout);
 		}
 	}
 
 	return omx_err;
 } // end omx_set_state
+
+
+int omx_get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event_ ) {
+	event_ = NULL;
+
+	if (component == NULL)
+		return -1;
+
+	pthread_mutex_lock(&component->event_queue_mutex);
+
+	if (queue_is_empty(&component->event_queue)) {
+		pthread_mutex_unlock(&component->event_queue_mutex);
+		return -1;
+	}
+
+	queue_dequeue(&component->event_queue, (void*)event_ );
+
+	if (queue_is_empty(&component->event_queue)) {
+		pthread_mutex_unlock(&component->event_queue_mutex);
+		return 0;
+	}
+
+	pthread_mutex_unlock(&component->event_queue_mutex);
+	return 1;
+} // end omx_get_event
+
 
 
 
@@ -287,7 +315,7 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 	}
 
 	// enable port but don't wait
-	omx_err = omx_enable_port(component, component->port, 0);
+	omx_err = omx_enable_port(component, 0);
 	if(omx_err != OMX_ErrorNone)
 		return omx_err;
 
@@ -317,7 +345,7 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 	return omx_err;
 } // end omx_alloc_buffers
 
-
+/*
 OMX_ERRORTYPE omx_free_buffers(OMX_COMPONENT_T *component) {
 	OMX_BUFFERHEADERTYPE *buf, *prev;
 	buf = component->buffers;
@@ -328,7 +356,7 @@ OMX_ERRORTYPE omx_free_buffers(OMX_COMPONENT_T *component) {
 	}
 	return OMX_ErrorNone;
 } // end omx_free_buffers
-
+*/
 
 
 
@@ -416,21 +444,21 @@ OMX_ERRORTYPE omx_init_audio_render_component(OMX_COMPONENT_T *component, char *
 	component->port = 100;
 
 	pthread_mutex_init (&component->comp_mutex, NULL);
-	pthread_mutex_init(&component->comp_evq_mutex, NULL);
+	pthread_mutex_init(&component->event_queue_mutex, NULL);
 
 	component->callbacks.EventHandler = omx_event_callback;
 	component->callbacks.EmptyBufferDone = omx_empty_buffer_done_callback;
-	component->callbacks.FillBufferDone = omx_fill_buffer_done_callback;
+	component->callbacks.FillBufferDone = NULL; //omx_fill_buffer_done_callback;
 
-	list_init(&component->buffer_list);
-	queue_init(&component->event_queue);
+	list_init(&component->buffer_list, free);
+	queue_init(&component->event_queue, free);
 
 	omx_err = OMX_GetHandle(&component->handle, compname, component, &component->callbacks);
 	if (omx_err != OMX_ErrorNone)
 		return omx_err;
 
 	omx_err = omx_disable_port(component, 5000);
-	if (omx_error != OMX_ErrorNone)
+	if (omx_err != OMX_ErrorNone)
 		return omx_err;
 
 	return OMX_ErrorNone;

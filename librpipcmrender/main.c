@@ -46,7 +46,7 @@ int main() {
 		printf("Failed to set volume\n");
 		return omx_err;
 	}
-	omx_free_buffers(&component, 100);
+	//omx_free_buffers(&component, 100);
 	return 0;
 }
 

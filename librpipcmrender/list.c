@@ -25,7 +25,7 @@ void               *data;
 
 while (list_size(list) > 0) {
 
-   if (list_rem_next(list, NULL, (void **)&data) == 0 && list->destroy !=
+   if (list_remove_next(list, NULL, (void **)&data) == 0 && list->destroy !=
       NULL) {
 
 
@@ -84,7 +84,7 @@ return 0;
 }
 
 
-int list_rem_next(LLIST_T *list, LLIST_ENTRY_T *element, void **data) {
+int list_remove_next(LLIST_T *list, LLIST_ENTRY_T *element, void **data) {
 
 LLIST_ENTRY_T           *old_element;
 
