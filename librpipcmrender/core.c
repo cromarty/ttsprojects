@@ -169,7 +169,7 @@ OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, uint64_t wait) {
 			return omx_err;
 
 		if(wait) {
-			omx_err = omx_wait_for_command_complete(component, OMX_CommandPortEnable, component->port, 1000);
+			omx_err = wait_for_command_complete(component, OMX_CommandPortEnable, component->port, 1000);
 		}
 	}
 
@@ -195,7 +195,7 @@ printf("After getting port definition\n");
 			return omx_err;
 printf("Before wait\n");
 		if(wait)
-			omx_err = omx_wait_for_command_complete(component, OMX_CommandPortDisable, component->port, 1000);
+			omx_err = wait_for_command_complete(component, OMX_CommandPortDisable, component->port, 1000);
 
 	}
 
@@ -243,7 +243,7 @@ OMX_ERRORTYPE omx_set_state(OMX_COMPONENT_T *component, OMX_STATETYPE state, uin
 			omx_err = OMX_ErrorNone;
 		}
 		if (timeout) {
-			omx_err = omx_wait_for_command_complete(component, OMX_CommandStateSet, state, timeout);
+			omx_err = wait_for_command_complete(component, OMX_CommandStateSet, state, timeout);
 		}
 	}
 
