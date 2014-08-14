@@ -33,6 +33,156 @@ static int min(int val1, int val2) {
 	return ( val1 < val2 ? val1 : val2 );
 } // end min 
 
+
+static char *error_type_string(OMX_ERRORTYPE omx_err) {
+	char *error_string = malloc(64);
+	switch(omx_err) {
+		case OMX_ErrorNone:
+			sprintf(error_string, "%s", "OMX_ErrorNone");
+			break;
+		case OMX_ErrorInsufficientResources:
+			sprintf(error_string, "%s", "OMX_ErrorInsufficientResources");
+			break;
+		case OMX_ErrorUndefined:
+			sprintf(error_string, "%s", "OMX_ErrorUndefined");
+			break;
+		case OMX_ErrorInvalidComponentName:
+			sprintf(error_string, "%s", "OMX_ErrorInvalidComponentName");
+			break;
+		case OMX_ErrorComponentNotFound:
+			sprintf(error_string, "%s", "OMX_ErrorComponentNotFound");
+			break;
+		case OMX_ErrorInvalidComponent:
+			sprintf(error_string, "%s", "OMX_ErrorInvalidComponent");
+			break;
+		case OMX_ErrorBadParameter:
+			sprintf(error_string, "%s", "OMX_ErrorBadParameter");
+			break;
+		case OMX_ErrorNotImplemented:
+			sprintf(error_string, "%s", "OMX_ErrorNotImplemented");
+			break;
+		case OMX_ErrorUnderflow:
+			sprintf(error_string, "%s", "OMX_ErrorUnderflow");
+			break;
+		case OMX_ErrorOverflow:
+			sprintf(error_string, "%s", "OMX_ErrorOverflow");
+			break;
+		case OMX_ErrorHardware:
+			sprintf(error_string, "%s", "OMX_ErrorHardware");
+			break;
+		case OMX_ErrorInvalidState:
+			sprintf(error_string, "%s", "OMX_ErrorInvalidState");
+			break;
+		case OMX_ErrorStreamCorrupt:
+			sprintf(error_string, "%s", "OMX_ErrorStreamCorrupt");
+			break;
+		case OMX_ErrorPortsNotCompatible:
+			sprintf(error_string, "%s", "OMX_ErrorPortsNotCompatible");
+			break;
+		case OMX_ErrorResourcesLost:
+			sprintf(error_string, "%s", "OMX_ErrorResourcesLost");
+			break;
+		case OMX_ErrorVersionMismatch:
+			sprintf(error_string, "%s", "OMX_ErrorVersionMismatch");
+			break;
+		case OMX_ErrorNotReady:
+			sprintf(error_string, "%s", "OMX_ErrorNotReady");
+			break;
+		case OMX_ErrorTimeout:
+			sprintf(error_string, "%s", "OMX_ErrorTimeout");
+			break;
+		case OMX_ErrorSameState:
+			sprintf(error_string, "%s", "OMX_ErrorSameState");
+			break;
+		case OMX_ErrorResourcesPreempted:
+			sprintf(error_string, "%s", "OMX_ErrorResourcesPreempted");
+			break;
+		case OMX_ErrorPortUnresponsiveDuringDeallocation:
+			sprintf(error_string, "%s", "OMX_ErrorPortUnresponsiveDuringDeallocation");
+			break;
+		case OMX_ErrorPortUnresponsiveDuringStop:
+			sprintf(error_string, "%s", "OMX_ErrorPortUnresponsiveDuringStop");
+			break;
+		case OMX_ErrorIncorrectStateTransition:
+			sprintf(error_string, "%s", "OMX_ErrorIncorrectStateTransition");
+			break;
+		case OMX_ErrorIncorrectStateOperation:
+			sprintf(error_string, "%s", "OMX_ErrorIncorrectStateOperation");
+			break;
+		case OMX_ErrorUnsupportedSetting:
+			sprintf(error_string, "%s", "OMX_ErrorUnsupportedSetting");
+			break;
+		case OMX_ErrorUnsupportedIndex:
+			sprintf(error_string, "%s", "OMX_ErrorUnsupportedIndex");
+			break;
+		case OMX_ErrorBadPortIndex:
+			sprintf(error_string, "%s", "OMX_ErrorBadPortIndex");
+			break;
+		case OMX_ErrorPortUnpopulated:
+			sprintf(error_string, "%s", "OMX_ErrorPortUnpopulated");
+			break;
+		case OMX_ErrorComponentSuspended:
+			sprintf(error_string, "%s", "OMX_ErrorComponentSuspended");
+			break;
+		case OMX_ErrorDynamicResourcesUnavailable:
+			sprintf(error_string, "%s", "OMX_ErrorDynamicResourcesUnavailable");
+			break;
+		case OMX_ErrorMbErrorsInFrame:
+			sprintf(error_string, "%s", "OMX_ErrorMbErrorsInFrame");
+			break;
+		case OMX_ErrorFormatNotDetected:
+			sprintf(error_string, "%s", "OMX_ErrorFormatNotDetected");
+			break;
+		case OMX_ErrorContentPipeOpenFailed:
+			sprintf(error_string, "%s", "OMX_ErrorContentPipeOpenFailed");
+			break;
+		case OMX_ErrorContentPipeCreationFailed:
+			sprintf(error_string, "%s", "OMX_ErrorContentPipeCreationFailed");
+			break;
+		case OMX_ErrorSeperateTablesUsed:
+			sprintf(error_string, "%s", "OMX_ErrorSeperateTablesUsed");
+			break;
+		case OMX_ErrorTunnelingUnsupported:
+			sprintf(error_string, "%s", "OMX_ErrorTunnelingUnsupported");
+			break;
+		case OMX_ErrorKhronosExtensions:
+			sprintf(error_string, "%s", "OMX_ErrorKhronosExtensions");
+			break;
+		case OMX_ErrorVendorStartUnused:
+			sprintf(error_string, "%s", "OMX_ErrorVendorStartUnused");
+			break;
+		case OMX_ErrorDiskFull:
+			sprintf(error_string, "%s", "OMX_ErrorDiskFull");
+			break;
+		case OMX_ErrorMaxFileSize:
+			sprintf(error_string, "%s", "OMX_ErrorMaxFileSize");
+			break;
+		case OMX_ErrorDrmUnauthorised:
+			sprintf(error_string, "%s", "OMX_ErrorDrmUnauthorised");
+			break;
+		case OMX_ErrorDrmExpired:
+			sprintf(error_string, "%s", "OMX_ErrorDrmExpired");
+			break;
+		case OMX_ErrorDrmGeneral:
+			sprintf(error_string, "%s", "OMX_ErrorDrmGeneral");
+			break;
+		case OMX_ErrorMax:
+			sprintf(error_string, "%s", "OMX_ErrorMax");
+			break;
+		default:
+			sprintf(error_string, "%s", "Other");
+	}
+	return error_string;
+} // end error_type_string
+
+
+
+
+
+
+
+
+
 static uint64_t time_now_microseconds() {
 	struct timespec now;
 	if (clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &now) == -1)
@@ -353,12 +503,20 @@ OMX_ERRORTYPE omx_free_buffers(OMX_COMPONENT_T *component) {
 
 
 
-OMX_ERRORTYPE omx_set_pcm_parameters(OMX_COMPONENT_T *component, int samplerate, int channels, int bitdepth, char *dest) {
+OMX_ERRORTYPE omx_set_pcm_parameters(
+	OMX_COMPONENT_T *component,
+	int samplerate,
+	int channels,
+	int bitdepth,
+	char *dest)
+{
 	OMX_AUDIO_PARAM_PCMMODETYPE pcm;
 	OMX_ERRORTYPE omx_err;
 	OMX_INIT_STRUCTURE(pcm);
 
-	pcm.nPortIndex = component->port;
+	debug_log(stdout, "Entered omx_set_pcm_parameters\n");
+
+	pcm.nPortIndex = 100; //component->port;
 	pcm.nChannels = channels;
 	pcm.eNumData = OMX_NumericalDataSigned;
 	pcm.eEndian = OMX_EndianLittle;
@@ -395,6 +553,7 @@ OMX_ERRORTYPE omx_set_pcm_parameters(OMX_COMPONENT_T *component, int samplerate,
 
 	omx_err = OMX_SetParameter(component->handle, OMX_IndexParamAudioPcm, &pcm);
 	if (omx_err != OMX_ErrorNone) {
+		debug_log(stdout, "Failed in OMX_SetParameter in omx_set_pcm_parameters. Error string: %s\n", error_type_string(omx_err));
 		return omx_err;
 	}
 
@@ -403,6 +562,7 @@ OMX_ERRORTYPE omx_set_pcm_parameters(OMX_COMPONENT_T *component, int samplerate,
 	strcpy ((char *) ar_dest.sName, dest);
 	omx_err = OMX_SetConfig(component->handle, OMX_IndexConfigBrcmAudioDestination, &ar_dest);
 	if (omx_err != OMX_ErrorNone) {
+		debug_log(stdout, "Failed in OMX_SetConfig setting audio destination in omx_set_pcm_parameters\n");
 		return omx_err;
 	}
 	return OMX_ErrorNone;
@@ -413,15 +573,17 @@ OMX_ERRORTYPE omx_set_volume(OMX_COMPONENT_T *component, unsigned int vol) {
 	OMX_ERRORTYPE omx_err;
 	OMX_AUDIO_CONFIG_VOLUMETYPE volume;
 	OMX_INIT_STRUCTURE (volume);
-
+	debug_log(stdout, "Entered omx_set_volume\n");
 	vol = min(100, vol);
 	volume.nPortIndex = component->port;
 	volume.sVolume.nValue = vol;
 
 	omx_err = OMX_SetParameter(component->handle, OMX_IndexConfigAudioVolume, &volume);
-	if (omx_err != OMX_ErrorNone)
+	if (omx_err != OMX_ErrorNone) {
+		debug_log(stdout, "Failed in OMX_SetParameter, inside omx_set_volume. Error string: %s\n", error_type_string(omx_err));
 		return omx_err;
-
+	}
+	debug_log(stdout, "Exit from omx_set_volume\n");
 	return OMX_ErrorNone;
 } // end omx_set_volume
 
