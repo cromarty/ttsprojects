@@ -25,6 +25,8 @@
 	(a).nVersion.s.nRevision = OMX_VERSION_REVISION; \
 	(a).nVersion.s.nStep = OMX_VERSION_STEP
 
+#define QUEUE_OTHER_EVENTS 0
+
 
 static int min(int val1, int val2) {
 	return ( val1 < val2 ? val1 : val2 );
@@ -39,73 +41,53 @@ static uint64_t time_now_microseconds() {
 } // end time_now_microseconds
 
 
-static OMX_ERRORTYPE omx_wait_for_command_complete(OMX_COMPONENT_T*component, OMX_U32 command, OMX_U32 nData2, uint64_t timeout) {
-		int queue_state;
+static OMX_ERRORTYPE wait_for_command_complete(OMX_COMPONENT_T*component, OMX_U32 command, OMX_U32 nData2, uint64_t timeout) {
+	int queue_state;
 	if (component == NULL)
 		return OMX_EventError;
 
-printf("In omx_wait_for_command_complete\n");
+	printf("In wait_for_command_complete\n");
+
 	uint64_t start_time = time_now_microseconds();
 
 	struct OMX_EVENT_T *event = malloc(sizeof(struct OMX_EVENT_T));
 	if (event == NULL)
 		return OMX_EventError;
 
-printf("Before do loop\n");
-// we can't just exit if the event queue is empty until the timeout is exceeded
+	printf("Before do loop\n");
+
+	// We can't just exit if the event queue is empty until the timeout is exceeded.
+	// This is because the event might arrive in the queue while we're in this loop
 	do {
-		queue_state = omx_get_event(component, event);
- if (queue_state > -1) {
+		queue_state = get_event(component, event, &component->command_complete_event_queue);
+		if (queue_state > -1) {
 			if (event) {
 printf("We have an event in the do loop\n");
 return OMX_ErrorNone;
-			} // if (event)
-		} // if (omxGetEvent(component, &event) > -1)
+			} // if event
+		} // end if get_event
 	} while (((time_now_microseconds() - start_time) < timeout) || (event != NULL));
-printf("After do loop\n");
+
+	printf("After do loop in get_event\n");
+
 	return OMX_ErrorTimeout;
-} // end omx_wait_for_command_complete
+} // end wait_for_command_complete
 
 
-OMX_ERRORTYPE omx_event_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_EVENTTYPE event_, OMX_U32 data1, OMX_U32 data2, OMX_PTR event_data) {
+OMX_ERRORTYPE omx_event_callback(
+	OMX_HANDLETYPE hcomponent,
+	OMX_PTR app_data,
+	OMX_EVENTTYPE event_,
+	OMX_U32 data1,
+	OMX_U32 data2,
+	OMX_PTR event_data)
+{
+
 	if (app_data == NULL)
 		return OMX_ErrorNone;
 
 	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
-	const char *event_str;
-
-	switch (event_) {
-		case OMX_EventCmdComplete: 
-			switch(data1) {
-			case OMX_CommandStateSet: event_str = "OMX_EventCmdComplete: cmd=OMX_CommandStateSet"; break;
-			case OMX_CommandFlush: event_str = "OMX_EventCmdComplete: cmd=OMX_CommandFlush"; break;
-			case OMX_CommandPortDisable: event_str = "OMX_EventCmdComplete: cmd=OMX_CommandPortDisable"; break;
-			case OMX_CommandPortEnable: event_str = "OMX_EventCmdComplete: cmd=OMX_CommandPortEnable"; break;
-			case OMX_CommandMarkBuffer: event_str = "OMX_EventCmdComplete: cmd=OMX_CommandMarkBuffer"; break;
-			default:
-				event_str = "OMX_EventCmdComplete: cmd=??";
-			} 
-			break;	
-		case OMX_EventError: event_str = "OMX_EventError"; 
-				//omxShowState(component);
-				break;	
-		case OMX_EventMark: event_str = "OMX_EventMark"; break;	
-		case OMX_EventPortSettingsChanged: 
-			event_str = "OMX_EventPortSettingsChanged";
-			break;	
-		case OMX_EventBufferFlag: event_str = "OMX_EventBufferFlag"; break;	
-		case OMX_EventResourcesAcquired: event_str = "OMX_EventResourcesAcquired"; break;	
-		case OMX_EventComponentResumed: event_str = "OMX_EventComponentResumed"; break;	
-		case OMX_EventDynamicResourcesAvailable: event_str = "OMX_EventDynamicResourcesAvailable"; break;	
-		case OMX_EventPortFormatDetected: event_str = "OMX_EventPortFormatDetected"; break;	
-		case OMX_EventKhronosExtensions: event_str = "OMX_EventKhronosExtensions"; break;	
-		case OMX_EventVendorStartUnused: event_str = "OMX_EventVendorStartUnused"; break;	
-		case OMX_EventParamOrConfigChanged: event_str = "OMX_EventParamOrConfigChanged"; break;
-		default:	
-			event_str = "Unknown OMX event";
-			break;
-	}
-printf("Event: %s\n", event_str);
+	//const char *event_str;
 
 	struct OMX_EVENT_T *event = malloc(sizeof(struct OMX_EVENT_T));
 	if (event == NULL)
@@ -115,29 +97,27 @@ printf("Event: %s\n", event_str);
 	event->data1 = data1;
 	event->data2 = data2;
 	event->event_data = event_data;
-printf("About to queue event\n");
-		queue_enqueue(&component->event_queue, (void*)event);
-printf("About to leave event callback\n");
+
+	switch (event_) {
+		case OMX_EventCmdComplete: 
+			queue_enqueue(&component->command_complete_event_queue, (void*)event);
+			break;
+		default:
+			if (QUEUE_OTHER_EVENTS)
+				queue_enqueue(&component->other_event_queue, (void*)event);
+	}
+
 	return OMX_ErrorNone;
 } // end omx_event_callback
 
 OMX_ERRORTYPE omx_empty_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_BUFFERHEADERTYPE *buffer) {
 	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
-
 	if (component) {
 		//pthread_mutex_lock(&component->inputMutex);
 
 		buffer->nFilledLen = 0;
 		buffer->nOffset = 0;
-/*
-		if (component->inputBufferHdr == NULL) {
-			component->inputBufferHdr = createSimpleListItem(pBuffer);
-			component->inputBufferHdrEnd = component->inputBufferHdr;
-		} else {
-			addObjectToSimpleList(component->inputBufferHdrEnd, pBuffer);
-			component->inputBufferHdrEnd = component->inputBufferHdrEnd->next;
-		}
-*/
+
 		//pthread_cond_broadcast(&component->inputBufferCond);
 		//pthread_mutex_unlock(&component->inputMutex);
 	}
@@ -145,6 +125,7 @@ OMX_ERRORTYPE omx_empty_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR 
 	return OMX_ErrorNone;
 
 } // end omx_empty_buffer_done_callback
+
 /*
 OMX_ERRORTYPE omx_fill_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_BUFFERHEADERTYPE* buffer) {
 	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
@@ -270,34 +251,32 @@ OMX_ERRORTYPE omx_set_state(OMX_COMPONENT_T *component, OMX_STATETYPE state, uin
 } // end omx_set_state
 
 
-int omx_get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event_ ) {
-printf("In omx_get_event\n");
+static int get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event_, QUEUE_T *event_queue);
+	printf("In get_event\n");
 
 	pthread_mutex_lock(&component->event_queue_mutex);
 
-	if (queue_is_empty(&component->event_queue)) {
-printf("Queue is empty at entry to omx_get_event\n");
-pthread_mutex_unlock(&component->event_queue_mutex);
-event_ = NULL;
+	if (queue_is_empty(event_queue)) {
+		printf("Queue is empty at entry to get_event\n");
+		pthread_mutex_unlock(&component->event_queue_mutex);
+		event_ = NULL;
 		return -1;
 	}
 
-printf("About to dequeue event\n");
-	queue_dequeue(&component->event_queue, (void*)event_ );
-printf("After dequeue event\n");
+	printf("About to dequeue event\n");
+	queue_dequeue(event_queue, (void*)event_ );
+	printf("After dequeue event\n");
 
-	if (queue_is_empty(&component->event_queue)) {
+	if (queue_is_empty(event_queue)) {
 		pthread_mutex_unlock(&component->event_queue_mutex);
 		return 0;
 	}
 
 	pthread_mutex_unlock(&component->event_queue_mutex);
-printf("About to exit omx_get_event\n");
+	printf("About to exit get_event\n");
 	return 1; // there are more events in the queue
 
-} // end omx_get_event
-
-
+} // end get_event
 
 
 
@@ -460,7 +439,8 @@ OMX_ERRORTYPE omx_init_audio_render_component(OMX_COMPONENT_T *component, char *
 	component->callbacks.FillBufferDone = NULL; //omx_fill_buffer_done_callback;
 
 	list_init(&component->buffer_list, free);
-	queue_init(&component->event_queue, free);
+	queue_init(&component->command_complete_event_queue);
+	queue_init(&component->other_event_queue);
 printf("Successfully initialised list and queue\n");
 
 	omx_err = OMX_GetHandle(&component->handle, compname, component, &component->callbacks);
