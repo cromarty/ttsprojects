@@ -327,7 +327,7 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 	} // end for
 
 	// now wait for the enable command to complete
-	omx_err = omx_wait_for_command_complete(component, OMX_CommandPortEnable, component->port, 50000); 
+	omx_err = wait_for_command_complete(component, OMX_CommandPortEnable, component->port, 50000); 
 	if(omx_err != OMX_ErrorNone)
 		return omx_err;
 
@@ -440,8 +440,8 @@ OMX_ERRORTYPE omx_init_audio_render_component(OMX_COMPONENT_T *component, char *
 	component->callbacks.FillBufferDone = NULL; //omx_fill_buffer_done_callback;
 
 	list_init(&component->buffer_list, free);
-	queue_init(&component->command_complete_event_queue);
-	queue_init(&component->other_event_queue);
+	queue_init(&component->command_complete_event_queue, free);
+	queue_init(&component->other_event_queue, free);
 printf("Successfully initialised list and queue\n");
 
 	omx_err = OMX_GetHandle(&component->handle, compname, component, &component->callbacks);
