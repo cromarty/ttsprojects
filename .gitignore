@@ -6,6 +6,9 @@ lex.yy.c
 *.tab.c
 *.tab.h
 
+# ignore *.o
+*.o
+
 # my usual nonsense
 res
 res.bat
