@@ -11,7 +11,7 @@ lex.yy.c
 
 # my usual nonsense
 res
-res.bat
+*.bat
 *.zip
 *.log
 
