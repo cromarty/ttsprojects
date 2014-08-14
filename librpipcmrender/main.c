@@ -31,6 +31,7 @@ int main() {
 		printf("Failed in omx_init_audio_render_component\n");
 		return omx_err;
 	}
+/*
 	omx_err = omx_set_pcm_parameters(&component, 22050, 1, 24, "local");
 	if (omx_err != OMX_ErrorNone) {
 		printf("Failed to set pcm parameters\n");
@@ -47,6 +48,7 @@ int main() {
 		return omx_err;
 	}
 	//omx_free_buffers(&component, 100);
+*/
 	return 0;
 }
 

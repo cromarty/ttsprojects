@@ -40,25 +40,29 @@ static uint64_t time_now_microseconds() {
 
 
 static OMX_ERRORTYPE omx_wait_for_command_complete(OMX_COMPONENT_T*component, OMX_U32 command, OMX_U32 nData2, uint64_t timeout) {
+		int queue_state;
 	if (component == NULL)
 		return OMX_EventError;
 
+printf("In omx_wait_for_command_complete\n");
 	uint64_t start_time = time_now_microseconds();
 
-	struct OMX_EVENT_T *event = NULL;
-	//const char *event_str;
+	struct OMX_EVENT_T *event = malloc(sizeof(struct OMX_EVENT_T));
+	if (event == NULL)
+		return OMX_EventError;
 
+printf("Before do loop\n");
+// we can't just exit if the event queue is empty until the timeout is exceeded
 	do {
-		if (event != NULL) {
-			free(event);
-		}
-		if (omx_get_event(component, event) > -1) {
+		queue_state = omx_get_event(component, event);
+ if (queue_state > -1) {
 			if (event) {
-				//arse(event->eEvent);
+printf("We have an event in the do loop\n");
+return OMX_ErrorNone;
 			} // if (event)
 		} // if (omxGetEvent(component, &event) > -1)
 	} while (((time_now_microseconds() - start_time) < timeout) || (event != NULL));
-
+printf("After do loop\n");
 	return OMX_ErrorTimeout;
 } // end omx_wait_for_command_complete
 
@@ -101,7 +105,7 @@ OMX_ERRORTYPE omx_event_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OM
 			event_str = "Unknown OMX event";
 			break;
 	}
-
+printf("Event: %s\n", event_str);
 
 	struct OMX_EVENT_T *event = malloc(sizeof(struct OMX_EVENT_T));
 	if (event == NULL)
@@ -111,7 +115,9 @@ OMX_ERRORTYPE omx_event_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OM
 	event->data1 = data1;
 	event->data2 = data2;
 	event->event_data = event_data;
+printf("About to queue event\n");
 		queue_enqueue(&component->event_queue, (void*)event);
+printf("About to leave event callback\n");
 	return OMX_ErrorNone;
 } // end omx_event_callback
 
@@ -193,20 +199,20 @@ OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, uint64_t wait) {
 
 OMX_ERRORTYPE omx_disable_port(OMX_COMPONENT_T *component, uint64_t wait) {
 	OMX_ERRORTYPE omx_err = OMX_ErrorNone;
-
+printf("In omx_disable_port\n");
 	OMX_PARAM_PORTDEFINITIONTYPE portdef;
 	OMX_INIT_STRUCTURE(portdef);
 	portdef.nPortIndex = component->port;
-
+printf("About to get port definition\n");
 	omx_err = OMX_GetParameter(component->handle, OMX_IndexParamPortDefinition, &portdef);
 	if (omx_err != OMX_ErrorNone)
 		return omx_err;
-
+printf("After getting port definition\n");
 	if(portdef.bEnabled == OMX_TRUE) {
 		omx_err = OMX_SendCommand(component->handle, OMX_CommandPortDisable, component->port, NULL);
 		if(omx_err != OMX_ErrorNone)
 			return omx_err;
-
+printf("Before wait\n");
 		if(wait)
 			omx_err = omx_wait_for_command_complete(component, OMX_CommandPortDisable, component->port, 1000);
 
@@ -265,19 +271,20 @@ OMX_ERRORTYPE omx_set_state(OMX_COMPONENT_T *component, OMX_STATETYPE state, uin
 
 
 int omx_get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event_ ) {
-	event_ = NULL;
-
-	if (component == NULL)
-		return -1;
+printf("In omx_get_event\n");
 
 	pthread_mutex_lock(&component->event_queue_mutex);
 
 	if (queue_is_empty(&component->event_queue)) {
-		pthread_mutex_unlock(&component->event_queue_mutex);
+printf("Queue is empty at entry to omx_get_event\n");
+pthread_mutex_unlock(&component->event_queue_mutex);
+event_ = NULL;
 		return -1;
 	}
 
+printf("About to dequeue event\n");
 	queue_dequeue(&component->event_queue, (void*)event_ );
+printf("After dequeue event\n");
 
 	if (queue_is_empty(&component->event_queue)) {
 		pthread_mutex_unlock(&component->event_queue_mutex);
@@ -285,7 +292,9 @@ int omx_get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event_ ) {
 	}
 
 	pthread_mutex_unlock(&component->event_queue_mutex);
-	return 1;
+printf("About to exit omx_get_event\n");
+	return 1; // there are more events in the queue
+
 } // end omx_get_event
 
 
@@ -325,7 +334,7 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 
 	for (i = 0; i < portdef.nBufferCountActual; i++) {
 		OMX_BUFFERHEADERTYPE *buffer = NULL;
-		omx_err = OMX_AllocateBuffer(component->handle, &buffer, component->port, NULL, portdef.nBufferSize);
+		omx_err = OMX_AllocateBuffer(component->handle, &buffer, component->port, NULL, component->buffer_size);
 		if(omx_err != OMX_ErrorNone)
 			return omx_err;
 
@@ -334,7 +343,7 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 		buffer->nOffset = 0;
 		buffer->pAppPrivate = (void*)i; 
 
-		//component->buffer_hdr_end = component->buffer_hdr_end->next;
+		list_append(&component->buffer_list, (void*)buffer);
 	} // end for
 
 	// now wait for the enable command to complete
@@ -452,10 +461,12 @@ OMX_ERRORTYPE omx_init_audio_render_component(OMX_COMPONENT_T *component, char *
 
 	list_init(&component->buffer_list, free);
 	queue_init(&component->event_queue, free);
+printf("Successfully initialised list and queue\n");
 
 	omx_err = OMX_GetHandle(&component->handle, compname, component, &component->callbacks);
 	if (omx_err != OMX_ErrorNone)
 		return omx_err;
+printf("After GetHandle\n"); 
 
 	omx_err = omx_disable_port(component, 5000);
 	if (omx_err != OMX_ErrorNone)
