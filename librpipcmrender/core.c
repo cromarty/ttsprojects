@@ -41,6 +41,36 @@ static uint64_t time_now_microseconds() {
 } // end time_now_microseconds
 
 
+
+static int get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event_, QUEUE_T *event_queue) {
+	printf("In get_event\n");
+
+	pthread_mutex_lock(&component->event_queue_mutex);
+
+	if (queue_is_empty(event_queue)) {
+		printf("Queue is empty at entry to get_event\n");
+		pthread_mutex_unlock(&component->event_queue_mutex);
+		event_ = NULL;
+		return -1;
+	}
+
+	printf("About to dequeue event\n");
+	queue_dequeue(event_queue, (void*)event_ );
+	printf("After dequeue event\n");
+
+	if (queue_is_empty(event_queue)) {
+		pthread_mutex_unlock(&component->event_queue_mutex);
+		return 0;
+	}
+
+	pthread_mutex_unlock(&component->event_queue_mutex);
+	printf("About to exit get_event\n");
+	return 1; // there are more events in the queue
+
+} // end get_event
+
+
+
 static OMX_ERRORTYPE wait_for_command_complete(OMX_COMPONENT_T*component, OMX_U32 command, OMX_U32 nData2, uint64_t timeout) {
 	int queue_state;
 	if (component == NULL)
@@ -249,35 +279,6 @@ OMX_ERRORTYPE omx_set_state(OMX_COMPONENT_T *component, OMX_STATETYPE state, uin
 
 	return omx_err;
 } // end omx_set_state
-
-
-static int get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event_, QUEUE_T *event_queue);
-	printf("In get_event\n");
-
-	pthread_mutex_lock(&component->event_queue_mutex);
-
-	if (queue_is_empty(event_queue)) {
-		printf("Queue is empty at entry to get_event\n");
-		pthread_mutex_unlock(&component->event_queue_mutex);
-		event_ = NULL;
-		return -1;
-	}
-
-	printf("About to dequeue event\n");
-	queue_dequeue(event_queue, (void*)event_ );
-	printf("After dequeue event\n");
-
-	if (queue_is_empty(event_queue)) {
-		pthread_mutex_unlock(&component->event_queue_mutex);
-		return 0;
-	}
-
-	pthread_mutex_unlock(&component->event_queue_mutex);
-	printf("About to exit get_event\n");
-	return 1; // there are more events in the queue
-
-} // end get_event
-
 
 
 OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
