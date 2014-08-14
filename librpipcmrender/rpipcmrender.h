@@ -16,7 +16,8 @@ typedef struct {
 	OMX_U32 buffer_size;
 	OMX_CALLBACKTYPE callbacks;
 	LLIST_T buffer_list;
-	QUEUE_T event_queue;
+	QUEUE_T command_complete_event_queue;
+	QUEUE_T other_event_queue;
 	pthread_mutex_t comp_mutex;
 	pthread_mutex_t event_queue_mutex;
 } OMX_COMPONENT_T;
