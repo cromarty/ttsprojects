@@ -28,6 +28,7 @@
 
 #define QUEUE_OTHER_EVENTS 0
 
+/* start of static functions */
 
 static int max(int val1, int val2) {
 	return (val1 > val2 ? val1 : val2);
@@ -134,6 +135,9 @@ return OMX_ErrorNone;
 	return OMX_ErrorTimeout;
 } // end wait_for_command_complete
 
+/* end of static functions */
+
+/* start of public functions */
 
 void omx_errortype_string(OMX_ERRORTYPE omx_err, char *error_str) {
 	switch(omx_err) {
@@ -323,7 +327,6 @@ OMX_ERRORTYPE omx_event_callback(
 		return OMX_ErrorNone;
 
 	AUDIO_COMPONENT_T *component = (AUDIO_COMPONENT_T *)app_data;
-	//const char *event_str;
 
 	struct OMX_EVENT_T *event = malloc(sizeof(struct OMX_EVENT_T));
 	if (event == NULL)
@@ -364,35 +367,8 @@ OMX_ERRORTYPE omx_empty_buffer_done_callback(
 	}
 
 	return OMX_ErrorNone;
-
 } // end omx_empty_buffer_done_callback
 
-/*
-OMX_ERRORTYPE omx_fill_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_BUFFERHEADERTYPE* buffer) {
-	AUDIO_COMPONENT_T *component = (AUDIO_COMPONENT_T *)app_data;
-
-	if (component) {
-		pthread_mutex_lock(&component->inputMutex);
-		buffer->nFilledLen      = 0;
-		buffer->nOffset         = 0;
-
-		if (component->inputBufferHdr == NULL) {
-			component->inputBufferHdr = createSimpleListItem(pBuffer);
-			component->inputBufferHdrEnd = component->inputBufferHdr;
-		} else {
-			addObjectToSimpleList(component->inputBufferHdrEnd, pBuffer);
-			component->inputBufferHdrEnd = component->inputBufferHdrEnd->next;
-		}
-
-		pthread_cond_broadcast(&component->inputBufferCond);
-
-		pthread_mutex_unlock(&component->inputMutex);
-	}
-
-	return OMX_ErrorNone;
-
-} // end omx_fill_buffer_done_callback
-*/
 
 
 OMX_ERRORTYPE omx_enable_port(AUDIO_COMPONENT_T *component, uint64_t wait) {
@@ -416,6 +392,7 @@ OMX_ERRORTYPE omx_enable_port(AUDIO_COMPONENT_T *component, uint64_t wait) {
 
 	return omx_err;
 } // end omx_enable_port
+
 
 
 
@@ -466,7 +443,10 @@ OMX_STATETYPE omx_get_state(AUDIO_COMPONENT_T *component) {
 
 OMX_ERRORTYPE omx_set_state(AUDIO_COMPONENT_T *component, OMX_STATETYPE state, uint64_t timeout) {
 	OMX_ERRORTYPE omx_err = OMX_ErrorNone;
+
 	OMX_STATETYPE state_actual = OMX_StateMax;
+
+	debug_log(stdout, "Entered omx_set_state\n");
 
 	if (!component)
 		return OMX_ErrorNone;
@@ -475,21 +455,26 @@ OMX_ERRORTYPE omx_set_state(AUDIO_COMPONENT_T *component, OMX_STATETYPE state, u
 		return OMX_ErrorUndefined;
 
 	state_actual = omx_get_state(component);
-	if(state == state_actual)
+	if(state == state_actual) {
+		debug_log(stdout, "Component is already at requested state in omx_set_state\n");
 		return OMX_ErrorNone;
+	}
 
 	omx_err = OMX_SendCommand(component->handle, OMX_CommandStateSet, state, NULL);
 	if (omx_err != OMX_ErrorNone) {
 		if(omx_err == OMX_ErrorSameState) {
+			debug_log(stdout, "OMX_SendCommand to set state returned OMX_ErrorSameState in omx_set_state\n");
 			omx_err = OMX_ErrorNone;
 		}
 		if (timeout) {
+			debug_log(stdout, "Waiting for command completion in omx_set_state\n");
 			omx_err = wait_for_command_complete(component, OMX_CommandStateSet, state, timeout);
 		}
 	}
-
+	debug_log(stdout, "Exit from omx_set_state\n");
 	return omx_err;
 } // end omx_set_state
+
 
 
 OMX_ERRORTYPE omx_alloc_buffers(AUDIO_COMPONENT_T *component) {
@@ -523,6 +508,7 @@ if (omx_err != OMX_ErrorNone) {
 	}
 
 	debug_log(stdout, "\nnBufferCountActual: %d\nnBufferSize: %d\n\n", portdef.nBufferCountActual, portdef.nBufferSize);
+
 	if(omx_get_state(component) != OMX_StateIdle) {
 		if(omx_get_state(component) != OMX_StateLoaded)
 			omx_set_state(component, OMX_StateLoaded, 5000);
@@ -571,6 +557,7 @@ if (omx_err != OMX_ErrorNone) {
 
 	return omx_err;
 } // end omx_alloc_buffers
+
 
 
 OMX_ERRORTYPE omx_free_buffers(AUDIO_COMPONENT_T *component) {
@@ -720,4 +707,22 @@ OMX_ERRORTYPE omx_free_pcm_render_component(AUDIO_COMPONENT_T *component) {
 	return omx_err;
 } // end omx_free_pcm_render_component
 
+#arse
+
+OMX_ERRORTYPE omx_port_state(AUDIO_COMPONENT_T *component, int *port_state) {
+	OMX_ERRORTYPE omx_err;
+
+	OMX_PARAM_PORTDEFINITIONTYPE portdef;
+	OMX_INIT_STRUCTURE(portdef);
+	portdef.nPortIndex = component->port;
+
+	omx_err = OMX_GetParameter(component->handle, OMX_IndexParamPortDefinition, &portdef);
+	if (omx_err != OMX_ErrorNone) {
+		debug_log(stdout, "Failed to get portdef in omx_port_state\n");
+		return omx_err;
+	}
+
+	*port_enabled = (portdef.bEnabled ? 1 : 0 ); 
+	return OMX_ErrorNone;
+} // end omx_port_state
 
