@@ -57,7 +57,8 @@ printf("Size of free buffer queue after allocation: %d\n", queue_size(&component
 	omx_free_buffers(&component);
 printf("Size of buffer list: %d\n", list_size(&component.buffer_list));
 printf("Size of free buffer queue: %d\n", queue_size(&component.free_buffer_queue));
-
+printf("Size of comand complete event queue: %d\n", queue_size(&component.command_complete_event_queue));
+printf("Size of other event queue: %d\n", queue_size(&component.other_event_queue));
 	return 0;
 }
 
