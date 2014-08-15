@@ -41,7 +41,7 @@ OMX_ERRORTYPE omx_alloc_buffers(AUDIO_COMPONENT_T *component);
 OMX_ERRORTYPE omx_free_buffers(AUDIO_COMPONENT_T *component);
 OMX_ERRORTYPE omx_set_pcm_parameters(AUDIO_COMPONENT_T *component, int samplerate, int channels, int bitdepth, char *dest);
 OMX_ERRORTYPE omx_set_volume(AUDIO_COMPONENT_T *component, unsigned int vol);
-OMX_ERRORTYPE omx_init_audio_render_component(AUDIO_COMPONENT_T *component, char *compname);
+OMX_ERRORTYPE omx_init_audio_render_component(AUDIO_COMPONENT_T *component, char *compname, int buffers_requested, int buffer_size_requested);
 
 #endif
 

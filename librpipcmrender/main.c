@@ -28,7 +28,7 @@ int main() {
 		return omx_err;
 	}
 
-	omx_err = omx_init_audio_render_component(&component, "OMX.broadcom.audio_render");
+	omx_err = omx_init_audio_render_component(&component, "OMX.broadcom.audio_render", 3, 2048);
 	if (omx_err != OMX_ErrorNone) {
 		debug_log(stdout,"Failed in omx_init_audio_render_component\n");
 		return omx_err;
@@ -46,6 +46,8 @@ debug_log(stdout, "After init audio component\n");
 		debug_log(stdout,"Failed to allocate buffers\n");
 		return omx_err;
 	}
+printf("Size of buffer list after allocation: %d\n", list_size(&component.buffer_list));
+printf("Size of free buffer queue after allocation: %d\n", queue_size(&component.free_buffer_queue));
 
 	omx_err = omx_set_volume(&component, 100);
 	if (omx_err != OMX_ErrorNone) {
@@ -53,6 +55,8 @@ debug_log(stdout, "After init audio component\n");
 		return omx_err;
 	}
 	omx_free_buffers(&component);
+printf("Size of buffer list: %d\n", list_size(&component.buffer_list));
+printf("Size of free buffer queue: %d\n", queue_size(&component.free_buffer_queue));
 
 	return 0;
 }

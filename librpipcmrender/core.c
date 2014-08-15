@@ -29,6 +29,10 @@
 #define QUEUE_OTHER_EVENTS 0
 
 
+static int max(int val1, int val2) {
+	return (val1 > val2 ? val1 : val2);
+} // end max
+
 static int min(int val1, int val2) {
 	return ( val1 < val2 ? val1 : val2 );
 } // end min 
@@ -465,6 +469,16 @@ OMX_ERRORTYPE omx_alloc_buffers(AUDIO_COMPONENT_T *component) {
 		return omx_err;
 	}
 
+	portdef.nBufferCountActual = max(component->buffer_count, portdef.nBufferCountActual);
+	portdef.nBufferSize = max(component->buffer_size, portdef.nBufferSize);
+
+	omx_err = OMX_SetParameter(component->handle, OMX_IndexParamPortDefinition, &portdef);
+if (omx_err != OMX_ErrorNone) {
+		debug_log(stdout, "Failed to set portdef params\n");
+		return omx_err;
+	}
+
+	debug_log(stdout, "\nnBufferCountActual: %d\nnBufferSize: %d\n\n", portdef.nBufferCountActual, portdef.nBufferSize);
 	if(omx_get_state(component) != OMX_StateIdle) {
 		if(omx_get_state(component) != OMX_StateLoaded)
 			omx_set_state(component, OMX_StateLoaded, 5000);
@@ -515,6 +529,7 @@ OMX_ERRORTYPE omx_alloc_buffers(AUDIO_COMPONENT_T *component) {
 
 OMX_ERRORTYPE omx_free_buffers(AUDIO_COMPONENT_T *component) {
 	list_destroy(&component->buffer_list);
+	queue_destroy(&component->free_buffer_queue);
 	return OMX_ErrorNone;
 } // end omx_free_buffers
 
@@ -610,11 +625,13 @@ OMX_ERRORTYPE omx_set_volume(AUDIO_COMPONENT_T *component, unsigned int vol) {
 
 
 
-OMX_ERRORTYPE omx_init_audio_render_component(AUDIO_COMPONENT_T *component, char *compname) {
+OMX_ERRORTYPE omx_init_audio_render_component(AUDIO_COMPONENT_T *component, char *compname, int buffers_requested, int buffer_size_requested) {
 	OMX_ERRORTYPE omx_err;
 	memset (component, 0, sizeof(AUDIO_COMPONENT_T));
 
 	component->port = 100;
+	component->buffer_count = buffers_requested;
+	component->buffer_size = (max(0, buffer_size_requested) + 15) & ~15;
 
 	pthread_mutex_init (&component->comp_mutex, NULL);
 	pthread_mutex_init(&component->event_queue_mutex, NULL);
