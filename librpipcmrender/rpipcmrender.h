@@ -37,6 +37,7 @@ OMX_ERRORTYPE omx_free_pcm_render_component(AUDIO_COMPONENT_T *component);
 OMX_ERRORTYPE omx_free_pcm_render_component(AUDIO_COMPONENT_T *component);
 void omx_errortype_string(OMX_ERRORTYPE omx_err, char *error_str);
 void omx_state_string(AUDIO_COMPONENT_T *component, char *state_str);
+void omx_commandtype_string(OMX_COMMANDTYPE cmd, char *command_str);
 OMX_ERRORTYPE omx_enable_port(AUDIO_COMPONENT_T *component, uint64_t wait);
 OMX_ERRORTYPE omx_disable_port(AUDIO_COMPONENT_T *component, uint64_t wait);
 OMX_STATETYPE omx_get_state(AUDIO_COMPONENT_T *component);

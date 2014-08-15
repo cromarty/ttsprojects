@@ -28,6 +28,9 @@
 
 #define QUEUE_OTHER_EVENTS 0
 
+/* start of global vars */
+char debug_str[128];
+
 /* start of static functions */
 
 static int max(int val1, int val2) {
@@ -80,7 +83,6 @@ static int get_event(AUDIO_COMPONENT_T *component, struct OMX_EVENT_T *event_, Q
 
 	debug_log(stdout, "About to dequeue event\n");
 	queue_dequeue(event_queue, (void*)event_ );
-	debug_log(stdout, "After dequeue event\n");
 
 	if (queue_is_empty(event_queue)) {
 		pthread_mutex_unlock(&component->event_queue_mutex);
@@ -105,7 +107,8 @@ static OMX_ERRORTYPE wait_for_command_complete(
 	if (component == NULL)
 		return OMX_EventError;
 
-	debug_log(stdout, "In wait_for_command_complete\n");
+	omx_commandtype_string(command, debug_str);
+	debug_log(stdout, "Entered wait_for_command_complete. Waiting for: %s\n", debug_str);
 
 	uint64_t start_time = time_now_microseconds();
 	uint64_t time_since_start;
@@ -128,7 +131,6 @@ return OMX_ErrorNone;
 		} // end if get_event
 		time_since_start = (time_now_microseconds() - start_time);
 	} while (time_since_start < timeout);
-	//} while ((time_since_start < timeout) || (event != NULL));
 
 	debug_log(stdout, "After do loop in get_event\n");
 
@@ -310,6 +312,29 @@ void omx_state_string(AUDIO_COMPONENT_T *component, char *state_str) {
 
 	return;
 } // end omx_state_string
+
+void omx_commandtype_string(OMX_COMMANDTYPE cmd, char *command_str) {
+	switch(cmd) {
+		case OMX_CommandStateSet:
+			sprintf(command_str, "%s", "Change the component state");
+			break;
+		case OMX_CommandFlush:
+			sprintf(command_str, "%s", "Flush the data queue(s) of a component");
+			break;
+		case OMX_CommandPortDisable:
+			sprintf(command_str, "%s", "Disable a port on a component");
+			break;
+		case OMX_CommandPortEnable:
+			sprintf(command_str, "%s", "Enable a port on a component");
+			break;
+		case OMX_CommandMarkBuffer:
+			sprintf(command_str, "%s", "Mark a component/buffer for observation");
+			break;
+		default:
+			sprintf(command_str, "%s", "_DEFAULT_");
+	}
+	return;
+} // end omx_commandtype_string
 
 
 
@@ -707,7 +732,7 @@ OMX_ERRORTYPE omx_free_pcm_render_component(AUDIO_COMPONENT_T *component) {
 	return omx_err;
 } // end omx_free_pcm_render_component
 
-#arse
+
 
 OMX_ERRORTYPE omx_port_state(AUDIO_COMPONENT_T *component, int *port_state) {
 	OMX_ERRORTYPE omx_err;
@@ -722,7 +747,7 @@ OMX_ERRORTYPE omx_port_state(AUDIO_COMPONENT_T *component, int *port_state) {
 		return omx_err;
 	}
 
-	*port_enabled = (portdef.bEnabled ? 1 : 0 ); 
+	*port_state = (portdef.bEnabled ? 1 : 0 ); 
 	return OMX_ErrorNone;
 } // end omx_port_state
 
