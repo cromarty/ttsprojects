@@ -94,7 +94,12 @@ static int get_event(AUDIO_COMPONENT_T *component, struct OMX_EVENT_T *event_, Q
 
 
 
-static OMX_ERRORTYPE wait_for_command_complete(AUDIO_COMPONENT_T*component, OMX_U32 command, OMX_U32 nData2, uint64_t timeout) {
+static OMX_ERRORTYPE wait_for_command_complete(
+	AUDIO_COMPONENT_T*component,
+	OMX_U32 command,
+	OMX_U32 nData2,
+	uint64_t timeout)
+{
 	int queue_state;
 	if (component == NULL)
 		return OMX_EventError;
@@ -102,6 +107,7 @@ static OMX_ERRORTYPE wait_for_command_complete(AUDIO_COMPONENT_T*component, OMX_
 	debug_log(stdout, "In wait_for_command_complete\n");
 
 	uint64_t start_time = time_now_microseconds();
+	uint64_t time_since_start;
 
 	struct OMX_EVENT_T *event = malloc(sizeof(struct OMX_EVENT_T));
 	if (event == NULL)
@@ -119,7 +125,9 @@ debug_log(stdout, "We have an event in the do loop\n");
 return OMX_ErrorNone;
 			} // if event
 		} // end if get_event
-	} while (((time_now_microseconds() - start_time) < timeout) || (event != NULL));
+		time_since_start = (time_now_microseconds() - start_time);
+	} while (time_since_start < timeout);
+	//} while ((time_since_start < timeout) || (event != NULL));
 
 	debug_log(stdout, "After do loop in get_event\n");
 
@@ -486,7 +494,7 @@ OMX_ERRORTYPE omx_set_state(AUDIO_COMPONENT_T *component, OMX_STATETYPE state, u
 
 OMX_ERRORTYPE omx_alloc_buffers(AUDIO_COMPONENT_T *component) {
 	OMX_ERRORTYPE omx_err = OMX_ErrorNone;
-	error_str[64];
+	char error_str[64];
 	OMX_PARAM_PORTDEFINITIONTYPE portdef;
 	size_t i;
 
@@ -705,5 +713,11 @@ debug_log(stdout, "Successfully initialised list and queues\n");
 	return OMX_ErrorNone;
 } // end omx_init_pcm_render_component
 
+
+OMX_ERRORTYPE omx_free_pcm_render_component(AUDIO_COMPONENT_T *component) {
+	OMX_ERRORTYPE omx_err;
+	omx_err = omx_free_buffers(component);
+	return omx_err;
+} // end omx_free_pcm_render_component
 
 

@@ -34,6 +34,7 @@ struct OMX_EVENT_T {
 
 OMX_ERRORTYPE omx_init_pcm_render_component(AUDIO_COMPONENT_T *component, char *compname, int buffers_requested, int buffer_size_requested);
 OMX_ERRORTYPE omx_free_pcm_render_component(AUDIO_COMPONENT_T *component);
+OMX_ERRORTYPE omx_free_pcm_render_component(AUDIO_COMPONENT_T *component);
 void omx_errortype_string(OMX_ERRORTYPE omx_err, char *error_str);
 void omx_state_string(AUDIO_COMPONENT_T *component, char *state_str);
 OMX_ERRORTYPE omx_enable_port(AUDIO_COMPONENT_T *component, uint64_t wait);
