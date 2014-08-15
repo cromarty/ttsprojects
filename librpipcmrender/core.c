@@ -552,7 +552,7 @@ OMX_ERRORTYPE omx_set_pcm_parameters(
 
 	debug_log(stdout, "Entered omx_set_pcm_parameters\n");
 
-	pcm.nPortIndex = 100; //component->port;
+	pcm.nPortIndex = component->port;
 	pcm.nChannels = channels;
 	pcm.eNumData = OMX_NumericalDataSigned;
 	pcm.eEndian = OMX_EndianLittle;
@@ -625,7 +625,7 @@ OMX_ERRORTYPE omx_set_volume(AUDIO_COMPONENT_T *component, unsigned int vol) {
 
 
 
-OMX_ERRORTYPE omx_init_audio_render_component(AUDIO_COMPONENT_T *component, char *compname, int buffers_requested, int buffer_size_requested) {
+OMX_ERRORTYPE omx_init_pcm_render_component(AUDIO_COMPONENT_T *component, char *compname, int buffers_requested, int buffer_size_requested) {
 	OMX_ERRORTYPE omx_err;
 	memset (component, 0, sizeof(AUDIO_COMPONENT_T));
 
@@ -656,7 +656,7 @@ debug_log(stdout, "After GetHandle\n");
 		return omx_err;
 
 	return OMX_ErrorNone;
-} // end omx_init_audio_render_component
+} // end omx_init_pcm_render_component
 
 
 

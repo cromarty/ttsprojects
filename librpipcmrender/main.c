@@ -28,9 +28,9 @@ int main() {
 		return omx_err;
 	}
 
-	omx_err = omx_init_audio_render_component(&component, "OMX.broadcom.audio_render", 3, 2048);
+	omx_err = omx_init_pcm_render_component(&component, "OMX.broadcom.audio_render", 3, 2048);
 	if (omx_err != OMX_ErrorNone) {
-		debug_log(stdout,"Failed in omx_init_audio_render_component\n");
+		debug_log(stdout,"Failed in omx_init_pcm_render_component\n");
 		return omx_err;
 	}
 debug_log(stdout, "After init audio component\n");
