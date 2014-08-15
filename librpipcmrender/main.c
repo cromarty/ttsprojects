@@ -19,7 +19,7 @@
 
 int main() {
 	OMX_ERRORTYPE omx_err;
-	OMX_COMPONENT_T component;
+	AUDIO_COMPONENT_T component;
 	bcm_host_init();
 
 	omx_err = OMX_Init();
@@ -52,7 +52,7 @@ debug_log(stdout, "After init audio component\n");
 		debug_log(stdout,"Failed to set volume\n");
 		return omx_err;
 	}
-	//omx_free_buffers(&component, 100);
+	omx_free_buffers(&component);
 
 	return 0;
 }

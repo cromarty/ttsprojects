@@ -175,12 +175,21 @@ static char *error_type_string(OMX_ERRORTYPE omx_err) {
 	return error_string;
 } // end error_type_string
 
+static void release_buffer_list_entry(void *data) {
+	AUDIO_COMPONENT_T *component = (AUDIO_COMPONENT_T*)((OMX_BUFFERHEADERTYPE*)data)->pAppPrivate;
+	OMX_BUFFERHEADERTYPE *buf = (OMX_BUFFERHEADERTYPE*)data;
+	debug_log(stdout, "Freeing a buffer\n");
+	OMX_FreeBuffer(component->handle, component->port, buf);
+		return;
+} // end release_buffer_list_entry
 
+static void release_event_queue_entry(void *data) {
+	return;
+} // end release_event_queue_entry
 
-
-
-
-
+static void release_free_buffer_queue_entry(void *data) {
+	return;
+} // end release_free_buffer_queue_entry
 
 
 static uint64_t time_now_microseconds() {
@@ -193,7 +202,7 @@ static uint64_t time_now_microseconds() {
 
 
 
-static int get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event_, QUEUE_T *event_queue) {
+static int get_event(AUDIO_COMPONENT_T *component, struct OMX_EVENT_T *event_, QUEUE_T *event_queue) {
 	debug_log(stdout, "In get_event\n");
 
 	pthread_mutex_lock(&component->event_queue_mutex);
@@ -222,7 +231,7 @@ static int get_event(OMX_COMPONENT_T *component, struct OMX_EVENT_T *event_, QUE
 
 
 
-static OMX_ERRORTYPE wait_for_command_complete(OMX_COMPONENT_T*component, OMX_U32 command, OMX_U32 nData2, uint64_t timeout) {
+static OMX_ERRORTYPE wait_for_command_complete(AUDIO_COMPONENT_T*component, OMX_U32 command, OMX_U32 nData2, uint64_t timeout) {
 	int queue_state;
 	if (component == NULL)
 		return OMX_EventError;
@@ -267,7 +276,7 @@ OMX_ERRORTYPE omx_event_callback(
 	if (app_data == NULL)
 		return OMX_ErrorNone;
 
-	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
+	AUDIO_COMPONENT_T *component = (AUDIO_COMPONENT_T *)app_data;
 	//const char *event_str;
 
 	struct OMX_EVENT_T *event = malloc(sizeof(struct OMX_EVENT_T));
@@ -291,8 +300,13 @@ OMX_ERRORTYPE omx_event_callback(
 	return OMX_ErrorNone;
 } // end omx_event_callback
 
-OMX_ERRORTYPE omx_empty_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_BUFFERHEADERTYPE *buffer) {
-	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
+OMX_ERRORTYPE omx_empty_buffer_done_callback(
+	OMX_HANDLETYPE hcomponent,
+	OMX_PTR app_data,
+	OMX_BUFFERHEADERTYPE *buffer)
+{
+	AUDIO_COMPONENT_T *component = (AUDIO_COMPONENT_T *)app_data;
+	debug_log(stdout, "Empty buffer done callback\n");
 	if (component) {
 		//pthread_mutex_lock(&component->inputMutex);
 
@@ -309,7 +323,7 @@ OMX_ERRORTYPE omx_empty_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR 
 
 /*
 OMX_ERRORTYPE omx_fill_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR app_data, OMX_BUFFERHEADERTYPE* buffer) {
-	OMX_COMPONENT_T *component = (OMX_COMPONENT_T *)app_data;
+	AUDIO_COMPONENT_T *component = (AUDIO_COMPONENT_T *)app_data;
 
 	if (component) {
 		pthread_mutex_lock(&component->inputMutex);
@@ -335,7 +349,7 @@ OMX_ERRORTYPE omx_fill_buffer_done_callback(OMX_HANDLETYPE hcomponent, OMX_PTR a
 */
 
 
-OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, uint64_t wait) {
+OMX_ERRORTYPE omx_enable_port(AUDIO_COMPONENT_T *component, uint64_t wait) {
 	OMX_ERRORTYPE omx_err = OMX_ErrorNone;
 
 	OMX_PARAM_PORTDEFINITIONTYPE portdef;
@@ -359,7 +373,7 @@ OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, uint64_t wait) {
 
 
 
-OMX_ERRORTYPE omx_disable_port(OMX_COMPONENT_T *component, uint64_t wait) {
+OMX_ERRORTYPE omx_disable_port(AUDIO_COMPONENT_T *component, uint64_t wait) {
 	OMX_ERRORTYPE omx_err = OMX_ErrorNone;
 debug_log(stdout, "In omx_disable_port\n");
 	OMX_PARAM_PORTDEFINITIONTYPE portdef;
@@ -385,7 +399,7 @@ debug_log(stdout, "Before wait\n");
 
 
 
-OMX_STATETYPE omx_get_state(OMX_COMPONENT_T *component) {
+OMX_STATETYPE omx_get_state(AUDIO_COMPONENT_T *component) {
 	pthread_mutex_lock(&component->comp_mutex);
 
 	OMX_STATETYPE state;
@@ -404,7 +418,7 @@ OMX_STATETYPE omx_get_state(OMX_COMPONENT_T *component) {
 
 
 
-OMX_ERRORTYPE omx_set_state(OMX_COMPONENT_T *component, OMX_STATETYPE state, uint64_t timeout) {
+OMX_ERRORTYPE omx_set_state(AUDIO_COMPONENT_T *component, OMX_STATETYPE state, uint64_t timeout) {
 	OMX_ERRORTYPE omx_err = OMX_ErrorNone;
 	OMX_STATETYPE state_actual = OMX_StateMax;
 
@@ -432,7 +446,7 @@ OMX_ERRORTYPE omx_set_state(OMX_COMPONENT_T *component, OMX_STATETYPE state, uin
 } // end omx_set_state
 
 
-OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
+OMX_ERRORTYPE omx_alloc_buffers(AUDIO_COMPONENT_T *component) {
 	OMX_ERRORTYPE omx_err = OMX_ErrorNone;
 	OMX_PARAM_PORTDEFINITIONTYPE portdef;
 	size_t i;
@@ -471,7 +485,7 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 
 	for (i = 0; i < portdef.nBufferCountActual; i++) {
 		OMX_BUFFERHEADERTYPE *buffer = NULL;
-		omx_err = OMX_AllocateBuffer(component->handle, &buffer, component->port, NULL, component->buffer_size);
+		omx_err = OMX_AllocateBuffer(component->handle, &buffer, component->port, component, component->buffer_size);
 		if(omx_err != OMX_ErrorNone) {
 		debug_log(stdout, "Failed in OMX_AllocBuffer inside omx_alloc_buffers. Error string: %s\n", error_type_string(omx_err));
 			return omx_err;
@@ -480,9 +494,12 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 		buffer->nInputPortIndex = component->port;
 		buffer->nFilledLen = 0;
 		buffer->nOffset = 0;
-		buffer->pAppPrivate = (void*)i; 
 
+	// add the allocated buffer to the linked list buffer_list
 		list_append(&component->buffer_list, (void*)buffer);
+
+	// add the allocated buffer to the queue of free buffers
+	queue_enqueue(&component->free_buffer_queue, (void*)buffer);
 	} // end for
 
 	// now wait for the enable command to complete
@@ -495,18 +512,12 @@ OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component) {
 	return omx_err;
 } // end omx_alloc_buffers
 
-/*
-OMX_ERRORTYPE omx_free_buffers(OMX_COMPONENT_T *component) {
-	OMX_BUFFERHEADERTYPE *buf, *prev;
-	buf = component->buffers;
-	while (buf) {
-		prev = buf->pAppPrivate;
-		OMX_FreeBuffer(component->handle, component->port, buf);
-		buf = prev;
-	}
+
+OMX_ERRORTYPE omx_free_buffers(AUDIO_COMPONENT_T *component) {
+	list_destroy(&component->buffer_list);
 	return OMX_ErrorNone;
 } // end omx_free_buffers
-*/
+
 
 
 
@@ -514,7 +525,7 @@ OMX_ERRORTYPE omx_free_buffers(OMX_COMPONENT_T *component) {
 
 
 OMX_ERRORTYPE omx_set_pcm_parameters(
-	OMX_COMPONENT_T *component,
+	AUDIO_COMPONENT_T *component,
 	int samplerate,
 	int channels,
 	int bitdepth,
@@ -579,7 +590,7 @@ OMX_ERRORTYPE omx_set_pcm_parameters(
 } // end set_pcm_parameters
 
 
-OMX_ERRORTYPE omx_set_volume(OMX_COMPONENT_T *component, unsigned int vol) {
+OMX_ERRORTYPE omx_set_volume(AUDIO_COMPONENT_T *component, unsigned int vol) {
 	OMX_ERRORTYPE omx_err;
 	OMX_AUDIO_CONFIG_VOLUMETYPE volume;
 	OMX_INIT_STRUCTURE (volume);
@@ -599,9 +610,9 @@ OMX_ERRORTYPE omx_set_volume(OMX_COMPONENT_T *component, unsigned int vol) {
 
 
 
-OMX_ERRORTYPE omx_init_audio_render_component(OMX_COMPONENT_T *component, char *compname) {
+OMX_ERRORTYPE omx_init_audio_render_component(AUDIO_COMPONENT_T *component, char *compname) {
 	OMX_ERRORTYPE omx_err;
-	memset (component, 0, sizeof(OMX_COMPONENT_T));
+	memset (component, 0, sizeof(AUDIO_COMPONENT_T));
 
 	component->port = 100;
 
@@ -612,10 +623,11 @@ OMX_ERRORTYPE omx_init_audio_render_component(OMX_COMPONENT_T *component, char *
 	component->callbacks.EmptyBufferDone = omx_empty_buffer_done_callback;
 	component->callbacks.FillBufferDone = NULL; //omx_fill_buffer_done_callback;
 
-	list_init(&component->buffer_list, free);
-	queue_init(&component->command_complete_event_queue, free);
-	queue_init(&component->other_event_queue, free);
-debug_log(stdout, "Successfully initialised list and queue\n");
+	list_init(&component->buffer_list, release_buffer_list_entry);
+	queue_init(&component->command_complete_event_queue, release_event_queue_entry);
+	queue_init(&component->other_event_queue, release_event_queue_entry);
+	queue_init(&component->free_buffer_queue, release_free_buffer_queue_entry);
+debug_log(stdout, "Successfully initialised list and queues\n");
 
 	omx_err = OMX_GetHandle(&component->handle, compname, component, &component->callbacks);
 	if (omx_err != OMX_ErrorNone)

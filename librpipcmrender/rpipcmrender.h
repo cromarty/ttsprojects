@@ -18,9 +18,10 @@ typedef struct {
 	LLIST_T buffer_list;
 	QUEUE_T command_complete_event_queue;
 	QUEUE_T other_event_queue;
+	QUEUE_T free_buffer_queue;
 	pthread_mutex_t comp_mutex;
 	pthread_mutex_t event_queue_mutex;
-} OMX_COMPONENT_T;
+} AUDIO_COMPONENT_T;
 
 
 struct OMX_EVENT_T {
@@ -32,15 +33,15 @@ struct OMX_EVENT_T {
 
 
 
-OMX_ERRORTYPE omx_enable_port(OMX_COMPONENT_T *component, uint64_t wait);
-OMX_ERRORTYPE omx_disable_port(OMX_COMPONENT_T *component, uint64_t wait);
-OMX_STATETYPE omx_get_state(OMX_COMPONENT_T *component);
-OMX_ERRORTYPE omx_set_state(OMX_COMPONENT_T *component, OMX_STATETYPE state, uint64_t timeout);
-OMX_ERRORTYPE omx_alloc_buffers(OMX_COMPONENT_T *component);
-OMX_ERRORTYPE omx_free_buffers(OMX_COMPONENT_T *component);
-OMX_ERRORTYPE omx_set_pcm_parameters(OMX_COMPONENT_T *component, int samplerate, int channels, int bitdepth, char *dest);
-OMX_ERRORTYPE omx_set_volume(OMX_COMPONENT_T *component, unsigned int vol);
-OMX_ERRORTYPE omx_init_audio_render_component(OMX_COMPONENT_T *component, char *compname);
+OMX_ERRORTYPE omx_enable_port(AUDIO_COMPONENT_T *component, uint64_t wait);
+OMX_ERRORTYPE omx_disable_port(AUDIO_COMPONENT_T *component, uint64_t wait);
+OMX_STATETYPE omx_get_state(AUDIO_COMPONENT_T *component);
+OMX_ERRORTYPE omx_set_state(AUDIO_COMPONENT_T *component, OMX_STATETYPE state, uint64_t timeout);
+OMX_ERRORTYPE omx_alloc_buffers(AUDIO_COMPONENT_T *component);
+OMX_ERRORTYPE omx_free_buffers(AUDIO_COMPONENT_T *component);
+OMX_ERRORTYPE omx_set_pcm_parameters(AUDIO_COMPONENT_T *component, int samplerate, int channels, int bitdepth, char *dest);
+OMX_ERRORTYPE omx_set_volume(AUDIO_COMPONENT_T *component, unsigned int vol);
+OMX_ERRORTYPE omx_init_audio_render_component(AUDIO_COMPONENT_T *component, char *compname);
 
 #endif
 
