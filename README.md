@@ -25,6 +25,10 @@ has 'autospawn' hard-coded.
 Read more about SpeakUp, speechd-up and speech-dispatcher in the 
 speech-dispatcher directory.
 
+In libomxilpcmrender is a project to write a sound-driver to render PCM 
+text-to-speech directly on the Raspberry Pi GPU.
+
+
 
 
 
