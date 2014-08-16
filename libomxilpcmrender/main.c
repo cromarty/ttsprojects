@@ -13,7 +13,7 @@
 #include <IL/OMX_Broadcom.h>
 #include <pthread.h>
 
-#include "rpipcmrender.h"
+#include "omxilpcmrender.h"
 #include "debug.h"
 
 
