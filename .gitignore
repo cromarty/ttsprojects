@@ -18,3 +18,7 @@ res
 SciTE property files
 *.properties
 
+
+# libomxilpcmrender test prog
+coretest
+
