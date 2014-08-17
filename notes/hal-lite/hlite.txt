@@ -1,0 +1,2474 @@
+Customising Hal Lite and Writing your own Environment Files.
+
+1. -  Starting to Read the Screen
+
+This lesson gives you a basic introduction to reading the screen.
+
+
+1.1 A note about Hal Lite
+ 
+Hal Lite is the program that looks after the speech synthesiser.  It will be 
+working away all the time that the computer is switched on and will send data 
+out to the synthesiser to be spoken.  Hal Lite is a sophisticated program, 
+and later on you will learn about the many ways that Hal Lite can be set up 
+to tell you just what you want to know, and no more.  However, to start with, 
+Hal Lite will read out to you every letter, number or punctuation mark that 
+you type in.
+
+1.2 Starting screen reading
+ 
+Depress the key called <ALT> and whilst it is depressed tap the letter <J> 
+key.  The computer will say "reading".  You are no longer in "live" mode but 
+in the reading mode.  This means that the keys on the keyboard all have 
+different meanings.  Let's try a few.
+
+The letter <T> key now means go to the top left hand corner of the screen and 
+the letter <L> key stands for "read a line".  So try pressing first the letter 
+<T> and then the <L> key.  Hal Lite will then make the speech synthesiser 
+read the top line of the screen which is the "Welcome" message.  Try it again.  
+Now to read some more lines of text.  Use the <T> and <L> keys again but this 
+time press <L> over and over again and it will read the lines as it proceeds 
+down the screen.
+
+Note:   If you should accidentally press the letter <P> key whilst in reading 
+mode you will find you have entered the parameter menu which will be explained 
+later in the manual.  In the meantime, to get out of the parameter menu and 
+back into reading mode press the <ESC> key.
+ 
+Now, to get out of reading mode, simply hit the <ENTER> key and the computer 
+will say "exit" and you are back in live mode again.  One important tip that 
+you might find useful at this stage is the command to mute the synthesiser.  
+Simply hold down the <ALT> key and whilst it is depressed tap the letter <M>.  
+The synthesiser will immediately stop what it is saying.
+
+2. -  More Screen Reading
+
+This lesson takes you through a more comprehensive list of Hal Lite's reading 
+commands and discusses how Hal Lite can be made to read text of different 
+colours.
+
+2.1 Reading lines, words and characters
+ 
+Enter reading mode as before (depress the <ALT> key and tap the <J> key).  
+Now use the <T> key to place the reading cursor in the top left hand corner 
+of the screen. The cursor is a small marker which shows sighted users where 
+they are on the screen.  The shape of the cursor is not important - they come 
+in all shapes, sizes and even colours.  The important concept is that it marks 
+our position on the screen.  The top left hand corner of the screen is the 
+"home" position of the cursor from which everything else is measured.  So now 
+the cursor is in column one and row one.  You can check this if you like by 
+pressing the <X> and <Y> keys, both should say "one". 
+
+As you move the cursor along the line the value of X will increase, and as 
+you move down the screen the value of Y will increase.
+
+Now let's read the top line "Welcome to lesson 1" but just one word at a time.  
+Press the letter <R> key for "read a word".  Repeat this and you will be able 
+to read the whole screen just one word at a time.  As you do this hit the <X> 
+and <Y> keys from time to time so as to monitor your position on the screen.
+ 
+Suppose that you read a word that you cannot quite understand because the 
+speech synthesiser has not got it quite right?  Simply go back to the start 
+of the word using the <Q> key and step through the word one character at a 
+time with the <C> key.  If you still cannot understand you can make the 
+computer spell out the word phonetically, that is using the alpha, bravo, 
+charlie system.  Try this now by reading a word with the <R> key then use Q 
+to go back to the start of the word.  Now press down the <ALT> key and tap 
+the letter <I> key.  The first letter of the word will be spoken.  Now keep 
+the <ALT> key depressed and tap the letter <I> key a second time.  The 
+computer will give you the phonetic equivalent of the letter.  Now move along 
+one character using the <C> key and repeat the sequence.
+
+There are a few other relevant key meanings that you can experiment with and 
+we finish this first part of the lesson with a list of these commands.  Again 
+we have used a form of shorthand to say "keep the ALT key depressed and tap 
+the letter I key".  This is simply written:
+
+<ALT>  and  <I>.
+
+Similarly if the command uses the control key, instead of writing "depress 
+the control key and whilst it is depressed tap the letter A key", we simply 
+write:
+<CTRL> and <A>
+
+Again we hope that this form of shorthand makes reading the tutor easier.  
+Here is the list:
+
+<L>
+read a line at a time
+
+<R>
+read a word at a time
+
+<C>
+read a character at a time
+
+<S>
+moves the reading cursor to the start of the line
+
+<E>
+moves the reading cursor to the end of the line
+
+<U>
+moves the reading cursor up one line
+
+<D>
+moves the reading cursor down one line
+
+<T>
+moves the reading cursor to the top of the screen
+
+<B>
+moves the reading cursor to the  bottom of the line
+
+<H>
+moves the reading cursor to its live mode position i.e. where it was
+
+<X>
+reads the cursor position as a column number
+
+<Y>
+reads the cursor position as a row number
+
+<.>
+moves the cursor one character but without speaking it
+
+<,>
+moves the cursor back one character but without speaking it
+
+<ALT> and <O>
+pressed once reads the word that the cursor is on, pressed a second time will 
+spell that word
+
+<ALT> and <L>
+reads the line that the cursor is on
+
+<ALT> and <K>
+reads the line that the cursor is on up to the cursor position 
+
+<ALT> and <T>
+reads current time
+
+<ALT> and <D>
+reads current date
+
+<ALT> and <I>
+pressed once reads the character that the cursor is on, pressed a second time 
+will read that character
+
+<ALT> and <G>
+reads row and column position (like <X> and <Y>
+
+<ENTER>
+exits reading mode and returns the cursor to its original position 
+
+<CTRL> and <M>
+an identical alternative to return above
+
+The shifted point on the numeric keypad offers a sentence reading facility 
+which enables you to read a whole screen of text a sentence at a time 
+whenever shifted point is depressed.  For more information on special numeric 
+keypad commands see section 6.3 in this manual.
+
+Finally it is worth mentioning <CTRL> and <N>.  This command, within reading 
+mode, causes Hal Lite to tell you its version and serial number.
+ 
+Another method of examining the contents of the screen in reading mode is to 
+use the cursor keys.  They have the following effect:
+ 
+<cursor up>
+takes the cursor up one line and reads that line
+
+<cursor down>   
+takes the cursor down one line and reads that line
+
+<cursor right>
+takes the cursor right one character and reads it
+
+<cursor left>
+takes the cursor left one character and reads it
+
+<CTRL> and <cursor left>
+takes the cursor left one word and reads it
+
+<CTRL> and <cursor right>
+takes the cursor right one word and reads it
+
+<HOME>
+takes the cursor to the start of the current line
+
+<END>   
+takes the cursor to the end of the current line
+
+<PgUp>
+takes the cursor to the start of the top line
+
+<PgDn>
+takes the cursor to the start of the bottom line
+
+2.2 Introducing colours
+ 
+So far we have been reading text on the screen regardless of its colour.  If 
+you have one of the many forms of colour card in your computer, Hal Lite will 
+allow you to find out the colour of certain text so that you can manipulate 
+it for your own requirements.  Perhaps it should be mentioned at this point 
+that it is not necessary for you to have a colour monitor at all - it is the 
+colour card within the computer that Hal Lite is concerned with.
+
+To find the colour of screen text, enter reading mode and place the cursor on 
+a letter in the word.  Now press the letter <A> key.  The computer will speak 
+the attributes of the character - there are three in all.  The first is the 
+ASCII value which we will deal with much later on, the second is the 
+background colour, and the third is the foreground colour.  An example might 
+be "ASCII 65, background black, foreground white".  This means that it is a 
+white upper case "A" on a black background. 
+
+Now if you had a word processor which checked a document's spelling and 
+changed all questionable words from white to red then you could use this 
+facility to find out which words were questioned.
+
+The first thing to do is to determine the colours involved by using the letter 
+<A> key as described above.  You can try this if you wish on the "lesson" 
+screen because it consists of a number of colours - make a note of the 
+various background and foreground colours you come across.  (In fact there is 
+an easier way of determining colour layout by permanently setting the 
+attributes parameter option via the parameter menu.  This will be covered 
+in later).
+
+Now that you have ascertained the foreground and background colours involved 
+we can proceed.  For example, if you want to restrict your output to red text 
+on a black background enter <ALT> and <R>, the computer says "restrict to 
+foreground?" followed by a colour.  If this colour is not red then tap the 
+<SPACE BAR> to change it.  Continue to tap the <SPACE BAR>, cycling through 
+the colours, until red is reached.  Now press <ENTER>. Hal Lite will now ask 
+you what background colour you require by posing the question "background?" 
+followed by a colour.  As before, cycle through the colour options using the 
+<SPACE BAR> until you reach the desired choice - in our case "black".  Select 
+this by pressing <ENTER>.
+
+Now, if we read the screen one line at a time, only text in red on a black 
+background will be spoken.  For example, on the Lesson screen you will only 
+hear one line which reads "this line is in red".  This is a great time saver 
+in certain applications.
+
+The output may be restricted in three other ways as follows:
+ 
+U  -  underlined text
+B   -  blinking or flashing text
+I   -  text in inverse video
+
+Just enter <ALT> and <R> as before and then follow this by typing one of the 
+letters <U>, <B> or <I>.  The expression "inverse video" simply means text 
+whose foreground colour is the normal background colour, and whose background 
+colour is normally the foreground colour.  Some word processors do this to 
+text when, for example, it is defined as a "block".  Try this with the <B> 
+option and then examine the "lesson" screen a line at a time.  You will only 
+be able to read the text which says "but a blinking white line looks far more 
+impressive".
+
+The majority of programs only use eight foreground colours and eight 
+background colours, namely, black, blue, green, cyan, red, magenta, yellow 
+and white. However, on occasions you may come across "bright" foreground 
+text. If you cycle through in the usual way beyond the eight standard colours 
+you will hear the bright colours announced.
+ 
+Finally, you will need to know how to remove colour restrictions so that 
+Hal Lite can read text of any colour once again.  Simply enter <ALT> and <R> 
+and, in answer to the question "restrict to foreground?" press <ESC>.  
+Hal Lite will say "ignored" and come up with the question "background?".  
+Again press <ESC> and once more Hal Lite will say "ignored". 
+
+Similarly make use of the <ESC> key to ignore either foreground or background 
+colours.  For example, if you wish to read a specific foreground text colour 
+on any background colour just press <ESC> when asked for the background colour.  
+Use the same procedure in reverse if you wish to read text of any colour on a 
+specific background colour.
+ 
+Practise restricting colour output as this will pay dividends in saved time.
+
+3.   -  Finding and Marking
+
+This lesson teaches you how to find individual characters or `strings' on 
+your screen and also how to reference parts of the screen using `markers'.
+
+3.1 Finding a character
+ 
+It can be very boring examining a whole screen full of information to try and 
+find just one word or character. Hal Lite can help you in this search if you 
+use its "find" facility.
+ 
+Enter reading mode and go to the top of the screen.  Now let's search for 
+punctuation marks.  Press the letter <F> key and the computer will say "find".  
+Now if we were searching for full stops you could hit that key, try it - the 
+computer says "period" and then "found".  If you now see where your cursor is 
+on the screen you will find that one depression of the letter <C> will read 
+the character "period".
+
+Hal Lite starts its search from the "home" position and looks along each row 
+in turn, but suppose that we wanted to find another full stop?  If we were 
+to hit <F> and <.> again then Hal Lite would return to the home position and 
+start the search again and "find" the same full stop as before!  To avoid 
+this you can continue the search from your present position by using the 
+<|> "bar" key. 
+
+If you are not sure where the bar key is experiment whilst in live mode 
+depressing various keys until you hear Hal Lite say the word "bar".  On many 
+computers it is shifted <\>.  Press the <F> key and then press the <|> key - 
+repeat this for further occurrences of the character until there are no more 
+full stops on the screen.  If the character is not found then Hal Lite will 
+tell you.
+ 
+You may combine the search facility with colour restriction.  If you wish to 
+find a character of a particular colour, restrict output as described in the 
+previous lesson. All other characters will be ignored.  Do not forget to turn 
+the colour restriction off afterwards!
+
+3.2 String search
+ 
+If you wish to search for more than one character you will need to implement 
+Hal Lite's string search facility.  A string is simply the expression used 
+for a series of characters. For example, the word camel is a string as is the 
+telephone number 035263529.
+
+Suppose, for example, we want to find the word "this", first enter reading 
+mode and tap the letter <T> to go to the top of the screen and then tap the 
+</> "slash" key. Hal Lite will echo the words "search for?".  Now type in the 
+four letters "this" and press <ENTER>.  If the word is on the screen Hal Lite 
+will move the cursor to the start of the word and say "found".  If it is not 
+on the screen Hal Lite will echo "not found".  Hal Lite does not discriminate 
+between upper or lower case letters.
+
+To find a second occurrence of the word simply depress </> again and 
+immediately tap <ENTER>.  Hal Lite will take the cursor to the next 
+occurrence of the word.  This process may be repeated as many times as you 
+wish.
+
+3.3 Marking the screen
+ 
+Very often an application program such as a database will always lay out 
+information on the screen in the same way. We can take advantage of this 
+when in reading mode by setting markers at appropriate places which we can go 
+to immediately.  (However, there is an alternative method using Hal Lite's 
+window facility which is described later).
+		
+Move to any point on the screen and check its position with the <X> and <Y> 
+keys.  Now hit the letter <M> key, the computer will say "set marker", select 
+any letter of the alphabet, say the letter A.  Now move away from that 
+position and hit the <G> key.  The computer will say "go to?".  Now tap the 
+<A> key and you will be taken to your original position immediately.  Check 
+this using the <X> and <Y> keys.  You can set up to 26 markers, one for each 
+letter of the alphabet.  In fact when you first start using Hal Lite all 26 
+markers are preset, A being the top line, B the second line etc.
+
+Another facility offered by Hal Lite is that you can command it to move up 
+and down a number of rows from your current position on the screen.  Try it 
+using the <G> key. If you press number keys followed by any other key your 
+position will immediately change to that row number.
+
+Try pressing <G> then <1><9> and then the <SPACE BAR>.  You are now in row 
+19, check this with the <Y> key.
+
+Now if you wish to go back seven lines to row 12 simply enter <G> then the 
+minus sign <-> and the number <7>. Tap the <SPACE BAR> and check your 
+position with the <Y> key.  If you want to go back to row 19 then hit <G> 
+and then the plus sign <+> followed by the number <7> and tap the <SPACE BAR>.  
+Try this with other numbers.
+
+A similar feature is available for moving along a row. To tell Hal Lite that 
+you wish to move in that direction the comma is used after hitting the <G> 
+key.  For example, press the <G> key, then the <,> key, then a number and 
+press the <SPACE BAR>.  Check your position using the <X> key.  Say that you 
+moved to column 15 and you wished to go to column 30, simply press <G> then 
+hit the <,> key and then enter the plus sign followed by the number 15 and 
+press the <SPACE BAR>.  Your position will immediately change to 30 - check 
+this with the <X> key.
+
+Although you may not feel there is much of a need for markers, you will find 
+that later on when we come to consider monitor markers time invested in a 
+thorough grounding in this subject will pay dividends.
+
+4.   -  Live Mode
+
+So far you have spent most of your time learning some of the special key 
+commands within reading mode.  This lesson brings you out of reading mode to 
+the normal or live mode where the keys do what you expect them to do.  
+However, some of the reading commands that you have learnt can still be 
+accessed by use of the <ALT> key.
+
+4.1 Alt commands which work in live mode
+
+<ALT> and <R>
+to restrict colour output
+
+<ALT> and <I>
+to read a character and its phonetic representation
+
+<ALT> and <O>
+to read a word and its spelling
+
+<ALT> and <G>
+to read out your row and column number
+
+<ALT> and <J>
+to enter reading mode
+
+<ALT> and <L>
+to read your current line
+
+<ALT> and <K>
+to read your current line to the cursor
+
+<ALT> and <T>
+to read current time
+
+<ALT> and <D>
+to read current date
+
+<ALT> and <M>
+to mute the speech
+
+You should find the <ALT> and <L> and <ALT> and <K> commands particularly 
+useful when using a word processor.
+
+4.2 Turning speech off and reading a window
+ 
+The list below gives you two new commands to try
+
+<ALT> and <V>   toggles speech output on and off
+<ALT> and <P>   reads a window
+ 
+Now for a few words of explanation:-
+
+The word "toggle".  This simply means that the same action turns a facility 
+both on and off, e.g. pressing a key once enables an activity, pressing the 
+same key a second time disables the activity.
+ 
+The <ALT> and <V> toggles between speech on and speech off.  This is useful 
+if, say, a sighted person wants to use the computer for a few minutes. 
+
+They might be aggravated by the sound of the speech - so simply enter <ALT> 
+and <V> and when they have finished and you want the speech output back again 
+enter <ALT> and <V> again.
+
+You should never turn the synthesiser off while Hal Lite is running because 
+the screen display is slowed down to a very great extent.
+ 
+Finally a new command - <ALT> and <P>.  When you enter this command the 
+computer asks "read?".  You then have to enter a window number.  Please 
+don't worry about this new term "window".  It will be covered later.  All 
+you have to know is that window number 0 is the whole screen.  So if you want 
+to know the contents of the screen whilst in live mode simply enter <ALT> and 
+<P> followed by the number <0>.  Remember that you can "shut up" the output 
+temporarily with <ALT> and <M>.
+
+Of course if you want to know what yellow text there is on the screen from 
+live mode restrict output to yellow using <ALT> and <R> as previously 
+explained, then <ALT> and <P> followed by the number <0>.  Hal Lite will now 
+read all the yellow text on the screen.
+
+4.3 The numeric keypad
+
+When in live mode Hal Lite can make special use of the cursor keys.  Ensure 
+that the number lock key is off and use the following cursor controls in 
+conjunction with the left shift key depressed.
+
+The numbers <1>, <2> and <3> read the previous, current and next character.  
+The numbers <4>, <5> and <6> read the previous, current and next word.  The 
+numbers <7>, <8> and <9> read the previous, current and next line.  The 
+number <0> is mute.
+ 
+A final command is the use of left shift key with the numeric key pad "point" 
+<.> key.  This action causes Hal Lite to read the current sentence - that is, 
+the text between the previous full stop and the next.
+ 
+These special features are particularly useful when editing a document in a 
+word processor.  Don't forget the sentence reading facility that Hal Lite 
+offers in reading mode using the "shifted point" command.  This enables you 
+to read a whole screen of text a sentence at a time whenever "shifted point" 
+is depressed. 
+
+In live mode the numbers on the keyboard can be accessed normally simply by 
+putting the number lock on or using the right hand shift key.
+
+5.   -  Adjustments to Hal Lite
+
+This lesson tells you how to adjust your speech synthesiser from Hal Lite 
+and introduces you to HAL's parameter menu.
+
+5.1 Adjusting the speech
+ 
+There are two methods of adjusting your speech synthesiser.  The first is to 
+adjust the "box" itself - for example turning the volume control up and down.  
+The other way is to ask Hal Lite to send commands to the "box". Hal Lite can 
+do this to the three Series 2 Synthesisers made by Dolphin.  The three 
+synthesisers are called the Apollo 2, PC2 card and the Juno-sp.  If you have 
+another speech synthesiser then you won't be able to control it from Hal Lite.
+
+To adjust the speed of the speech on your Dolphin Series 2 Synthesiser use 
+<ALT> and <S> in either reading or live mode to cycle through the speed 
+options.  Another way is to use the function keys <F1> and <F2> in reading 
+mode. 
+
+Additional refinements to the speech are controlled by the other function 
+keys within reading mode.  To change variables such as pitch (use <F3> and 
+<F4>), prosody or excitability (use <F5> and <F6>), inter word pause (use <F7> 
+and <F8>), and inter phrase pause (use <F9> and <F10>).
+
+Please note that it is not possible to change the speed of the speech whilst 
+your speech synthesiser is talking.  Any alterations made whilst it is 
+talking will not be effective until it has finished.
+ 
+A good way to check your ideal speed is to use <ALT> and <P> followed by the 
+number <0> to read the whole screen. Please note that many users find that 
+using headphones allows them to understand speech at faster speeds.
+
+<ALT> and <Q> toggles hypermode on and off.  The hypermode allows you to skim 
+read by only reading the important words.  For example "The rain in Spain 
+falls mainly on the plain" sounds like "rain Spain falls mainly plain".
+
+The <ALT> and <Q> command works in either screen reading or live mode.  
+Please note that when in hypermode the two alphabetic characters A and I do 
+not give keyboard echo.  This is because Hal Lite thinks of them as single 
+letter words and as a consequence ignores them. 
+
+However, they will have been entered into the text and this can be checked 
+by turning hypermode off.
+
+You also have the ability to alter the volume of your synthesiser directly 
+from Hal Lite.  (<ALT> and <Z> decreases the volume and <ALT> and <X> 
+increases the volume.)
+
+The Juno synthesiser is designed to be fully controllable from the keyboard 
+and so it does not have a volume control on it.
+
+Furthermore, <ALT> and <B> will restore the speech characteristics (volume, 
+rate, pitch and prosody) to their default settings.
+
+We have implemented this feature as the Juno synthesiser automatically 
+switches off to conserve battery power if you remove Hal Lite from memory 
+HLITE -r.
+
+5.2 The parameter menu
+ 
+Hal Lite is an extremely flexible program and allows many changes to be made 
+to the way that it operates.  These changes are referred to as parameter 
+adjustments and are carried out by using the parameter menu.  This menu is 
+simply a list of items which can be changed easily to suit your own needs.
+
+In this section we take an initial look at the parameter menu.  To enter the 
+parameter menu, press the letter <P> key when within reading mode.  To leave 
+the menu at any time simply hit the <ESC> key - this returns you to reading 
+mode.
+
+5.2.1 Getting a feel for the parameters
+ 
+Enter reading mode with <ALT> and <J> and tap the letter <P> to enter the 
+parameter menu.  Hal Lite will say "parameter menu" followed by the first 
+parameter which is keyboard echo followed by its current option.  The default 
+option is to echo every character depressed on the keyboard.  You will 
+therefore hear the information spoken thus - "parameter menu - key echo - 
+characters".
+ 
+Let us now move on to examine the current option of the other parameters.  
+This is achieved by using the <TAB> key - each time you depress the <TAB> key 
+Hal Lite speaks the parameter followed by its current option.  Do not worry if 
+these do not make sense to you - hopefully many of them will by the end of 
+this manual!
+
+If you depress the <TAB> key once, Hal Lite will say "screen - auto".  Press 
+<TAB> again and "screen punctuation - all" will be heard.  Continue in this 
+way "tabbing" through the menu.  Eventually you will return to your original 
+"key echo - characters".
+
+You may also use the up and down cursor keys to move through the parameter 
+menu.
+ 
+Now that we have familiarised ourselves with the parameters within the menu 
+we can press <ESC> to exit from it and return to reading mode.  Hal Lite will 
+inform you by saying "exit parameter menu".
+
+5.2.2 Changing the parameter options
+ 
+In this section we will learn how to select the various options available for 
+each parameter.  The process is simple - first select the parameter using the 
+<TAB> key as outlined above.  Secondly, cycle through the available options 
+for that parameter using the <SPACE BAR>.
+
+Enter the parameter menu by going into reading mode and depressing the letter 
+<P> key.  Now <TAB> through the menu until you reach the "caps - off" point.  
+This means that when a capital or upper case letter is typed it sounds just 
+like a lower case letter.  Now tap the <SPACE BAR> once.  Hal Lite says "caps - 
+on" to indicate that upper case letters will be spoken with the prefix "caps".  
+Exit the parameter menu with the <ESC> key and then return to live mode with 
+<ENTER>.
+
+Now try typing an upper case letter and see for yourself how Hal Lite 
+differentiates between upper and lower case. Hal Lite will also tell you the 
+case difference when screen reading.
+
+To revert back to the original setting, simply re-enter the parameter menu, 
+<TAB> through the parameters until "caps - on" is reached and depress the 
+<SPACE BAR> once.  Hal Lite will say "caps - off".  Leave the parameter menu 
+by using the <ESC> key and return to live mode by tapping <ENTER>.
+ 
+In this section we have had an overview of the parameter menu.  We know how 
+to enter it using the letter <P> from reading mode.  We have also tabbed 
+through all the parameters and changed one parameter option by using the 
+<SPACE BAR> to toggle between "caps - off" to "caps - on" and then back again.
+
+Essentially this is all there is to using the parameter menu.  However in 
+future lessons we will take a longer look at all the parameters and how to 
+save any option changes
+
+6. -  More Adjustments to Hal Lite
+
+This lesson explains some more of the basic parameters and discusses the 
+options for them.
+
+6.1 Keyboard echo
+ 
+Enter screen reading and use the letter <P> to move into the parameter menu.  
+The first parameter to be spoken will be "key echo" which refers to the level 
+of keyboard echo.  The default setting is for every character key to be 
+spoken - hence the spoken message "key echo - characters".
+ 
+Tap the <SPACE BAR> to change this to "key echo - words".  Hit <ESC> to exit 
+the menu and <ENTER> to exit reading mode.  Now you will notice the 
+difference when typing - instead of each individual character being echoed 
+the whole word is spoken whenever the <SPACE BAR> or a punctuation mark is 
+depressed.  Many users find this type of keyboard echo preferable to having 
+every single character spoken.
+
+Please note - when key echo is set to words, if you hear nothing spoken or 
+you hear the previous character being spoken as you type then the muting 
+parameter option is set to on.  Change this to off or cursors and your words 
+setting will work.
+
+Now return to the parameter menu and change key echo once again.  The third 
+option is "key echo - off".  Some users prefer no feedback at all when they 
+are typing, only using speech to check their work after input.  If you tap 
+the <SPACE BAR> again you will return to the original setting of "key echo - 
+characters".  You can cycle through the options in this way as many times as 
+you wish.
+
+6.2 Changing more than one parameter
+ 
+So far we have only made one change at a time to the parameter options - 
+changing the speaking of caps in the previous lesson and changing the 
+keyboard echo earlier in this lesson.
+
+Suppose that we want to change two or more parameters? Start by entering the 
+parameter menu and changing the keyboard echo option using the <SPACE BAR>.  
+When the desired option is reached simply press the <TAB> key - the keyboard 
+echo will remain at your selected setting and you will move on to the next 
+parameter.
+
+Hal Lite will now say "screen - auto". Try changing this by using the <SPACE 
+BAR> to take it through all the options thus auto, off and on.  As we have 
+landed on this parameter we had better explain its function!
+
+Under almost every circumstance Hal Lite works out for itself the best way to 
+speak screen text - this is the auto option.  Just occasionally there is a 
+problem with Hal Lite speaking everything twice or saying too much; if this 
+happens try the "screen - off" option.  Similarly the "screen - on" option 
+can be of value on rare occasions.
+ 
+As mentioned above, the "screen - auto" option is usually the best, so cycle 
+through these options again until you return to "auto".  Now we could either 
+press the <TAB> key to move on to the next parameter or hit the <ESC> key to 
+leave the menu.  Use <ESC> and then <ENTER> to return to live mode.
+
+Thus you can see that it is possible to change as many parameter options as 
+you wish without having to continually enter and exit the menu. 
+
+6.3 Nine more parameters
+
+So far we have learnt three things about the parameter menu:
+ 
+* how to enter and exit the parameter menu
+* how to move from parameter to parameter using the <TAB> or cursor keys
+* how to cycle through each parameter's options using the <SPACE BAR>
+
+From this point on we will not continually repeat these basic instructions 
+but rather concentrate on describing some more parameters and their options.
+
+6.3.1 Screen punctuation
+ 
+This refers to punctuation spoken during screen reading. There are four 
+levels - off, some, most and all - e.g. the most option pronounces all 
+punctuation apart from the apostrophe.  Try experimenting with the various 
+settings to see which you prefer.
+
+
+6.3.2 Key echo punctuation
+ 
+This parameter refers to the level of punctuation echoed by keyboard entry.  
+It has identical options to the screen punctuation mentioned above.  Try the 
+four options for yourself.  However, most users prefer the default value of 
+all keyboard punctuation spoken.
+
+6.3.3 Space and return
+ 
+This parameter refers to the keyboard echo of the <SPACE BAR> and <ENTER> key.  
+The options are either on or off.  If you only require one of these keys to 
+speak please see the section on teaching keys later in this lesson.
+
+6.3.4 Blank lines
+ 
+This parameter toggles between blank lines being announced or not.  Sometimes 
+it is useful when editing or screen reading to be reminded when a line 
+contains no text, in which case blank - on should be selected.
+
+6.3.5 Compress punctuation
+ 
+This parameter allows you to choose how Hal Lite speaks punctuation marks 
+displayed on the screen.  This facility is offered because many application 
+programs use rows of dashes or stars for decorative purposes - if Hal Lite 
+were to read them all it could be a very tedious process.  The options are 
+on or off - for example if you set compress punctuation to on Hal Lite will 
+only read the first two punctuation marks even if there is a whole row of 
+them.
+
+6.3.6 Announce Alt and Control keys
+ 
+This parameter allows you the option of Hal Lite speaking these two keys when 
+they are depressed.  It is particularly useful for beginners who are 
+unaccustomed to the PC keyboard but more advanced users will probably prefer 
+to set this option to off.  There is a third option muting, which causes the 
+synthesiser to be muted when <ALT> and <CTRL> are pressed together.
+
+6.3.7 Speaking numbers
+
+This parameter has two options - NUMBERS on or NUMBERS off.  This controls 
+whether a numbers' individual digits are read out, or the number is read out 
+as a whole, e.g. 123 can be read out as "one two three", or "one hundred and 
+twenty three".
+
+The file NUMBERS.??? is a text file and defines how numbers are spoken.  The 
+extension ??? is taken from the prompt file name.  Thus PROMPT.ITA will bring 
+in NUMBERS.ITA.  See Appendix 3 for details of the numbers prompt file.  The 
+number option must be on and the numbers file must exist for numbers to be 
+spoken.
+
+6.3.8 Leading Zeroes
+
+This parameter is directly after NUMBERS  on/off in the parameter menu.
+
+'ZERO on' means that, if NUMBERS are set to on, leading zeros will be spoken.  
+(Especially useful for telephone numbers).  E.g.
+
+0905 will be spoken as "zero nine hundred and five".
+
+The default setting is off.
+
+6.3.9 Exceptions
+
+This parameter has two options - words on or words off. This controls what 
+Hal Lite says when it comes across certain user defined strings on the screen.  
+These strings are defined in an Exceptions Dictionary.  The file ENGLISH.DIC 
+is the default name for the Exceptions Dictionary file.  Supplied on the HAL 
+LITE disk is a program called DEDIT to create/alter an Exceptions Dictionary. 
+Details of how to use DEDIT and how to load Exceptions Dictionaries are given 
+later.
+
+6.4 Teaching Hal Lite to Speak
+ 
+You can teach Hal Lite to speak in two ways - firstly according to the key 
+depressed and secondly according to the character being read from the screen.
+
+6.4.1 Teaching keys
+ 
+Within reading mode <CTRL> and <T> prompts Hal Lite to ask "teach which key?"  
+In response to this tap a key, say function key number 10, Hal Lite will then 
+respond "enter string".  Now type in the words you want Hal Lite to speak when 
+function key 10 is depressed.  Hit <ENTER> and Hal Lite will inform you "done".  
+If you exit reading mode and try tapping function key 10 it will now repeat 
+your chosen words.  This facility can be a most useful reminder of key 
+definitions within application software.
+ 
+Please note - if key echo is set to words then some keys will not speak the 
+string that they have been taught.
+
+6.4.2 Teaching screen characters
+ 
+The <CTRL> and <S> command within reading mode allows you to teach Hal Lite 
+what to say when it comes across a particular character on the screen.  
+Suppose you wish Hal Lite to speak the words "divided by" every time it comes 
+across the "slash" sign on the screen.  Try entering <CTRL> and <S>.  Hal Lite 
+responds with the question "teach which character?" Enter "slash".  Hal Lite 
+will say "enter string".  Now type in the two words "divided by" and hit 
+<ENTER>.  Hal Lite will inform you done.  From now on every time Hal Lite 
+comes across the slash character it will say "divided by".
+
+It is possible to teach Hal Lite to speak characters which are not normally 
+spoken, for example a high ASCII character such as ASCII 190, "ù".  Simply 
+enter <CTRL> and <S> as before and when prompted "teach which character?" 
+depress the <ALT> key and enter the number 190 on the numeric keypad whilst 
+the <ALT> key remains depressed.  Now release the <ALT> key and Hal Lite will 
+prompt you to enter the string.  Type in your message, e.g. "marker" and 
+<ENTER>.  Hal Lite will inform you "done".
+
+7. -  Parameters
+
+This section completes the description of Hal Lite's basic command set and 
+describes some special features not mentioned in the earlier lessons.  Most 
+users may never need to know about these features.
+
+7.1 Command line entries
+ 
+All additional command line entries beyond the Hal Lite program name are 
+separated by a space and the dash sign -.  It is important to note that this 
+is not the underline character.
+
+HLITE  -r
+removes Hal Lite from the system
+
+HLITE  -ffilename
+loads the environment filename in to Hal Lite
+
+HLITE  -dpath
+for files which have no path, e.g. hal.spc, prompt.hal and english.dic, this 
+is the absolute "path" to be used
+ 
+HLITE  -d
+sets absolute path to the current directory
+
+HLITE  -pfilename
+loads the prompt file filename
+
+HLITE -a
+loads the default Exceptions Dictionary, english.dic
+
+HLITE  -afilename
+loads the Exceptions Dictionary "filename"
+
+HLITE  -n
+bypass test for valid directory. (Needed for networks)
+
+HLITE  -m##
+where ## is the size in kilobytes of the largest Exceptions Dictionary needed
+
+HLITE -c
+Send speech output to PC 2 card (default address)
+
+HLITE -c2
+Send speech output to PC 2 card (secondary address)
+
+HLITE -1
+Send speech output to Apollo 2/Juno on COM1.
+
+HLITE -2
+Send speech output to Apollo 2/Juno on COM2.
+
+HLITE -3
+Send speech output to Apollo 2/Juno on COM3.
+
+HLITE -4
+Send speech output to Apollo 2/Juno on COM4.
+
+HLITE -KG
+Disables monitor markers from firing in 'graphics mode'.
+
+Some HAL users experience a scrambled screen when using the 'graphics mode' 
+page preview facility of WordPerfect.  If you experience this problem, then 
+use the -KG command line option.
+
+The following options can be used on the command line of a currently running 
+Hal Lite.
+
+HLITE  -dpath
+HLITE  -ffilename
+HLITE  -pfilename
+(see above for details
+
+8. - Advanced parameters
+
+After reading the Hal Lite User Guide and this lesson, you will have covered 
+all the basic parameters and their options.  There will still be a number of 
+advanced parameters that have not been covered and these will be dealt with 
+later on in the manual.
+ 
+8.1 Muting
+ 
+One of the problems associated with using speech to access text is how to 
+stop the synthesiser talking unnecessarily.  We have already considered the 
+<ALT> and <M> and <SHIFT> and <0> methods for muting. However, Hal Lite 
+offers three more refined options within the muting parameter which should 
+cover most contingencies.
+
+When muting is set to on the depression of any key instantly mutes anything 
+that is being spoken.  So, for example, if you were typing with every 
+character being echoed by Hal Lite then you could never "out-type" the speech 
+because any outstanding speech would be muted by your typing - this is why the 
+key echo parameter will not work on words when muting is on.  As Hal Lite is 
+triggered to read a word when the <SPACE BAR> is pressed so the word is muted! 
+
+The outcome of all this is silence (although some software packages give a 
+strange effect of making Hal Lite speak the previously typed character).
+
+Another option is muting - all commands which is identical to muting - on but 
+functions only within reading mode.
+ 
+The third option is muting - cursors.  This option is identical to muting - 
+on but only applies to the cursor keys.  It is particularly useful when 
+reading through documents in a word processor because you do not have to wait 
+until a whole line is spoken before going on to the next line - simply hit 
+the appropriate cursor key to stop the current line being spoken and start 
+hearing the next line.  This setting is favoured by users who set the key echo 
+parameter to words.
+
+The final option is muting - off which turns off Hal Lite's special muting 
+facilities mentioned above.  However the <ALT> and <M> command is still 
+available.
+
+8.2 Sound parameters
+ 
+Hal Lite can produce a number of musical notes to present you with 
+information such as the cursor position, typing of upper case letters and 
+Hal Lite error messages.  There are three options - all, off and an 
+intermediate one called beeps.
+ 
+Having sounds - all on greatly helps when screen reading.  For example, when 
+reading lines the pitch of the musical note decreases as you move further 
+down the screen.  When reading a word at a time the musical pitch increases 
+as you progress along the line.
+
+The musical notes can also help when reading characters as it is possible to 
+differentiate between upper and lower case letters, punctuation, spaces and 
+control characters. Do not be concerned about the term "control characters" 
+as they will be discussed in more detail later.  (However, if you come across 
+an invisible character on the screen which emits a high pitched note then it 
+is a control character!)  Musical notes are also useful in live mode because 
+a tone is emitted when upper case letters are typed.
+
+The second option is sounds - beeps.  This option gives limited musical beep 
+feedback including beeps when typing capital letter keys.  Finally sounds - 
+off simply turns off all musical sound output from Hal Lite.
+ 
+The best approach to this parameter is to try all three options and use the 
+one which meets your needs.  If your computer has a volume control be sure 
+to turn it up before embarking on any experiments.
+
+8.3 Attributes
+
+As we saw earlier, every character on the screen (including spaces) has three 
+attributes to describe it.  Just to remind ourselves, these three are:
+ 
+* foreground colour
+* background colour
+* ASCII value
+
+The ASCII value is a special number which is given to every character - for 
+example an upper case A has an ASCII value of 65.  (By the way ASCII stands 
+for American Standard Code for Information Interchange).  These ASCII values 
+need not concern us at this stage. Earlier we discovered how to ascertain the 
+attributes of individual characters, now we move on to a more sophisticated 
+way which gives the information a line at a time by using the parameter menu.
+ 
+Enter reading mode and then enter the parameter menu. <TAB> through to the 
+attributes parameter and use the <SPACE BAR> to select the option attributes - 
+on.  Use the <ESC> key to return to reading mode and try reading the screen a 
+line at a time - as well as hearing the usual text on the screen you will 
+also be told the background and foreground colours.  
+
+Additionally, you can be given this information on your current line when in 
+live mode by pressing <ALT> and <L>.
+
+As we have seen this data can be very useful during the planning stage of 
+colour restriction and will be even more useful later on when we consider 
+highlighted text.
+
+8.4 Compressing spaces
+ 
+When Hal Lite reads two words separated by a number of spaces there may be a 
+slight time delay.  This can be either a useful clue to screen layout or an 
+annoying feature.  Hal Lite allows you to set the delay to compress - on/off 
+or 1-20.
+
+When this parameter is set in the range 1 to 20 it controls the length of the 
+pause in the speech when Hal Lite comes across multiple spaces on the screen.  
+(1 being the shortest pause and 20 being the longest pause.)
+
+As with many of Hal Lite's advanced features it is often a question of 
+personal taste as to the setting of a particular parameter option.  The best 
+policy is to experiment until you find the appropriate combination for your 
+needs.
+
+8.5 Cursor, Enter and Tab actions
+ 
+Within Hal Lite these three types of key have certain elements in common.  
+However, the cursor keys are particularly flexible so we will deal with them 
+first.
+
+8.6 The cursor keys
+ 
+The cursor keys are often used in application programs such as word 
+processors, databases and spreadsheets to allow you to move around the screen 
+rather as in reading mode with the up, down, left and right commands.  As you 
+have seen, the cursor keys can be used in reading mode to do just that.  
+However, when you are not running an application program and the computer is 
+at DOS level the cursor keys are not used in this way.
+ 
+You may be interested to know that at DOS level the left and right cursor 
+keys have a special effect.  Try entering: lessons  <ENTER> with the Hal Lite 
+disk in Drive A. You will get an error message because there is no such file 
+on the disk.  Now at the A:> prompt hit the right arrow key a couple of times 
+and check your current line with <ALT> and <L>.  You will find that beyond 
+the prompt are the first couple of letters of the word "lessons". 
+
+Continue to tap the right arrow key until "lesson" appears, then hit the 
+<ENTER> key and the program will load.  If you go too far and get the whole 
+word "lessons" on the screen, just tap the left arrow key and it will delete 
+the letter "s" from the end.  Your MS-DOS manual will give you many more 
+useful hints and tips of this kind.
+
+8.7 Cursor, carriage return and tab keys - common options
+ 
+Having dealt specifically with cursor key actions we can now move on to 
+consider a number of common options applicable to cursor, carriage return and 
+tab keys.
+ 
+The parameters cursor does, return does and tab does each have nineteen 
+options and they are listed and explained below:
+
+lines
+reads the line that the cursor is on.
+
+highlighted text
+this will be dealt in Lesson 4.
+
+to cursor
+reads text on line up to cursor position.
+
+column
+reads column number of cursor position.
+
+read two lines  
+reads the line above the current line and the current line.
+
+read three lines
+reads two lines above, one line above and the current line.
+
+read window 0 
+through 9
+windows will be dealt with later in the manual.
+
+off
+no spoken output.
+
+characters
+speaks the character at the cursor.
+
+words           
+speaks the word at the cursor.
+
+Although at first sight some of these options might appear obscure, experience 
+has found them to be very useful in a number of applications as we will see 
+later.  However, in the meantime, the default option settings of cursor does 
+lines, return does off and tab does off are probably the most sensible.
+
+8.8 Timer wait and extra key checks
+ 
+These two parameters relate to the interaction between Hal Lite, an 
+application program and the depression of cursor keys.  The technicalities of 
+this interaction need not concern us here but suffice it to say that should 
+any problems be experienced when using the cursor keys in a program, changing 
+these parameter options can help.  An example of such a problem is an 
+excessively long delay elapsing between pressing a cursor key and Hal Lite's 
+spoken response.
+
+8.9 Document Read
+
+This advanced facility allows you to read a whole document from within your 
+favourite word processor, and edit it easily.  This will be very application 
+dependent, so Document Read will need to be set up for each application you 
+use.
+
+Hal Lite allows you to stop the Document Read at any time by pressing <SPACE>.  
+Hal Lite will then automatically move the application's cursor to the word or 
+sentence that was being read.
+
+Document Read needs to be configured for each individual application Hal Lite 
+uses.  Therefore setting the correct parameters in Hal Lite's parameter menu 
+is very important.
+
+To configure Document Read you need to enter Hal Lite's parameter menu.  (You 
+will find the options at the bottom of the menu).
+
+Do this by pressing:
+
+<ALT> and <J>, then <P>  
+
+Hal Lite will respond by saying "parameter menu".
+
+Use the <TAB> key to move to the options that start with the "Document Read" 
+message.  (You can cycle through the options for each Document Read parameter 
+using <SPACE>). Here is a list of the Document Read parameters (and what they 
+do):
+
+Document Read mode
+
+Options:        Off 
+		On 
+		All 
+		All Extra Key Checks
+
+This parameter controls the mode in which Document Read operates.
+
+Off             Turns Document Read off
+On              Turns Document Read on
+All             Changes the way Document Read interacts with an application.  
+		You should use this option  if spoken words or lines are 
+		incomplete.
+All Extra
+Key Checks      Changes the way Document Read interacts with an application.  
+You should use this option if none of the above options work.
+
+Document Read does
+	
+Options:        off 
+characters 
+words
+lines 
+highlighted text 
+to cursor 
+column 
+read two lines 
+read three lines 
+read window 0 through 9
+
+This parameter works in the same way as the Cursor does parameter in the 
+parameter menu, and controls whether Document Read moves a whole words, a 
+whole line, etc. at a time whilst moving through the document.
+
+Document Read  -  Document Read Window
+	
+Options:        window 1 to 9 
+		off
+
+Each application you use has its own way of signalling it is at the end of a 
+document (End of document code).  So Hal Lite has a user-definable way of 
+checking for the end of a document.
+
+You must define a single line window around the area of the screen in which 
+the application displays its line, row and column information.  You should 
+try to make the single line window as small as possible so Hal Lite can check 
+the end of document status quickly.  
+		
+For example in WordPerfect the status line looks something like:
+
+Doc 1 Pg 1 Ln 1 Pos 1
+
+You would create the single line window around the Doc 1 Pg 1 Ln 1 Pos 1 area.  
+Once the end of a document is reached in WordPerfect, the line number will no 
+longer change.  Hal Lite will then know that the end of a document has been 
+reached.  
+
+N.B.  Window 0 cannot be defined as the Document Read Window.
+
+This option should be used in conjunction with Document Read  -  
+For same / For change parameter, detailed below.
+
+Document Read - For Same / For Change
+
+Options:        for same 
+		for change
+
+This option works in a similar way to monitor markers.  If the Document Read 
+Window remains the same when the end of a document is reached then the for 
+same option should be selected.  e.g. in WordPerfect the line number does not 
+change when the end of a document has been reached. If the application 
+displays a message line or pop-up box to signify the end of a document, use 
+the for change option.
+
+This option is application-dependent.  
+
+Document Read  -  Blank
+
+Options:        2 to 99 
+		off
+
+This is another method of monitoring for the end of a document.  This option 
+tells Hal Lite to monitor for blank lines/words rather than monitoring the 
+Document Read Window.  You can specify the number of lines/words for Hal Lite 
+to look for, from 2 through 99.  This will be useful where applications do not 
+have a status line or you want to stop reading after a fixed number of lines.
+
+Document Read Delay
+	
+Options:        on 
+		off
+
+If an application seems to be reading the wrong information from the screen, 
+e.g. Hal Lite is reading the previous line all the time, then switch this 
+parameter on.  Otherwise leave it off.
+
+Document Read Forward
+
+This parameter defines the keystroke which your application uses to move the 
+cursor forward within a document, by default it is <CTRL> and <cursor right>.  
+For example, VIEW (see "ASCII file viewer") uses the <cursor right> to move 
+the cursor forward through the document.  So, to define this keystroke you 
+would:
+
+*       Move to the Document Read Forward parameter in the parameter menu.
+
+*       Next, press <ENTER>.
+
+*       Now, press the down arrow key.
+
+Hal Lite will then say "done".  The Document Read Forward keystroke has now 
+been set.
+
+Document Read Backward
+
+This parameter defines the keystroke which your application uses to move the 
+cursor backward within a document, by default it is <CTRL> and <left cursor>.
+
+For example, VIEW (see "ASCII file viewer") uses the <up cursor> to move the 
+cursor backward through the document.  So, to define this keystroke you would:
+
+*       Move to the Document Read Backward parameter in the parameter menu.
+
+*       Next, press <ENTER>.
+
+*       Now, press the down arrow key.
+
+Hal Lite will then say "done".  The Document Read Backward keystroke has now 
+been set.
+
+N.B.  When using Document Read you must make sure that a forward keystroke 
+followed by a backward keystroke leaves your cursor position unchanged.
+
+Document Read  -  Timer Wait
+
+Options:        0 to 99
+
+This parameter works in exactly the same way as Timer Wait parameter.
+
+It is useful to note that when using Document Read  -  Timer 
+Wait you should start by setting it to the same as the Timer Wait parameter.
+
+If you place a high number in this option your application may jam.
+
+Starting Document Read
+
+To activate the Document Read facility you need to press:
+
+<ALT> and <P>, then <C>  
+
+in live mode.
+
+The synthesiser will then start to read the document, until the end of the 
+document is reached, or a key is pressed.
+
+* When Hal Lite has been set up correctly to use the Document Read facility, 
+it should return the message "End of Document" when it reaches the last line 
+in a document.
+
+8.10 Cursors Wait
+
+If Cursors Wait is set to off then Hal Lite will delay the application from 
+getting the next keypress.
+
+9.   -  Simple Windows
+
+You have already come across the <ALT> and <P> command to read window number 
+zero - the whole screen.  This lesson teaches you how to define up to nine 
+other windows of any size and position.
+
+9.1 Defining the window
+
+Windows can be very useful to give you instant access to useful parts of the 
+screen such as status lines.  A window can be as small as part of a line, or 
+a whole line or a block of lines.  Also, windows can overlap each other.  
+Just imagine drawing a rectangle on the screen which covers text that you are 
+interested in - that is a window and you can read it immediately using the 
+<ALT> and <P> command.
+
+Firstly, enter reading mode and explore the screen to decide upon the area 
+you wish to define as a window. Now position the cursor at the point you 
+wish to become the top left hand corner of the window.  Hit the <W> key and 
+Hal Lite will say "window".  Tap the letter <S> for start of window and a 
+number, say <1>.  We have now defined the top left hand corner of window 
+1.  Next move the cursor to the point which is to be the bottom right hand 
+corner of the window.  Hit <W> for window then the letter <E> for end of 
+window and finally a number, - the number <1> in this example.
+
+Having defined window number 1 we can try reading it. Exit from reading mode 
+to live mode and enter <ALT> and <P> followed by the number <1>.  Hal Lite 
+will read all the text within the window.  As mentioned before, this is 
+particularly useful for reading status lines such as those found in word 
+processors and spreadsheets.  Remember, you can define up to nine windows 
+using the numbers 1 through 9.  Window number 0 is always the entire screen 
+and cannot be changed.
+ 
+Of course you can use the <ALT> and <R> command to restrict the output of 
+the window to a colour combination, underlined, blinking or inverse video 
+text.
+
+9.2 Entering the window
+ 
+In reading mode you can go into a window by tapping the <W> key for window 
+followed by the window number - number <1> in our example.  As soon as you 
+have done this Hal Lite thinks of the window as being the whole screen and 
+will not allow you out of the area defined as that window number.  You can 
+read it using all the standard commands such as <T>, <L> etc.  This can be 
+very useful for taking you straight to the area of the screen that interests 
+you - for example one field in a database.
+ 
+By using <ALT> and <R> you can limit output from the window even further by 
+restricting colour output.  So, for example, if you were only interested in 
+red text on a black background within your window you could access this 
+information very quickly.
+
+You can come out of the window in a number of ways. Firstly simply by exiting 
+reading mode with the <ENTER> key or by tapping <W> for window and hitting 
+the number <0>: this makes the whole screen your window again.  Another method 
+is to go to a marker outside of the window.
+
+10.   -  Find and Output Windows
+
+You have now learnt the basic concepts associated with windows.  This lesson 
+goes on to examine two specific types of window.
+
+10.1 The find window
+ 
+We have already come across the find command in reading mode and the use of 
+the <|> character to find further occurrences in the search.  With a find 
+window we limit the extent of the search to the text within the window.
+ 
+First of all define a window, then within reading mode enter the parameter 
+menu and cycle through the parameters with the <TAB> key.  When you reach 
+find window - 0 cycle through the window numbers using the <SPACE BAR> until 
+you reach your defined window number.  Then exit the parameter menu.  From 
+now on your find facility will only work within that window number. 
+
+Again you can narrow down the search still further by restricting the colour 
+of the character being searched for by using <ALT> and <R> in the usual way.
+ 
+Hal Lite's string search facility can be limited in exactly the same way to a 
+find window with or without colour restriction.
+
+Experiment with find windows using both single character and string searches 
+to acquaint yourself completely with the concept of windows before continuing 
+with the next section.
+
+10.2 The output window
+ 
+So far we have only been considering windows within reading mode (apart from 
+the <ALT> and <P> command in live mode).  The concept of the output window is 
+different because it determines what part of the screen is output in live 
+mode.
+ 
+In many application programs which are menu driven the entire menu is spoken 
+just as it appears on the screen. However you might not wish this to happen 
+because, for example, the menu contains a digital clock which is always being 
+updated and hence all you hear is the time being repeated over and over again. 
+
+If you define an output window which excludes the clock display then only the 
+part of the screen within the window area is spoken and the clock is silenced.
+ 
+To define an output window, start off in the usual way by defining a window 
+which excludes areas of the screen which you do not wish to be output.
+
+Next, we have to tell Hal Lite that this window number is an output window.  
+Do this by cycling through the parameters until you reach output window. Now 
+tap the <SPACE BAR> until you hear your window number spoken.  Escape from 
+the parameter menu and exit reading mode.  Future screen output will only 
+come from within the area of your output window.  Reading of text with <ALT> 
+and <L>, <ALT> and <K>, cursor keys etc. are also restricted to the output 
+window in live mode.
+ 
+The simple window described in Lesson 2 together with the find and output 
+windows covered in this lesson really are more straightforward than might be 
+imagined at first reading.  As with every concept outlined in this manual the 
+secret of understanding lies in practical experimentation and this will pay 
+dividends when we move on.
+
+11.   -  Highlighted Text
+
+This lesson  moves on to discuss highlighted text.  This is text that you 
+consider important or of high profile.  You may choose to define your 
+highlighted text  as being of any colour, blinking, underlined, or inverse 
+video text.  It does not have to be a bright colour or even the colour that 
+the application program you are running refers to as `highlighted'.
+
+11.1 Setting the highlight option
+ 
+Suppose we decide that information given in the colour green on a black 
+background is of great importance within a particular application program.  
+If we define this colour combination as being our highlight colour then 
+Hal Lite offers us a number of ways to quickly access this data.
+ 
+First of all, we need to tell Hal Lite that green foreground with a black 
+background is our choice as highlighted text.  To do this use the parameter 
+menu and <TAB> through until "highlight is" is spoken.  Tap the <SPACE BAR> 
+and Hal Lite will say "highlighted text - foreground - black".  
+
+Use the <SPACE BAR> to cycle through the foreground colour options until the 
+desired colour is reached - green in our example.  
+
+If your foreground colour is to be a "bright" colour then continue with the 
+<SPACE BAR> until your desired colour is reached.  Now tap the <ENTER> key 
+and Hal Lite will offer you the background colour options.  Cycle through 
+these until the desired colour is reached and then hit the <ENTER> key.  
+Hal Lite will confirm your choice of background and foreground colours which 
+make up your definition of highlighted text.
+ 
+When using the method described above to select the highlight colour of your 
+choice you may wish to choose a particular foreground colour regardless of 
+its background colour or you may wish to choose text of any colour on a 
+specific background colour.  You can do this by telling Hal Lite to ignore 
+either the foreground or background option by pressing the <ESC> key instead 
+of selecting a colour.  Hal Lite will announce "ignored" in confirmation.
+ 
+Finally, you may choose blinking, underlined or text in inverse video by 
+entering either the letter <B>, <U> or <I> after tapping the <SPACE BAR> once 
+(instead of cycling through the colour options with the <SPACE BAR>).  
+Hal Lite will announce your choice in confirmation.
+
+It is important to be clear that choosing a highlight colour is not the same 
+as restricting output to a certain colour combination.  You could, for example, 
+have selected green on black as the highlight colour but have output 
+restricted to red on white.
+
+Now the easiest way to read the highlighted text on the screen is by using 
+<ALT> and <Y>.  Try it and see. Notice, as mentioned above, that you can read 
+the highlighted text even when output is restricted to another colour.  
+Pressing <ALT> and <Y> a second time will spell the highlighted text.  This 
+is similar to <ALT> and <O>, when pressed once it reads the word that the 
+cursor is on, when pressed a second time it spells the word the cursor is on.
+
+Try experimenting at this early stage so that you are quite sure that you can 
+differentiate between the concepts of restricting output and highlighting 
+text.  It might help to think of output restriction (<ALT> and <R>) as being 
+negative whereas highlighting output is a positive act.
+
+11.2 The highlight window
+ 
+It is possible to limit the amount of highlighted text which is read by <ALT> 
+and <Y> to a specific area of the screen by using a new type of window - the 
+highlight window.
+
+The window is constructed in the usual way (see Lesson 2).  Say, for example, 
+you make it window 6, Hal Lite now needs to be told that this is to be 
+considered as a highlight window.  Simply move through the parameter menu 
+until you reach highlight window.  Now cycle through the window numbers by 
+means of the <SPACE BAR> until you reach highlight window - 6, escape from 
+the menu and then exit to live mode.  The command <ALT> and <Y> will now only 
+read highlighted text within the confines of window 6.
+
+Again we stress the need to practice these techniques.  It is not enough to 
+simply read these lessons.  The use of highlighted text and highlight windows 
+is a very powerful tool which, if understood, will save you much time.
+
+11.3 Accessing highlighted text with the Tab, Return and Cursor keys.
+    
+So far we have only used <ALT> and <Y> to access the highlighted text.  We 
+now move on to see some very useful additions.
+ 
+In some applications it might be desirable to have the highlighted text 
+spoken when either the <TAB>, <ENTER> or cursor keys are hit.  All these 
+keys can be defined to do this via the parameter menu.  Simply <TAB> through 
+to either tab does, return does or cursor does. 
+
+Now cycle through the options with the <SPACE BAR> until you reach highlighted 
+text.  Return to live mode - you will find that each time the key is 
+depressed all highlighted text is spoken.  If you have set a highlight window, 
+only the highlighted text within that window will be spoken.
+ 
+Please note that the <TAB> and <ENTER> keys are often defined in a special 
+way by an application program which may override any definition which you 
+may have given them.
+ 
+The definition of cursor keys is particularly useful in application programs 
+such as spreadsheets.
+
+A spreadsheet is simply a grid of boxes on the screen rather like a chess 
+board.  Each square is called a "cell" and the data entered into it is 
+displayed in one colour on the screen.  As you move the cursor around the 
+cells the colour of the cell which the cursor is on changes.  This is simply 
+a device to show you where the cursor is.  When the cursor is on a cell it is 
+called the active cell.  Now this colour change can be taken advantage of by 
+Hal Lite.
+
+If we know the foreground colour of the contents of the active cell then we 
+can set that as the highlight colour. Now if we program the cursor keys to 
+read highlighted text, as we cursor around the spreadsheet we shall have the 
+contents of the active cell spoken to us. This is much easier than having to 
+move the cursor and then doing an <ALT> and <Y> over and over again.
+ 
+To make it tidier we can define a window around the spreadsheet grid and make 
+this a highlight window.  This means that text outside the grid which is 
+displayed in the highlight colour will not be spoken when the cursor keys are 
+depressed.
+ 
+Already we have started to create an environment which enables us to use a 
+spreadsheet in a very friendly way. Later we will build on this and consider 
+some other possible environments.
+
+12.   -  Monitor Markers
+
+In the earlier lessons you learnt about the twenty six markers.  This lesson 
+moves on to an advanced application for  markers: when they are defined as 
+monitor markers.  As their name implies, monitor markers  are used by 
+Hal Lite to monitor what happens at their position on the screen.
+
+12.1 What can monitor markers do?
+ 
+Before we learn how to use monitor markers let us whet your appetite by 
+describing what monitor markers can do.
+ 
+Three occurrences can be detected by a marker.  They are:
+ 
+* when the character at that point becomes the one specified by you
+
+* when the character at that point changes from the one specified by you
+
+* when the character at that point just changes
+
+When a monitor marker is triggered by one of these occurrences it can perform 
+a number of actions:
+
+* announce a message
+
+* load a new environment file
+
+* perform one of the tab, carriage return or cursor key functions outlined 
+below:
+
+lines
+reads the line that the cursor is on.
+
+highlighted text
+this has been dealt with in Lesson 4.
+
+to cursor       
+reads text on line up to cursor position.
+
+column
+reads column number of cursor position.
+
+read two lines
+reads the line above the current line and the current line.
+
+read three lines
+reads two lines above, one line above and the current line.
+
+read window 0 
+through 9
+windows will be dealt with later in the manual.
+
+off
+no spoken output.
+
+characters
+speaks the character at the cursor.
+
+words   
+speaks the word at the cursor.
+
+An example of using a monitor marker could be to watch the line 
+number indicator on a word processor status line.  It could be set 
+to announce the message "new line" every time this number 
+changes as you write a document.  A logical extension of this 
+would be the announcement of "new page" etc.
+ 
+Having seen what can be done let us now move on to see how to 
+go about it.
+
+12.2 Setting up a monitor marker
+ 
+There are three stages involved in setting up monitor markers.
+  
+12.2.1 Stage 1  - defining the change
+ 
+The first stage involves careful selection of a point on the screen which you 
+know will change in some way when you require an action to take place.  We 
+have already considered a possible application of a line or page number 
+changing on a word processor status line.  Locate the cursor on that position 
+within reading mode.  Make use of the <ALT> and <I> command to ensure that 
+you are in the correct position.
+
+Now, hit the letter <M> key to set a marker at that point and then tap any 
+letter of the alphabet.  In this example we will use the letter <A>.
+ 
+Just to recap, we have positioned marker A at a point on the screen which we 
+wish to monitor.  We must now go on to define the type of change to be 
+monitored for.
+ 
+Within reading mode, <CTRL> and <W> takes you into the monitor marker menu.  
+This menu is rather like the parameter menu and uses the <TAB> key to move 
+through the twenty-six monitor markers (represented by letters of the 
+alphabet).  Thus, when you first enter the menu, Hal Lite announces "monitor 
+marker - a" followed by its present setting which by default is off.  Try 
+tabbing through the markers.  Alternatively you can just hit a letter to go 
+straight to a monitor marker - for example to set marker V enter the monitor 
+marker menu and tap the letter <V>.  Now then, hit <ESC> and the synthesiser 
+will say "reading" and you will be returned to reading mode.
+
+Within the monitor marker menu the <SPACE BAR> is used to change the options 
+of each monitor marker.  Try re-entering the monitor marker menu and when 
+Hal Lite says  monitor marker - A - off" tap the <SPACE BAR>.
+
+With each subsequent tap you will hear the following: "monitor marker - A for 
+same", "monitor marker - A for not same", "monitor marker - A for change" and 
+finally "monitor marker - A - off".  These same, not same and change options 
+refer to an appointed character which we have yet to define (in stage 2, 
+below).
+ 
+Thus, the three active options are a shorthand form of writing:
+ 
+* monitor marker A will trigger when it detects the appointed character (same).
+ 
+* monitor marker A will trigger when it detects a change from the appointed 
+character (not same), and finally 
+
+* monitor marker A will trigger when it detects any change at all (change).
+ 
+In our example, we are going to use the A marker to tell us when a point on 
+the screen changes to the letter X. Thus, our appointed character is the 
+letter X and our change option is "monitor marker - A for same".
+
+12.2.2 Stage 2  -  defining the appointed character
+ 
+When Hal Lite speaks "monitor marker - A for same", press the <TAB> key and 
+you will be prompted to enter the appointed character with the message 
+"character is - O.K.?".  We have to say "no" in response to this question 
+because our appointed character is the letter X - so press <N> for "no".  
+Hal Lite responds with "type character to watch".  Enter the letter <X>.  
+Note: be careful to differentiate between upper and lower case.
+
+As soon as you have entered the appointed character Hal Lite moves on to 
+offer a couple of courses of possible action for you to select when the 
+character at monitor marker A becomes an X.
+ 
+Please note that it is possible to enter an ASCII number as the appointed 
+character.  For example, if you wish the appointed character to be ASCII 191, ®, 
+(which is not a spoken character) simply enter the number 191 on the numeric 
+key pad whilst keeping the <ALT> key depressed.
+
+12.2.3 Stage 3  -  defining the action
+ 
+Hal Lite allows us to define three types of action which can be taken when 
+the point at monitor marker A becomes an X.  They are:
+ 
+* speak a message
+* load an environment file
+* perform one of the tab, carriage return, cursor key actions
+	
+In our example we want Hal Lite to read the whole screen (window 0) when the 
+letter X appears at monitor marker A.
+
+Just as soon as you have entered the appointed character you are asked 
+"message is - O.K.?".  In our example, we do not wish Hal Lite to speak a 
+message so we can answer "yes" to this question - tap the letter <Y>.  
+Hal Lite now offers us another course of action by asking "file is - O.K.?".  
+Again, we can answer <Y> to this question because we do not want Hal Lite to 
+load in an environment file.  Finally, Hal Lite moves on to the third series 
+of actions possible - the tab, carriage return, cursor key actions.  The 
+first of these is "action for monitor A - words".
+
+Now, cycle through these options using the <SPACE BAR>.  They are as follows:
+
+lines
+reads the line that the cursor is on.
+
+highlighted text
+this has been dealt with in Lesson 4.
+
+to cursor
+reads text on line up to cursor position.
+
+column
+reads column number of cursor position.
+
+read two lines
+reads the line above the current line and the current line.
+
+read three lines
+reads two lines above, one line above and the current line.
+
+read window 0 
+through 9       
+windows will be dealt with later in the manual.
+
+off     
+no spoken output.
+
+characters      
+speaks the character at the cursor.
+
+words           
+speaks the word at the cursor.
+
+In our example, we wish to select the option read window 0 through 9.  Cycle 
+through with the <SPACE BAR> until Hal Lite says "read window 0" and then tap 
+the <ESC> key, the synthesiser will say "reading" and you will leave the 
+monitor marker menu.
+
+12.3 Monitor marker activation
+ 
+In our example we set a point on the screen to be monitored by marker A so 
+that if the letter X appeared at that point, Hal Lite would read the entire 
+screen.  Of course, you may configure the three variables outlined above in 
+any way you wish to suit your particular application.
+ 
+Finally, you need to activate the monitor marker option within the parameter 
+menu.  Simply <TAB> through the parameter menu and select the monitor marker 
+on option.  From now on any monitor markers that you have set will be in 
+operation.
+
+Again we have to stress the need to experiment and practise using monitor 
+markers.  They are not always easy to set up but once you have done so it is 
+possible to save these settings in an environment file so that you need never 
+have to repeat the procedure.  We will look at this in the next lesson.
+
+13.   -  Miscellaneous Commands
+
+If you have worked through all the lessons so far, you will have learnt 
+nearly all of Hal Lite's commands.  There still remain a few which will give 
+you even more power to configure your system.
+
+13.1 Hal Lite commands and application programs
+ 
+Some application programs use the same <ALT> key commands as Hal Lite does 
+in live mode.  This can be a nuisance because Hal Lite obeys the command and 
+stops it getting to the other program.  To overcome this Hal Lite uses <ALT> 
+and <N> which makes it ignore the next <ALT> key command.  For example if a 
+database program uses <ALT> and <L> as a command to move on to the next 
+record you will have to enter <ALT> and <N> and then <ALT> and <L>.  Don't 
+forget that most programs allow you to re-define such keys - this would be a 
+better alternative than having to constantly use the <ALT> and <N> command.
+
+Another method is to turn the Hal Lite Alt keys off.  You can do this with 
+<ALT> and <A> from within reading mode. This leaves only <ALT> and <J> 
+active in live mode.
+
+13.2 Status report
+ 
+The @ "at" sign in reading mode gives you the status of certain special keys 
+such as insert and number lock.  The key status is only mentioned when its 
+option is on.
+
+13.3 Saving or loading the Hal Lite prompts and environments
+ 
+There are two types of file that Hal Lite can load or save.  They are as 
+follows:
+
+13.3.1 The prompt file
+ 
+The prompt.hal file contains a list of Hal Lite's spoken commands,  for 
+example, "period" when you press the "full stop" key on the keyboard.  It is 
+possible to edit the prompt file so as to change the wording (See PREDIT). 
+
+So, if you want to change exclamation" to say "exclamation mark" you can do 
+so.  It is then possible to have a number of prompt type files which can be 
+loaded at any time to suit the application.
+
+There are a number of foreign language prompt files for Hal Lite, if you 
+have a Series 2 Synthesiser with additional language ROMs then you can load 
+in the appropriate prompt file and it could be set to automatically change the 
+active language ROM.  The way that it does this is by the @= command on the 
+last line of the file. 
+
+For example if you have two languages,  English and Welsh with English as 
+the first ROM then make sure that the English prompt file has the command @=1 
+as its last line, and the Welsh ROM has @=2 as its last line.  For multiple 
+ROM boards the @ commands in the prompt files should always equal the 
+appropriate ROM number. For example number one for English, number two for 
+Spanish, number three for Italian and number four for American.
+ 
+To load a prompt file simply enter <ALT> and <F> and in response to "load or 
+save" tap the letter <P> key.  Hal Lite will say "prompt".  Now enter the 
+prompt file name and press <ENTER>.  All being well the speech synthesiser 
+should say "done" and greet you in the language selected.
+
+Hal Lite always starts up by loading in the prompt file named prompt.hal - 
+however, any language prompt file can be renamed prompt.ha
+
+13.3.2 The environment file
+ 
+Hal Lite's environment is automatically loaded when Hal Lite is first run to 
+give you what is known as the default environment.  The name of this file is 
+hal.spc.
+ 
+However, you can change the environment with variations  such as voice speed, 
+pitch of speech, parameter changes etc. and it is possible to go on to save 
+this environment to disk and subsequently reload it into Hal Lite so that you 
+do not have to go to the trouble of modifying the default environment all 
+over again.
+
+If you always want to start up in your new environment then save it to the 
+file name hal.spc so that it replaces the default hal.spc file.
+
+The <ALT> and <F> command allows you to load or save the Hal Lite environment.  
+Once you have adjusted Hal Lite to give optimum output for your application, 
+you can save the setting to disk with <ALT> and <F> in live or reading mode.  
+After entering this command you are posed the question "load or save?".  
+Answer with the letter <S> for "save" and you will be asked for a file name.  
+Enter a legal file name and hit <ENTER>.  If the save is satisfactory Hal Lite 
+will say "done".  (If there is any problem Hal Lite informs you "save failed").  
+Please note that on some occasions Hal Lite will not perform the save until 
+you come out of reading mode.
+
+To load that environment back into Hal Lite use <ALT> and <F> again but this 
+time answer <L> for "load".  Again give the file name and the data will be 
+loaded.  If the load is satisfactory, the synthesiser will say "done", 
+otherwise it will say "load failed".  An environment file can be loaded 
+automatically by means of monitor markers - see Lesson 5 of this manual.
+
+An alternative way to the hal.spc method of loading on boot up is to add the 
+filename to your batch file as shown below:
+ 
+HLITE  -fxxxx
+ 
+where xxxx is a legal file name.  It is important to separate the environment 
+file name from the Hal Lite name by a space and a dash and the letter "f".
+
+If we had saved a spreadsheet environment with the file name calc.hal then 
+the command line to load in this environment with Hal Lite is as follows:
+ 
+HLITE  -fcalc.hal
+ 
+Try saving an environment and then loading it back into Hal Lite using the 
+<ALT> and <F>, the hal.spc and the command line methods.
+ 
+It is always possible to check the name of your current environment file by 
+tapping the <?> key when in reading mode.  This is very useful when working 
+on a number of environments which are to be loaded and unloaded by monitor 
+markers.
+
+13.4 The static cursor
+ 
+The static cursor facility available from within Hal Lite's parameter menu 
+is normally turned off.  If, however, you turn it on, Hal Lite will monitor 
+cursor movement, watching for a time when the cursor remains static.  When 
+this happens it will perform one of the operations from the usual tab, return, 
+cursor key actions list, that is, read - lines, highlighted text, to cursor, 
+column number, two lines, three lines, window 0 through 9, off, characters, 
+words.  This choice of options is available from the parameter menu under 
+the heading static does.
+
+The final variable concerned with the static cursor facility is that of 
+static wait.  This represents the length of time the cursor remains 
+stationary before Hal Lite takes any action.  The static wait parameter is 
+to be found within the parameter menu and allows you to choose options 
+between 0 and 9.  Each increment represents approximately 0.5 seconds wait.  
+It is best to experiment with this facility.
+
+13.5 The soft cursor
+ 
+Some programs use a soft cursor character such as ASCII 4, *, to show the 
+cursor position on the screen - the real cursor being somewhere quite 
+different.  For example, if you are using an early version of MS-WORD you 
+will find that wherever you are in the document the <ALT> and <L> command 
+will always read the same line.  This is the line where the true cursor is 
+parked.
+ 
+To overcome this problem, Hal Lite has a soft cursor facility which is 
+activated by using <CTRL> and <C> within reading mode.  Simply enter <CTRL> 
+and <C> and enter the soft cursor character.  From now on Hal Lite will 
+consider this as the real cursor.  If this character is a high ASCII number 
+then enter it via the numeric key pad whilst the <ALT> key is depressed.  If 
+the ASCII value is 32 (space character) then determine the foreground and 
+background colour of the soft cursor, set the highlight text to this value 
+and then enter <CTRL> and <C> and hit a function key.  If you need to 
+restrict this character to within a window then make it an output window.
+
+The Alt key method of entering high ASCII numbers can also be used with the 
+find command as follows.
+
+Within reading mode, tap the letter <F> key and Hal Lite will prompt you with 
+the word "find".  Now, with the "numlock" key on and the <ALT> key depressed 
+enter the ASCII number on the numeric keypad.  As soon as you release the 
+<ALT> key Hal Lite will initiate the search and announce "found" when it comes 
+across the character.
+
+14.   -  Creating Useful Environments
+
+You have already seen how a spreadsheet can be made to work in a friendly 
+way.  By making these `friendly' settings we have in effect created an 
+environment file.  This lesson considers the spreadsheet and some other 
+applications in more detail, with further reference to environment files.  
+Remember that you do not necessarily have to create your own environment files 
+as they have probably already been written for your application, and are 
+available from Dolphin on request.
+
+14.1 The word processor
+ 
+It must be emphasised that Hal Lite will work with most off-the-shelf 
+packages such as WordStar, DisplayWrite, Smartware and WordPerfect.  When 
+word processing with Hal Lite the best configuration is probably to have the 
+cursor keys reading a line at a time.  Also set the muting parameter option 
+to on if using key echo characters.  Most word processors use the <BkSp> key 
+to delete characters but occasionally the <DEL> key is used. 
+
+You can make this give intelligent feedback by setting it to either delete 
+previous or delete current in reading mode.  Tapping the <DEL> key will cause 
+it to toggle between these two options.  The original WordStar uses the 
+delete previous setting.  Experiment with this.
+
+Sometimes it is very hard to determine where exactly the cursor is when 
+editing.  The <ALT> and <K> key is a real boon here - it reads the current 
+line to the cursor.  After editing check on continuity with <ALT> and <L>.
+ 
+If you are a fast typist who uses speech then you might prefer to set keyboard 
+echo to words rather than characters - but do not forget to turn the muting 
+to cursors.  Try gradually increasing the speed of speech output from your 
+synthesiser and remember that many users find listening via headphones allows 
+them to comprehend very fast speech output.
+ 
+Many word processors have help screens that always appear in the same place 
+on the screen.  This is an ideal opportunity to construct a simple window 
+around this area for immediate access using the <ALT> and <P> command.
+
+It is a good idea to construct a window around the status line too - then you 
+can check your page or line number with an <ALT> and <P> command without 
+having to enter reading mode.  Again some packages use colours extensively, 
+for example underlined text appears in blue. It is a simple matter to restrict 
+output to that colour and check the text.
+ 
+When checking back through a document using the down cursor key it is a good 
+idea to have the "read capitals" option on, enabling you to check for case 
+errors.
+ 
+Some spell checkers throw up their suggested alternative spellings in a 
+different colour so use the <ALT> and <R> command to restrict colour and 
+then use the find command in screen reading to get straight to the first 
+suggested word.
+
+If your word processor uses a menu system where you have to use the cursor 
+keys to highlight an option then determine this highlight colour and set it 
+to be Hal Lite's highlight colour.  You could then configure the cursor keys 
+to read highlighted text but this could be inconvenient as they are used so 
+much when editing. 
+
+Another way is to use the cursor keys and then do an <ALT> and <Y> to read 
+the highlighted option.
+
+Don't forget that with many of these menu driven programs the initial letter 
+of the option will do the same thing as highlighting it. 
+
+Of course you can have more than one environment used within the package - 
+use monitor markers to load them in and out automatically.  Monitor markers 
+can also be used to read out messages.
+ 
+The static cursor can be of great help when using the word processor's "find" 
+command - you can configure it, for example, to read the line of text 
+containing a "found" word as soon as the cursor becomes stationary.  For 
+example <CTRL> and <Q>, then <F> in WordStar. 
+
+14.2 The spreadsheet
+ 
+Hal Lite can be configured to enable easy access to most of the popular 
+spreadsheets such as PC-Calc, Lotus 1-2-3, Smartware and SuperCalc.  Please 
+note, however, that a colour card is almost an essential prerequisite.  With 
+a spreadsheet the first thing to do is construct a window around the grid to 
+exclude all the co-ordinate letters and numbers.  Make this a highlight 
+window.  Now determine the foreground and background colours of the active 
+cell and make these the highlight colour. 
+
+Finally configure the cursor keys to read highlighted text. 
+
+Now you have an environment which reads the contents of the active cell as 
+you cursor around.
+ 
+It might be worth defining windows around the status lines so that you can 
+refer to them immediately from live mode with the <ALT> and <P> command.
+
+Another useful option would be to set monitor markers on the co-ordinates 
+status line.  They could be set to read them out as you move around to keep 
+track of your whereabouts.
+
+Finally, some spreadsheets give help screens in the form of two columns 
+separated by a central vertical line.  Such a screen layout is difficult to 
+read a line at a time so it is best to divide the screen into two windows 
+which can be accessed individually.
+
+14.3 The database
+ 
+There seem to be almost as many databases on the market today as there are 
+word processors.  However, most of them can be readily accessed using 
+Hal Lite.  Examples include Smartware, dBase and PC-File.
+
+Like spreadsheets, the use of a colour card in the PC can add considerably to 
+Hal Lite's flexibility when tailoring its environment for use with a database.
+ 
+A useful setting when entering data is to configure the return key to read 
+to cursor.  This means that as you make entries on a record the field name 
+will be spoken thereby enabling you to keep track of your progress.
+
+When using a database to retrieve information try to make use of colour.  For 
+example, the first field entry on a record is often printed in a different 
+colour to the other fields.  You could make this Hal Lite's highlight colour 
+and configure this to be spoken when it appears on the screen.
+ 
+If fields appear in the same screen position at all times then windows can 
+be utilised so that you can access data by using the <ALT> and <P> command 
+in live mode.
+
+Do not forget the value of an output window to restrict spoken data to a 
+minimum.  Monitor markers and the static cursor facility can be helpful to 
+let you know when a data search has been completed.
+
+14.4 Communications software
+ 
+If you wish to use a modem on a standard computer then it will probably have 
+to run off the serial port.  This is unfortunate for speech users because it 
+is the preferred port for the synthesiser.  
+
+There are two methods for overcoming the problem.
+ 
+The first method of overcoming the problem is to purchase a second serial 
+port.  These cards are not very expensive.  Hal Lite needs to be instructed 
+to use this second port when the program is loaded.
+ 
+The second method is to use the internal version of the speech sysnthesiser, 
+the PC 2 card.  Or better still use a Fax/Modem card instead of using a 
+modem connected  to a serial port.
+
+Do not forget that you have some control over the output of communications 
+packages with the screen parameter and by the use of output windows.
+ 
+If you require any suggestions regarding suitable communications software 
+please contact us.
+
+15. -  Creating Exceptions Dictionaries
+
+This lesson tells you how to teach Hal Lite exactly what to say when it comes 
+across a particular string of characters on the screen.
+
+15.1 Exceptions
+
+A lot of text that we read contains abbreviations or acronyms. When you are 
+using Hal Lite and it tries to speak strings of characters such as `etc.' or 
+`Mr', the sounds that are made can be unintelligible.  An Exceptions 
+Dictionary allows you to teach Hal Lite to pronounce these items as something 
+that you will understand.  For instance, you may want Hal Lite to speak the 
+word "control" every time it comes across "ctrl" on the screen, or say 
+"Limited" every time it comes across "Ltd.".
+
+Another use is to correct mispronunciations.
+e.g. When Hal Lite sees the word "ASCII" it says "ass see", but you could 
+define it to say "ask key" instead.
+
+15.2 Exceptions Dictionary
+
+Associated with the Exceptions Dictionary are two Hal Lite command line 
+parameters:
+
+-afilename
+where filename is the Exceptions Dictionary's filename
+							       
+-m##
+where ## is the size in kilobytes of the largest dictionary needed
+
+At least one of these 2 parameters must be used if exceptions are required.  
+If a filename is given then this file becomes the Exceptions Dictionary and 
+the default dictionary english.dic is not used.  Also, the option words in 
+the parameter menu must be set to on, for the exceptions to be spoken.
+
+To load an Exceptions Dictionary from Hal Lite's live mode. Depress the 
+<ALT> key, and whilst it is depressed tap the letter <F> key, the 
+synthesiser should now respond by saying "load or save".  Tap the letter <A> 
+key, and the synthesiser will say "words". Now type in the filename of the 
+Exceptions Dictionary you want to load and then press the <ENTER> key.  If 
+the Exceptions Dictionary has been successfully loaded the synthesiser will 
+say "done".  Otherwise the synthesiser will say "load failed".
+
+N.B.  If you did not use the -m## parameter to set aside some memory for the 
+Exceptions Dictionary, then you will not be able to load an Exceptions 
+Dictionary in this way.  This is because there will not be enough memory for 
+it to be loaded.
+
+15.3 DEDIT - Exceptions Dictionary editor
+
+This program will create or edit an Exceptions Dictionary.  The program has 
+its own prompt file (not required for English alphabet) which contains not 
+only the program prompts but also details of the alphabet to be used (the 
+order and, for each character, its lower case and uppercase forms).  The other 
+prompt files are intended for languages other than English.
+
+DEDIT has two command line parameters:
+
+-afilename
+defines the Exceptions Dictionary  (english.dic is the default)
+
+-pfilename
+defines DEDIT's prompt file (prompt.dic is the default)
+
+An Exceptions Dictionary consists of a list of exceptions listed in order.  
+Each exception consists of a search string, and a replacement string.  There 
+are 2 types of exception:
+
+1.      The search string is replaced ONLY if it is a whole word.  
+This type of exception is distinguished in the editor with an "arrows both 
+way" character.  A whole word is delimited by a space or carriage return.
+
+2.      The search string is replaced if it "starts" a word (or it is a whole 
+word).  This type of exception is distinguished in the editor with an "arrow 
+left" character.
+
+A "string" is a set of up to 38 characters.  These can be anything that the 
+computer can accept, except, in the search string a space is not permitted and 
+any lower case letter is converted to its upper case equivalent.  To enter 
+unusual codes depress the <ALT> key, and whilst it is depressed type in the 
+decimal code on the number pad.  Finally, release the <ALT> key.
+
+In the editor keys have the following meanings:
+
+<F1>
+Display the help screen
+
+<F4>
+Switch between displaying spaces as a dot and not
+
+<up arrow>
+Move up one entry
+
+<down arrow>
+Move down one entry
+
+<PgUp>
+Move up a screenful of entries
+
+<PgDn>
+Move down a screenful of entries
+
+<CTRL> and <PgUp>
+Move to first entry
+
+<CTRL> and <PgDn>
+Move to last entry
+ 
+When you are not editing an entry:
+
+<F2>
+Find an exception - key in the search string and press <ENTER>.
+
+<ENTER>
+Start editing the current entry.
+
+<CTRL> and <ENTER>
+Replace the current entry.
+
+<INS>
+Insert a new entry into the dictionary.
+
+<DEL>/<BkSp>
+Delete the current entry.
+
+<F9>
+Save the dictionary.
+
+<ESC>
+Save the dictionary and finish the program.
+
+<Q>
+Quit the program without saving the changes.
+
+When you are editing an entry:
+
+<F3>
+Switch between  1) "whole word only" and  2) "start of word"
+
+<DEL>
+Delete the character at the cursor.
+
+<Left arrow>
+Move the cursor to the left.
+
+<Right arrow>
+Move the cursor to the right.
+
+<HOME>
+Move the cursor to the start of the current string.
+
+<END>
+Move the cursor to the end of the current string.
+
+<ENTER>/<INS>
+Throw away any editing done to the current entry.
+
+You will notice that some exceptions are duplicated e.g. "AVE" and "AVE.".  
+This is done to make "AVE." say "Avenue period" when screen punctuation is on.  
+If the exception was entered without this case, then with screen punctuation 
+on it would not say "period".
+
+If you have a new exception to enter press the key marked <INS>.  If you now 
+depress the <ALT> key, and whilst it is depressed tap the letter <L> key (to 
+read a line).  Hal Lite should respond by saying "start of word is".  If you 
+want the exception to be a whole word then tap the key marked <F3>.  You can 
+check this by using <ALT> and <L>, as above to read the line.  Hal Lite 
+should now say "whole word is".
+
+Type the word you want to replace and then press <ENTER>.  Then type the 
+replacement string.  Again using <ALT> and <L> will read out what you have 
+typed. Finally, press the <ENTER> key and this exception will be entered in 
+the dictionary.
+
+If you wish to edit an already existing exception, use the up and down cursor 
+keys until the exception you want to edit is spoken and then press the 
+<ENTER> key. 
+
+That exception will then be used as a template for a new exception.  Edit 
+your exception, pressing the <ENTER> key after you have entered the word to 
+replace, and again after its replacement string.  <ALT> and <L> will read out 
+the exception currently being edited.
+
+N.B.  If when editing you change the string that will be replaced, when done, 
+this will be added to your Exceptions Dictionary alongside the exception you 
+used as a template.
+
+15.4 PREDIT  -  Prompt Editor
+
+This is a simplified text editor which does not allow deletion of lines in 
+the file and allows you to edit a line and see the previous version at the 
+same time.  It is also limited to files of less than 1000 lines.
+
+The program has its own prompt file which contains the program prompts.
+
+The command line for this program is of the form:
+
+PREDIT  oldfile  newfile  -pfilename
+
+oldfile
+Optional:  The file you wish to edit.  (prompt.hal is the default)
+
+newfile
+Optional:  The name you wish the file to be saved under.
+
+-pfilename
+Optional:  PREDIT's prompt file. (prompt.pre is the default).
+
+Any character code can be entered into a line except for codes 0, 10, or 13.  
+Empty lines are not permitted and will always be replaced by a single space 
+character.
+
+In the editor keys have the following meanings:-
+
+<F1>
+Display the help screen.  Subsequent presses switch between the 2 help screens
+
+<F4>
+Switch between displaying spaces as a dot and not
+
+When you are not editing an entry:
+
+<up arrow>
+Move up one entry
+
+<down arrow>
+Move down one entry
+
+<PgUp>
+Move up a screenful of entries
+
+<PgDn>
+Move down a screenful of entries
+
+<CTRL> and <PgUp>
+Move to first entry
+
+<CTRL> and <PgDn>
+Move to last entry
+
+<ENTER>/<INS>
+Start editing the current entry.
+
+<DEL>/<BkSp>
+Delete the current entry.
+
+<ESC>
+Save the dictionary and finish the program.
+
+<Q>
+Quit the program without saving the changes.
+
+When you are editing an entry:
+
+<BkSp>
+Delete the character before the cursor.
+
+<DEL>
+Delete the character at the cursor.
+
+<left arrow>
+Move the cursor to the left.
+
+<right arrow>
+Move the cursor to the right.
+
+<HOME>
+Move the cursor to the start of the current line.
+
+<END>
+Move the cursor to the end of the current line.
+
+<ENTER>/<INS>
+Finish editing the current entry.
+
+<up arrow>
+Finish and edit next line up.
+
+<down arrow>
+Finish and edit next line down.
+
+<ESC>
+Throw away any editing done to the current entry.
+
+Note:  Lines can be up to 239 characters long.  All 239 are displayed whilst 
+you are editing a line but only the first 78 are displayed elsewhere.
+
+If you are finishing or quitting the program there is an "Are you sure?" 
+prompt.  Answer by pressing the <Y> key for yes, or any other key to cancel 
+the action.
+
+16.   -  Re-defining Hal Lite's keys
+
+This lesson deals with an advanced feature for redefining the keystrokes that 
+Hal Lite uses.  This is useful when running Hal Lite with an application 
+that use the same keystrokes.
+
+Important:  The HAL keystroke re-definition feature should only be used by 
+more confident users.  If you are in any doubt at all about this feature, 
+then please feel free to phone Dolphin and ask for the HelpDesk.
+
+16.1 Hal Lite's Keystroke Re-definition File
+
+If you want to re-define the keystrokes that Hal Lite uses, you can create a 
+Hal Lite keystroke re-definition file called  AAA.ZZZ.
+
+(AAA.ZZZ must be an ASCII text file.  You can create ASCII text files using 
+a text editor such as EDLIN, EDIT, or even WordStar [in non-document mode].)
+
+The layout of each line of the  AAA.ZZZ  file is:
+
+current-key             new-key
+
+The current-key/new-key pair can consist of three types of keystrokes, can be 
+entered in upper or lower case, and are separated by one or more spaces, or a 
+carriage return.
+
+Note:  Each current-key must have a new-key equivalent.
+The three types of keystrokes are:
+
+1.  An "Alt" keystroke, defined in the  AAA.ZZZ  file as ALT_A to ALT_Z, or a 
+"Control" keystroke, defined in the  AAA.ZZZ  file as CTRL_A to CTRL_Z.
+
+Note that an "Alt" or "Control" keystroke is entered as ALT or CTRL, followed 
+by an _ (underscore), followed by a key A to Z with no spaces in between.  
+e.g.
+
+ALT_J  ALT_E
+
+This means that in the  AAA.ZZZ  file, the keystroke to go into screen reading 
+mode is now <ALT> and <E>, instead of <ALT> and <J>.
+
+2.  Another type of keystroke is a single character obtainable from the 
+keyboard.
+
+e.g.
+
+	P  J
+
+This means that in the  AAA.ZZZ file, the keystroke to get into the parameter 
+menu within screen reading mode is now <J>.  (It used to be <P>).
+
+3.  You can also specify a re-definition for a keystroke which is used inside 
+one of Hal Lite's facilities.  Each of the keystrokes in the facilities are 
+preceded by a single letter, to identify the facility, and _ (underscore).  
+Here are a list of the facilities:
+
+
+When defining a window
+W_
+
+When filing
+F_ 
+(exceptions, prompts, environments)
+
+When inside Hal Lite's restrict colour facility
+R_ 
+
+Hal Lite's Yes/No keystroke
+Y_
+
+e.g.
+	F_A  E
+
+This means in the  AAA.ZZZ  file, that when Filing (<ALT> and <F>), the 
+keystroke to load an Exceptions Dictionary is now <E>, instead of <A>.
+
+The reason for using F_A instead of A, is that you must distinguish between:
+
+* <A> in filing, which loads an Exceptions Dictionary.
+
+AND
+
+* <A> in screen reading mode, which gives the attributes of the character 
+under the cursor.
+
+16.2 An Example
+
+Here is an example  AAA.ZZZ  file:
+
+ALT_J  ALT_E
+F_A  E
+W_S  B
+R_I  B
+Y_N  Z
+
+NOTE:  The options F_, W_, R_  and  Y_  are mandatory, in order to fully 
+define a keystroke within a facility.  The lines in the example  AAA.ZZZ  file 
+have the following meanings:
+
+ALT_J  ALT_E
+screen reading is now entered using ALT_E.
+
+F_A  E
+When Filing, Exceptions loaded using E
+
+W_S  B
+When defining windows, B is "start of window"
+
+R_I  B
+When using restrict B is used for intense
+
+Y_N  Z
+Keystroke for "No" is Z
+
+17. Speaking Numbers
+
+The numbers prompt file defines how strings of numbers are spoken by Hal Lite.  
+The first thirty lines of the numbers prompt file defines how numbers are 
+split when they are read.
+
+The first line of the file defines what characters are used for the decimal 
+point, separator and minus sign.  The second and third lines defines what is 
+said for the decimal point and minus characters.
+
+Line four defines the maximum number of digits that Hal Lite will try to 
+break up into tens, hundreds, thousands and millions.
+
+The lines following that up to line thirty define how the digits are actually 
+split.  The symbols used have the following meanings:
+
+0       zero digit
++       non-zero digit
+?       either zero or non-zero digit
+
+Some Examples
+
+Line six: /000000000 thousand million defines that if a digit, say n, is 
+followed by nine zeros then it is "n thousand million".
+
+Line seven:  /0000000++ thousand million and defines that if a digit, again 
+lets say n, is followed by seven zeros and the last two digits and non-zero 
+then it is, "n thousand million and" the two non-zero digits.
+
+Lines thirty one onwards in the numbers file just define what is said for 
+each of the number zero to ninety nine.
+
