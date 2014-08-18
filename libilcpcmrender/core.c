@@ -42,7 +42,7 @@ int32_t pcmrender_create(
 	int32_t ret;
 		OMX_ERRORTYPE omx_err;
 	PCMRENDER_STATE_T *st;
-
+printf("Asked for buffer of %d size\n", buffer_size); 
 
 	*component = NULL;
 
@@ -81,6 +81,7 @@ int32_t pcmrender_create(
 		return -1;
 
 	param.nBufferSize = max(st->buffer_size, param.nBufferSize);
+	printf("Will get buffers of %d\n", param.nBufferSize);
 	param.nBufferCountActual = max(st->buffer_count, param.nBufferCountMin);
 
 	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &param);
