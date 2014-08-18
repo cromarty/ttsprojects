@@ -24,7 +24,12 @@ typedef struct {
    COMPONENT_T *audio_render;
    COMPONENT_T *list[2];
    OMX_BUFFERHEADERTYPE *user_buffer_list; // buffers owned by the client
+   	uint32_t sample_rate;
+   		uint32_t num_channels;
+   			uint32_t bit_depth;
    uint32_t num_buffers;
+   	uint32_t buffer_size;
+   		uint32_t buffer_count;
    uint32_t bytes_per_sample;
 } PCMRENDER_STATE_T;
 
@@ -58,7 +63,7 @@ int32_t pcmrender_create(
 
 
 	st = calloc(1, sizeof(PCMRENDER_STATE_T));
-	OMX_PARAM_PORTDEFINITIONTYPE port_param;
+	OMX_PARAM_PORTDEFINITIONTYPE param;
 	OMX_AUDIO_PARAM_PCMMODETYPE pcm;
 	int32_t s;
 
@@ -67,7 +72,7 @@ int32_t pcmrender_create(
 	// create and start up everything
 	s = sem_init(&st->sema, 0, 1);
 	st->sample_rate = sample_rate;
-	st->channels = channels;
+	st->num_channels = num_channels;
 	st->bit_depth = bit_depth;
 		st->bytes_per_sample = (bit_depth * OUT_CHANNELS(num_channels)) >> 3;
 	st->buffer_size = (buffer_size + 15) & ~15;
@@ -82,7 +87,7 @@ int32_t pcmrender_create(
 	st->list[0] = st->audio_render;
 
 	// set up the number/size of buffers
-	memset(&port_param, 0, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
+	memset(&param, 0, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
 	param.nSize = sizeof(OMX_PARAM_PORTDEFINITIONTYPE);
 	param.nVersion.nVersion = OMX_VERSION;
 	param.nPortIndex = 100;
@@ -90,8 +95,8 @@ int32_t pcmrender_create(
 	if (omx_err != OMX_ErrorNone)
 		return -1;
 
-	param.nBufferSize = max(st->buffer_size, param.nBufferSizeMin);
-	param.nBufferCountActual = max(param.nBufferCountMin, st->num_buffers);
+	param.nBufferSize = max(st->buffer_size, param.nBufferSize);
+	param.nBufferCountActual = max(st->buffer_count, param.nBufferCountMin);
 
 	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &param);
 	if (omx_err != OMX_ErrorNone)
