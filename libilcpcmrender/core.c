@@ -42,7 +42,7 @@ int32_t pcmrender_create(
 	int32_t ret;
 		OMX_ERRORTYPE omx_err;
 	PCMRENDER_STATE_T *st;
-printf("Asked for buffer of %d size\n", buffer_size); 
+
 
 	*component = NULL;
 
@@ -81,7 +81,6 @@ printf("Asked for buffer of %d size\n", buffer_size);
 		return -1;
 
 	param.nBufferSize = max(st->buffer_size, param.nBufferSize);
-	printf("Will get buffers of %d\n", param.nBufferSize);
 	param.nBufferCountActual = max(st->buffer_count, param.nBufferCountMin);
 
 	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &param);
@@ -132,12 +131,15 @@ printf("Asked for buffer of %d size\n", buffer_size);
 		return -1;
 
 	ret = ilclient_change_component_state(st->audio_render, OMX_StateIdle);
-	if (ret < 0)
+	if (ret < 0) {
+		printf("Failed to set OMX_StateIdle\n")
 		return -1;
+	}
 
 	ret = ilclient_enable_port_buffers(st->audio_render, 100, NULL, NULL, NULL);
 	if (ret < 0) {
 		// error
+		printf("Failed to enable port\n");
 		ilclient_change_component_state(st->audio_render, OMX_StateLoaded);
 		ilclient_cleanup_components(st->list);
 		omx_err = OMX_Deinit();
@@ -149,8 +151,6 @@ printf("Asked for buffer of %d size\n", buffer_size);
 	}
 
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
-
-return 0;
 
 } // end pcmrender_create
 
@@ -181,10 +181,11 @@ int32_t pcmrender_delete(PCMRENDER_STATE_T *st) {
 	return 0;
 } // end pcmrender_delete
 
-
+/*
 OMX_ERRORTYPE omx_initialize() {
 	return OMX_Init();
 } // end omx_initialize;
+*/
 
 
 uint8_t *pcmrender_get_buffer(PCMRENDER_STATE_T *st) {
@@ -257,8 +258,8 @@ int32_t pcmrender_set_dest(PCMRENDER_STATE_T *st, const char *name) {
 
 		 omx_err = OMX_SetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigBrcmAudioDestination, &ar_dest);
 		 	if (omx_err != OMX_ErrorNone)
-		 			return ret;
-		 			
+				return ret;
+
 		ret = 0;
 	}
 

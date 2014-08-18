@@ -27,6 +27,9 @@ int main() {
 		return 1;
 		}
 
+	ret = pcmrender_set_dest(&st, "local");
+	if (ret < 0)
+		printf("Failed to set audio destination\n");
 	omx_err = pcmrender_delete(st);
 	if (omx_err != OMX_ErrorNone) {
 	printf("Failed to delete component\n");
