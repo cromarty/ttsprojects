@@ -185,3 +185,102 @@ OMX_ERRORTYPE omx_initialize() {
 	return OMX_Init();
 } // end omx_initialize;
 
+
+uint8_t *pcmrender_get_buffer(PCMRENDER_STATE_T *st) {
+	OMX_BUFFERHEADERTYPE *hdr = NULL;
+
+	hdr = ilclient_get_input_buffer(st->audio_render, 100, 0);
+
+	if(hdr) {
+		// put on the user list
+		sem_wait(&st->sema);
+		hdr->pAppPrivate = st->user_buffer_list;
+		st->user_buffer_list = hdr;
+		sem_post(&st->sema);
+	}
+
+	return hdr ? hdr->pBuffer : NULL;
+} // end pcmrender_get_buffer
+
+
+int32_t pcmrender_play_buffer(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
+	OMX_BUFFERHEADERTYPE *hdr = NULL, *prev = NULL;
+	int32_t ret = -1;
+
+	if(length % st->bytes_per_sample)
+		return -1;
+
+	sem_wait(&st->sema);
+
+	// search through user list for the right buffer header
+	hdr = st->user_buffer_list;
+	while(hdr != NULL && hdr->pBuffer != buffer && hdr->nAllocLen < length) {
+		prev = hdr;
+		hdr = hdr->pAppPrivate;
+	}
+
+	if(hdr) {
+		// we found it, remove from list
+		ret = 0;
+		if(prev)
+			prev->pAppPrivate = hdr->pAppPrivate;
+		else
+			st->user_buffer_list = hdr->pAppPrivate;
+	}
+
+	sem_post(&st->sema);
+
+	if(hdr) {
+		OMX_ERRORTYPE omx_err;
+		hdr->pAppPrivate = NULL;
+		hdr->nOffset = 0;
+		hdr->nFilledLen = length;
+		omx_err = OMX_EmptyThisBuffer(ILC_GET_HANDLE(st->audio_render), hdr);
+				if (omx_err != OMX_ErrorNone)
+							return -1;
+	}
+	return ret;
+} // end pcmrender_play_buffer
+
+
+int32_t pcmrender_set_dest(PCMRENDER_STATE_T *st, const char *name) {
+	int32_t ret = -1;
+	OMX_CONFIG_BRCMAUDIODESTINATIONTYPE ar_dest;
+
+	if (name && strlen(name) < sizeof(ar_dest.sName)) {
+		OMX_ERRORTYPE omx_err;
+		memset(&ar_dest, 0, sizeof(ar_dest));
+		ar_dest.nSize = sizeof(OMX_CONFIG_BRCMAUDIODESTINATIONTYPE);
+		ar_dest.nVersion.nVersion = OMX_VERSION;
+		strcpy((char *)ar_dest.sName, name);
+
+		 omx_err = OMX_SetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigBrcmAudioDestination, &ar_dest);
+		 	if (omx_err != OMX_ErrorNone)
+		 			return ret;
+		 			
+		ret = 0;
+	}
+
+	return ret;
+} // end pcmrender_play_buffer
+
+
+
+uint32_t pcmrender_get_latency(PCMRENDER_STATE_T *st) {
+	OMX_PARAM_U32TYPE param;
+	OMX_ERRORTYPE omx_err;
+
+	memset(&param, 0, sizeof(OMX_PARAM_U32TYPE));
+	param.nSize = sizeof(OMX_PARAM_U32TYPE);
+	param.nVersion.nVersion = OMX_VERSION;
+	param.nPortIndex = 100;
+
+	omx_err = OMX_GetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigAudioRenderingLatency, &param);
+		if (omx_err != OMX_ErrorNone)
+				return -1;
+
+	return param.nU32;
+} // end pcmrender_get_latency
+
+
+

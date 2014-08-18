@@ -15,7 +15,7 @@ int main() {
 	OMX_ERRORTYPE omx_err;
 	PCMRENDER_STATE_T *st;
 
-	omx_err = omx_initialize();
+	omx_err = OMX_Init();
 	if (omx_err != OMX_ErrorNone)
 		return 1;
 

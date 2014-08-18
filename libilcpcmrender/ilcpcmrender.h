@@ -35,9 +35,13 @@ int32_t pcmrender_create(
 	uint32_t num_channels,
 	uint32_t bit_depth,
 	uint32_t num_buffers,
-	uint32_t buffer_size);
+	uint32_t buffer_size
+	);
 
 int32_t pcmrender_delete(PCMRENDER_STATE_T *st);
+uint8_t *pcmrender_get_buffer(PCMRENDER_STATE_T *st);
+int32_t pcmrender_play_buffer(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t length);
+uint32_t pcmrender_get_latency(PCMRENDER_STATE_T *st);
 
 
 #endif
