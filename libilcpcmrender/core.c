@@ -10,29 +10,13 @@
 #include "ilcpcmrender.h"
 
 
+#define OUT_CHANNELS(num_channels) ((num_channels) > 4 ? 8: (num_channels) > 2 ? 4: (num_channels))
 
 //#ifndef countof
 //   #define countof(arr) (sizeof(arr) / sizeof(arr[0]))
 //#endif
 
 //#define BUFFER_SIZE_SAMPLES 1024
-
-typedef int int32_t;
-
-typedef struct {
-   sem_t sema;
-   ILCLIENT_T *client;
-   COMPONENT_T *audio_render;
-   COMPONENT_T *list[2];
-   OMX_BUFFERHEADERTYPE *user_buffer_list; // buffers owned by the client
-   	uint32_t sample_rate;
-   		uint32_t num_channels;
-   			uint32_t bit_depth;
-   uint32_t num_buffers;
-   	uint32_t buffer_size;
-   		uint32_t buffer_count;
-   uint32_t bytes_per_sample;
-} PCMRENDER_STATE_T;
 
 static int max(int val1, int val2) {
 	return (val1 > val2 ? val1 : val2);

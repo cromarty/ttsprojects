@@ -28,10 +28,11 @@ coretest : coretest.o core.o
 	$(CC) -o coretest coretest.o core.o $(LDFLAGS) 
 
 coretest.o : coretest.c ilcpcmrender.h
-	$(CC) $(CFLAGS) -c coretest.c ilcpcmrender.h coretest.o core.o $(LDFLAGS) 
+	$(CC) $(CFLAGS) -c coretest.c
 
 core.o : core.c ilcpcmrender.h
-	$(CC) $(CFLAGS) -c core.c ilcpcmrender.h coretest.o core.o $(LDFLAGS) 
+	$(CC) $(CFLAGS) -c core.c
+	 
 
 clean :
 	rm coretest coretest.o core.o
