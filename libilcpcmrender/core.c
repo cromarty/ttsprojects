@@ -41,7 +41,14 @@ static void input_buffer_callback(void *data, COMPONENT_T *comp) {
 } // end input_buffer_callback
 
 
-int32_t pcmrender_create(PCMRENDER_STATE_T **component, uint32_t sample_rate, uint32_t num_channels, uint32_t bit_depth, uint32_t num_buffers, uint32_t buffer_size) {
+int32_t pcmrender_create(
+	PCMRENDER_STATE_T **component,
+	uint32_t sample_rate,
+	uint32_t num_channels,
+	uint32_t bit_depth,
+	uint32_t num_buffers,
+	uint32_t buffer_size)
+{
 	int32_t ret;
 		OMX_ERRORTYPE omx_err;
 	PCMRENDER_STATE_T *st;
