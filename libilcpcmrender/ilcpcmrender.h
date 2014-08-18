@@ -17,6 +17,7 @@ typedef struct {
    sem_t sema;
    ILCLIENT_T *client;
    COMPONENT_T *audio_render;
+   OMX_HANDLETYPE *handle;
    COMPONENT_T *list[2];
    OMX_BUFFERHEADERTYPE *user_buffer_list; // buffers owned by the client
    	uint32_t sample_rate;
@@ -42,6 +43,9 @@ int32_t pcmrender_delete(PCMRENDER_STATE_T *st);
 uint8_t *pcmrender_get_buffer(PCMRENDER_STATE_T *st);
 int32_t pcmrender_play_buffer(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t length);
 uint32_t pcmrender_get_latency(PCMRENDER_STATE_T *st);
+int32_t pcmrender_set_dest(PCMRENDER_STATE_T *st, const char *name);
+int32_t pcmrender_get_state(PCMRENDER_STATE_T *st, OMX_STATETYPE *state);
+
 
 
 #endif

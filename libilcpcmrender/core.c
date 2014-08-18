@@ -18,6 +18,17 @@
 
 //#define BUFFER_SIZE_SAMPLES 1024
 
+#define OMX_INIT_STRUCTURE(a) \
+	memset(&(a), 0, sizeof(a)); \
+		(a).nSize = sizeof(a); \
+			(a).nVersion.s.nVersionMajor = OMX_VERSION_MAJOR; \
+				(a).nVersion.s.nVersionMinor = OMX_VERSION_MINOR; \
+					(a).nVersion.s.nRevision = OMX_VERSION_REVISION; \
+						(a).nVersion.s.nStep = OMX_VERSION_STEP
+						
+						
+static const char *audio_dest[] = {"local", "hdmi"};
+
 static int max(int val1, int val2) {
 	return (val1 > val2 ? val1 : val2);
 } // end max
@@ -68,6 +79,8 @@ int32_t pcmrender_create(
 	ret = ilclient_create_component(st->client, &st->audio_render, "audio_render", ILCLIENT_ENABLE_INPUT_BUFFERS | ILCLIENT_DISABLE_ALL_PORTS);
 	if (ret == -1)
 		return -1;
+st->handle = ILC_GET_HANDLE(st->audio_render);
+
 
 	st->list[0] = st->audio_render;
 
@@ -132,7 +145,7 @@ int32_t pcmrender_create(
 
 	ret = ilclient_change_component_state(st->audio_render, OMX_StateIdle);
 	if (ret < 0) {
-		printf("Failed to set OMX_StateIdle\n")
+		printf("Failed to set OMX_StateIdle\n");
 		return -1;
 	}
 
@@ -247,16 +260,14 @@ int32_t pcmrender_play_buffer(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t l
 
 int32_t pcmrender_set_dest(PCMRENDER_STATE_T *st, const char *name) {
 	int32_t ret = -1;
-	OMX_CONFIG_BRCMAUDIODESTINATIONTYPE ar_dest;
+	OMX_CONFIG_BRCMAUDIODESTINATIONTYPE dest;
 
-	if (name && strlen(name) < sizeof(ar_dest.sName)) {
+	if (name && strlen(name) < sizeof(dest.sName)) {
 		OMX_ERRORTYPE omx_err;
-		memset(&ar_dest, 0, sizeof(ar_dest));
-		ar_dest.nSize = sizeof(OMX_CONFIG_BRCMAUDIODESTINATIONTYPE);
-		ar_dest.nVersion.nVersion = OMX_VERSION;
-		strcpy((char *)ar_dest.sName, name);
+		OMX_INIT_STRUCTURE(dest);
+		strcpy((char *)dest.sName, name);
 
-		 omx_err = OMX_SetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigBrcmAudioDestination, &ar_dest);
+		 omx_err = OMX_SetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigBrcmAudioDestination, &dest);
 		 	if (omx_err != OMX_ErrorNone)
 				return ret;
 
@@ -286,3 +297,11 @@ uint32_t pcmrender_get_latency(PCMRENDER_STATE_T *st) {
 
 
 
+int32_t pcmrender_get_state(PCMRENDER_STATE_T *st, OMX_STATETYPE *state) {
+	OMX_ERRORTYPE omx_err = OMX_GetState(st->handle, state);
+		return (omx_err == OMX_ErrorNone ? 0 : -1);
+		} // end pcmrender_get_state
+		 
+
+		
+	
