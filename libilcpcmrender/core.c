@@ -7,14 +7,15 @@
 #include "bcm_host.h"
 #include "ilclient.h"
 
+#include "ilcpcmrender.h"
 
-#define OUT_CHANNELS(num_channels) ((num_channels) > 4 ? 8: (num_channels) > 2 ? 4: (num_channels))
 
-#ifndef countof
-   #define countof(arr) (sizeof(arr) / sizeof(arr[0]))
-#endif
 
-#define BUFFER_SIZE_SAMPLES 1024
+//#ifndef countof
+//   #define countof(arr) (sizeof(arr) / sizeof(arr[0]))
+//#endif
+
+//#define BUFFER_SIZE_SAMPLES 1024
 
 typedef int int32_t;
 
@@ -199,26 +200,4 @@ int32_t pcmrender_delete(PCMRENDER_STATE_T *st) {
 OMX_ERRORTYPE omx_initialize() {
 	return OMX_Init();
 } // end omx_initialize;
-
-
-int main() {
-	OMX_ERRORTYPE omx_err;
-	PCMRENDER_STATE_T *st;
-
-	omx_err = omx_initialize();
-	if (omx_err != OMX_ErrorNone)
-		return 1;
-
-	omx_err = pcmrender_create(&st, 22050, 1, 16, 5, 2048);
-	if (omx_err != OMX_ErrorNone)
-		return 1;
-
-	omx_err = pcmrender_delete(st);
-	if (omx_err != OMX_ErrorNone)
-		return 1;
-
-	return 0;
-
-} // end main
-
 
