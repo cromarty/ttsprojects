@@ -19,13 +19,16 @@
 typedef int int32_t;
 
 typedef struct {
-   sem_t sema;
-   ILCLIENT_T *client;
-   COMPONENT_T *audio_render;
-   COMPONENT_T *list[2];
-   OMX_BUFFERHEADERTYPE *user_buffer_list; // buffers owned by the client
-   uint32_t num_buffers;
-   uint32_t bytes_per_sample;
+	sem_t sema;
+	ILCLIENT_T *client;
+	COMPONENT_T *audio_render;
+	COMPONENT_T *list[2];
+	OMX_BUFFERHEADERTYPE *user_buffer_list; // buffers owned by the client
+	uint32_t num_buffers;
+	uint32_t sample_rate;
+	uint32_t numchannels;
+	uint32_t bit_depth;
+	uint32_t bytes_per_sample;
 } PCMRENDER_STATE_T;
 
 static int max(int val1, int val2) {
@@ -41,28 +44,22 @@ static void input_buffer_callback(void *data, COMPONENT_T *comp) {
 } // end input_buffer_callback
 
 
-int32_t pcmrender_create(PCMRENDER_STATE_T **component, uint32_t sample_rate, uint32_t num_channels, uint32_t bit_depth, uint32_t num_buffers, uint32_t buffer_size) {
+int32_t pcmrender_create(
+	PCMRENDER_STATE_T **component,
+	uint32_t sample_rate,
+	uint32_t num_channels,
+	uint32_t bit_depth,
+	uint32_t num_buffers,
+	uint32_t buffer_size)
+{
 	int32_t ret;
 		OMX_ERRORTYPE omx_err;
 	PCMRENDER_STATE_T *st;
-	uint32_t bytes_per_sample = (bit_depth * OUT_CHANNELS(num_channels)) >> 3;
+
+	bytes_per_sample = (bit_depth * OUT_CHANNELS(num_channels)) >> 3;
 
 	*component = NULL;
-/*******
-	if (sample_rate < 11025)
-		sample_rate = 11025;
-	else
-		if (sample_rate < 22050)
-			sample_rate = 22050;
-		else
-			sample_rate = 44100;
 
-	if ((num_channels != 1) && (num_channels != 2))
-		return -1;
-
-	if ((bit_depth != 16) && (bit_depth != 32))
-		return -1;
-******/
 	int size = (buffer_size + 15) & ~15;
 	st = calloc(1, sizeof(PCMRENDER_STATE_T));
 	OMX_PARAM_PORTDEFINITIONTYPE port_param;
@@ -73,29 +70,33 @@ int32_t pcmrender_create(PCMRENDER_STATE_T **component, uint32_t sample_rate, ui
 
 	// create and start up everything
 	s = sem_init(&st->sema, 0, 1);
+	st->sample_rate = sample_rate;
+	st->num_channels = num_channels;
+	st->bit_depth = bit_depth;
 	st->bytes_per_sample = bytes_per_sample;
-	st->num_buffers = num_buffers;
+
 	st->client = ilclient_init();
 	ilclient_set_empty_buffer_done_callback(st->client, input_buffer_callback, st);
 
 	ret = ilclient_create_component(st->client, &st->audio_render, "audio_render", ILCLIENT_ENABLE_INPUT_BUFFERS | ILCLIENT_DISABLE_ALL_PORTS);
 	if (ret == -1)
 		return -1;
-/******
+
 	st->list[0] = st->audio_render;
 
 	// set up the number/size of buffers
-	memset(&port_param, 0, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
-	port_param.nSize = sizeof(OMX_PARAM_PORTDEFINITIONTYPE);
-	port_param.nVersion.nVersion = OMX_VERSION;
-	port_param.nPortIndex = 100;
-	omx_err = OMX_GetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &port_param);
+	memset(&param, 0, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
+	param.nSize = sizeof(OMX_PARAM_PORTDEFINITIONTYPE);
+	param.nVersion.nVersion = OMX_VERSION;
+	param.nPortIndex = 100;
+	omx_err = OMX_GetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &param);
 	if (omx_err != OMX_ErrorNone)
 		return -1;
 
-	port_param.nBufferSize = size;
-	port_param.nBufferCountActual = num_buffers;
-	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &port_param);
+	st->num_buffers = num_buffers;
+	param.nBufferSize = size;
+	param.nBufferCountActual = max(param->nBufferCountMin, st->num_buffers);
+	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &param);
 	if (omx_err != OMX_ErrorNone)
 		return -1;
 
@@ -104,15 +105,15 @@ int32_t pcmrender_create(PCMRENDER_STATE_T **component, uint32_t sample_rate, ui
 	pcm.nSize = sizeof(OMX_AUDIO_PARAM_PCMMODETYPE);
 	pcm.nVersion.nVersion = OMX_VERSION;
 	pcm.nPortIndex = 100;
-	pcm.nChannels = OUT_CHANNELS(num_channels);
+	pcm.nChannels = st->num_channels;
 	pcm.eNumData = OMX_NumericalDataSigned;
 	pcm.eEndian = OMX_EndianLittle;
-	pcm.nSamplingRate = sample_rate;
+	pcm.nSamplingRate = st->sample_rate;
 	pcm.bInterleaved = OMX_TRUE;
-	pcm.nBitPerSample = bit_depth;
+	pcm.nBitPerSample = st->bit_depth;
 	pcm.ePCMMode = OMX_AUDIO_PCMModeLinear;
 
-	switch(num_channels) {
+	switch(st->num_channels) {
 		case 1:
 			pcm.eChannelMapping[0] = OMX_AUDIO_ChannelCF;
 			break;
@@ -160,7 +161,7 @@ int32_t pcmrender_create(PCMRENDER_STATE_T **component, uint32_t sample_rate, ui
 	}
 
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
-******/
+
 return 0;
 
 } // end pcmrender_create
