@@ -24,15 +24,18 @@ LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
         -lrt 
 
-coretest : coretest.o core.o
-	$(CC) -o coretest coretest.o core.o $(LDFLAGS) 
+coretest : coretest.o core.o utils.o
+	$(CC) -o coretest coretest.o core.o utils.o $(LDFLAGS) 
 
-coretest.o : coretest.c ilctts_lib.h
+coretest.o : coretest.c ilctts_lib.h # utils.h
 	$(CC) $(CFLAGS) -c coretest.c
 
-core.o : core.c ilctts_lib.h
+core.o : core.c ilctts_lib.h utils.h
 	$(CC) $(CFLAGS) -c core.c
 	 
+utils.o : utils.c utils.h
+	$(CC) $(CFLAGS) -c utils.c
+		 
 
 clean :
-	rm coretest coretest.o core.o
+	rm coretest coretest.o core.o utils.o

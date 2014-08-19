@@ -8,6 +8,7 @@
 #include "ilclient.h"
 
 #include "ilctts_lib.h"
+#include "utils.h"
 
 
 
@@ -16,6 +17,7 @@ int main() {
 	OMX_STATETYPE state;
 	TTSRENDER_STATE_T *st;
 	int32_t ret;
+		char debug_str[128];
 	bcm_host_init();
 	omx_err = OMX_Init();
 	if (omx_err != OMX_ErrorNone) {
@@ -47,7 +49,8 @@ int main() {
 		if (ret < 0) {
 			printf("Failed to get state\n");
 			} else {
-				printf("Got state: %d\n", state);
+					omx_statetype_string(state, debug_str);
+				printf("Got state: %s\n", debug_str);
 				}
 		
 		
