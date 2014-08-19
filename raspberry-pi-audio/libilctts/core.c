@@ -41,9 +41,21 @@ static void input_buffer_callback(void *data, COMPONENT_T *comp) {
 
 } // end input_buffer_callback
 
+static void error_callback(void *data, COMPONENT_T *comp) {
+	
+} // end error_callback
+/*
+static void config_changed_callback(void *data, COMPONENT_T *comp) {
+
+} // end config_changed_callback
+
+static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
+
+} // end port_settings_changed_callback
+*/
 
 int32_t ilctts_create(
-	PCMRENDER_STATE_T **component,
+	TTSRENDER_STATE_T **component,
 	uint32_t sample_rate,
 	uint32_t num_channels,
 	uint32_t bit_depth,
@@ -52,13 +64,12 @@ int32_t ilctts_create(
 {
 	int32_t ret;
 		OMX_ERRORTYPE omx_err;
-	PCMRENDER_STATE_T *st;
-
+	TTSRENDER_STATE_T *st;
 
 	*component = NULL;
 
 
-	st = calloc(1, sizeof(PCMRENDER_STATE_T));
+	st = calloc(1, sizeof(TTSRENDER_STATE_T));
 	OMX_PARAM_PORTDEFINITIONTYPE param;
 	OMX_AUDIO_PARAM_PCMMODETYPE pcm;
 	int32_t s;
@@ -67,6 +78,9 @@ int32_t ilctts_create(
 
 	// create and start up everything
 	s = sem_init(&st->sema, 0, 1);
+	if (s < 0)
+		return -1;
+
 	st->sample_rate = sample_rate;
 	st->num_channels = num_channels;
 	st->bit_depth = bit_depth;
@@ -74,13 +88,16 @@ int32_t ilctts_create(
 	st->buffer_size = (buffer_size + 15) & ~15;
 	st->num_buffers = num_buffers;
 	st->client = ilclient_init();
+
+	// set up callbacks
 	ilclient_set_empty_buffer_done_callback(st->client, input_buffer_callback, st);
+	ilclient_set_error_callback(st->client, error_callback, st);
 
 	ret = ilclient_create_component(st->client, &st->audio_render, "audio_render", ILCLIENT_ENABLE_INPUT_BUFFERS | ILCLIENT_DISABLE_ALL_PORTS);
 	if (ret == -1)
 		return -1;
-st->handle = ILC_GET_HANDLE(st->audio_render);
 
+st->handle = ILC_GET_HANDLE(st->audio_render);
 
 	st->list[0] = st->audio_render;
 
@@ -101,9 +118,10 @@ st->handle = ILC_GET_HANDLE(st->audio_render);
 		return -1;
 
 	// set the pcm parameters
-	memset(&pcm, 0, sizeof(OMX_AUDIO_PARAM_PCMMODETYPE));
-	pcm.nSize = sizeof(OMX_AUDIO_PARAM_PCMMODETYPE);
-	pcm.nVersion.nVersion = OMX_VERSION;
+	OMX_INIT_STRUCTURE(pcm);
+	//memset(&pcm, 0, sizeof(OMX_AUDIO_PARAM_PCMMODETYPE));
+	//pcm.nSize = sizeof(OMX_AUDIO_PARAM_PCMMODETYPE);
+	//pcm.nVersion.nVersion = OMX_VERSION;
 	pcm.nPortIndex = 100;
 	pcm.nChannels = OUT_CHANNELS(num_channels);
 	pcm.eNumData = OMX_NumericalDataSigned;
@@ -143,16 +161,14 @@ st->handle = ILC_GET_HANDLE(st->audio_render);
 	if (omx_err != OMX_ErrorNone)
 		return -1;
 
+	// this function waits for the command to complete
 	ret = ilclient_change_component_state(st->audio_render, OMX_StateIdle);
-	if (ret < 0) {
-		printf("Failed to set OMX_StateIdle\n");
+	if (ret < 0)
 		return -1;
-	}
 
 	ret = ilclient_enable_port_buffers(st->audio_render, 100, NULL, NULL, NULL);
 	if (ret < 0) {
 		// error
-		printf("Failed to enable port\n");
 		ilclient_change_component_state(st->audio_render, OMX_StateLoaded);
 		ilclient_cleanup_components(st->list);
 		omx_err = OMX_Deinit();
@@ -168,7 +184,7 @@ st->handle = ILC_GET_HANDLE(st->audio_render);
 } // end ilctts_create
 
 
-int32_t ilctts_delete(PCMRENDER_STATE_T *st) {
+int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
 	int32_t ret;
 	OMX_ERRORTYPE omx_err;
 
@@ -181,7 +197,7 @@ int32_t ilctts_delete(PCMRENDER_STATE_T *st) {
 		return -1;
 
 	ilclient_disable_port_buffers(st->audio_render, 100, st->user_buffer_list, NULL, NULL);
-	ret = ilclient_change_component_state(st->audio_render, OMX_StateLoaded);
+	ilclient_change_component_state(st->audio_render, OMX_StateLoaded);
 	ilclient_cleanup_components(st->list);
 
 	omx_err = OMX_Deinit();
@@ -194,18 +210,11 @@ int32_t ilctts_delete(PCMRENDER_STATE_T *st) {
 	return 0;
 } // end ilctts_delete
 
-/*
-OMX_ERRORTYPE omx_initialize() {
-	return OMX_Init();
-} // end omx_initialize;
-*/
 
-
-uint8_t *ilctts_get_buffer(PCMRENDER_STATE_T *st) {
+uint8_t *ilctts_get_buffer(TTSRENDER_STATE_T *st) {
 	OMX_BUFFERHEADERTYPE *hdr = NULL;
 
 	hdr = ilclient_get_input_buffer(st->audio_render, 100, 0);
-
 	if(hdr) {
 		// put on the user list
 		sem_wait(&st->sema);
@@ -218,7 +227,7 @@ uint8_t *ilctts_get_buffer(PCMRENDER_STATE_T *st) {
 } // end ilctts_get_buffer
 
 
-int32_t ilctts_play_buffer(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
+int32_t ilctts_play_buffer(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
 	OMX_BUFFERHEADERTYPE *hdr = NULL, *prev = NULL;
 	int32_t ret = -1;
 
@@ -258,7 +267,7 @@ int32_t ilctts_play_buffer(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t leng
 } // end ilctts_play_buffer
 
 
-int32_t ilctts_set_dest(PCMRENDER_STATE_T *st, const char *name) {
+int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name) {
 	int32_t ret = -1;
 	OMX_CONFIG_BRCMAUDIODESTINATIONTYPE dest;
 
@@ -275,17 +284,14 @@ int32_t ilctts_set_dest(PCMRENDER_STATE_T *st, const char *name) {
 	}
 
 	return ret;
-} // end ilctts_play_buffer
+} // end ilctts_set_dest
 
 
 
-uint32_t ilctts_get_latency(PCMRENDER_STATE_T *st) {
+uint32_t ilctts_get_latency(TTSRENDER_STATE_T *st) {
 	OMX_PARAM_U32TYPE param;
 	OMX_ERRORTYPE omx_err;
-
-	memset(&param, 0, sizeof(OMX_PARAM_U32TYPE));
-	param.nSize = sizeof(OMX_PARAM_U32TYPE);
-	param.nVersion.nVersion = OMX_VERSION;
+	OMX_INIT_STRUCTURE(param);
 	param.nPortIndex = 100;
 
 	omx_err = OMX_GetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigAudioRenderingLatency, &param);
@@ -297,13 +303,13 @@ uint32_t ilctts_get_latency(PCMRENDER_STATE_T *st) {
 
 
 
-int32_t ilctts_get_state(PCMRENDER_STATE_T *st, OMX_STATETYPE *state) {
+int32_t ilctts_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
 	OMX_ERRORTYPE omx_err = OMX_GetState(st->handle, state);
-		return (omx_err == OMX_ErrorNone ? 0 : -1);
+		return (omx_err != OMX_ErrorNone ? 0 : -1);
 		} // end ilctts_get_state
-		 
 
-int32_t ilctts_set_volume(PCMRENDER_STATE_T *st, unsigned int vol) {
+
+int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
 	OMX_ERRORTYPE omx_err;
 	OMX_AUDIO_CONFIG_VOLUMETYPE volume;
 	OMX_INIT_STRUCTURE(volume);
@@ -313,21 +319,20 @@ int32_t ilctts_set_volume(PCMRENDER_STATE_T *st, unsigned int vol) {
 	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigAudioVolume, &volume);
 	if (omx_err != OMX_ErrorNone)
 		return -1;
-		
+
 	return 0;
 } // end ilctts_set_volume
 
-int32_t ilctts_pause(PCMRENDER_STATE_T *st) {	
+int32_t ilctts_pause(TTSRENDER_STATE_T *st) {	
 		return ilclient_change_component_state(st->audio_render, OMX_StatePause);
 		} //end ilctts_pause
-		
-	
-int32_t ilctts_resume(PCMRENDER_STATE_T *st) {	
+
+int32_t ilctts_resume(TTSRENDER_STATE_T *st) {	
 		return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
 		} //end ilctts_resume
-		
-		
-		
-	
-		
-	
+
+
+
+
+
+
