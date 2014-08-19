@@ -27,7 +27,7 @@ LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib \
 coretest : coretest.o core.o utils.o
 	$(CC) -o coretest coretest.o core.o utils.o $(LDFLAGS) 
 
-coretest.o : coretest.c ilctts_lib.h # utils.h
+coretest.o : coretest.c ilctts_lib.h
 	$(CC) $(CFLAGS) -c coretest.c
 
 core.o : core.c ilctts_lib.h utils.h
