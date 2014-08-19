@@ -41,9 +41,6 @@ static void input_buffer_callback(void *data, COMPONENT_T *comp) {
 
 } // end input_buffer_callback
 
-static void error_callback(void *data, COMPONENT_T *comp) {
-	
-} // end error_callback
 /*
 static void config_changed_callback(void *data, COMPONENT_T *comp) {
 
@@ -54,8 +51,7 @@ static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 } // end port_settings_changed_callback
 */
 
-int32_t ilctts_create(
-	TTSRENDER_STATE_T **component,
+int32_t ilctts_create(TTSRENDER_STATE_T **component,
 	uint32_t sample_rate,
 	uint32_t num_channels,
 	uint32_t bit_depth,
@@ -91,7 +87,6 @@ int32_t ilctts_create(
 
 	// set up callbacks
 	ilclient_set_empty_buffer_done_callback(st->client, input_buffer_callback, st);
-	ilclient_set_error_callback(st->client, error_callback, st);
 
 	ret = ilclient_create_component(st->client, &st->audio_render, "audio_render", ILCLIENT_ENABLE_INPUT_BUFFERS | ILCLIENT_DISABLE_ALL_PORTS);
 	if (ret == -1)
@@ -304,8 +299,11 @@ uint32_t ilctts_get_latency(TTSRENDER_STATE_T *st) {
 
 
 int32_t ilctts_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
-	OMX_ERRORTYPE omx_err = OMX_GetState(st->handle, state);
-		return (omx_err != OMX_ErrorNone ? 0 : -1);
+	OMX_ERRORTYPE omx_err = OMX_GetState(ILC_GET_HANDLE(st->audio_render), state);
+	if (omx_err != OMX_ErrorNone)
+		return -1;
+		
+		return 0;
 		} // end ilctts_get_state
 
 
