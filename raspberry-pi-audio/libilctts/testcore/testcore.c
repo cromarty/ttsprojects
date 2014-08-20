@@ -47,13 +47,18 @@ ilctts_play_buffer(st, buf, bytes_read);
 
 
 
-int main() {
+int main(int argc, char **argv) {
 	OMX_ERRORTYPE omx_err;
 	OMX_STATETYPE state;
 	TTSRENDER_STATE_T *st;
 	int32_t ret;
 		char debug_str[128];
 		int chunks = 0;
+		
+			if (argc != 2) {
+					printf("Usage: testcore <raw-pcm-file>\n");
+							return 1;
+							}
 	bcm_host_init();
 	omx_err = OMX_Init();
 	if (omx_err != OMX_ErrorNone) {
@@ -88,7 +93,7 @@ int main() {
 					omx_statetype_string(state, debug_str);
 				printf("Got state: %s\n", debug_str);
 				}
- ret = consume_file(st, "softrains.raw", &chunks);
+ ret = consume_file(st, argv[1], &chunks);
 if (ret < 0)
 printf("There was some kind of error in consume_file\n");
 		
