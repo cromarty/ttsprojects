@@ -22,3 +22,6 @@ SciTE property files
 # libomxilpcmrender test prog
 coretest
 
+# ignore raw pcm files
+*.raw
+
