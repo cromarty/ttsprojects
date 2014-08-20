@@ -17,7 +17,7 @@ typedef struct {
    sem_t buffer_list_sema;
    ILCLIENT_T *client;
    COMPONENT_T *audio_render;
-   OMX_HANDLETYPE *handle;
+   //OMX_HANDLETYPE *handle;
    COMPONENT_T *list[2];
    OMX_BUFFERHEADERTYPE *user_buffer_list; // buffers owned by the client
    	uint32_t sample_rate;

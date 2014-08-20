@@ -91,7 +91,7 @@ int32_t ilctts_create(TTSRENDER_STATE_T **component,
 	if (ret == -1)
 		return -1;
 
-st->handle = ILC_GET_HANDLE(st->audio_render);
+//st->handle = ILC_GET_HANDLE(st->audio_render);
 
 	st->list[0] = st->audio_render;
 
