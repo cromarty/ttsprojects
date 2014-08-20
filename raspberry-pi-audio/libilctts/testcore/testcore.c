@@ -12,7 +12,7 @@
 
 int32_t consume_file(TTSRENDER_STATE_T *st, const char *filename, int *chunks) {
 	FILE *fp;
-	int32_t ret = -1;
+	//int32_t ret = -1;
 	uint8_t *buf = (uint8_t*)malloc(st->buffer_size);
 	int bytes_read;
 	
@@ -20,18 +20,24 @@ int32_t consume_file(TTSRENDER_STATE_T *st, const char *filename, int *chunks) {
 	if (fp == NULL)
 		return -1;
 
-	while( ! feof(fp) ) {
 		bytes_read = fread(buf, 1, st->buffer_size, fp);
-		printf("Bytes read: %d\n", bytes_read);
+	while( ! feof(fp) ) {
 		if (bytes_read)
-		*chunks++;
+		*chunks += 1;
+		else
+		break;
+		
 		buf = ilctts_get_buffer(st);
-		if (buf == NULL) {
-				fclose(fp);
-						return ret;
-						}
+		while(buf == NULL) {
+				pthread_mutex_lock(&st->free_buffer_mutex);
+				pthread_cond_wait(&st->free_buffer_cv, &st->free_buffer_mutex);
+				buf = ilctts_get_buffer(st);
+				pthread_mutex_unlock(&st->free_buffer_mutex);
+						}// end while
 		
 ilctts_play_buffer(st, buf, bytes_read);
+		bytes_read = fread(buf, 1, st->buffer_size, fp);
+
 	}
 
 	fclose(fp);
@@ -82,7 +88,7 @@ int main() {
 					omx_statetype_string(state, debug_str);
 				printf("Got state: %s\n", debug_str);
 				}
- ret = consume_file(st, "blackbird.raw", &chunks);
+ ret = consume_file(st, "softrains.raw", &chunks);
 if (ret < 0)
 printf("There was some kind of error in consume_file\n");
 		

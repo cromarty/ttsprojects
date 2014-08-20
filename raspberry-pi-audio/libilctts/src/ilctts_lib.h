@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <pthread.h>
 #include <semaphore.h>
 
 #include "bcm_host.h"
@@ -27,6 +28,8 @@ typedef struct {
    	uint32_t buffer_size;
    		uint32_t buffer_count;
    uint32_t bytes_per_sample;
+   	pthread_mutex_t free_buffer_mutex;
+   		pthread_cond_t	free_buffer_cv;
 } TTSRENDER_STATE_T;
 
 

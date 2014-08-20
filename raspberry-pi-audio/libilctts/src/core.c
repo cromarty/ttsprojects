@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <pthread.h>
 #include <semaphore.h>
 
 #include "bcm_host.h"
@@ -37,7 +38,11 @@ static int min(int val1, int val2) {
 } // end min
 
 static void input_buffer_callback(void *data, COMPONENT_T *comp) {
-
+	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)data;
+		pthread_mutex_lock(&st->free_buffer_mutex);
+			pthread_cond_signal(&st->free_buffer_cv);
+				pthread_mutex_unlock(&st->free_buffer_mutex);
+				
 } // end input_buffer_callback
 
 /*
@@ -76,6 +81,8 @@ int32_t ilctts_create(TTSRENDER_STATE_T **component,
 	if (s < 0)
 		return -1;
 
+	pthread_mutex_init(&st->free_buffer_mutex, NULL);
+		pthread_cond_init(&st->free_buffer_cv, NULL);
 	st->sample_rate = sample_rate;
 	st->num_channels = num_channels;
 	st->bit_depth = bit_depth;
