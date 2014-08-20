@@ -14,7 +14,7 @@
 typedef int int32_t;
 
 typedef struct {
-   sem_t sema;
+   sem_t buffer_list_sema;
    ILCLIENT_T *client;
    COMPONENT_T *audio_render;
    OMX_HANDLETYPE *handle;

@@ -72,7 +72,7 @@ int32_t ilctts_create(TTSRENDER_STATE_T **component,
 	*component = st;
 
 	// create and start up everything
-	s = sem_init(&st->sema, 0, 1);
+	s = sem_init(&st->buffer_list_sema, 0, 1);
 	if (s < 0)
 		return -1;
 
@@ -170,7 +170,7 @@ st->handle = ILC_GET_HANDLE(st->audio_render);
 		ilclient_cleanup_components(st->list);
 		omx_err = OMX_Deinit();
 		ilclient_destroy(st->client);
-		sem_destroy(&st->sema);
+		sem_destroy(&st->buffer_list_sema);
 		free(st);
 		*component = NULL;
 		return -1;
@@ -202,7 +202,7 @@ int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
 		return -1;
 
 	ilclient_destroy(st->client);
-	sem_destroy(&st->sema);
+	sem_destroy(&st->buffer_list_sema);
 	free(st);
 	return 0;
 } // end ilctts_delete
@@ -214,10 +214,10 @@ uint8_t *ilctts_get_buffer(TTSRENDER_STATE_T *st) {
 	hdr = ilclient_get_input_buffer(st->audio_render, 100, 0);
 	if(hdr) {
 		// put on the user list
-		sem_wait(&st->sema);
+		sem_wait(&st->buffer_list_sema);
 		hdr->pAppPrivate = st->user_buffer_list;
 		st->user_buffer_list = hdr;
-		sem_post(&st->sema);
+		sem_post(&st->buffer_list_sema);
 	}
 
 	return hdr ? hdr->pBuffer : NULL;
@@ -231,7 +231,7 @@ int32_t ilctts_play_buffer(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t leng
 	if(length % st->bytes_per_sample)
 		return -1;
 
-	sem_wait(&st->sema);
+	sem_wait(&st->buffer_list_sema);
 
 	// search through user list for the right buffer header
 	hdr = st->user_buffer_list;
@@ -249,7 +249,7 @@ int32_t ilctts_play_buffer(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t leng
 			st->user_buffer_list = hdr->pAppPrivate;
 	}
 
-	sem_post(&st->sema);
+	sem_post(&st->buffer_list_sema);
 
 	if(hdr) {
 		OMX_ERRORTYPE omx_err;
