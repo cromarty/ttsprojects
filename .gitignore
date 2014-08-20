@@ -25,3 +25,6 @@ coretest
 # ignore raw pcm files
 *.raw
 
+# test executables
+raspberry-pi-audio/libilctts/testcore/testcore
+
