@@ -1,4 +1,6 @@
 CC = gcc
+VERSION = 0.1.0
+TARGET_LIB = libilctts.so
 INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads \
         -I$(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux \
@@ -24,15 +26,14 @@ LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib -shared \
         -lrt 
         	
 RM = rm -f
-TARGET_LIB = libilctts.so
 
 SRCS = core.c utils.c
 OBJS = $(SRCS:.c=.o)
 
 .PHONY: all
-all: ${TARGET_LIB}
+all: ${TARGET_LIB}.${VERSION}
 
-$(TARGET_LIB): $(OBJS)
+$(TARGET_LIB).$(VERSION): $(OBJS)
 	$(CC) ${LDFLAGS} -o $@ $^
 
 $(SRCS:.c=.d):%.d:%.c
@@ -42,5 +43,5 @@ include $(SRCS:.c=.d)
 
 .PHONY: clean
 clean:
-	-${RM} ${TARGET_LIB} ${OBJS} $(SRCS:.c=.d)
+	-${RM} ${TARGET_LIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)
 
