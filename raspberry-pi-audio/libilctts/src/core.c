@@ -6,6 +6,7 @@
 #include <semaphore.h>
 
 #include "bcm_host.h"
+#include "ringbuffer.h"
 #include "ilclient.h"
 
 #include "ilctts_lib.h"

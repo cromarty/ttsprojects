@@ -31,4 +31,7 @@ raspberry-pi-audio/libilctts/testcore/testcore
 # dependancy files
 *.d
 
+# generated libraries
+*.so.*
+
 
