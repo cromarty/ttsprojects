@@ -59,9 +59,11 @@ int main(int argc, char **argv) {
 					printf("Usage: testcore <raw-pcm-file>\n");
 							return 1;
 							}
-	bcm_host_init();
-	omx_err = OMX_Init();
-	if (omx_err != OMX_ErrorNone) {
+	//bcm_host_init();
+	//omx_err = OMX_Init();
+	ret = ilctts_initialize();
+	//if (omx_err != OMX_ErrorNone) {
+		if (ret < 0) { 
 	printf("Failed to initialise OMX\n");
 		return 1;
 		} else {

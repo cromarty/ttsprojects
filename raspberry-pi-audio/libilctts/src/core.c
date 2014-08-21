@@ -56,6 +56,17 @@ static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 } // end port_settings_changed_callback
 */
 
+int32_t ilctts_initialize() {
+	OMX_ERRORTYPE omx_err;
+		bcm_host_init();
+			omx_err = OMX_Init();
+				return (omx_err == OMX_ErrorNone ? 0 : -1);
+				} // end ilctts_initialize
+				
+				int32_t ilctts_finalize() {
+					return 0;
+					} // end ilctts_finalize
+					
 int32_t ilctts_create(TTSRENDER_STATE_T **component,
 	uint32_t sample_rate,
 	uint32_t num_channels,

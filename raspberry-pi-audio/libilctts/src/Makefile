@@ -31,8 +31,8 @@ RM = rm -f
 SRCS = core.c utils.c ringbuffer.c
 OBJS = $(SRCS:.c=.o)
 
-.PHONY: all
-all: ${TARGET_LIB}.${VERSION}
+#.PHONY: all
+all : ${TARGET_LIB}.${VERSION}
 
 $(TARGET_LIB).$(VERSION): $(OBJS)
 	$(CC) ${LDFLAGS} -o $@ $^
@@ -41,12 +41,15 @@ $(SRCS:.c=.d):%.d:%.c
 	$(CC) $(CFLAGS) -MM $< >$@
 
 include $(SRCS:.c=.d)
-.PHONEY: install 
-install:
+
+install :
 	install ${TARGET_LIB}.${VERSION} ${INSTALLDIR}
 	ln -s ${INSTALLDIR}/${TARGET_LIB}.${VERSION} ${INSTALLDIR}/${TARGET_LIB}	
-	
-.PHONY: clean
-clean:
+
+uninstall :
+	rm ${INSTALLDIR}/${TARGET_LIB}
+		rm ${INSTALLDIR}/${TARGET_LIB}.${VERSION}
+			
+clean :
 	-${RM} ${TARGET_LIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)
 
