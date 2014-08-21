@@ -91,7 +91,8 @@ int32_t ilctts_create(TTSRENDER_STATE_T **component,
 	st->buffer_size = (buffer_size + 15) & ~15;
 	st->num_buffers = num_buffers;
 	st->client = ilclient_init();
-
+	st->pcmring_size = 8192;
+		st->pcmring = ilctts_ringbuffer_init(st->pcmring_size);
 	// set up callbacks
 	ilclient_set_empty_buffer_done_callback(st->client, input_buffer_callback, st);
 

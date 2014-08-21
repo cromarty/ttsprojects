@@ -32,6 +32,7 @@ raspberry-pi-audio/libilctts/testcore/testcore
 *.d
 
 # generated libraries
+*.so
 *.so.*
 
 
