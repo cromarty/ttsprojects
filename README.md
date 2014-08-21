@@ -29,11 +29,11 @@ In raspberry-pi-audio is a project to write a sound-driver to render PCM
 text-to-speech directly on the Raspberry Pi GPU.  Read more about that and 
 connected stuff in the README.md in that directory.
 
-Also in this directory are:
+Also in the raspberry-pi-audio/ directory are:
 
-piespeak/
-piespeakup
-espiespeak/
+1. piespeak/
+2. piespeakup
+3. espiespeak/
 
 Read all about those things in the README.md files in those directories.
 

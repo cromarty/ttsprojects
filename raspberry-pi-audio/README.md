@@ -33,7 +33,7 @@ The library can be used in a number of ways.
 
 The way espeak produces synthesised speech is important here.
 
-espeak can be used in a number of ways.  Two major modes are synchronous and 
+espeak can be used in several ways.  Two major modes are synchronous and 
 asynchronous.  Here we are only interested in asynchronous modes as used by 
 screen-readers and supporting software.
 
@@ -80,8 +80,22 @@ highlighted above.
 It is intended to write sd_piespeak, using the LIBILCTTS library to connect 
 speech-dispatcher, and hence Orca, to the GPU.
 
+### COntents of this directory:
 
+espiespeak/
 
+The code of the proposed Emacspeak speech server using the audio library 
+discussed.
 
+libilctts/
 
+The actual audio library and associated test programs.
+
+piespeakup/
+
+The proposed version of espeakup to use this audio library.
+
+sd_piespeak/
+
+Code of the proposed speech-dispatcher module which uses this library.
 
