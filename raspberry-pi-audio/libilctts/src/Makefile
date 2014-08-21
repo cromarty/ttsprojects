@@ -28,7 +28,7 @@ LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib -shared \
         	
 RM = rm -f
 
-SRCS = core.c utils.c ringbuffer.c
+SRCS = core.c utils.c ringbuffer.c espeak.c
 OBJS = $(SRCS:.c=.o)
 
 #.PHONY: all

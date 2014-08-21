@@ -27,8 +27,8 @@
 				(a).nVersion.s.nVersionMinor = OMX_VERSION_MINOR; \
 					(a).nVersion.s.nRevision = OMX_VERSION_REVISION; \
 						(a).nVersion.s.nStep = OMX_VERSION_STEP
-						
-						
+
+
 
 static int max(int val1, int val2) {
 	return (val1 > val2 ? val1 : val2);
@@ -43,7 +43,7 @@ static void input_buffer_callback(void *data, COMPONENT_T *comp) {
 		pthread_mutex_lock(&st->free_buffer_mutex);
 			pthread_cond_signal(&st->free_buffer_cv);
 				pthread_mutex_unlock(&st->free_buffer_mutex);
-				
+
 } // end input_buffer_callback
 
 /*
@@ -58,15 +58,20 @@ static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 
 int32_t ilctts_initialize() {
 	OMX_ERRORTYPE omx_err;
-		bcm_host_init();
-			omx_err = OMX_Init();
-				return (omx_err == OMX_ErrorNone ? 0 : -1);
-				} // end ilctts_initialize
-				
-				int32_t ilctts_finalize() {
-					return 0;
-					} // end ilctts_finalize
-					
+	bcm_host_init();
+	omx_err = OMX_Init();
+	return (omx_err == OMX_ErrorNone ? 0 : -1);
+} // end ilctts_initialize
+
+int32_t ilctts_finalize() {
+	OMX_ERRORTYPE omx_err;
+	omx_err = OMX_Deinit();
+	if (omx_err != OMX_ErrorNone)
+		return -1;
+
+	return 0;
+} // end ilctts_finalize
+
 int32_t ilctts_create(TTSRENDER_STATE_T **component,
 	uint32_t sample_rate,
 	uint32_t num_channels,
@@ -217,13 +222,10 @@ int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
 	ilclient_change_component_state(st->audio_render, OMX_StateLoaded);
 	ilclient_cleanup_components(st->list);
 
-	omx_err = OMX_Deinit();
-	if (omx_err != OMX_ErrorNone)
-		return -1;
-
 	ilclient_destroy(st->client);
 	sem_destroy(&st->buffer_list_sema);
 	free(st);
+
 	return 0;
 } // end ilctts_delete
 
@@ -324,7 +326,7 @@ int32_t ilctts_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
 	OMX_ERRORTYPE omx_err = OMX_GetState(ILC_GET_HANDLE(st->audio_render), state);
 	if (omx_err != OMX_ErrorNone)
 		return -1;
-		
+
 		return 0;
 		} // end ilctts_get_state
 
@@ -334,7 +336,7 @@ int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
 	OMX_AUDIO_CONFIG_VOLUMETYPE volume;
 	OMX_INIT_STRUCTURE(volume);
 	vol = min(100, vol);
-	volume.nPortIndex = 100; 
+	volume.nPortIndex = 100;
 	volume.sVolume.nValue = vol;
 	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigAudioVolume, &volume);
 	if (omx_err != OMX_ErrorNone)
@@ -343,11 +345,11 @@ int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
 	return 0;
 } // end ilctts_set_volume
 
-int32_t ilctts_pause(TTSRENDER_STATE_T *st) {	
+int32_t ilctts_pause(TTSRENDER_STATE_T *st) {
 		return ilclient_change_component_state(st->audio_render, OMX_StatePause);
 		} //end ilctts_pause
 
-int32_t ilctts_resume(TTSRENDER_STATE_T *st) {	
+int32_t ilctts_resume(TTSRENDER_STATE_T *st) {
 		return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
 		} //end ilctts_resume
 

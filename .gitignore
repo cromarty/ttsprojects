@@ -26,7 +26,7 @@ coretest
 *.raw
 
 # test executables
-raspberry-pi-audio/libilctts/testcore/testcore
+raspberry-pi-audio/libilctts/testlib/testlib
 
 # dependancy files
 *.d

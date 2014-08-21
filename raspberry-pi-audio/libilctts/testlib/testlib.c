@@ -107,7 +107,8 @@ printf("There was some kind of error in consume_file\n");
 	printf("Failed to delete component\n");
 		return 1;
 		}
-
+	ilctts_finalize();
+	
 	return 0;
 
 } // end main
