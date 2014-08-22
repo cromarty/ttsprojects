@@ -48,8 +48,8 @@ install :
 
 uninstall :
 	rm ${INSTALLDIR}/${TARGET_LIB}
-		rm ${INSTALLDIR}/${TARGET_LIB}.${VERSION}
-			
+	rm ${INSTALLDIR}/${TARGET_LIB}.${VERSION}
+
 clean :
 	-${RM} ${TARGET_LIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)
 
