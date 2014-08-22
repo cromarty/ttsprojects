@@ -6,6 +6,7 @@
 #include <semaphore.h>
 #include <espeak/speak_lib.h>
 
+#include "audioq.h"
 #include "ringbuffer.h"
 #include "ilctts_lib.h"
 

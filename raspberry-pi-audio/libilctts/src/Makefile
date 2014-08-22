@@ -1,6 +1,6 @@
 CC = gcc
 VERSION = 0.1.0
-TARGET_LIB = libilctts.so
+TARGETLIB = libilctts.so
 INSTALLDIR = /usr/lib
 INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads \
@@ -31,10 +31,9 @@ RM = rm -f
 SRCS = core.c utils.c ringbuffer.c espeak.c list.c queue.c
 OBJS = $(SRCS:.c=.o)
 
-#.PHONY: all
-all : ${TARGET_LIB}.${VERSION}
+all : ${TARGETLIB}.${VERSION}
 
-$(TARGET_LIB).$(VERSION): $(OBJS)
+$(TARGETLIB).$(VERSION): $(OBJS)
 	$(CC) ${LDFLAGS} -o $@ $^
 
 $(SRCS:.c=.d):%.d:%.c
@@ -43,13 +42,13 @@ $(SRCS:.c=.d):%.d:%.c
 include $(SRCS:.c=.d)
 
 install :
-	install ${TARGET_LIB}.${VERSION} ${INSTALLDIR}
-	ln -s ${INSTALLDIR}/${TARGET_LIB}.${VERSION} ${INSTALLDIR}/${TARGET_LIB}	
+	install ${TARGETLIB}.${VERSION} ${INSTALLDIR}
+	ln -s ${INSTALLDIR}/${TARGETLIB}.${VERSION} ${INSTALLDIR}/${TARGETLIB}	
 
 uninstall :
-	rm ${INSTALLDIR}/${TARGET_LIB}
-	rm ${INSTALLDIR}/${TARGET_LIB}.${VERSION}
+	rm ${INSTALLDIR}/${TARGETLIB}
+	rm ${INSTALLDIR}/${TARGETLIB}.${VERSION}
 
 clean :
-	-${RM} ${TARGET_LIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)
+	-${RM} ${TARGETLIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)
 

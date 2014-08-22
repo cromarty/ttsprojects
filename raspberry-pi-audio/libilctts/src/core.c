@@ -7,8 +7,10 @@
 
 #include "bcm_host.h"
 #include "ringbuffer.h"
+#include "audioq.h"
 #include "ilclient.h"
-
+#include "list.h"
+#include "queue.h"
 #include "ilctts_lib.h"
 
 
