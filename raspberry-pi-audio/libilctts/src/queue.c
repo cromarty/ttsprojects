@@ -5,7 +5,7 @@
 
 
 int queue_enqueue(QUEUE_T *queue, const void *data) {
-	return list_insert(queue, list_tail(queue), data);
+	return list_insert_next(queue, list_tail(queue), data);
 
 } // end queue_enqueue
 
