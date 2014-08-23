@@ -1,4 +1,3 @@
-
 #include <stdlib.h>
 #include <string.h>
 
@@ -19,22 +18,14 @@ return;
 
 
 void list_destroy(LLIST_T *list) {
+	void               *data;
+	while (list_size(list) > 0) {
+  if (list_remove_next(list, NULL, (void **)&data) == 0 && list->destroy != NULL) {
+			list->destroy(data);
 
-void               *data;
+  }
 
-
-while (list_size(list) > 0) {
-
-   if (list_remove_next(list, NULL, (void **)&data) == 0 && list->destroy !=
-      NULL) {
-
-
-      list->destroy(data);
-
-   }
-
-}
-
+	}
 
 memset(list, 0, sizeof(LLIST_T));
 
