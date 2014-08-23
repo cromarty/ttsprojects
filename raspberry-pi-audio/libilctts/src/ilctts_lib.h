@@ -1,6 +1,5 @@
 #ifndef ILCTTS_LIB_H
 #define ILCTTS_LIB_H
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -14,28 +13,34 @@
 #include "queue.h"
 
 
-		
 typedef int int32_t;
 
 typedef struct {
-   sem_t buffer_list_sema;
-   ILCLIENT_T *client;
-   COMPONENT_T *audio_render;
-   //OMX_HANDLETYPE *handle;
-   COMPONENT_T *list[2];
-   OMX_BUFFERHEADERTYPE *user_buffer_list; // buffers owned by the client
-   	uint32_t sample_rate;
-   		uint32_t num_channels;
-   			uint32_t bit_depth;
-   uint32_t num_buffers;
-   	uint32_t buffer_size;
-   		uint32_t buffer_count;
-   uint32_t bytes_per_sample;
+	ILCLIENT_T *client;
+	COMPONENT_T *audio_render;
+	COMPONENT_T *list[2];
+	OMX_BUFFERHEADERTYPE *user_buffer_list; // buffers owned by the client
+	uint32_t sample_rate;
+	uint32_t num_channels;
+	uint32_t bit_depth;
+	uint32_t num_buffers;
+	uint32_t buffer_size;
+	uint32_t buffer_count;
+	uint32_t bytes_per_sample;
    	pthread_mutex_t free_buffer_mutex;
-   		pthread_cond_t	free_buffer_cv;
-   				QUEUE_T playback_queue;
+	pthread_cond_t	free_buffer_cv;
+	pthread_t playback_queue_mutex;
+	pthread_cond_t	playback_queue_cv;
+	pthread_t	playback_thread_mutex;
+	pthread_cond_t	playback_thread_cv;
+	sem_t buffer_list_sema;
+	sema_t	playback_queue_sema;
+	sema_t	playback_thread_sema;
+	QUEUE_T playback_queue;
 } TTSRENDER_STATE_T;
 
+int32_t ilctts_initialize();
+int32_t ilctts_finalize();
 
 int32_t ilctts_create(
 	TTSRENDER_STATE_T **component,

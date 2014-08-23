@@ -18,14 +18,14 @@ CFLAGS = $(INCLUDES) -DSTANDALONE -D__STDC_CONSTANT_MACROS \
         -pipe -DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST \
         -DUSE_EXTERNAL_LIBBCM_HOST \
         -DUSE_VCHIQ_ARM -Wno-psabi \
-        	-O2 -Wextra
+        -O2 -Wextra
 LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib -shared \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/ilclient \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/vgfont \
         -lopenmaxil -lilclient \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
-        -lrt 
-        	
+        -lrt
+
 RM = rm -f
 
 SRCS = core.c utils.c espeak.c list.c queue.c
@@ -42,13 +42,13 @@ $(SRCS:.c=.d):%.d:%.c
 include $(SRCS:.c=.d)
 
 install :
-	install ${TARGETLIB}.${VERSION} ${INSTALLDIR}
-	ln -s ${INSTALLDIR}/${TARGETLIB}.${VERSION} ${INSTALLDIR}/${TARGETLIB}	
+        install ${TARGETLIB}.${VERSION} ${INSTALLDIR}
+        ln -s ${INSTALLDIR}/${TARGETLIB}.${VERSION} ${INSTALLDIR}/${TARGETLIB}	
 
 uninstall :
-	rm ${INSTALLDIR}/${TARGETLIB}
-	rm ${INSTALLDIR}/${TARGETLIB}.${VERSION}
+        rm ${INSTALLDIR}/${TARGETLIB}
+        rm ${INSTALLDIR}/${TARGETLIB}.${VERSION}
 
 clean :
-	-${RM} ${TARGETLIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)
+        -${RM} ${TARGETLIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)
 

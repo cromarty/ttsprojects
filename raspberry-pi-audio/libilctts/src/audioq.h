@@ -14,7 +14,6 @@ typedef enum {
 	ESPEAK_QET_END		// Speech completed.
 } PLAYBACK_QUEUE_ENTRY_TYPE;
 
-
 typedef struct {
 	PLAYBACK_QUEUE_ENTRY_TYPE type;
 	union {
