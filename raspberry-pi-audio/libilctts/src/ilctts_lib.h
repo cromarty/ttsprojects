@@ -10,15 +10,10 @@
 
 #include "bcm_host.h"
 #include "ilclient.h"
-#include "ringbuffer.h"
 #include "list.h"
 #include "queue.h"
 
 
-typedef enum {
-	FALSE,
-	TRUE
-} ILCTTS_BOOLEAN_T;
 		
 typedef int int32_t;
 
@@ -38,8 +33,6 @@ typedef struct {
    uint32_t bytes_per_sample;
    	pthread_mutex_t free_buffer_mutex;
    		pthread_cond_t	free_buffer_cv;
-   		uint32_t pcmring_size;
-   			RING_BUFFER_T *pcmring;
    				QUEUE_T playback_queue;
 } TTSRENDER_STATE_T;
 

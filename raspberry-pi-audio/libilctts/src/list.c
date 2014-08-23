@@ -43,7 +43,7 @@ return;
 }
 
 
-int list_insert(LLIST_T *list, LLIST_ENTRY_T *element, const void *data) {
+int list_insert_next(LLIST_T *list, LLIST_ENTRY_T *element, const void *data) {
 
 LLIST_ENTRY_T           *new_element;
 
