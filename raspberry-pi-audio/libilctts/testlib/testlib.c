@@ -17,14 +17,20 @@
 
 int32_t consume_file(TTSRENDER_STATE_T *st, const char *filename, int *chunks) {
 	FILE *fp;
+short real[N>>1];
+short imag[N>>1];
+//uint8_t *real = (uint8_t*)malloc(N);
 	uint8_t *buf = (uint8_t*)malloc(N);
 	int bytesread, totalbytesread = 0;
+memset(real, 0, N);
+memset(imag, 0, N);
+
 	printf("Consuming file %s in chunks of %d bytes\n", filename, N);	
 	fp = fopen(filename, "r");
 	if (fp == NULL)
 		return -1;
 
-		bytesread = fread(buf, 1, N, fp);
+		bytesread = fread(real, 2, N>>1, fp);
 if ( ! bytesread) {
 printf("Failed to read the first chunk\n");
 fclose(fp);
@@ -38,7 +44,6 @@ totalbytesread += bytesread;
 		} else {
 		break;
 		}
-
 		buf = ilctts_get_buffer(st);
 		while(buf == NULL) {
 				pthread_mutex_lock(&st->free_buffer_mutex);
@@ -46,9 +51,10 @@ totalbytesread += bytesread;
 				buf = ilctts_get_buffer(st);
 				pthread_mutex_unlock(&st->free_buffer_mutex);
 						}// end while
-		
-ilctts_play_buffer(st, buf, bytesread);
-		bytesread = fread(buf, 1, N, fp);
+
+memcpy(buf, real, bytesread<<1);		
+ilctts_play_buffer(st, buf, bytesread<<1);
+		bytesread = fread(real, 2, N>>1, fp);
 
 	}
 
@@ -81,7 +87,7 @@ int main(int argc, char **argv) {
 				}
 				
 
-	omx_err = ilctts_create(&st, 22050, 1, 16, 5, 2048);
+	omx_err = ilctts_create(&st, 22050, 1, 16, 5, N);
 	if (omx_err != OMX_ErrorNone) {
 	printf("Failed to create component\n");
 		return 1;
