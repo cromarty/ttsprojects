@@ -34,8 +34,8 @@ typedef struct {
 	pthread_mutex_t	playback_thread_mutex;
 	pthread_cond_t	playback_thread_cv;
 	pthread_mutex_t espeak_state_mutex;
-	uint32_t espeak_state;
-	uint32_t stop_requested;
+	uint32_t tts_engine_state;
+	uint32_t tts_engine_stop_requested;
 	sem_t buffer_list_sema;
 	sem_t	pbq_sema;
 	sem_t	playback_thread_sema;

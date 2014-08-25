@@ -28,7 +28,7 @@ LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib -shared \
 
 RM = rm -f
 
-SRCS = core.c utils.c espeak.c list.c queue.c
+SRCS = core.c utils.c list.c queue.c
 OBJS = $(SRCS:.c=.o)
 
 all : ${TARGETLIB}.${VERSION}

@@ -10,7 +10,7 @@
 #include "list.h"
 #include "queue.h"
 #include "ilctts_lib.h"
-#include "espeak.h"
+//#include "espeak.h"
 
 
 #define OUT_CHANNELS(num_channels) ((num_channels) > 4 ? 8: (num_channels) > 2 ? 4: (num_channels))
