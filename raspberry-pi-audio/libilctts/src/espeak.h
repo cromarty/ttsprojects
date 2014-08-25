@@ -38,32 +38,36 @@ typedef enum {
 	ESPEAK_QET_SOUND_ICON,	/* A Sound Icon */
 	ESPEAK_QET_BEGIN,	/* Beginning of speech. */
 	ESPEAK_QET_END		/* Speech completed. */
-} ESPEAK_PLAYBACK_QUEUE_ENTY_TYPE_T;
+} ESPEAK_PBQ_ENTRY_TYPE_T;
 
 
 typedef struct {
 	long num_samples;
 	short *audio_chunk;
-} ESPEAK_PLAYBACK_QUEUE_AUDIO_CHUNK_T;
+} ESPEAK_PBQ_AUDIO_CHUNK_T;
 
 
 typedef struct {
-	ESPEAK_PLAYBACK_QUEUE_ENTRY_TYPE_T type;
+	ESPEAK_PBQ_ENTRY_TYPE_T type;
 	union {
 		char *markId;
-		ESPEAK_PLAYBACK_QUEUE_AUDIO_CHUNK_T audio;
+		ESPEAK_PBQ_AUDIO_CHUNK_T audio;
 		char *sound_icon_filename;
 	} data;
-} ESPEAK_PLAYBACK_QUEUE_ENTRY_T;
+} ESPEAK_PBQ_ENTRY_T;
 
 
 static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT * events);
-static uint32_t playback_queue_add_audio(TTSRENDER_STATE_T *st, short *audio_chunk, int num_samples);
-static uint32_t playback_queue_add_flag(TTSRENDER_STATE_T *st, PLAYBACK_QUEUE_ENTRY_TYPE_T type);
-static uint32_t playback_queue_add_mark(TTSRENDER_STATE_T *st, const char *mark_id);
-static uint32_t playback_queue_add_sound_icon(TTSRENDER_STATE_T *st, const char *filename);
-static void delete_playback_queue_entry(TTSRENDER_STATE_T *st);
-static void clear_playback_queue(TTSRENDER_STATE_T *st, );
+static uint32_t pbq_add_audio(TTSRENDER_STATE_T *st, short *audio_chunk, int num_samples);
+static uint32_t pbq_add_flag(
+	TTSRENDER_STATE_T *st,
+	ESPEAK_PBQ_ENTRY_TYPE_T type
+);
+
+static uint32_t pbq_add_mark(TTSRENDER_STATE_T *st, const char *mark_id);
+static uint32_t pbq_add_sound_icon(TTSRENDER_STATE_T *st, const char *filename);
+static void delete_pbq_entry(TTSRENDER_STATE_T *st);
+static void clear_pbq(TTSRENDER_STATE_T *st);
 
 
 #endif

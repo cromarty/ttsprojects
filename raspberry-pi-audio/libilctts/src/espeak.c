@@ -29,9 +29,10 @@ static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT
 	if (st->espeak_state == ESPEAK_BEFORE_SYNTH) {
 		numsamples_sent_msg = 0;
 		st->espeak_state = ESPEAK_BEFORE_PLAY;
-		ilctts_espeak_playback_queue_add_flag();
+		pbq_add_flag(st, ESPEAK_BEFORE_SYNTH);
+
 		// Wake up playback thread
-		sem_post(&st->play_semaphore);
+		sem_post(&st->playback_thread_sema);
 	}
 	pthread_mutex_unlock(&st->espeak_state_mutex);
 
@@ -61,14 +62,14 @@ static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT
 		// Process actual event
 		switch (events->type) {
 		case espeakEVENT_MARK:
-			result = ilctts_espeak_playback_queue_add_mark(events->id.name);
+			result = pbq_add_mark(st, events->id.name);
 			break;
 		case espeakEVENT_PLAY:
-			result = ilctts_espeak_playback_queue_add_sound_icon(events->id.name);
+			result = pbq_add_sound_icon(st, events->id.name);
 			break;
 		case espeakEVENT_MSG_TERMINATED:
 			// This event never has any audio in the same callback
-			result = ilctts_espeak_playback_queue_add_flag(ESPEAK_QET_END);
+			result = pbq_add_flag(st, ESPEAK_QET_END);
 			break;
 		default:
 			break;
@@ -90,7 +91,7 @@ static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT
 /* Adds a chunk of pcm audio to the audio playback queue.
 *  Waits until there is enough space in the queue.
 */
-static uint32_t ilctts_espeak_playback_queue_add_audio(TTSRENDER_STATE_T *st, short *audio_chunk, int num_samples) {
+static uint32_t pbq_add_audio(TTSRENDER_STATE_T *st, short *audio_chunk, int num_samples) {
 	pthread_mutex_lock(&st->playback_queue_mutex);
 	while (!st->espeak_stop_requested && playback_queue_size > EspeakAudioQueueMaxSize) {
 		pthread_cond_wait(&st->playback_queue_cv, &st->playback_queue_mutex);
@@ -100,39 +101,37 @@ static uint32_t ilctts_espeak_playback_queue_add_audio(TTSRENDER_STATE_T *st, sh
 		return 1; // stop espeak
 	}
 
-	PLAYBACK_QUEUE_ENTRY_T *pqentry = g_new(TPlaybackQueueEntry, 1);
-	pqentry->type = ESPEAK_QET_AUDIO;
-	pqentry->data.audio.num_samples = num_samples;
+	PBQ_ENTRY_T *pbqentry = malloc(sizeof(PBQ_ENTRY_T));
+	pbqentry->type = ESPEAK_QET_AUDIO;
+	pbqentry->data.audio.num_samples = num_samples;
 	int nbytes = sizeof(short) * num_samples;
-	pqentry->data.audio.audio_chunk = (short *)g_memdup((gconstpointer) audio_chunk, nbytes);
-	//playback_queue_push(pqentry);
-	// now queue the entry
+	pbqentry->data.audio.audio_chunk = (short *)g_memdup((gconstpointer) audio_chunk, nbytes);
 	queue_enqueue(&st->playback_queue, (void*)entry);
 	return TRUE; // check this
 }
 
 /* Adds a begin or end flag to the playback queue. */
-static uint32_t ilctts_espeak_playback_queue_add_flag(TTSRENDER_STATE_T *st, PLAYBACK_QUEUE_ENTRY_TYPE_T type) {
-	PLAYBACK_QUEUE_ENTRY_T *pqentry = (PLAYBACK_QUEUE_ENTRY_T *)malloc(sizeof(PLAYBACK_QUEUE_ENTRY_T));
-	pqentry->type = type;
+static uint32_t pbq_add_flag(TTSRENDER_STATE_T *st, PBQ_ENTRY_TYPE_T type) {
+	PBQ_ENTRY_T *pbqentry = (PBQ_ENTRY_T *)malloc(sizeof(PBQ_ENTRY_T));
+	pbqentry->type = type;
 	queue_enqueue(&st->playback_queue, (void*)entry);
 	return;
 } // end playback_queue_flag
 
 /* Adds an Index Mark to the audio playback queue. */
-static uint32_t ilctts_espeak_playback_queue_add_mark(TTSRENDER_STATE_T *st, const char *mark_id) {
-	PLAYBACK_QUEUE_ENTRY_T *pqentry = (PLAYBACK_QUEUE_ENTRY_T*)malloc(sizeof(PLAYBACK_QUEUE_ENTRY_T));
-	pqentry->type = ESPEAK_QET_INDEX_MARK;
-	pqentry->data.mark_id = g_strdup(mark_id);
+static uint32_t pbq_add_mark(TTSRENDER_STATE_T *st, const char *mark_id) {
+	PBQ_ENTRY_T *pbqentry = (PBQ_ENTRY_T*)malloc(sizeof(PBQ_ENTRY_T));
+	pbqentry->type = ESPEAK_QET_INDEX_MARK;
+	pbqentry->data.mark_id = g_strdup(mark_id);
 	queue_enqueue(&st->playback_queue, entry);
 	return;
 } // end playback_queue_mark
 
 /* Add a sound icon to the playback queue. */
-static uint32_t ilctts_espeak_playback_queue_add_sound_icon(TTSRENDER_STATE_T *st, const char *filename) {
-	PLAYBACK_QUEUE_ENTRY_T *pqentry = (PLAYBACK_QUEUE_ENTRY_T*)malloc(sizeof(PLAYBACK_QUEUE_ENTRY_T));
-	pqentry->type = ESPEAK_QET_SOUND_ICON;
-	pqentry->data.sound_icon_filename = g_strdup(filename);
+static uint32_t pbq_add_sound_icon(TTSRENDER_STATE_T *st, const char *filename) {
+	PBQ_ENTRY_T *pbqentry = (PBQ_ENTRY_T*)malloc(sizeof(PBQ_ENTRY_T));
+	pbqentry->type = ESPEAK_QET_SOUND_ICON;
+	pbqentry->data.sound_icon_filename = g_strdup(filename);
 	queue_enqueue(&st->playback_queue, (void*)entry);
 	return;
 } //end playback_queue_sound_icon
@@ -140,22 +139,22 @@ static uint32_t ilctts_espeak_playback_queue_add_sound_icon(TTSRENDER_STATE_T *s
 
 /* Deletes an entry from the playback audio queue, freeing memory. */
 static void ilctts_espeak_delete_playback_queue_entry(TTSRENDER_STATE_T *st) {
-	PLAYBACK_QUEUE_ENTRY_T *pqentry;
-	queue_dequeue(&st->playback_queue, (void*)pqentry);
-	switch (pqentry->type) {
+	PBQ_ENTRY_T *pbqentry;
+	queue_dequeue(&st->playback_queue, (void*)pbqentry);
+	switch (pbqentry->type) {
 	case ESPEAK_QET_AUDIO:
-		free(pqentry->data.audio.audio_chunk);
+		free(pbqentry->data.audio.audio_chunk);
 		break;
 	case ESPEAK_QET_INDEX_MARK:
-		free(pqentry->data.mark_id);
+		free(pbqentry->data.mark_id);
 		break;
 	case ESPEAK_QET_SOUND_ICON:
-		free(pqentry->data.sound_icon_filename);
+		free(pbqentry->data.sound_icon_filename);
 		break;
 	default:
 		break;
 	}
-	free(pqentry);
+	free(pbqentry);
 } // end delete_playback_queue_entry
 
 
