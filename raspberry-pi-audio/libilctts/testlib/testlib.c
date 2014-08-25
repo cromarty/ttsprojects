@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <semaphore.h>
+#include <math.h>
 
 #include "bcm_host.h"
 #include "ilclient.h"
@@ -10,23 +11,34 @@
 #include "ilctts_lib.h"
 #include "utils.h"
 
+#define M 10
+//#define N (st->buffer_size)
+#define N (1<<M)
+
 int32_t consume_file(TTSRENDER_STATE_T *st, const char *filename, int *chunks) {
 	FILE *fp;
-	//int32_t ret = -1;
-	uint8_t *buf = (uint8_t*)malloc(st->buffer_size);
-	int bytes_read;
-	
+	uint8_t *buf = (uint8_t*)malloc(N);
+	int bytesread, totalbytesread = 0;
+	printf("Consuming file %s in chunks of %d bytes\n", filename, N);	
 	fp = fopen(filename, "r");
 	if (fp == NULL)
 		return -1;
 
-		bytes_read = fread(buf, 1, st->buffer_size, fp);
+		bytesread = fread(buf, 1, N, fp);
+if ( ! bytesread) {
+printf("Failed to read the first chunk\n");
+fclose(fp);
+	return -1;
+}
+	
 	while( ! feof(fp) ) {
-		if (bytes_read)
+		if (bytesread) {
 		*chunks += 1;
-		else
+totalbytesread += bytesread;
+		} else {
 		break;
-		
+		}
+
 		buf = ilctts_get_buffer(st);
 		while(buf == NULL) {
 				pthread_mutex_lock(&st->free_buffer_mutex);
@@ -35,13 +47,13 @@ int32_t consume_file(TTSRENDER_STATE_T *st, const char *filename, int *chunks) {
 				pthread_mutex_unlock(&st->free_buffer_mutex);
 						}// end while
 		
-ilctts_play_buffer(st, buf, bytes_read);
-		bytes_read = fread(buf, 1, st->buffer_size, fp);
+ilctts_play_buffer(st, buf, bytesread);
+		bytesread = fread(buf, 1, N, fp);
 
 	}
 
 	fclose(fp);
-	printf("Read %d chunks of data\n", *chunks);
+	printf("Read %d chunks of data, total of %d\n", *chunks, totalbytesread);
 	return 0;
 } // end consume_file
 
@@ -59,10 +71,8 @@ int main(int argc, char **argv) {
 					printf("Usage: testcore <raw-pcm-file>\n");
 							return 1;
 							}
-	//bcm_host_init();
-	//omx_err = OMX_Init();
+
 	ret = ilctts_initialize();
-	//if (omx_err != OMX_ErrorNone) {
 		if (ret < 0) { 
 	printf("Failed to initialise OMX\n");
 		return 1;
@@ -75,31 +85,23 @@ int main(int argc, char **argv) {
 	if (omx_err != OMX_ErrorNone) {
 	printf("Failed to create component\n");
 		return 1;
-		} else {
-				printf("Successfully created component\n");
 				}
 
 	ret = ilctts_set_dest(st, "local");
 	if (ret < 0) {
 		printf("Failed to set audio destination\n");
 		return 1;
-		} else {
-			printf("Successfully set audio destination\n");
 			}
-			
 		
 		ret = ilctts_get_state(st, &state);
 		if (ret < 0) {
 			printf("Failed to get state\n");
-			} else {
-					omx_statetype_string(state, debug_str);
 				printf("Got state: %s\n", debug_str);
 				}
+
  ret = consume_file(st, argv[1], &chunks);
 if (ret < 0)
 printf("There was some kind of error in consume_file\n");
-		
-		printf("Read %d chunks of data\n", chunks);
 		
 		
 	omx_err = ilctts_delete(st);
