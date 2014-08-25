@@ -52,7 +52,7 @@ static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT
 				pos_msg = pos_msg * st->sample_rate / 1000;
 				// Convert position in message to position in current chunk
 				int upto = (int)CLAMP(pos_msg - numsamples_sent_msg, 0, numsamples);	/* This is just for safety */
-				ilctts_espeak_send_audio_upto(wav, &numsamples_sent, upto);
+				send_audio_upto(wav, &numsamples_sent, upto);
 				break;
 			}
 		default:
@@ -74,13 +74,15 @@ static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT
 		default:
 			break;
 		}
+
 		if (st->espeak_stop_requested) {
 			return 1;
 		}
+
 		events++;
 	} // while
 
-	ilctts_espeak_send_audio_upto(wav, &numsamples_sent, numsamples);
+	send_audio_upto(wav, &numsamples_sent, numsamples);
 	numsamples_sent_msg += numsamples;
 	return 0;
 
@@ -116,7 +118,7 @@ static uint32_t pbq_add_flag(TTSRENDER_STATE_T *st, PBQ_ENTRY_TYPE_T type) {
 	pbqentry->type = type;
 	queue_enqueue(&st->playback_queue, (void*)entry);
 	return;
-} // end playback_queue_flag
+} // end pbq_flag
 
 /* Adds an Index Mark to the audio playback queue. */
 static uint32_t pbq_add_mark(TTSRENDER_STATE_T *st, const char *mark_id) {
@@ -125,7 +127,7 @@ static uint32_t pbq_add_mark(TTSRENDER_STATE_T *st, const char *mark_id) {
 	pbqentry->data.mark_id = g_strdup(mark_id);
 	queue_enqueue(&st->playback_queue, entry);
 	return;
-} // end playback_queue_mark
+} // end pbq_mark
 
 /* Add a sound icon to the playback queue. */
 static uint32_t pbq_add_sound_icon(TTSRENDER_STATE_T *st, const char *filename) {
@@ -134,11 +136,11 @@ static uint32_t pbq_add_sound_icon(TTSRENDER_STATE_T *st, const char *filename) 
 	pbqentry->data.sound_icon_filename = g_strdup(filename);
 	queue_enqueue(&st->playback_queue, (void*)entry);
 	return;
-} //end playback_queue_sound_icon
+} //end pbq_sound_icon
 
 
 /* Deletes an entry from the playback audio queue, freeing memory. */
-static void ilctts_espeak_delete_playback_queue_entry(TTSRENDER_STATE_T *st) {
+static void delete_pbq_entry(TTSRENDER_STATE_T *st) {
 	PBQ_ENTRY_T *pbqentry;
 	queue_dequeue(&st->playback_queue, (void*)pbqentry);
 	switch (pbqentry->type) {
@@ -155,18 +157,19 @@ static void ilctts_espeak_delete_playback_queue_entry(TTSRENDER_STATE_T *st) {
 		break;
 	}
 	free(pbqentry);
-} // end delete_playback_queue_entry
+} // end delete_pbq_entry
 
 
 /* Erases the entire playback queue, freeing memory. */
-static void ilctts_espeak_clear_playback_queue(TTSRENDER_STATE_T *st, ) {
+static void clear_pbq(TTSRENDER_STATE_T *st, ) {
 	pthread_mutex_lock(&st->playback_queue_mutex);
 	while (queue_size(&st->playback_queue) > 0 ) {
 		delete_playback_queue_entry(st);
 	}
 	queue_destroy(st->playback_queue);
 	pthread_mutex_unlock(&st->playback_queue_mutex);
-}
+} // end clear_pbq
+
 
 
 
