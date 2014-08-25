@@ -18,7 +18,7 @@ CFLAGS = $(INCLUDES) -DSTANDALONE -D__STDC_CONSTANT_MACROS \
         -pipe -DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST \
         -DUSE_EXTERNAL_LIBBCM_HOST \
         -DUSE_VCHIQ_ARM -Wno-psabi \
-        -O2 -Wextra
+        -O2 -Wextra -Wno-unused-function
 LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib -shared \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/ilclient \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/vgfont \

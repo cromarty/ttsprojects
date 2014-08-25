@@ -12,6 +12,11 @@
 #include "list.h"
 #include "queue.h"
 
+#undef	CLAMP
+#define CLAMP(x, low, high)  \
+			(((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
+
+
 
 typedef enum {
 	ESPEAK_FATAL_ERROR = -1,
@@ -57,7 +62,7 @@ typedef struct {
 } PBQ_ENTRY_T;
 
 
-static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT * events);
+static int synth_callback(short *wav, int numsamples, espeak_EVENT *events);
 static uint32_t pbq_add_audio(TTSRENDER_STATE_T *st, short *audio_chunk, int num_samples);
 static uint32_t pbq_add_flag(
 	TTSRENDER_STATE_T *st,
@@ -68,6 +73,7 @@ static uint32_t pbq_add_mark(TTSRENDER_STATE_T *st, const char *mark_id);
 static uint32_t pbq_add_sound_icon(TTSRENDER_STATE_T *st, const char *filename);
 static void delete_pbq_entry(TTSRENDER_STATE_T *st);
 static void clear_pbq(TTSRENDER_STATE_T *st);
+static uint32_t send_audio_upto(TTSRENDER_STATE_T *st, short *wav, int *sent,int upto);
 
 
 #endif

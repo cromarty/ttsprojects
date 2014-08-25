@@ -29,17 +29,18 @@ typedef struct {
 	uint32_t bytes_per_sample;
    	pthread_mutex_t free_buffer_mutex;
 	pthread_cond_t	free_buffer_cv;
-	pthread_t playback_queue_mutex;
-	pthread_cond_t	playback_queue_cv;
+	pthread_t pbq_mutex;
+	pthread_cond_t	pbq_cv;
 	pthread_mutex_t	playback_thread_mutex;
 	pthread_cond_t	playback_thread_cv;
 	pthread_mutex_t espeak_state_mutex;
 	uint32_t espeak_state;
-	uint32_t espeak_stop_requested;
+	uint32_t stop_requested;
 	sem_t buffer_list_sema;
-	sem_t	playback_queue_sema;
+	sem_t	pbq_sema;
 	sem_t	playback_thread_sema;
-	QUEUE_T playback_queue;
+	QUEUE_T pbq;  // queue of playback objects
+	uint32_t pbq_size;  // number of samples currently in queue
 } TTSRENDER_STATE_T;
 
 int32_t ilctts_initialize();
