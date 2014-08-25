@@ -6,11 +6,10 @@
 #include <semaphore.h>
 #include <espeak/speak_lib.h>
 
-#include "audioq.h"
-//#include "ringbuffer.h"
 #include "ilctts_lib.h"
 #include "list.h"
 #include "queue.h"
+#include "espeak.h"
 
 /*
 * Return values:
@@ -19,18 +18,18 @@
 */
 
 static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT * events) {
+	TTSRENDER_STATE_T *st;
 		// Number of samples sent in current message.
 	static int numsamples_sent_msg = 0;
 	// Number of samples already sent during this call to the callback.
 	int numsamples_sent = 0;
-	ILCTTS_BOOLEAN_T result = FALSE;
+	 uint32_t result = 0;
 
 	pthread_mutex_lock(&st->espeak_state_mutex);
-	if (st->espeak_state == BEFORE_SYNTH) {
+	if (st->espeak_state == ESPEAK_BEFORE_SYNTH) {
 		numsamples_sent_msg = 0;
-		st->espeak_state = BEFORE_PLAY;
-		//espeak_add_flag_to_playback_queue(ESPEAK_QET_BEGIN);
-		playback_queue_add_flag();
+		st->espeak_state = ESPEAK_BEFORE_PLAY;
+		ilctts_espeak_playback_queue_add_flag();
 		// Wake up playback thread
 		sem_post(&st->play_semaphore);
 	}
@@ -52,7 +51,7 @@ static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT
 				pos_msg = pos_msg * st->sample_rate / 1000;
 				// Convert position in message to position in current chunk
 				int upto = (int)CLAMP(pos_msg - numsamples_sent_msg, 0, numsamples);	/* This is just for safety */
-				espeak_send_audio_upto(wav, &numsamples_sent, upto);
+				ilctts_espeak_send_audio_upto(wav, &numsamples_sent, upto);
 				break;
 			}
 		default:
@@ -62,14 +61,14 @@ static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT
 		// Process actual event
 		switch (events->type) {
 		case espeakEVENT_MARK:
-			result = playback_queue_add_mark(events->id.name);
+			result = ilctts_espeak_playback_queue_add_mark(events->id.name);
 			break;
 		case espeakEVENT_PLAY:
-			result = playback_queue_add_sound_icon(events->id.name);
+			result = ilctts_espeak_playback_queue_add_sound_icon(events->id.name);
 			break;
 		case espeakEVENT_MSG_TERMINATED:
 			// This event never has any audio in the same callback
-			result = playback_queue_add_flag(ESPEAK_QET_END);
+			result = ilctts_espeak_playback_queue_add_flag(ESPEAK_QET_END);
 			break;
 		default:
 			break;
@@ -80,7 +79,7 @@ static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT
 		events++;
 	} // while
 
-	espeak_send_audio_upto(wav, &numsamples_sent, numsamples);
+	ilctts_espeak_send_audio_upto(wav, &numsamples_sent, numsamples);
 	numsamples_sent_msg += numsamples;
 	return 0;
 
@@ -91,7 +90,7 @@ static int ilctts_espeak_synth_callback(short *wav, int numsamples, espeak_EVENT
 /* Adds a chunk of pcm audio to the audio playback queue.
 *  Waits until there is enough space in the queue.
 */
-static ILCTTS_BOOLEAN_T playback_queue_add_audio(TTSRENDER_STATE_T *st, short *audio_chunk, int num_samples) {
+static uint32_t ilctts_espeak_playback_queue_add_audio(TTSRENDER_STATE_T *st, short *audio_chunk, int num_samples) {
 	pthread_mutex_lock(&st->playback_queue_mutex);
 	while (!st->espeak_stop_requested && playback_queue_size > EspeakAudioQueueMaxSize) {
 		pthread_cond_wait(&st->playback_queue_cv, &st->playback_queue_mutex);
@@ -113,7 +112,7 @@ static ILCTTS_BOOLEAN_T playback_queue_add_audio(TTSRENDER_STATE_T *st, short *a
 }
 
 /* Adds a begin or end flag to the playback queue. */
-static ILCTTS_BOOLEAN_T playback_queue_add_flag(TTSRENDER_STATE_T *st, PLAYBACK_QUEUE_ENTRY_TYPE_T type) {
+static uint32_t ilctts_espeak_playback_queue_add_flag(TTSRENDER_STATE_T *st, PLAYBACK_QUEUE_ENTRY_TYPE_T type) {
 	PLAYBACK_QUEUE_ENTRY_T *pqentry = (PLAYBACK_QUEUE_ENTRY_T *)malloc(sizeof(PLAYBACK_QUEUE_ENTRY_T));
 	pqentry->type = type;
 	queue_enqueue(&st->playback_queue, (void*)entry);
@@ -121,7 +120,7 @@ static ILCTTS_BOOLEAN_T playback_queue_add_flag(TTSRENDER_STATE_T *st, PLAYBACK_
 } // end playback_queue_flag
 
 /* Adds an Index Mark to the audio playback queue. */
-static ILCTTS_BOOLEAN_T playback_queue_add_mark(TTSRENDER_STATE_T *st, const char *mark_id) {
+static uint32_t ilctts_espeak_playback_queue_add_mark(TTSRENDER_STATE_T *st, const char *mark_id) {
 	PLAYBACK_QUEUE_ENTRY_T *pqentry = (PLAYBACK_QUEUE_ENTRY_T*)malloc(sizeof(PLAYBACK_QUEUE_ENTRY_T));
 	pqentry->type = ESPEAK_QET_INDEX_MARK;
 	pqentry->data.mark_id = g_strdup(mark_id);
@@ -130,7 +129,7 @@ static ILCTTS_BOOLEAN_T playback_queue_add_mark(TTSRENDER_STATE_T *st, const cha
 } // end playback_queue_mark
 
 /* Add a sound icon to the playback queue. */
-static ILCTTS_BOOLEAN_T playback_queue_add_sound_icon(TTSRENDER_STATE_T *st, const char *filename) {
+static uint32_t ilctts_espeak_playback_queue_add_sound_icon(TTSRENDER_STATE_T *st, const char *filename) {
 	PLAYBACK_QUEUE_ENTRY_T *pqentry = (PLAYBACK_QUEUE_ENTRY_T*)malloc(sizeof(PLAYBACK_QUEUE_ENTRY_T));
 	pqentry->type = ESPEAK_QET_SOUND_ICON;
 	pqentry->data.sound_icon_filename = g_strdup(filename);
@@ -140,7 +139,7 @@ static ILCTTS_BOOLEAN_T playback_queue_add_sound_icon(TTSRENDER_STATE_T *st, con
 
 
 /* Deletes an entry from the playback audio queue, freeing memory. */
-static void delete_playback_queue_entry(TTSRENDER_STATE_T *st) {
+static void ilctts_espeak_delete_playback_queue_entry(TTSRENDER_STATE_T *st) {
 	PLAYBACK_QUEUE_ENTRY_T *pqentry;
 	queue_dequeue(&st->playback_queue, (void*)pqentry);
 	switch (pqentry->type) {
@@ -161,7 +160,7 @@ static void delete_playback_queue_entry(TTSRENDER_STATE_T *st) {
 
 
 /* Erases the entire playback queue, freeing memory. */
-static void clear_playback_queue(TTSRENDER_STATE_T *st, ) {
+static void ilctts_espeak_clear_playback_queue(TTSRENDER_STATE_T *st, ) {
 	pthread_mutex_lock(&st->playback_queue_mutex);
 	while (queue_size(&st->playback_queue) > 0 ) {
 		delete_playback_queue_entry(st);

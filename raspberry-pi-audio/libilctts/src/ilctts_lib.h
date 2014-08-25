@@ -31,11 +31,13 @@ typedef struct {
 	pthread_cond_t	free_buffer_cv;
 	pthread_t playback_queue_mutex;
 	pthread_cond_t	playback_queue_cv;
-	pthread_t	playback_thread_mutex;
+	pthread_mutex_t	playback_thread_mutex;
 	pthread_cond_t	playback_thread_cv;
+	pthread_mutex_t espeak_state_mutex;
+	uint32_t espeak_state;
 	sem_t buffer_list_sema;
-	sema_t	playback_queue_sema;
-	sema_t	playback_thread_sema;
+	sem_t	playback_queue_sema;
+	sem_t	playback_thread_sema;
 	QUEUE_T playback_queue;
 } TTSRENDER_STATE_T;
 

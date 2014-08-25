@@ -6,12 +6,11 @@
 #include <semaphore.h>
 
 #include "bcm_host.h"
-//#include "ringbuffer.h"
-#include "audioq.h"
 #include "ilclient.h"
 #include "list.h"
 #include "queue.h"
 #include "ilctts_lib.h"
+#include "espeak.h"
 
 
 #define OUT_CHANNELS(num_channels) ((num_channels) > 4 ? 8: (num_channels) > 2 ? 4: (num_channels))
@@ -109,8 +108,8 @@ int32_t ilctts_create(TTSRENDER_STATE_T **component,
 	st->buffer_size = (buffer_size + 15) & ~15;
 	st->num_buffers = num_buffers;
 	st->client = ilclient_init();
-	st->pcmring_size = 8192;
-		st->pcmring = ilctts_ringbuffer_init(st->pcmring_size);
+	//st->pcmring_size = 8192;
+		//st->pcmring = ilctts_ringbuffer_init(st->pcmring_size);
 	// set up callbacks
 	ilclient_set_empty_buffer_done_callback(st->client, input_buffer_callback, st);
 

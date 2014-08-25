@@ -42,13 +42,13 @@ $(SRCS:.c=.d):%.d:%.c
 include $(SRCS:.c=.d)
 
 install :
-        install ${TARGETLIB}.${VERSION} ${INSTALLDIR}
-        ln -s ${INSTALLDIR}/${TARGETLIB}.${VERSION} ${INSTALLDIR}/${TARGETLIB}	
+	install ${TARGETLIB}.${VERSION} ${INSTALLDIR}
+	ln -s ${INSTALLDIR}/${TARGETLIB}.${VERSION} ${INSTALLDIR}/${TARGETLIB}	
 
 uninstall :
-        rm ${INSTALLDIR}/${TARGETLIB}
-        rm ${INSTALLDIR}/${TARGETLIB}.${VERSION}
+	rm ${INSTALLDIR}/${TARGETLIB}
+	rm ${INSTALLDIR}/${TARGETLIB}.${VERSION}
 
 clean :
-        -${RM} ${TARGETLIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)
+	-${RM} ${TARGETLIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)
 
