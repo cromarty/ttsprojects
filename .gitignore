@@ -22,8 +22,9 @@ SciTE property files
 # libomxilpcmrender test prog
 coretest
 
-# ignore raw pcm files
+# ignore raw pcm and wav files
 *.raw
+*.wav
 
 # test executables
 raspberry-pi-audio/libilctts/testlib/testlib
@@ -34,5 +35,8 @@ raspberry-pi-audio/libilctts/testlib/testlib
 # generated libraries
 *.so
 *.so.*
+
+# text files
+*.txt
 
 

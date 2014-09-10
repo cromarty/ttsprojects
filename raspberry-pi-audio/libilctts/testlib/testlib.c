@@ -15,6 +15,8 @@
 //#define N (st->buffer_size)
 #define N (1<<M)
 
+        
+
 int32_t consume_file(TTSRENDER_STATE_T *st, const char *filename, int *chunks) {
 	FILE *fp;
 short real[N>>1];
@@ -44,6 +46,8 @@ totalbytesread += bytesread;
 		} else {
 		break;
 		}
+        
+
 		buf = ilctts_get_buffer(st);
 		while(buf == NULL) {
 				pthread_mutex_lock(&st->free_buffer_mutex);
