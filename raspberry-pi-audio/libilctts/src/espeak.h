@@ -6,14 +6,15 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <espeak/speak_lib.h>
 
 #include "list.h"
 #include "queue.h"
 #include "ilctts_lib.h"
 
 
-static int synth_callback(short *wav, int numsamples, espeak_EVENT * events);
-
+static int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * events);
+void ilctts_set_callbacks(TTSRENDER_STATE_T*);
 
 #endif
 

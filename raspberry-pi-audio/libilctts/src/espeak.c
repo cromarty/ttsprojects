@@ -4,14 +4,18 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <espeak/speak_lib.h>
 
 #include "list.h"
 #include "queue.h"
 #include "ilctts_lib.h"
 #include "espeak.h"
 
+TTSRENDER_STATE_T *g_st = NULL;
 
-static int synth_callback(short *wav, int numsamples, espeak_EVENT * events) {
+
+
+static int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * events) {
 	static int numsamples_sent_msg = 0;
 	int numsamples_sent = 0;
 
@@ -22,6 +26,7 @@ static int synth_callback(short *wav, int numsamples, espeak_EVENT * events) {
 		numsamples_sent_msg = 0;
 		espeak_state = BEFORE_PLAY;
 		// add begin flag to queue
+
 		// wake playback thread here
 
 	}
@@ -34,6 +39,7 @@ static int synth_callback(short *wav, int numsamples, espeak_EVENT * events) {
 	while (events->type != espeakEVENT_LIST_TERMINATED) {
 
 	} // end while (events->type != espeakEVENT_LIST_TERMINATED)
+
 	// send audio up to here
 
 	// increment the static number of samples in this message
@@ -41,4 +47,11 @@ static int synth_callback(short *wav, int numsamples, espeak_EVENT * events) {
 
 	// return zero to indicate we still want more of this message
 	return 0;
-}
+} // end ilctts_synth_callback
+
+void ilctts_set_callbacks(TTSRENDER_STATE_T *st) {
+	g_st = st;
+	espeak_SetSynthCallback(ilctts_synth_callback);
+	//espeak_SetUriCallback(ilctts_uri_callback);
+	return;
+} // end ilctts_set_callbacks
