@@ -11,7 +11,7 @@
 #include "ilctts_lib.h"
 #include "espeak.h"
 
-TTSRENDER_STATE_T *g_st = NULL;
+static TTSRENDER_STATE_T *g_st = NULL;
 
 
 
@@ -22,9 +22,9 @@ static int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * even
 	// set espeak state mutex lock here
 
 	// first time in for this message?
-	if (espeak_state == BEFORE_SYNTH) {
+	if (g_st->tts_state == TTS_BEFORE_SYNTH) {
 		numsamples_sent_msg = 0;
-		espeak_state = BEFORE_PLAY;
+		g_st->tts_state = TTS_BEFORE_PLAY;
 		// add begin flag to queue
 
 		// wake playback thread here
@@ -32,7 +32,7 @@ static int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * even
 	}
 	// unlock the espeak state mutex here
 
-	if (espeak_stop_requested)
+	if (g_st->tts_state == TTS_STOP_REQUESTED)
 		return 1;
 
 	// process audio data and events
