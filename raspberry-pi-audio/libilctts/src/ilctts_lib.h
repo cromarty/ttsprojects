@@ -42,6 +42,7 @@ typedef struct {
 	uint32_t buffer_size;
 	uint32_t buffer_count;
 	uint32_t bytes_per_sample;
+	int64_t	position_in_message;
    	pthread_mutex_t free_buffer_mutex;
 	pthread_cond_t	free_buffer_cv;
 	pthread_t pbq_mutex;

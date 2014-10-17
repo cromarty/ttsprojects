@@ -12,6 +12,7 @@
 #include "queue.h"
 #include "ilctts_lib.h"
 
+#define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
 
 static int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * events);
