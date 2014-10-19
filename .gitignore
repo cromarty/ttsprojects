@@ -28,6 +28,7 @@ coretest
 
 # test executables
 raspberry-pi-audio/libilctts/testlib/testlib
+raspberry-pi-audio/libilctts/testringbuffer/testringbuffer
 
 # dependancy files
 *.d

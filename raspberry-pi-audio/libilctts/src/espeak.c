@@ -15,7 +15,7 @@ static TTSRENDER_STATE_T *g_st = NULL;
 
 
 
-static int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * events) {
+int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * events) {
 	static int numsamples_sent_msg = 0;
 	int numsamples_sent = 0;
 
@@ -55,3 +55,6 @@ void ilctts_set_callbacks(TTSRENDER_STATE_T *st) {
 	//espeak_SetUriCallback(ilctts_uri_callback);
 	return;
 } // end ilctts_set_callbacks
+
+//--- static functions
+

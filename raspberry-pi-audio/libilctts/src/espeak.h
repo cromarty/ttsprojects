@@ -15,8 +15,11 @@
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
 
 
-static int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * events);
+int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * events);
 void ilctts_set_callbacks(TTSRENDER_STATE_T*);
+
+//--- static functions
+
 
 #endif
 
