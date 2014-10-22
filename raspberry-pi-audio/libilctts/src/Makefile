@@ -24,7 +24,7 @@ LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib -shared \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/vgfont \
         -lopenmaxil -lilclient \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
-        -lrt
+        -lpthread -lespeak -lrt
 
 RM = rm -f
 

@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 #include <espeak/speak_lib.h>
+#include <espeak/speak_lib.h>
 
 #include "list.h"
 #include "queue.h"
