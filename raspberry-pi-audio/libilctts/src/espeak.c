@@ -36,11 +36,12 @@
 #include "list.h"
 #include "queue.h"
 #include "ilctts_lib.h"
+#include "ilctts_types.h"
 #include "espeak.h"
 
 static TTSRENDER_STATE_T *g_st = NULL;
 
-
+//-- functions
 
 int ilctts_espeak_init(TTSRENDER_STATE_T *st) {
 	int err;
@@ -48,11 +49,14 @@ int ilctts_espeak_init(TTSRENDER_STATE_T *st) {
 #ifndef _SD_MODULE_
 	int EspeakAudioChunkSize =0;
 #endif
+
 	//DBG("Espeak: Module init().");
+
 #ifdef _SD_MODULE_
 	INIT_INDEX_MARKING();
 	*status_info = NULL;
 #endif
+
 	// Report versions.
 	espeak_version = espeak_Info(NULL);
 	//DBG("Espeak: Initializing engine with buffer size %d ms.", EspeakAudioChunkSize);
@@ -69,6 +73,7 @@ int ilctts_espeak_init(TTSRENDER_STATE_T *st) {
 #endif
 		return ESPEAK_FATAL_ERROR;
 	}
+
 	//DBG("Espeak: Registering callbacks.");
 
 	espeak_SetSynthCallback(ilctts_synth_callback);
@@ -80,6 +85,7 @@ int ilctts_espeak_init(TTSRENDER_STATE_T *st) {
 	}
 
 	espeak_voice_list = espeak_list_synthesis_voices(st);
+
 	// Reset global state
 	espeak_state_reset(st);
 
@@ -88,7 +94,7 @@ int ilctts_espeak_init(TTSRENDER_STATE_T *st) {
 	pthread_mutex_init(&st->espeak_stop_or_pause_suspended_mutex, NULL);
 	pthread_mutex_init(&st->espeak_play_suspended_mutex, NULL);
 
-	// This mutex mediates access to the playback queue between the espeak synthesis thread andthe the playback thread.
+	// This mutex mediates access to the playback queue between the espeak synthesis thread and the playback thread.
 	pthread_mutex_init(&st->playback_queue_mutex, NULL);
 	pthread_cond_init(&st->playback_queue_condition, NULL);
 
@@ -110,9 +116,60 @@ int ilctts_espeak_init(TTSRENDER_STATE_T *st) {
 		*status_info = g_strdup("Failed to create playback thread.");
 		return ESPEAK_FATAL_ERROR;
 	}
+
 	*status_info = g_strdup("Espeak: Initialized successfully.");
 	return ESPEAK_OK;
 } // end ilctts_espeak_init
+
+
+
+int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * events) {
+	static int numsamples_sent_msg = 0;
+	int numsamples_sent = 0;
+
+	// set espeak state mutex lock here
+
+	// first time in for this message?
+	if (g_st->tts_state == TTS_BEFORE_SYNTH) {
+		numsamples_sent_msg = 0;
+		g_st->tts_state = TTS_BEFORE_PLAY;
+		// add begin flag to queue
+
+		// wake playback thread here
+
+	}
+	// unlock the espeak state mutex here
+
+	if (g_st->tts_state == TTS_STOP_REQUESTED)
+		return 1;
+
+	// process audio data and events
+	while (events->type != espeakEVENT_LIST_TERMINATED) {
+
+	} // end while (events->type != espeakEVENT_LIST_TERMINATED)
+
+	// send audio up to here
+
+	// increment the static number of samples in this message
+	numsamples_sent_msg += numsamples;
+
+	// return zero to indicate we still want more of this message
+	return 0;
+} // end ilctts_synth_callback
+
+
+
+
+
+
+
+
+void ilctts_set_callbacks(TTSRENDER_STATE_T *st) {
+	espeak_SetSynthCallback(ilctts_synth_callback);
+	//espeak_SetUriCallback(ilctts_uri_callback);
+	return;
+} // end ilctts_set_callbacks
+
 
 // Adds a chunk of pcm audio to the audio playback queue.
    // Waits until there is enough space in the queue.
@@ -246,7 +303,7 @@ static int espeak_send_to_audio(TTSRENDER_STATE_T *st, TPlaybackQueueEntry * pla
 
 
 
-static void espeak_set_cap_let_recogn(TTSRENDER_STATE_T *st, SPDCapitalLetters cap_mode) {
+static void espeak_set_cap_let_recogn(TTSRENDER_STATE_T *st, ILCTTS_CAPITAL_LETTERS cap_mode) {
 	int espeak_cap_mode = 0;
 	switch (cap_mode) {
 	case SPD_CAP_NONE:
@@ -489,8 +546,9 @@ static gboolean playback_queue_push(TPlaybackQueueEntry * entry) {
 
 
 
+
 // set speaking thread parameters
-void set_speaking_thread_parameters() {
+static void set_speaking_thread_parameters() {
 	int ret;
 	sigset_t all_signals;	    
 
@@ -507,6 +565,8 @@ void set_speaking_thread_parameters() {
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);				
 
 } // end set_speaking_thread_parameters
+
+
 
 
 

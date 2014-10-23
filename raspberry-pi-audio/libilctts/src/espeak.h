@@ -11,9 +11,9 @@
 #include "list.h"
 #include "queue.h"
 #include "ilctts_lib.h"
+#include "ilctts_types.h"
 
 #define CLAMP(x, low, high)  (((x) > (high)) ? (high) : (((x) < (low)) ? (low) : (x)))
-
 
 typedef enum {
 	ESPEAK_FATAL_ERROR = -1,
@@ -50,11 +50,13 @@ typedef struct {
 	} data;
 } PLAYBACK_QUEUE_ENTRY_T;
 
+//-- function prototypes
 
-int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * events);
-void ilctts_set_callbacks(TTSRENDER_STATE_T*);
+int ilctts_espeak_init(TTSRENDER_STATE_T *st);
+int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT *events);
+void ilctts_set_callbacks(TTSRENDER_STATE_T *st);
 
-//--- static functions
+//-- static functions
 
 static int espeak_add_audio_to_playback_queue(TTSRENDER_STATE_T *st, short *audio_chunk, int num_samples);
 static int espeak_add_flag_to_playback_queue(TTSRENDER_STATE_T *st, PLAYBACK_QUEUE_ENTRY_T type);
@@ -64,7 +66,7 @@ static void espeak_clear_playback_queue(TTSRENDER_STATE_T *st);
 static void espeak_delete_playback_queue_entry(TTSRENDER_STATE_T *st, PLAYBACK_QUEUE_ENTRY_T *playback_queue_entry);
 static int espeak_send_audio_upto(TTSRENDER_STATE_T *st, short *wav, int *sent, int upto);
 static int espeak_send_to_audio(TTSRENDER_STATE_T *st, PLAYBACK_QUEUE_ENTRY_T *playback_queue_entry);
-static void espeak_set_cap_let_recogn(TTSRENDER_STATE_T *st, SPDCapitalLetters cap_mode);
+static void espeak_set_cap_let_recogn(TTSRENDER_STATE_T *st, ILCTTS_CAPITAL_LETTERS cap_mode);
 static void espeak_set_language(TTSRENDER_STATE_T *st, char *lang);
 static void espeak_set_language_and_voice(TTSRENDER_STATE_T *st, char *lang, SPDVoiceType voice_code);
 static void espeak_set_pitch(TTSRENDER_STATE_T *st, signed int pitch);
@@ -77,6 +79,8 @@ static void espeak_state_reset(TTSRENDER_STATE_T *st);
 static int is_thread_busy(TTSRENDER_STATE_T *st, pthread_mutex_t *suspended_mutex);
 static TPlaybackQueueEntry *playback_queue_pop();
 static gboolean playback_queue_push(TPlaybackQueueEntry * entry);
+static void set_speaking_thread_parameters();
+
 static void *_espeak_play(void *param);
 static void *_espeak_stop_or_pause(void *param);
 
