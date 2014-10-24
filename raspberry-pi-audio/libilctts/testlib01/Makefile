@@ -1,6 +1,5 @@
 CC = gcc
 SRCDIR = ../src
-TEST_LIB_PATH = ../src
 INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads \
         -I$(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux \
@@ -9,8 +8,7 @@ INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include -I../src -I.
 
 CFLAGS = $(INCLUDES)
-LDFLAGS = -Wl,-rpath,$(TEST_LIB_PATH) \
-        -L$(SDKSTAGE)/opt/vc/lib \
+LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/ilclient \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/vgfont \
                 -L../src
