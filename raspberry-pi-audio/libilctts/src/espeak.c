@@ -1,10 +1,9 @@
 /*
+* espeak.c - eSpeak functions
 *
-* <file> - <description>
+* Contains eSpeak functions, most of which are static and hence private.
 *
-* <short_description>
-*
-* Copyright (C) <years>, Mike Ray, <mike.ray@btinternet.com>
+* Copyright (C) 2014, Mike Ray, <mike.ray@btinternet.com>
 *
 * This is free software; you can redistribute it and/or modify it under the
 * terms of the GNU Lesser General Public License as published by the Free
@@ -24,6 +23,7 @@
 * $Id: <author>
 *
 *--code--*/
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -164,11 +164,29 @@ int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT * events) {
 
 
 
+
+/*
+int ilctts_uri_callback(int type, const char *uri, const char *base) {
+	int result = 1;
+	if (type == 1) {
+		// Audio icon
+#if HAVE_SNDFILE
+		if (g_file_test(uri, G_FILE_TEST_EXISTS)) {
+			result = 0;
+		}
+#endif
+	}
+	return result;
+} // end uri_callback
+*/
+
+
 void ilctts_set_callbacks(TTSRENDER_STATE_T *st) {
 	espeak_SetSynthCallback(ilctts_synth_callback);
 	//espeak_SetUriCallback(ilctts_uri_callback);
 	return;
 } // end ilctts_set_callbacks
+
 
 
 // Adds a chunk of pcm audio to the audio playback queue.
@@ -196,7 +214,7 @@ static int espeak_add_audio_to_playback_queue(TTSRENDER_STATE_T *st, short *audi
 
 
 
-/* Adds a begin or end flag to the playback queue. */
+// Adds a begin or end flag to the playback queue.
 static int espeak_add_flag_to_playback_queue(TTSRENDER_STATE_T *st, PLAYBACK_QUEUE_ENTRY_T type) {
 	PLAYBACK_QUEUE_ENTRY_T *playback_queue_entry = (PLAYBACK_QUEUE_ENTRY_T*)malloc(sizeof(PLAYBACK_QUEUE_ENTRY_T));
 
@@ -228,7 +246,7 @@ static int espeak_add_sound_icon_to_playback_queue(TTSRENDER_STATE_T *st, const 
 
 
 
-/* Erases the entire playback queue, freeing memory. */
+/// Erases the entire playback queue, freeing memory.
 static void espeak_clear_playback_queue(TTSRENDER_STATE_T *st) {
 	pthread_mutex_lock(&st->playback_queue_mutex);
 
@@ -245,7 +263,7 @@ static void espeak_clear_playback_queue(TTSRENDER_STATE_T *st) {
 
 
 
-/* Deletes an entry from the playback audio queue, freeing memory. */
+// Deletes an entry from the playback audio queue, freeing memory.
 static void espeak_delete_playback_queue_entry(TTSRENDER_STATE_T *st, PLAYBACK_QUEUE_ENTRY_T *playback_queue_entry) {
 	switch (playback_queue_entry->type) {
 	case QET_AUDIO:
@@ -281,7 +299,7 @@ static int espeak_send_audio_upto(TTSRENDER_STATE_T *st, short *wav, int *sent, 
 
 
 
-/* Sends a chunk of audio to the audio player and waits for completion or error. */
+// Sends a chunk of audio to the audio player and waits for completion or error.
 static int espeak_send_to_audio(TTSRENDER_STATE_T *st, TPlaybackQueueEntry * playback_queue_entry) {
 	int ret = 0;
 	AudioTrack track;
@@ -334,7 +352,7 @@ static void espeak_set_language(TTSRENDER_STATE_T *st, char *lang) {
 
 
 
-/* Given a language code and SD voice code, sets the espeak voice. */
+// Given a language code and SD voice code, sets the espeak voice.
 static void espeak_set_language_and_voice(TTSRENDER_STATE_T *st, char *lang, SPDVoiceType voice_code) {
 	DBG("Espeak: set_language_and_voice %s %d", lang, voice_code);
 	espeak_ERROR ret;
@@ -669,7 +687,7 @@ static void *_espeak_play(void *param) {
 
 
 
-/* Stop or Pause thread. */
+// Stop or Pause thread.
 static void *_espeak_stop_or_pause(void *param) {
 	volatile TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)param;
 	int ret;
@@ -680,7 +698,7 @@ static void *_espeak_stop_or_pause(void *param) {
 	set_speaking_thread_parameters();
 
 	while (!st->tts_close_requested) {
-		/* If semaphore not set, set suspended lock and suspend until it is signaled. */
+		// If semaphore not set, set suspended lock and suspend until it is signaled.
 		if (0 != sem_trywait(&st->tts_stop_or_pause_semaphore)) {
 			pthread_mutex_lock(&st->tts_stop_or_pause_suspended_mutex);
 			sem_wait(&st->tts_stop_or_pause_semaphore);

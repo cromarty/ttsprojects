@@ -54,6 +54,9 @@ typedef struct {
 
 int ilctts_espeak_init(TTSRENDER_STATE_T *st);
 int ilctts_synth_callback(short *wav, int numsamples, espeak_EVENT *events);
+/*
+int ilctts_uri_callback(int type, const char *uri, const char *base);
+*/
 void ilctts_set_callbacks(TTSRENDER_STATE_T *st);
 
 //-- static functions
