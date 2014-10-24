@@ -6,7 +6,7 @@
 #include <math.h>
 
 #include "bcm_host.h"
-#include "ilclient.h"
+//#include "ilclient.h"
 
 #include "ilctts_lib.h"
 #include "utils.h"

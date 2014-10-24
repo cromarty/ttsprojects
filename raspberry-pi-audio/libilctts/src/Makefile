@@ -1,12 +1,11 @@
 CC = gcc
 VERSION = 0.1.0
 TARGETLIB = libilctts.so
-INSTALLDIR = /usr/lib
-INCLUDEDIR = /usr/include
+INSTALLDIR = /usr/local/lib
+INCLUDEDIR = /usr/local/include
 INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads \
         -I$(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux \
-        -I$(SDKSTAGE)/opt/vc/src/hello_pi/libs/ilclient \
         -I$(SDKSTAGE)/opt/vc/hello_pi/libs/vgfont \
         -I$(SDKSTAGE)/opt/vc/include -I../src -I.
 CFLAGS = $(INCLUDES) -DSTANDALONE -D__STDC_CONSTANT_MACROS \
@@ -22,15 +21,14 @@ CFLAGS = $(INCLUDES) -DSTANDALONE -D__STDC_CONSTANT_MACROS \
         -O2 -Wextra -Wno-unused-function
 LDFLAGS = -Wl,--verbose \
         -L$(SDKSTAGE)/opt/vc/lib -shared \
-        -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/ilclient \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/vgfont
-LDLIBS = -lopenmaxil -lilclient \
+LDLIBS = -lopenmaxil \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
         -lrt
 
 RM = rm -f
 
-SRCS = core.c utils.c list.c queue.c
+SRCS = core.c utils.c list.c queue.c ilclient.c ilcore.c
 OBJS = $(SRCS:.c=.o)
 
 all : ${TARGETLIB}.${VERSION}
@@ -47,6 +45,7 @@ install :
 	install ${TARGETLIB}.${VERSION} ${INSTALLDIR}
 	ln -s ${INSTALLDIR}/${TARGETLIB}.${VERSION} ${INSTALLDIR}/${TARGETLIB}	
 	install ilctts_lib.h ${INCLUDEDIR}
+	ldconfig
 
 uninstall :
 	rm ${INSTALLDIR}/${TARGETLIB}

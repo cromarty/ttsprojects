@@ -12,7 +12,7 @@ LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/ilclient \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/vgfont \
                 -L../src
-LDLIBS = -lilctts -lopenmaxil -lilclient \
+LDLIBS = -lilctts -lopenmaxil \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
         -lrt
 
