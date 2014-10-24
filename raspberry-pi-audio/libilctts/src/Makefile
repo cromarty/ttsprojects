@@ -20,10 +20,11 @@ CFLAGS = $(INCLUDES) -DSTANDALONE -D__STDC_CONSTANT_MACROS \
         -DUSE_EXTERNAL_LIBBCM_HOST \
         -DUSE_VCHIQ_ARM -Wno-psabi \
         -O2 -Wextra -Wno-unused-function
-LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib -shared \
+LDFLAGS = -Wl,--verbose \
+        -L$(SDKSTAGE)/opt/vc/lib -shared \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/ilclient \
-        -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/vgfont \
-        -lopenmaxil -lilclient \
+        -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/vgfont
+LDLIBS = -lopenmaxil -lilclient \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
         -lrt
 
@@ -35,7 +36,7 @@ OBJS = $(SRCS:.c=.o)
 all : ${TARGETLIB}.${VERSION}
 
 $(TARGETLIB).$(VERSION): $(OBJS)
-	$(CC) ${LDFLAGS} -o $@ $^
+	$(CC) ${LDFLAGS} ${LDLIBS} -o $@ $^
 
 $(SRCS:.c=.d):%.d:%.c
 	$(CC) $(CFLAGS) -MM $< >$@
