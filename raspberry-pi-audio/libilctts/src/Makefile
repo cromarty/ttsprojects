@@ -2,6 +2,7 @@ CC = gcc
 VERSION = 0.1.0
 TARGETLIB = libilctts.so
 INSTALLDIR = /usr/lib
+INCLUDEDIR = /usr/include
 INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads \
         -I$(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux \
@@ -24,11 +25,11 @@ LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib -shared \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/vgfont \
         -lopenmaxil -lilclient \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
-        -lpthread -lespeak -lrt
+        -lrt
 
 RM = rm -f
 
-SRCS = core.c utils.c list.c queue.c espeak.c
+SRCS = core.c utils.c list.c queue.c
 OBJS = $(SRCS:.c=.o)
 
 all : ${TARGETLIB}.${VERSION}
@@ -44,10 +45,12 @@ include $(SRCS:.c=.d)
 install :
 	install ${TARGETLIB}.${VERSION} ${INSTALLDIR}
 	ln -s ${INSTALLDIR}/${TARGETLIB}.${VERSION} ${INSTALLDIR}/${TARGETLIB}	
+	install ilctts_lib.h ${INCLUDEDIR}
 
 uninstall :
 	rm ${INSTALLDIR}/${TARGETLIB}
 	rm ${INSTALLDIR}/${TARGETLIB}.${VERSION}
+	rm ${INCLUDEDIR}/ilctts_lib.h
 
 clean :
 	-${RM} ${TARGETLIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)
