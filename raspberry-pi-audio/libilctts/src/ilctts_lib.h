@@ -124,8 +124,8 @@ int list_remove_next(LLIST_T *list, LLIST_ENTRY_T *element, void **data);
 #define queue_init list_init
 #define queue_destroy list_destroy
 
-int queue_enqueue(QUEUE_T *queue, const void *data);
-int queue_dequeue(QUEUE_T *queue, void **data);
+int queue_push(QUEUE_T *queue, const void *data);
+int queue_pop(QUEUE_T *queue, void **data);
 
 #define queue_peek(queue) ((queue)->head == NULL ? NULL : (queue)->head->data)
 #define queue_is_empty(list) (list_is_empty(list))
