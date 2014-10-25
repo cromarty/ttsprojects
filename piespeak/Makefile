@@ -65,7 +65,7 @@ USE_AUDIO=-DUSE_SADA
 else
 ifeq ($(AUDIO),rpi)
 WAVE=wave_rpi.cpp
-LIB_AUDIO=
+LIB_AUDIO=/usr/lib/libilctts.so
 USE_AUDIO=-DUSE_RPI
 else
 WAVE=wave.cpp
@@ -101,8 +101,7 @@ SRCS3 = espeak.cpp
 OBJS3=$(patsubst %.cpp,%.o,$(SRCS3))
 LIBS3=-lstdc++ -L . -lespeak
 
-CXXFLAGS=-O2
-
+CXXFLAGS=-O2 -I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads  -I/opt/vc/include/interface/vmcs_host/linux  -I/opt/vc/src/hello_pi/libs/ilclient
 
 all: $(BIN_NAME) $(LIB_NAME) $(STATIC_LIB_NAME) $(BIN2_NAME)
 
