@@ -1,8 +1,8 @@
 CC = gcc
 VERSION = 0.1.0
 TARGETLIB = libilctts.so
-INSTALLDIR = /usr/local/lib
-INCLUDEDIR = /usr/local/include
+INSTALLDIR = /usr/lib
+INCLUDEDIR = /usr/include
 INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads \
         -I$(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux \
@@ -20,8 +20,7 @@ CFLAGS = $(INCLUDES) -DSTANDALONE -D__STDC_CONSTANT_MACROS \
         -DUSE_VCHIQ_ARM -Wno-psabi \
         -O2 -Wextra -Wno-unused-function
 LDFLAGS = -Wl,--verbose \
-        -L$(SDKSTAGE)/opt/vc/lib -shared \
-        -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/vgfont
+        -L$(SDKSTAGE)/opt/vc/lib -shared
 LDLIBS = -lopenmaxil \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
         -lrt
