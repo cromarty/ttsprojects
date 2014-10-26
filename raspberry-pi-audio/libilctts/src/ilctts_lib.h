@@ -25,12 +25,13 @@ typedef enum {
 	TTS_STOP_REQUESTED
 } TTS_STATE_T;
 
+
 typedef enum {
 	TTS_PAUSE_OFF,
 	TTS_PAUSE_REQUESTED,
 	TTS_PAUSE_MARK_REPORTED
 } TTS_PAUSE_STATE_T;
-
+// TTSRENDER_STATE_T
 typedef struct {
 	ILCLIENT_T *client;
 	COMPONENT_T *audio_render;
@@ -39,25 +40,28 @@ typedef struct {
 	uint32_t sample_rate;
 	uint32_t num_channels;
 	uint32_t bit_depth;
+	uint32_t ringbuffer_size;
 	uint32_t num_buffers;
 	uint32_t buffer_size;
 	uint32_t buffer_count;
 	uint32_t bytes_per_sample;
 	int64_t	position_in_message;
-   	pthread_mutex_t free_buffer_mutex;
-	pthread_cond_t	free_buffer_cv;
-	pthread_t playback_queue_mutex;
-	pthread_cond_t	playback_queue_cv;
-	pthread_mutex_t	playback_thread_mutex;
-	pthread_cond_t	playback_thread_cv;
-	pthread_mutex_t espeak_state_mutex;
+   	pthread_mutex_t free_buffer_mutex;			// mutex set in buffer callback
+	pthread_cond_t	free_buffer_cv;				// free buffer condition
+	pthread_mutex_t ringbuffer_mutex;			// ringbuffer protection mutex
+	pthread_cond_t ringbuffer_cv;				// ringbuffer condition
+	//pthread_t playback_queue_mutex;			// only needed in the speech-dispatcher module
+	//pthread_cond_t	playback_queue_cv;		// as above
+	//pthread_mutex_t	playback_thread_mutex;		// possibly needed in sd module?
+	//pthread_cond_t	playback_thread_cv;		// as above
+	//pthread_mutex_t espeak_state_mutex;			// possibly only needed in sd module
+	sem_t buffer_list_sema;					// used during buffer setup
 	TTS_STATE_T tts_state;
 	TTS_PAUSE_STATE_T tts_pause_state;
-	sem_t buffer_list_sema;
-	sem_t	playback_queue_sema;
-	sem_t	playback_thread_sema;
-	QUEUE_T playback_queue;  // queue of playback objects
-	uint32_t playback_queue_size;  // number of samples currently in queue
+	//sem_t	playback_queue_sema;				// possibly only needed in sd module
+	//sem_t	playback_thread_sema;				// as above
+	//QUEUE_T playback_queue;				// as above
+	//uint32_t playback_queue_size;				// as above
 } TTSRENDER_STATE_T;
 
 int32_t ilctts_initialize();
@@ -69,7 +73,8 @@ int32_t ilctts_create(
 	uint32_t num_channels,
 	uint32_t bit_depth,
 	uint32_t num_buffers,
-	uint32_t buffer_size
+	uint32_t buffer_size,
+	uint32_t ringbuffer_size
 	);
 
 int32_t ilctts_delete(TTSRENDER_STATE_T *st);

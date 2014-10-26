@@ -73,12 +73,15 @@ int32_t ilctts_finalize() {
 	return 0;
 } // end ilctts_finalize
 
-int32_t ilctts_create(TTSRENDER_STATE_T **component,
+int32_t ilctts_create(
+	TTSRENDER_STATE_T **component,
 	uint32_t sample_rate,
 	uint32_t num_channels,
 	uint32_t bit_depth,
 	uint32_t num_buffers,
-	uint32_t buffer_size)
+	uint32_t buffer_size,
+	uint32_t ringbuffer_size
+)
 {
 	int32_t ret;
 		OMX_ERRORTYPE omx_err;
@@ -95,23 +98,31 @@ int32_t ilctts_create(TTSRENDER_STATE_T **component,
 	*component = st;
 
 	// create and start up everything
+
+	// initialise buffer list semaphore
 	s = sem_init(&st->buffer_list_sema, 0, 1);
 	if (s < 0)
 		return -1;
 
+	// free_buffer mutex and cv
 	pthread_mutex_init(&st->free_buffer_mutex, NULL);
-		pthread_cond_init(&st->free_buffer_cv, NULL);
+	pthread_cond_init(&st->free_buffer_cv, NULL);
+
+	// ringbuffer mutex and cv
+	pthread_mutex_init(&st->ringbuffer_mutex, NULL);
+	pthread_cond_init(&st->ringbuffer_cv, NULL);
+
 	st->sample_rate = sample_rate;
 	st->num_channels = num_channels;
 	st->bit_depth = bit_depth;
-		st->bytes_per_sample = (bit_depth * OUT_CHANNELS(num_channels)) >> 3;
+	st->ringbuffer_size = ringbuffer_size;
+	st->bytes_per_sample = (bit_depth * OUT_CHANNELS(num_channels)) >> 3;
 	st->buffer_size = (buffer_size + 15) & ~15;
 	st->num_buffers = num_buffers;
 	st->client = ilclient_init();
 	st->tts_state = TTS_INIT;
 	st->tts_pause_state = TTS_PAUSE_OFF;
-	//st->pcmring_size = 8192;
-		//st->pcmring = ilctts_ringbuffer_init(st->pcmring_size);
+
 	// set up callbacks
 	ilclient_set_empty_buffer_done_callback(st->client, input_buffer_callback, st);
 
@@ -125,9 +136,6 @@ int32_t ilctts_create(TTSRENDER_STATE_T **component,
 
 	// set up the number/size of buffers
 		OMX_INIT_STRUCTURE(param);
-	//memset(&param, 0, sizeof(OMX_PARAM_PORTDEFINITIONTYPE));
-	//param.nSize = sizeof(OMX_PARAM_PORTDEFINITIONTYPE);
-	//param.nVersion.nVersion = OMX_VERSION;
 	param.nPortIndex = 100;
 	omx_err = OMX_GetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &param);
 	if (omx_err != OMX_ErrorNone)
@@ -144,9 +152,6 @@ int32_t ilctts_create(TTSRENDER_STATE_T **component,
 
 	// set the pcm parameters
 	OMX_INIT_STRUCTURE(pcm);
-	//memset(&pcm, 0, sizeof(OMX_AUDIO_PARAM_PCMMODETYPE));
-	//pcm.nSize = sizeof(OMX_AUDIO_PARAM_PCMMODETYPE);
-	//pcm.nVersion.nVersion = OMX_VERSION;
 	pcm.nPortIndex = 100;
 	pcm.nChannels = OUT_CHANNELS(num_channels);
 	pcm.eNumData = OMX_NumericalDataSigned;
@@ -199,6 +204,7 @@ int32_t ilctts_create(TTSRENDER_STATE_T **component,
 		omx_err = OMX_Deinit();
 		ilclient_destroy(st->client);
 		sem_destroy(&st->buffer_list_sema);
+		// need to destroy other stuff here?
 		free(st);
 		*component = NULL;
 		return -1;
