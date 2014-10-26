@@ -13,6 +13,7 @@
 //#include "espeak.h"
 
 
+
 #define OUT_CHANNELS(num_channels) ((num_channels) > 4 ? 8: (num_channels) > 2 ? 4: (num_channels))
 
 //#ifndef countof
@@ -80,7 +81,7 @@ int32_t ilctts_create(
 	uint32_t bit_depth,
 	uint32_t num_buffers,
 	uint32_t buffer_size,
-	uint32_t ringbuffer_size
+	uint32_t ringbuffer_length
 )
 {
 	int32_t ret;
@@ -115,7 +116,6 @@ int32_t ilctts_create(
 	st->sample_rate = sample_rate;
 	st->num_channels = num_channels;
 	st->bit_depth = bit_depth;
-	st->ringbuffer_size = ringbuffer_size;
 	st->bytes_per_sample = (bit_depth * OUT_CHANNELS(num_channels)) >> 3;
 	st->buffer_size = (buffer_size + 15) & ~15;
 	st->num_buffers = num_buffers;
@@ -123,12 +123,16 @@ int32_t ilctts_create(
 	st->tts_state = TTS_INIT;
 	st->tts_pause_state = TTS_PAUSE_OFF;
 
+	st->ringbuffer = ringbuffer_init(ringbuffer_length);
+	if (st->ringbuffer == NULL)
+		return -1;
+
 	// set up callbacks
 	ilclient_set_empty_buffer_done_callback(st->client, input_buffer_callback, st);
 
 	ret = ilclient_create_component(st->client, &st->audio_render, "audio_render", ILCLIENT_ENABLE_INPUT_BUFFERS | ILCLIENT_DISABLE_ALL_PORTS);
 	if (ret == -1)
-		return -1;
+		return ret;
 
 //st->handle = ILC_GET_HANDLE(st->audio_render);
 

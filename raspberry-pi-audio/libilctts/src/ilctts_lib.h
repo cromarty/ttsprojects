@@ -11,7 +11,7 @@
 #include "ilclient.h"
 #include "list.h"
 #include "queue.h"
-
+#include "ringbuffer.h"
 
 
 typedef int int32_t;
@@ -62,6 +62,7 @@ typedef struct {
 	//sem_t	playback_thread_sema;				// as above
 	//QUEUE_T playback_queue;				// as above
 	//uint32_t playback_queue_size;				// as above
+	RINGBUFFER_T *ringbuffer;
 } TTSRENDER_STATE_T;
 
 int32_t ilctts_initialize();
@@ -74,7 +75,7 @@ int32_t ilctts_create(
 	uint32_t bit_depth,
 	uint32_t num_buffers,
 	uint32_t buffer_size,
-	uint32_t ringbuffer_size
+	uint32_t ringbuffer_length
 	);
 
 int32_t ilctts_delete(TTSRENDER_STATE_T *st);

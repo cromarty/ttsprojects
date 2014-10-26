@@ -1,7 +1,7 @@
 CC = gcc
 VERSION = 0.1.0
 TARGETLIB = libilctts.so
-INSTALLDIR = /usr/lib
+INSTALLDIR = /usr/local/lib
 INCLUDEDIR = /usr/local/include/ilctts
 INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads \
@@ -27,7 +27,7 @@ LDLIBS = -lopenmaxil \
 
 RM = rm -f
 
-SRCS = core.c utils.c list.c queue.c ilclient.c ilcore.c
+SRCS = core.c utils.c list.c queue.c ringbuffer.c ilclient.c ilcore.c
 OBJS = $(SRCS:.c=.o)
 
 all : ${TARGETLIB}.${VERSION}
@@ -47,6 +47,7 @@ install :
 	install ilctts_lib.h $(INCLUDEDIR)
 	install list.h $(INCLUDEDIR)
 	install queue.h $(INCLUDEDIR)
+	install ringbuffer.h $(INCLUDEDIR)
 	ldconfig
 
 uninstall :

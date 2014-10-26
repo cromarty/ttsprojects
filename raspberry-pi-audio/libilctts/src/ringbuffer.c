@@ -7,10 +7,16 @@
 
 RINGBUFFER_T *ringbuffer_init(int length) {
 	RINGBUFFER_T *buffer = malloc(sizeof(RINGBUFFER_T));
+	if (buffer == NULL)
+		return NULL;
 	buffer->length = length;
 	buffer->head = 0;
     buffer->tail = 0;
 	buffer->buffer = malloc(length);
+	if (buffer->buffer == NULL) {
+		free(buffer);
+		return NULL;
+	}
 	return buffer;
 }
 
