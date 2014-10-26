@@ -30,7 +30,7 @@ coretest
 raspberry-pi-audio/libilctts/testlib*/testlib
 raspberry-pi-audio/libilctts/testlist/testlist
 raspberry-pi-audio/libilctts/testqueue/testqueue
-raspberry-pi-audio/libilctts/testringbuffer/testringbuffer
+raspberry-pi-audio/libilctts/testringbuffer/testrb
 
 # dependancy files
 *.d

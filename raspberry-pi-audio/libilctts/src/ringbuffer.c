@@ -5,24 +5,24 @@
 #include "ringbuffer.h"
 
 
-RING_BUFFER_T *ilctts_ringbuffer_init(int length) {
-	RING_BUFFER_T *buffer = malloc(sizeof(RING_BUFFER_T));
+RINGBUFFER_T *ringbuffer_init(int length) {
+	RINGBUFFER_T *buffer = malloc(sizeof(RINGBUFFER_T));
 	buffer->length = length;
 	buffer->head = 0;
     buffer->tail = 0;
 	buffer->buffer = malloc(length);
 	return buffer;
-} // end ilctts_ringbuffer_init
+}
 
-void ilctts_ringbuffer_destroy(RING_BUFFER_T *buffer)
+void ringbuffer_destroy(RINGBUFFER_T *buffer)
 {
 	if(buffer) {
 		free(buffer->buffer);
 		free(buffer);
 	}
-} // end ilctts_ringbuffer_destroy
+}
 
-int ilctts_ringbuffer_write(RING_BUFFER_T *buffer, char *data, int writesize)
+int ringbuffer_write(RINGBUFFER_T *buffer, char *data, int writesize)
 {
 	int firstchunksize;
 	int secondchunksize;
@@ -31,7 +31,7 @@ int ilctts_ringbuffer_write(RING_BUFFER_T *buffer, char *data, int writesize)
 	if ( writesize > buffer->length )
 		return -1;
 
-	freespace = ilctts_ringbuffer_freespace(buffer);
+	freespace = ringbuffer_freespace(buffer);
 	if (freespace < writesize)
 		return -1;
 
@@ -50,13 +50,13 @@ int ilctts_ringbuffer_write(RING_BUFFER_T *buffer, char *data, int writesize)
 
 	return writesize;
 
-} // end ilctts_ringbuffer_write
+}
 
-int ilctts_ringbuffer_read(RING_BUFFER_T *buffer, char *data, int readsize) {
+int ringbuffer_read(RINGBUFFER_T *buffer, char *data, int readsize) {
 	int firstchunksize;
 	int secondchunksize;
 
-	if ( readsize > ilctts_ringbuffer_usedspace(buffer))
+	if ( readsize > ringbuffer_used_space(buffer))
 		return -1;
 
 	if( buffer->tail > buffer->head ) {
@@ -74,9 +74,9 @@ int ilctts_ringbuffer_read(RING_BUFFER_T *buffer, char *data, int readsize) {
 
 	return readsize;
 
-} // end ilctts_ringbuffer_read
+}
 
-int ilctts_ringbuffer_peek(RING_BUFFER_T *buffer, char *c, int offset) {
+int ringbuffer_peek(RINGBUFFER_T *buffer, char *c, int offset) {
 	int idx;
 	if (buffer->head == buffer->tail)
 		return -1;
@@ -88,9 +88,9 @@ int ilctts_ringbuffer_peek(RING_BUFFER_T *buffer, char *c, int offset) {
 	*c = buffer->buffer[idx];
 	return 1;
 
-} // end ilctts_ringbuffer_peek
+} // end ringbuffer_peek
 
-int ilctts_ringbuffer_slurp(RING_BUFFER_T *buffer, char *data) {
+int ringbuffer_slurp(RINGBUFFER_T *buffer, char *data) {
 	int firstchunksize;
 	int secondchunksize;
 	int slurped;
@@ -113,10 +113,10 @@ int ilctts_ringbuffer_slurp(RING_BUFFER_T *buffer, char *data) {
 	buffer->head = buffer->tail = 0;
 	return slurped;
 
-} // end ilctts_ringbuffer_slurp
+} // end ringbuffer_slurp
 
 
-int ilctts_ringbuffer_freespace(RING_BUFFER_T *buffer) {
+int ringbuffer_freespace(RINGBUFFER_T *buffer) {
 if(buffer->head == buffer->tail)
                         return buffer->length;
 
@@ -125,9 +125,9 @@ if(buffer->head == buffer->tail)
 
 	return buffer->head - buffer->tail;
 
-} // end ilctts_ringbuffer_freespace
+} // end ringbuffer_freespace
 
-int ilctts_ringbuffer_usedspace(RING_BUFFER_T *buffer) {
+int ringbuffer_used_space(RINGBUFFER_T *buffer) {
 	if (buffer->head == buffer->tail)
 		return 0;
 
@@ -136,21 +136,22 @@ int ilctts_ringbuffer_usedspace(RING_BUFFER_T *buffer) {
 
 	return (buffer->length - buffer->head) + buffer->tail;
 
-} // end ilctts_ringbuffer_usedspace
+} // end ringbuffer_datasize
 
-int ilctts_ringbuffer_spin(RING_BUFFER_T *buffer, int offset) {
+int ringbuffer_spin(RINGBUFFER_T *buffer, int offset) {
 	if (offset == 0)
 		return 0;
 
 	buffer->head = (buffer->head + offset) % buffer->length;
 	return buffer->head;
-} // end ilctts_ringbuffer_spin
+} // end ringbuffer_spin
 
-int ilctts_ringbuffer_isempty(RING_BUFFER_T *buffer) {
+int ringbuffer_isempty(RINGBUFFER_T *buffer) {
 	return (buffer->head == buffer->tail);
-} // end ilctts_ringbuffer_isempty
+} // end ringbuffer_isempty
 
-int ilctts_ringbuffer_isfull(RING_BUFFER_T *buffer) {
-	return (ilctts_ringbuffer_freespace(buffer) == 0);
-} // end ilctts_ringbuffer_isfull
+int ringbuffer_isfull(RINGBUFFER_T *buffer) {
+	return (ringbuffer_freespace(buffer) == 0);
+}
 
+//

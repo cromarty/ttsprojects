@@ -1,11 +1,7 @@
 CC = gcc
 SRCDIR = ../src
-INCLUDES = -I../src
-CFLAGS = $(INCLUDES)
-LDFLAGS = -Wall
+CFLAGS = -I../src
 
-all :
-	$(CC) $(CFLAGS) -o testringbuffer testringbuffer.c $(SRCDIR)/ringbuffer.c
-
-clean :
-	rm testringbuffer testringbuffer.o ringbuffer.o
+all:
+	$(CC) -o testrb testringbuffer.c $(SRCDIR)/ringbuffer.c $(CFLAGS)
+	
