@@ -16,20 +16,18 @@
 
 int32_t consume_file(TTSRENDER_STATE_T *st, const char *filename, int *chunks) {
 	FILE *fp;
-	short real[N>>1];
-	short imag[N>>1];
+	short fbuf[N>>1];
 
 	uint8_t *buf = (uint8_t*)malloc(N);
 	int bytesread, totalbytesread = 0;
-	memset(real, 0, N);
-	memset(imag, 0, N);
+	memset(fbuf, 0, N);
 
 	printf("Consuming file %s in chunks of %d bytes\n", filename, N);	
 	fp = fopen(filename, "r");
 	if (fp == NULL)
 		return -1;
 
-	bytesread = fread(real, 2, N>>1, fp);
+	bytesread = fread(fbuf, 2, N>>1, fp);
 if ( ! bytesread) {
 		printf("Failed to read the first chunk\n");
 		fclose(fp);
@@ -52,9 +50,9 @@ if ( ! bytesread) {
 			pthread_mutex_unlock(&st->free_buffer_mutex);
 		}// end while
 
-		memcpy(buf, real, bytesread<<1);		
+		memcpy(buf, fbuf, bytesread<<1);		
 		ilctts_play_buffer(st, buf, bytesread<<1);
-		bytesread = fread(real, 2, N>>1, fp);
+		bytesread = fread(fbuf, 2, N>>1, fp);
 
 	}
 
