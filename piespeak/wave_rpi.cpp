@@ -37,46 +37,58 @@ static uint32_t myWritePosition = 0;
 
 //-- static functions
 
-static void init_buffer () {
+static void init_buffer() {
 	return;
 }
 
-static unsigned int get_used_mem () {
+static unsigned int get_used_mem() {
 	return 0;
 }
 
-static void start_stream () {
+static void start_stream() {
 	return;
 }
 
-void wave_flush (void *theHandler) {
+void wave_flush(void *theHandler) {
 	return;
 }
 
-static int wave_open_sound () {
+static int wave_open_sound() {
 	return 0;
 }
 
-static void select_device (const char *the_api) {
+static void select_device(const char *the_api) {
 	return;
 }
 
-void wave_set_callback_is_output_enabled (t_wave_callback * cb) {
+void wave_set_callback_is_output_enabled(t_wave_callback *cb) {
 	return;
 }
-
-
-
-
 
 int wave_init(int samplerate) {
 	return 0;
 }
-void*wave_open(const char* the_api) {
-	return NULL;
-}
 
-size_t wave_write(void* theHandler, char* theMono16BitsWaveBuffer, size_t theSize) {
+void*wave_open(const char* the_api) {
+	static int once = 0;
+	if (! once) {
+		// choose the device
+		once++;
+	}
+
+	return ((void*)1);
+} // end wave_open
+
+
+size_t wave_write(void *theHandler, char *theMono16BitsWaveBuffer, size_t theSize) {
+	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)theHandler;
+	size_t bytes_written = 0;
+	// in here add the audio to the ring buffer
+	// needs to be guarded by a mutex
+	size_t bytes_to_write = (out_channels==1) ? theSize : theSize*2;
+	my_stream_could_start = 0;
+	
+	
 	return 0;
 }
 
@@ -104,7 +116,8 @@ int wave_get_remaining_time(uint32_t sample, uint32_t* time) {
 	return 0;
 }
 
-// general functions
+//-- general functions
+
 void clock_gettime2(struct timespec *ts) {
 	return;
 }
@@ -113,8 +126,8 @@ void add_time_in_ms(struct timespec *ts, int time_in_ms) {
 	return;
 }
 
+//-- for tests
 
-// for tests
 void *wave_test_get_write_buffer() {
 	return NULL;
 }

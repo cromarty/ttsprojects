@@ -9,28 +9,10 @@
 
 #include "bcm_host.h"
 #include "ilclient.h"
-//#include "list.h"
-//#include "queue.h"
-
-//-- linked list types
-
-// linked list entry
-typedef struct LLIST_ENTRY_ {
-void               *data;
-struct LLIST_ENTRY_   *next;
-} LLIST_ENTRY_T;
-
-// linked list type
-typedef struct LLIST_ {
-int                size;
-void               (*destroy)(void *data);
-LLIST_ENTRY_T           *head;
-LLIST_ENTRY_T           *tail;
-} LLIST_T;
+#include "list.h"
+#include "queue.h"
 
 
-//-- queue type
-typedef LLIST_T QUEUE_T;
 
 typedef int int32_t;
 
@@ -99,40 +81,6 @@ int32_t ilctts_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state);
 int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol);
 int32_t ilctts_pause(TTSRENDER_STATE_T *st);
 int32_t ilctts_resume(TTSRENDER_STATE_T *st);
-
-//-- linked list function prototypes
-
-
-void list_init(LLIST_T *list, void (*destroy)(void *data));
-void list_destroy(LLIST_T *list);
-int list_insert_next(LLIST_T *list, LLIST_ENTRY_T *element, const void *data);
-int list_remove_next(LLIST_T *list, LLIST_ENTRY_T *element, void **data);
-
-//-- linked list macros
-#define list_size(list) ((list)->size)
-#define list_head(list) ((list)->head)
-#define list_tail(list) ((list)->tail)
-#define list_is_head(list, element) ((element) == (list)->head ? 1 : 0)
-#define list_is_tail(element) ((element)->next == NULL ? 1 : 0)
-#define list_is_empty(list) ((list)->size == 0 ? 1 : 0)
-#define list_data(element) ((element)->data)
-#define list_next(element) ((element)->next)
-#define list_append(list, data) (list_insert_next(list, ((list)->tail), data))
-
-//-- queue function prototypes and macros
-
-#define queue_init list_init
-#define queue_destroy list_destroy
-
-int queue_push(QUEUE_T *queue, const void *data);
-int queue_pop(QUEUE_T *queue, void **data);
-
-#define queue_peek(queue) ((queue)->head == NULL ? NULL : (queue)->head->data)
-#define queue_is_empty(list) (list_is_empty(list))
-#define queue_size list_size
-
-//-- end of queue function prototypes and macros
-
 
 
 #endif

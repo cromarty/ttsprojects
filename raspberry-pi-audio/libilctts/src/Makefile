@@ -2,7 +2,7 @@ CC = gcc
 VERSION = 0.1.0
 TARGETLIB = libilctts.so
 INSTALLDIR = /usr/lib
-INCLUDEDIR = /usr/include
+INCLUDEDIR = /usr/local/include/ilctts
 INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads \
         -I$(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux \
@@ -43,13 +43,16 @@ include $(SRCS:.c=.d)
 install :
 	install ${TARGETLIB}.${VERSION} ${INSTALLDIR}
 	ln -s ${INSTALLDIR}/${TARGETLIB}.${VERSION} ${INSTALLDIR}/${TARGETLIB}	
-	install ilctts_lib.h ${INCLUDEDIR}
+	mkdir -p $(INCLUDEDIR)
+	install ilctts_lib.h $(INCLUDEDIR)
+	install list.h $(INCLUDEDIR)
+	install queue.h $(INCLUDEDIR)
 	ldconfig
 
 uninstall :
 	rm ${INSTALLDIR}/${TARGETLIB}
 	rm ${INSTALLDIR}/${TARGETLIB}.${VERSION}
-	rm ${INCLUDEDIR}/ilctts_lib.h
+	rm -rf ${INCLUDEDIR}
 
 clean :
 	-${RM} ${TARGETLIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)

@@ -101,7 +101,9 @@ SRCS3 = espeak.cpp
 OBJS3=$(patsubst %.cpp,%.o,$(SRCS3))
 LIBS3=-lstdc++ -L . -lespeak
 
-CXXFLAGS=-O2 -I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads  -I/opt/vc/include/interface/vmcs_host/linux  -I/opt/vc/src/hello_pi/libs/ilclient
+CXXFLAGS=-O2 -I/opt/vc/include \
+        -I/opt/vc/include/interface/vcos/pthreads \
+        -I/opt/vc/include/interface/vmcs_host/linux  -I/opt/vc/src/hello_pi/libs/ilclient
 
 all: $(BIN_NAME) $(LIB_NAME) $(STATIC_LIB_NAME) $(BIN2_NAME)
 
