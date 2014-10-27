@@ -58,6 +58,11 @@ static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 } // end port_settings_changed_callback
 */
 
+static void*_ringbuffer_consumer_thread(void *arg) {
+	volatile TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)arg;
+	pthread_exit(NULL);
+} // end _ringbuffer_consumer_thread
+
 int32_t ilctts_initialize() {
 	OMX_ERRORTYPE omx_err;
 	bcm_host_init();
@@ -363,10 +368,17 @@ int32_t ilctts_pause(TTSRENDER_STATE_T *st) {
 		} //end ilctts_pause
 
 int32_t ilctts_resume(TTSRENDER_STATE_T *st) {
-		return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
-		} //end ilctts_resume
+	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
+} //end ilctts_resume
 
+int32_t ilctts_start_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st) {
+	pthread_t th;
+	return pthread_create(&th, NULL, _ringbuffer_consumer_thread, (void*)st);
+} // end ilctts_start_ringbuffer_consumer_thread
 
+void ilctts_stop_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st) {
+	return;
+} // end ilctts_stop_ringbuffer_consumer_thread
 
 
 

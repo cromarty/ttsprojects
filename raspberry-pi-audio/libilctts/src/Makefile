@@ -27,7 +27,9 @@ LDLIBS = -lopenmaxil \
 
 RM = rm -f
 
-SRCS = core.c utils.c list.c queue.c ringbuffer.c ilclient.c ilcore.c
+SRCS = core.c utils.c list.c queue.c ringbuffer.c \
+	debug.c ilclient.c ilcore.c
+
 OBJS = $(SRCS:.c=.o)
 
 all : ${TARGETLIB}.${VERSION}
