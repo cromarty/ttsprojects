@@ -8,6 +8,7 @@ INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux \
         -I$(SDKSTAGE)/opt/vc/hello_pi/libs/vgfont \
         -I$(SDKSTAGE)/opt/vc/include -I../src -I.
+
 CFLAGS = $(INCLUDES) -DSTANDALONE -D__STDC_CONSTANT_MACROS \
         -D__STDC_LIMIT_MACROS -DTARGET_POSIX \
         -D_LINUX -fPIC -DPIC -D_REENTRANT \
@@ -19,8 +20,10 @@ CFLAGS = $(INCLUDES) -DSTANDALONE -D__STDC_CONSTANT_MACROS \
         -DUSE_EXTERNAL_LIBBCM_HOST \
         -DUSE_VCHIQ_ARM -Wno-psabi \
         -O2 -Wextra -Wno-unused-function
+
 LDFLAGS = -Wl,--verbose \
         -L$(SDKSTAGE)/opt/vc/lib -shared
+
 LDLIBS = -lopenmaxil \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
         -lrt
@@ -32,7 +35,7 @@ SRCS = core.c utils.c list.c queue.c ringbuffer.c \
 
 OBJS = $(SRCS:.c=.o)
 
-all : ${TARGETLIB}.${VERSION}
+all : $(TARGETLIB).$(VERSION)
 
 $(TARGETLIB).$(VERSION): $(OBJS)
 	$(CC) ${LDFLAGS} ${LDLIBS} -o $@ $^
@@ -43,8 +46,8 @@ $(SRCS:.c=.d):%.d:%.c
 include $(SRCS:.c=.d)
 
 install :
-	install ${TARGETLIB}.${VERSION} ${INSTALLDIR}
-	ln -s ${INSTALLDIR}/${TARGETLIB}.${VERSION} ${INSTALLDIR}/${TARGETLIB}	
+	install $(TARGETLIB).$(VERSION) $(INSTALLDIR)
+	ln -s $(INSTALLDIR)/$(TARGETLIB).$(VERSION) $(INSTALLDIR)/$(TARGETLIB)
 	mkdir -p $(INCLUDEDIR)
 	install ilctts_lib.h $(INCLUDEDIR)
 	install list.h $(INCLUDEDIR)
@@ -53,10 +56,10 @@ install :
 	ldconfig
 
 uninstall :
-	rm ${INSTALLDIR}/${TARGETLIB}
-	rm ${INSTALLDIR}/${TARGETLIB}.${VERSION}
-	rm -rf ${INCLUDEDIR}
+	rm $(INSTALLDIR)/$(TARGETLIB)
+	rm $(INSTALLDIR)/$(TARGETLIB).$(VERSION)
+	rm -rf $(INCLUDEDIR)
 
 clean :
-	-${RM} ${TARGETLIB}.${VERSION} ${OBJS} $(SRCS:.c=.d)
+	$(RM) $(TARGETLIB).$(VERSION) $(OBJS) $(SRCS:.c=.d)
 
