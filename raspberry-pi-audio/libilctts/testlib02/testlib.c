@@ -9,9 +9,46 @@
 #include "ilctts_lib.h"
 #include "utils.h"
 
-#define M 10
 
+//#include <espeak/speak_lib.h>
+
+#define M 10
 #define N (1<<M)
+
+
+int producer(TTSRENDER_STATE_T *st) {
+	int sample_rate;
+int bytesread, byteswritten;
+uint8_t *buf = malloc(N);
+
+	FILE *fp;
+
+	//sample_rate = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, 200, NULL, 0);
+	fp = fopen("softrains.raw", "r");
+if (fp == NULL)
+		return -1;
+
+	bytesread = fread(buf, 2, N>>1, fp);
+sem_post(&st->ringbuffer_empty_sema);
+while(!feof(fp)) {
+printf("Read %d bytes from file\n", bytesread);
+printf("Waiting for empty semaphore\n");
+sem_wait(&st->ringbuffer_empty_sema);
+printf("Empty semaphore signalled\n");
+pthread_mutex_lock(&st->ringbuffer_mutex);
+printf("ringbuffer_mutex locked\n");
+byteswritten = ringbuffer_write(st->ringbuffer, buf, bytesread<<1);
+printf("%d bytes written to ring buffer\n", byteswritten);
+pthread_mutex_unlock(&st->ringbuffer_mutex);
+printf("ringbuffer_mutex unlocked\n");
+sem_post(&st->ringbuffer_data_sema);
+bytesread = fread(buf, 2, N>>1, fp);
+} // end while(!feof(fp))
+fclose(fp);
+
+	return 0;
+} // end producer
+
        
 
 int main(int argc, char **argv) {
@@ -21,11 +58,12 @@ int main(int argc, char **argv) {
 	int32_t ret;
 	char debug_str[128];
 	int chunks = 0;
-
+/*
 	if (argc != 2) {
 		printf("Usage: testcore <raw-pcm-file>\n");
 		return 1;
 	}
+*/
 
 	ret = ilctts_initialize();
 	if (ret < 0) { 
@@ -54,7 +92,10 @@ int main(int argc, char **argv) {
 	}
 
 	// processing code in here
-	printf("Size of ringbuffer: %d\n", st->ringbuffer->length);
+ret = ilctts_start_ringbuffer_consumer_thread(st);
+if (ret != 0)
+		printf("Some kind of failure creating thread\n");
+ret = producer(st);
 
 	omx_err = ilctts_delete(st);
 	if (omx_err != OMX_ErrorNone) {

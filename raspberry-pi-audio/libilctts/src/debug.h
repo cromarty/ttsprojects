@@ -20,10 +20,12 @@
 #define LOGLEVEL_5 5
 
 #define ENTER(ll, text) ilctts_debug_enter(ll, text)
+#define INFO(ll, text) ilctts_debug_info(ll, text)
 #define SHOW(ll, format,...) ilctts_debug_show(ll, format,__VA_ARGS__);
 #define SHOW_TIME(ll, text) ilctts_debug_time(text);
 
 void ilctts_debug_enter(int loglevel, const char* text);
+void ilctts_debug_info(int loglevel, const char* text);
 void ilctts_debug_show(int loglevel, const char* format,...);
 void ilctts_debug_time(int loglevel, const char* text);
 

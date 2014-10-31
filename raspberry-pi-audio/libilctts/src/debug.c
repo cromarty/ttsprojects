@@ -36,6 +36,27 @@ void ilctts_debug_enter(int loglevel, const char* text) {
 
 } // end ilctts_debug_enter
 
+void ilctts_debug_info(int loglevel, const char* text) {
+	if (loglevel > LOGLEVEL)
+		return;
+
+	struct timeval tv;
+	gettimeofday(&tv, NULL);                  
+
+	if (LOGTYPE & LOGFILE) {
+		if (!fd_log) {
+			ilctts_debug_init();
+		}
+
+		if (fd_log) {
+			fprintf(fd_log, "%03d.%03dms > %s\n",(int)(tv.tv_sec%1000), (int)(tv.tv_usec/1000), text);
+		}
+	}
+	if (LOGTYPE & LOGSTDOUT)
+		fprintf(stderr, "%03d.%03dms > %s\n",(int)(tv.tv_sec%1000), (int)(tv.tv_usec/1000), text);
+
+} // end ilctts_debug_info
+
 
 void ilctts_debug_show(int loglevel, const char *format, ...) {
 	if (loglevel > LOGLEVEL)

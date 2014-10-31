@@ -18,7 +18,8 @@ int32_t consume_file(TTSRENDER_STATE_T *st, const char *filename, int *chunks) {
 	FILE *fp;
 	short fbuf[N>>1];
 
-	uint8_t *buf = (uint8_t*)malloc(N);
+	//uint8_t *buf = (uint8_t*)malloc(N);
+uint8_t *buf;
 	int bytesread, totalbytesread = 0;
 	memset(fbuf, 0, N);
 
@@ -51,7 +52,7 @@ if ( ! bytesread) {
 		}// end while
 
 		memcpy(buf, fbuf, bytesread<<1);		
-		ilctts_play_audio(st, buf, bytesread<<1);
+		ilctts_send_audio(st, buf, bytesread<<1);
 		bytesread = fread(fbuf, 2, N>>1, fp);
 
 	}
