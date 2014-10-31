@@ -51,7 +51,7 @@ if ( ! bytesread) {
 		}// end while
 
 		memcpy(buf, fbuf, bytesread<<1);		
-		ilctts_play_buffer(st, buf, bytesread<<1);
+		ilctts_play_audio(st, buf, bytesread<<1);
 		bytesread = fread(fbuf, 2, N>>1, fp);
 
 	}

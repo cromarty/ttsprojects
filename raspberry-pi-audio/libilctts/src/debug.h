@@ -4,19 +4,34 @@
 #define DEBUG_ENABLED
 
 #ifdef DEBUG_ENABLED
-#define ENTER(text) ilctts_debug_enter(text)
-#define SHOW(format,...) ilctts_debug_show(format,__VA_ARGS__);
-#define SHOW_TIME(text) ilctts_debug_time(text);
 
-void ilctts_debug_enter(const char* text);
-void ilctts_debug_show(const char* format,...);
-void ilctts_debug_time(const char* text);
+#define LOGFILE 1
+#define LOGSTDOUT 2
+
+#define LOGTYPE (LOGFILE|LOGSTDOUT)
+
+#define LOGLEVEL 5
+
+#define LOGLEVEL_0 0
+#define LOGLEVEL_1 1
+#define LOGLEVEL_2 2
+#define LOGLEVEL_3 3
+#define LOGLEVEL_4 4
+#define LOGLEVEL_5 5
+
+#define ENTER(ll, text) ilctts_debug_enter(ll, text)
+#define SHOW(ll, format,...) ilctts_debug_show(ll, format,__VA_ARGS__);
+#define SHOW_TIME(ll, text) ilctts_debug_time(text);
+
+void ilctts_debug_enter(int loglevel, const char* text);
+void ilctts_debug_show(int loglevel, const char* format,...);
+void ilctts_debug_time(int loglevel, const char* text);
 
 #else
 
-#define SHOW(format,...)
-#define SHOW_TIME(text)
-#define ENTER(text)
+#define SHOW(ll, format,...)
+#define SHOW_TIME(ll, text)
+#define ENTER(ll, text)
 
 #endif
 

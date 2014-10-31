@@ -80,7 +80,7 @@ int32_t ilctts_create(
 
 int32_t ilctts_delete(TTSRENDER_STATE_T *st);
 uint8_t *ilctts_get_buffer(TTSRENDER_STATE_T *st);
-int32_t ilctts_play_buffer(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length);
+int32_t ilctts_play_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length);
 uint32_t ilctts_get_latency(TTSRENDER_STATE_T *st);
 int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name);
 int32_t ilctts_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state);

@@ -60,13 +60,13 @@ static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 */
 
 static void*_ringbuffer_consumer_thread(void *arg) {
-	ENTER("_ringbuffer_consume_thread");
+	ENTER(LOGLEVEL_3, "_ringbuffer_consume_thread");
 	volatile TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)arg;
 	pthread_exit(NULL);
 } // end _ringbuffer_consumer_thread
 
 int32_t ilctts_initialize() {
-	ENTER("ilctts_initialize");
+	ENTER(LOGLEVEL_1, "ilctts_initialize");
 	OMX_ERRORTYPE omx_err;
 	bcm_host_init();
 	omx_err = OMX_Init();
@@ -74,7 +74,7 @@ int32_t ilctts_initialize() {
 } // end ilctts_initialize
 
 int32_t ilctts_finalize() {
-	ENTER("ilctts_finalize");
+	ENTER(LOGLEVEL_1, "ilctts_finalize");
 	OMX_ERRORTYPE omx_err;
 	omx_err = OMX_Deinit();
 	if (omx_err != OMX_ErrorNone)
@@ -93,7 +93,7 @@ int32_t ilctts_create(
 	uint32_t ringbuffer_length
 )
 {
-	ENTER("ilctts_create");
+	ENTER(LOGLEVEL_1, "ilctts_create");
 	int32_t ret;
 		OMX_ERRORTYPE omx_err;
 	TTSRENDER_STATE_T *st;
@@ -230,7 +230,7 @@ int32_t ilctts_create(
 
 
 int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
-	ENTER("ilctts_delete");
+	ENTER(LOGLEVEL_1, "ilctts_delete");
 	int32_t ret;
 	OMX_ERRORTYPE omx_err;
 
@@ -255,7 +255,7 @@ int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
 
 
 uint8_t *ilctts_get_buffer(TTSRENDER_STATE_T *st) {
-	ENTER("ilctts_get_buffer");
+	ENTER(LOGLEVEL_5, "ilctts_get_buffer");
 	OMX_BUFFERHEADERTYPE *hdr = NULL;
 
 	hdr = ilclient_get_input_buffer(st->audio_render, 100, 0);
@@ -271,12 +271,16 @@ uint8_t *ilctts_get_buffer(TTSRENDER_STATE_T *st) {
 } // end ilctts_get_buffer
 
 
-int32_t ilctts_play_buffer(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
-	ENTER("ilctts_play_buffer");
+int32_t ilctts_play_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
+	ENTER(LOGLEVEL_5, "ilctts_play_audio");
 	OMX_BUFFERHEADERTYPE *hdr = NULL, *prev = NULL;
 	int32_t ret = -1;
 
 	if(length % st->bytes_per_sample)
+		return -1;
+
+
+	if (length > st->buffer_size)
 		return -1;
 
 	sem_wait(&st->buffer_list_sema);
@@ -309,11 +313,11 @@ int32_t ilctts_play_buffer(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t leng
 							return -1;
 	}
 	return ret;
-} // end ilctts_play_buffer
+} // end ilctts_play_audio
 
 
 int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name) {
-	ENTER("ilctts_set_dest");
+	ENTER(LOGLEVEL_3, "ilctts_set_dest");
 	int32_t ret = -1;
 	OMX_CONFIG_BRCMAUDIODESTINATIONTYPE dest;
 
@@ -335,7 +339,7 @@ int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name) {
 
 
 uint32_t ilctts_get_latency(TTSRENDER_STATE_T *st) {
-	ENTER("ilctts_get_latency");
+	ENTER(LOGLEVEL_5, "ilctts_get_latency");
 	OMX_PARAM_U32TYPE param;
 	OMX_ERRORTYPE omx_err;
 	OMX_INIT_STRUCTURE(param);
@@ -351,7 +355,7 @@ uint32_t ilctts_get_latency(TTSRENDER_STATE_T *st) {
 
 
 int32_t ilctts_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
-	ENTER("ilctts_get_state");
+	ENTER(LOGLEVEL_4, "ilctts_get_state");
 	OMX_ERRORTYPE omx_err = OMX_GetState(ILC_GET_HANDLE(st->audio_render), state);
 	if (omx_err != OMX_ErrorNone)
 		return -1;
@@ -361,7 +365,7 @@ int32_t ilctts_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
 
 
 int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
-	ENTER("ilctts_set_volume");
+	ENTER(LOGLEVEL_4, "ilctts_set_volume");
 	OMX_ERRORTYPE omx_err;
 	OMX_AUDIO_CONFIG_VOLUMETYPE volume;
 	OMX_INIT_STRUCTURE(volume);
@@ -376,23 +380,23 @@ int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
 } // end ilctts_set_volume
 
 int32_t ilctts_pause(TTSRENDER_STATE_T *st) {
-	ENTER("ilctts_pause");
+	ENTER(LOGLEVEL_4, "ilctts_pause");
 		return ilclient_change_component_state(st->audio_render, OMX_StatePause);
 		} //end ilctts_pause
 
 int32_t ilctts_resume(TTSRENDER_STATE_T *st) {
-	ENTER("ilctts_resume");
+	ENTER(LOGLEVEL_4, "ilctts_resume");
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
 } //end ilctts_resume
 
 int32_t ilctts_start_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st) {
-	ENTER("ilctts_start_ringbuffer_consumer_thread");
+	ENTER(LOGLEVEL_5, "ilctts_start_ringbuffer_consumer_thread");
 	pthread_t th;
 	return pthread_create(&th, NULL, _ringbuffer_consumer_thread, (void*)st);
 } // end ilctts_start_ringbuffer_consumer_thread
 
 void ilctts_stop_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st) {
-	ENTER("ilctts_stop_ringbuffer_consumer_thread");
+	ENTER(LOGLEVEL_5, "ilctts_stop_ringbuffer_consumer_thread");
 	return;
 } // end ilctts_stop_ringbuffer_consumer_thread
 
