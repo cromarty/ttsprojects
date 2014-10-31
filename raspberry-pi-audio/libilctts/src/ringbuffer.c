@@ -28,11 +28,13 @@ void ringbuffer_destroy(RINGBUFFER_T *buffer)
 	}
 }
 
-int ringbuffer_write(RINGBUFFER_T *buffer, char *data, int writesize)
+int ringbuffer_write(RINGBUFFER_T *buffer, void *data, int writesize)
 {
 	int firstchunksize;
 	int secondchunksize;
 	int freespace;
+	char *b_ptr; // buffer pointer
+char *d_ptr; // data pointer
 
 	if ( writesize > buffer->length )
 		return -1;
@@ -42,15 +44,19 @@ int ringbuffer_write(RINGBUFFER_T *buffer, char *data, int writesize)
 		return -1;
 
 	if ( ( buffer->length - buffer->tail ) >= writesize) {
-		/* easy case, no wrapping */
-		memcpy(&buffer->buffer[buffer->tail], data, writesize);
+		// easy case, no wrapping
+b_ptr = (char*)buffer->buffer + buffer->tail;
+		memcpy(b_ptr, data, writesize);
 		buffer->tail += writesize;
 	} else {
-		/* harder case, buffer wraps */
+		// harder case, buffer wraps
 		firstchunksize = buffer->length - buffer->tail;
 		secondchunksize = writesize - firstchunksize;
-		memcpy( &buffer->buffer[buffer->tail], data, firstchunksize);
-		memcpy( &buffer->buffer[0], &data[firstchunksize], secondchunksize);
+	b_ptr = (char*)buffer->buffer + buffer->tail;
+		memcpy(b_ptr, data, firstchunksize);
+b_ptr = (char*)buffer->buffer;
+d_ptr = (char*)data + firstchunksize;
+		memcpy(b_ptr, d_ptr, secondchunksize);
 		buffer->tail = secondchunksize;
 	}
 
@@ -58,23 +64,29 @@ int ringbuffer_write(RINGBUFFER_T *buffer, char *data, int writesize)
 
 }
 
-int ringbuffer_read(RINGBUFFER_T *buffer, char *data, int readsize) {
+int ringbuffer_read(RINGBUFFER_T *buffer, void *data, int readsize) {
 	int firstchunksize;
 	int secondchunksize;
+char *b_ptr; // buffer pointer
+char *d_ptr; // data pointer
 
 	if ( readsize > ringbuffer_used_space(buffer))
 		return -1;
 
 	if( buffer->tail > buffer->head ) {
-		/* easy case, no wrap */
-		memcpy( data, &buffer->buffer[buffer->head], readsize);
+		// easy case, no wrap
+b_ptr = (char*)buffer->buffer + buffer->head;
+		memcpy( data, b_ptr, readsize);
 		buffer->head += readsize;
 	} else {
-		/* harder case, wrap */
+		// harder case, wrap
 		firstchunksize = buffer->length - buffer->head;
 		secondchunksize = readsize - firstchunksize;
-		memcpy( data, &buffer->buffer[buffer->head], firstchunksize);
-		memcpy( &data[firstchunksize], &buffer->buffer[0], secondchunksize);
+b_ptr = (char*)buffer->buffer + buffer->head;
+		memcpy( data, b_ptr, firstchunksize);
+b_ptr = (char*)buffer->buffer;
+d_ptr = (char*)data + firstchunksize;
+		memcpy( d_ptr, b_ptr, secondchunksize);
 		buffer->head = secondchunksize;
 	}
 
@@ -82,39 +94,31 @@ int ringbuffer_read(RINGBUFFER_T *buffer, char *data, int readsize) {
 
 }
 
-int ringbuffer_peek(RINGBUFFER_T *buffer, char *c, int offset) {
-	int idx;
-	if (buffer->head == buffer->tail)
-		return -1;
 
-	if (offset > buffer->length)
-		return -1;
-
-	idx = (buffer->head + offset) % buffer->length;
-	*c = buffer->buffer[idx];
-	return 1;
-
-} // end ringbuffer_peek
-
-int ringbuffer_slurp(RINGBUFFER_T *buffer, char *data) {
+int ringbuffer_slurp(RINGBUFFER_T *buffer, void *data) {
 	int firstchunksize;
 	int secondchunksize;
 	int slurped;
-
+	char *b_ptr; // buffer pointer
+	char *d_ptr; // data pointer
 	if (buffer->head == buffer->tail)
 		return -1;
 
 	if (buffer->tail > buffer->head) {
-		/* easy case, no wrap */
+		// easy case, no wrap
 		slurped = (buffer->tail - buffer->head);
-		memcpy(data, &buffer->buffer[buffer->head], buffer->tail - buffer->head);
+		b_ptr = buffer->buffer + buffer->head;
+		memcpy(data, b_ptr, slurped);
 	} else {
-		/* harder case, wrap */
+		// harder case, wrap
 		firstchunksize = buffer->length - buffer->head;
 		secondchunksize = buffer->tail;
 		slurped = firstchunksize + secondchunksize;
-		memcpy( data, &buffer->buffer[buffer->head], firstchunksize);
-		memcpy(&data[firstchunksize], &buffer->buffer[0], secondchunksize);
+		b_ptr = buffer->buffer + buffer->head;
+		memcpy( data, b_ptr, firstchunksize);
+		b_ptr = buffer->buffer;
+		d_ptr = data + firstchunksize;
+		memcpy(d_ptr, b_ptr, secondchunksize);
 	}
 	buffer->head = buffer->tail = 0;
 	return slurped;
