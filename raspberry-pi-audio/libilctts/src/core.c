@@ -1,3 +1,28 @@
+/*
+*
+* core.c - The main code of the library
+*
+* Main code of the library libilctts.so.
+* See the top-level README.md file for details of what the library does.
+*
+* Copyright (C) 2014, Mike Ray, <mike.ray@btinternet.com>
+*
+* This is free software; you can redistribute it and/or modify it under the
+* terms of the GNU Lesser General Public License as published by the Free
+* Software Foundation; either version 2.1, or (at your option) any later
+* version.
+*
+* This software is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public License
+* along with this package; see the file COPYING.  If not, write to the Free
+* Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
+* 02110-1301, USA.
+*
+*--code--*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -42,7 +67,9 @@ static int min(int val1, int val2) {
 } // end min
 
 static void input_buffer_callback(void *data, COMPONENT_T *comp) {
+	ENTER(LOGLEVEL_5, "input_buffer_callback"); 
 	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)data;
+	ILC_GET_HANDLE(comp); // just to suppress warnings about unused parameter
 		pthread_mutex_lock(&st->free_buffer_mutex);
 			pthread_cond_signal(&st->free_buffer_cv);
 				pthread_mutex_unlock(&st->free_buffer_mutex);
@@ -57,11 +84,75 @@ static void config_changed_callback(void *data, COMPONENT_T *comp) {
 static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 
 } // end port_settings_changed_callback
+
+
+static int ringbuffer_read_chunk(TTSRENDER_STATE_T *st) {
+	uint8_t *buf = NULL;
+	int bytes_available = min(st->buffer_size, ringbuffer_used_space(st->ringbuffer));
+
+	while(buf == NULL) {
+		pthread_mutex_lock(&st->free_buffer_mutex);
+		pthread_cond_wait(&st->free_buffer_cv, &st->free_buffer_mutex);
+		buf = ilctts_get_buffer(st);
+		pthread_mutex_unlock(&st->free_buffer_mutex);
+		usleep(1000);
+	}// end while
+	ringbuffer_read(st->ringbuffer, buf, bytes_available);
+	return ilctts_send_audio(st, buf, bytesread<<1);
+
+} // end ringbuffer_read_chunk
 */
+
+static void destroy_semaphores(TTSRENDER_STATE_T *st) {
+	ENTER(LOGLEVEL_3, "destroy_semaphores");
+	sem_destroy(&st->buffer_list_sema);
+	return;
+} // end destroy_semaphores
+
+static void destroy_mutexes(TTSRENDER_STATE_T *st) {
+	ENTER(LOGLEVEL_3, "destroy_mutexes");
+	pthread_mutex_destroy(&st->free_buffer_mutex);
+	return;
+} // end destroy_mutexes
+
 
 static void*_ringbuffer_consumer_thread(void *arg) {
 	ENTER(LOGLEVEL_3, "_ringbuffer_consume_thread");
 	volatile TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)arg;
+	uint8_t *buf = NULL;
+	int bytes_to_send;
+	int rc;
+
+	while(1) {
+		// wait for ringbuffer data semaphore. this tells us there is data available in the ring buffer
+		sem_wait((sem_t*)&st->ringbuffer_data_sema);
+		pthread_mutex_lock((pthread_mutex_t*)&st->ringbuffer_mutex);
+		while( ! ringbuffer_isempty(st->ringbuffer)) {
+			// set bytes_to_send to either the OMX IL Client buffer size, or the number of bytes waiting in the ring buffer, whichever is the smaller
+			bytes_to_send = min(st->buffer_size, ringbuffer_used_space(st->ringbuffer));
+			printf(">> Bytes to send: %d\n", bytes_to_send);
+			buf = ilctts_get_buffer((TTSRENDER_STATE_T*)st);
+			while(buf == NULL) {
+				pthread_mutex_lock((pthread_mutex_t*)&st->free_buffer_mutex);
+				pthread_cond_wait((pthread_cond_t*)&st->free_buffer_cv, (pthread_mutex_t*)&st->free_buffer_mutex);
+				buf = ilctts_get_buffer((TTSRENDER_STATE_T*)st);
+				pthread_mutex_unlock((pthread_mutex_t*)&st->free_buffer_mutex);
+			}// end while buf == NULL
+			printf(">> Before RB read, used space: %d\n", ringbuffer_used_space(st->ringbuffer));
+			rc = ringbuffer_read(st->ringbuffer, (void*)buf, bytes_to_send);
+			printf("RB Read %d bytes\n", rc);
+			rc = ilctts_send_audio((TTSRENDER_STATE_T*)st, buf, bytes_to_send);
+		} // end while buffer is not empty
+		printf(">> RB Should be empty\n");
+		printf(">> RB Free space: %d\n", ringbuffer_freespace(st->ringbuffer));
+		pthread_mutex_unlock((pthread_mutex_t*)&st->ringbuffer_mutex);
+		// post ringbuffer semaphore to tell producer thread to go ahead
+		printf(">> Posting empty semaphore\n");
+		sem_post((sem_t*)&st->ringbuffer_empty_sema);
+		buf = NULL;
+		usleep(1000);
+	} // end while(1)
+
 	pthread_exit(NULL);
 } // end _ringbuffer_consumer_thread
 
@@ -100,7 +191,6 @@ int32_t ilctts_create(
 
 	*component = NULL;
 
-
 	st = calloc(1, sizeof(TTSRENDER_STATE_T));
 	OMX_PARAM_PORTDEFINITIONTYPE param;
 	OMX_AUDIO_PARAM_PCMMODETYPE pcm;
@@ -119,9 +209,9 @@ int32_t ilctts_create(
 	pthread_mutex_init(&st->free_buffer_mutex, NULL);
 	pthread_cond_init(&st->free_buffer_cv, NULL);
 
-	// ringbuffer mutex and cv
+	// ringbuffer mutex
 	pthread_mutex_init(&st->ringbuffer_mutex, NULL);
-	pthread_cond_init(&st->ringbuffer_cv, NULL);
+	//pthread_cond_init(&st->ringbuffer_cv, NULL);
 
 	st->sample_rate = sample_rate;
 	st->num_channels = num_channels;
@@ -143,8 +233,6 @@ int32_t ilctts_create(
 	ret = ilclient_create_component(st->client, &st->audio_render, "audio_render", ILCLIENT_ENABLE_INPUT_BUFFERS | ILCLIENT_DISABLE_ALL_PORTS);
 	if (ret == -1)
 		return ret;
-
-//st->handle = ILC_GET_HANDLE(st->audio_render);
 
 	st->list[0] = st->audio_render;
 
@@ -217,13 +305,16 @@ int32_t ilctts_create(
 		ilclient_cleanup_components(st->list);
 		omx_err = OMX_Deinit();
 		ilclient_destroy(st->client);
-		sem_destroy(&st->buffer_list_sema);
-		// need to destroy other stuff here?
+		destroy_semaphores(st);
+		destroy_mutexes(st);
+		ringbuffer_destroy(st->ringbuffer);
+		// need to destroy and free other stuff here?
 		free(st);
 		*component = NULL;
 		return -1;
 	}
 
+	INFO(LOGLEVEL_1, "Setting state to executing in ilctts_create");
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
 
 } // end ilctts_create
@@ -271,14 +362,13 @@ uint8_t *ilctts_get_buffer(TTSRENDER_STATE_T *st) {
 } // end ilctts_get_buffer
 
 
-int32_t ilctts_play_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
-	ENTER(LOGLEVEL_5, "ilctts_play_audio");
+int32_t ilctts_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
+	ENTER(LOGLEVEL_5, "ilctts_send_audio");
 	OMX_BUFFERHEADERTYPE *hdr = NULL, *prev = NULL;
 	int32_t ret = -1;
 
 	if(length % st->bytes_per_sample)
 		return -1;
-
 
 	if (length > st->buffer_size)
 		return -1;
@@ -308,12 +398,13 @@ int32_t ilctts_play_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t lengt
 		hdr->pAppPrivate = NULL;
 		hdr->nOffset = 0;
 		hdr->nFilledLen = length;
+		INFO(LOGLEVEL_5, "Calling empty_this_buffer");
 		omx_err = OMX_EmptyThisBuffer(ILC_GET_HANDLE(st->audio_render), hdr);
 				if (omx_err != OMX_ErrorNone)
 							return -1;
 	}
 	return ret;
-} // end ilctts_play_audio
+} // end ilctts_send_audio
 
 
 int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name) {
@@ -395,10 +486,13 @@ int32_t ilctts_start_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st) {
 	return pthread_create(&th, NULL, _ringbuffer_consumer_thread, (void*)st);
 } // end ilctts_start_ringbuffer_consumer_thread
 
+/*
 void ilctts_stop_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st) {
 	ENTER(LOGLEVEL_5, "ilctts_stop_ringbuffer_consumer_thread");
+	
 	return;
 } // end ilctts_stop_ringbuffer_consumer_thread
+*/
 
 
 
