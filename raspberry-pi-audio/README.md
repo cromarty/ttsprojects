@@ -1,8 +1,15 @@
-### Rendering text-to-speech audio on the Raspberry Pi GPU
+## Rendering text-to-speech audio on the Raspberry Pi GPU ##
 
 In this sub-directory is code to implement a library to render text-to-speech 
 audio, as produced by the eSpeak software speech-synthesiser, on the GPU in the 
 RaspberryPi.
+
+It uses the OMX Integration Layer Client code
+found in 'userland', which is in /opt/vc on Raspbian and which can be downloaded and built for other distros with:
+
+git clone https://github.com/raspberrypi/userland.git
+
+### Why? ###
 
 I have done this for a number of reasons:
 
@@ -13,19 +20,25 @@ With the speakup kernel modules speakup and speakup_soft loaded, text-to-speech
 via espeak is regularly causing a kernel oops.
 
 This is because the mechanism for queueing chunks of PCM audio into the 
-rendering engine, the Video Core Hardware Interface Queue (VCHIQ), is frequently 
-passing the kernel a null-pointer.
+rendering engine, the Video Core Hardware Interface Queue (VCHIQ), is 
+frequently passing the kernel a null-pointer.
 
-This has only been the case since a modification to the snd-bcm2835 sound-driver 
-in early 2013, to introduce DMA was made.
+This has only been the case since a modification to the snd-bcm2835 
+sound-driver in early 2013, to introduce DMA was made.
 
-Using the OpenMAX IL to render audio directly on the Broadcom GPU (Graphics 
-Processing Unit) will completely bypass ALSA, pulseaudio, any other user-space 
-sound library and the snd-bcm2835 driver.
+Using the OpenMAX IL to render audio directly on the Broadcom GPU 
+(Graphics Processing Unit) will completely bypass ALSA, pulseaudio, any 
+other user-space sound library and the snd-bcm2835 driver.
 
-### The Library
+Also espeak text-to-speech stutters very badly even before it crashes the kernel.
 
-The library is called LIBILCTTS, for integration layer text-to-speech.
+### The Library ###
+
+The library is called 
+
+* LIBILCTTS
+
+For integration layer client text-to-speech.
 
 ### how the library will be used
 
@@ -34,68 +47,28 @@ The library can be used in a number of ways.
 The way espeak produces synthesised speech is important here.
 
 espeak can be used in several ways.  Two major modes are synchronous and 
-asynchronous.  Here we are only interested in asynchronous modes as used by 
-screen-readers and supporting software.
+asynchronous.  Here we are only interested in asynchronous modes as used 
+by screen-readers and supporting software.
 
-Furthermore, espeak can either be made to play the rendered speech itself by the 
-use of a common Linux sound library, like ALSA, pulseaudio or libao, or it can 
-be made to pass the PCM data back to the calling program via a callback 
-function.
+Furthermore, espeak can either be made to play the rendered speech 
+itself by the use of a common Linux sound library, like ALSA, pulseaudio 
+or libao, or it can be made to pass the PCM data back to the calling 
+program via a callback function.
 
-The library intends to use the second method, referred to by espeak as 
-AUDIO_OUTPUT_RETRIEVAL.
+In the first implementation of the library it is intended to write a new 
+audio driver source file to link into espeak which uses the library.
 
-The reason for doing this is to make it unnecessary to modify espeak.  espeak is 
-a dependancy of several applications and forking or otherwise modifying the 
-source code will complicate things for programs which depend on it, including 
-the Orca screen-reader used in graphical desktops.
+In the espeak source tree there are *.cpp files prefixed with 'wave'. 
+Each of these files provides the code to interface to a different audio 
+library.
 
-### espeakup becomes piespeakup
+There files called:
 
-There is a program called espeakup, which is commonly used to connect the 
-kernel-space screen-reader speakup with the espeak speech-synthesiser.
+* wave.cpp
 
-It is intended to modify espeakup to make piespeakup.  espeakup is not a 
-dependancy of any other program that I know of, so a name change will not have 
-any knock-on effects.
+wave.cpp is a special case in that it contains code for both portaudio and pulseaudio in one file.
 
-### espiespeak for Emacspeak
-
-The Emacspeak complete audio desktop currently has a speech-server written in 
-Tcl, which interfaces with espeak.
-
-It is intended to create espiespeak, a new server which will again use the audio 
-retrieval method to pass PCM audio to the GPU.
-
-### speech-dispatcher and sd
-
-The program speech-dispatcher is used by Orca in the graphical desktop to 
-connect to espeak.  It can also be used as a dispatcher of tts for speakup by 
-using speechd-up.
-
-speech-dispatcher includes loadable modules which function as audio-drivers.  
-One of these is called sd_espeak and again uses the audio retrieval method 
-highlighted above.
-
-It is intended to write sd_piespeak, using the LIBILCTTS library to connect 
-speech-dispatcher, and hence Orca, to the GPU.
-
-### COntents of this directory:
-
-espiespeak/
-
-The code of the proposed Emacspeak speech server using the audio library 
-discussed.
-
-libilctts/
-
-The actual audio library and associated test programs.
-
-piespeakup/
-
-The proposed version of espeakup to use this audio library.
-
-sd_piespeak/
-
-Code of the proposed speech-dispatcher module which uses this library.
+Changes will need to be made to the Makefile for espeak. It is intended 
+to provide a new sound driver in the file 'wave_rpi.cpp' and to provide 
+patches for the Makefile.
 
