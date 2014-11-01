@@ -2,7 +2,7 @@
 *~
 
 # ignore flex and bison intermediate files
-lex.yy.c
+*.yy.c
 *.tab.c
 *.tab.h
 

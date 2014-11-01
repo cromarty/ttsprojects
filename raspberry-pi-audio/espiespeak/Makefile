@@ -1,10 +1,11 @@
 CC = gcc
-LDFLAGS = -lfl
+LDFLAGS = 
+LDLIBS = -lfl
 
 all:
 	bison -d emacspeak.y
 	flex emacspeak.l
-	$(CC) -o emspk emacspeak.tab.c lex.yy.c emacspeak-sd.c $(LDFLAGS)
+	$(CC) -o emspk emacspeak.tab.c lex.yy.c emacspeak-sd.c $(LDFLAGS) $(LDLIBS)
 
 clean:
 	rm emacspeak.tab.c
