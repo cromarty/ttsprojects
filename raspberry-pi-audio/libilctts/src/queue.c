@@ -24,7 +24,9 @@
 *--code--*/
 #include <stdlib.h>
 
-#include "ilctts_lib.h"
+//#include "ilctts_lib.h"
+#include "list.h"
+#include "queue.h"
 
 int queue_push(QUEUE_T *queue, const void *data) {
 	return list_insert_next(queue, list_tail(queue), data);

@@ -43,14 +43,6 @@ int main() {
 		return 1;
 	}
 	print_results(rb, err, "After initialise");
-	offset = 0;
-	err = ringbuffer_peek(rb, &c, offset);
-	print_results(rb, err, "Peek at empty buffer");
-	if (err < 0) {
-	} else {
-		printf("Result codefrom attempt to peek at first character of empty buffer was not < 0, this is an error\n");
-		return 1;
-	}
 	err = ringbuffer_write(rb, "111111111122222222223333333333", 30);
 	print_results(rb, err, "After first write of 30 bytes");
 	if (err < 0) {
@@ -74,9 +66,7 @@ int main() {
 	} else {
 		printf("Third write (wrapping) returned: %d, this is correct\n");
 	}
-	offset = 2;
-	err = ringbuffer_peek(rb, &c, offset);
-	print_results(rb, err, "Peek at second character of non-empty buffer");
+
 	err = ringbuffer_slurp(rb, readdata);
 	print_results(rb, err, "After slurp of non-empty buffer");
 	zeros = open("/dev/zero", O_RDONLY);

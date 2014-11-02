@@ -38,7 +38,7 @@ int main(int argc, char **argv) {
 
 		*data = i + 1;
 
-		if (queue_enqueue(&queue, data) != 0)
+		if (queue_push(&queue, data) != 0)
 			return 1;
 
 	}
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
 	fprintf(stdout, "Dequeuing 5 elements\n");
 
 	for (i = 0; i < 5; i++) {
-		if (queue_dequeue(&queue, (void **)&data) == 0)
+		if (queue_pop(&queue, (void **)&data) == 0)
 			free(data);
 		else
 			return 1;
@@ -67,14 +67,14 @@ int main(int argc, char **argv) {
 		return 1;
 
 	*data = 100;
-	if (queue_enqueue(&queue, data) != 0)
+	if (queue_push(&queue, data) != 0)
 		return 1;
 
 	if ((data = (int *)malloc(sizeof(int))) == NULL)
 		return 1;
 
 	*data = 200;
-	if (queue_enqueue(&queue, data) != 0)
+	if (queue_push(&queue, data) != 0)
 		return 1;
 
 	print_queue(&queue);
@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
 	fprintf(stdout, "Dequeuing all elements\n");
 
 	while (queue_size(&queue) > 0) {
-		if (queue_dequeue(&queue, (void **)&data) == 0)
+		if (queue_pop(&queue, (void **)&data) == 0)
 			free(data);
    
 	}
