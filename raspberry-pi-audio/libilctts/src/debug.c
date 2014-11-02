@@ -104,6 +104,7 @@ void ilctts_debug_show(int loglevel, const char *format, ...) {
 } // end ilctts_debug_show
 
 
+
 void ilctts_debug_time(int loglevel, const char* text) {
 	if (loglevel > LOGLEVEL)
 		return;
@@ -123,5 +124,26 @@ void ilctts_debug_time(int loglevel, const char* text) {
 		fprintf(stderr, "%03d.%03dms > %s\n",(int)(tv.tv_sec%1000), (int)(tv.tv_usec/1000), text);
 
 } // end ilctts_debug_time 
+
+
+void ilctts_debug_error(const char *format, ...) {
+	va_list args;
+	va_start(args, format);
+	if (LOGTYPE & LOGFILE) {
+		if (!fd_log) {
+			ilctts_debug_init();
+		}
+		if (fd_log) {
+			vfprintf(fd_log, format, args);
+		}  
+	}
+	if (LOGTYPE & LOGSTDOUT)
+		vfprintf(stderr, format, args);
+
+	va_end(args);
+
+} // end ilctts_debug_error
+
+
 
 #endif

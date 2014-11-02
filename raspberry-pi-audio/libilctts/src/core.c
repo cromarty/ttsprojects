@@ -84,24 +84,8 @@ static void config_changed_callback(void *data, COMPONENT_T *comp) {
 static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 
 } // end port_settings_changed_callback
-
-
-static int ringbuffer_read_chunk(TTSRENDER_STATE_T *st) {
-	uint8_t *buf = NULL;
-	int bytes_available = min(st->buffer_size, ringbuffer_used_space(st->ringbuffer));
-
-	while(buf == NULL) {
-		pthread_mutex_lock(&st->free_buffer_mutex);
-		pthread_cond_wait(&st->free_buffer_cv, &st->free_buffer_mutex);
-		buf = ilctts_get_buffer(st);
-		pthread_mutex_unlock(&st->free_buffer_mutex);
-		usleep(1000);
-	}// end while
-	ringbuffer_read(st->ringbuffer, buf, bytes_available);
-	return ilctts_send_audio(st, buf, bytesread<<1);
-
-} // end ringbuffer_read_chunk
 */
+
 
 static void destroy_semaphores(TTSRENDER_STATE_T *st) {
 	ENTER(LOGLEVEL_3, "destroy_semaphores");
@@ -130,7 +114,6 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 		while( ! ringbuffer_isempty(st->ringbuffer)) {
 			// set bytes_to_send to either the OMX IL Client buffer size, or the number of bytes waiting in the ring buffer, whichever is the smaller
 			bytes_to_send = min(st->buffer_size, ringbuffer_used_space(st->ringbuffer));
-			//printf(">> Bytes to send: %d\n", bytes_to_send);
 			buf = ilctts_get_buffer((TTSRENDER_STATE_T*)st);
 			while(buf == NULL) {
 				//pthread_mutex_lock((pthread_mutex_t*)&st->free_buffer_mutex);
@@ -140,16 +123,21 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 			}// end while buf == NULL
 			int h = st->ringbuffer->head;
 			int t = st->ringbuffer->tail;
-			printf("In buffer: %d, try to read: %d, head: %d, tail: %d\n", ringbuffer_used_space(st->ringbuffer), bytes_to_send, h, t);
+
 			rc = ringbuffer_read(st->ringbuffer, (void*)buf, bytes_to_send);
+			if (rc == -1) {
+				ERROR("ringbuffer_read returned -1 error code in ilctts_consumer_thread\n", "");
+			}
 
 			rc = ilctts_send_audio((TTSRENDER_STATE_T*)st, buf, bytes_to_send);
+			if (rc == -1) {
+				ERROR("ilctts_send_audio returned error code -1 in ilctts_consumer_thread\n", "");
+			}
+
 		} // end while buffer is not empty
-		//printf(">> RB Should be empty\n");
-		//printf(">> RB Free space: %d\n", ringbuffer_freespace(st->ringbuffer));
+
 		pthread_mutex_unlock((pthread_mutex_t*)&st->ringbuffer_mutex);
 		// post ringbuffer semaphore to tell producer thread to go ahead
-		//printf(">> Posting empty semaphore\n");
 		sem_post((sem_t*)&st->ringbuffer_empty_sema);
 		buf = NULL;
 		usleep(1000);
@@ -163,6 +151,9 @@ int32_t ilctts_initialize() {
 	OMX_ERRORTYPE omx_err;
 	bcm_host_init();
 	omx_err = OMX_Init();
+	if (omx_err != OMX_ErrorNone) {
+		ERROR("OMX_Init returned error in ilctts_initialize: %d", omx_err);
+	}
 	return (omx_err == OMX_ErrorNone ? 0 : -1);
 } // end ilctts_initialize
 
@@ -170,8 +161,10 @@ int32_t ilctts_finalize() {
 	ENTER(LOGLEVEL_1, "ilctts_finalize");
 	OMX_ERRORTYPE omx_err;
 	omx_err = OMX_Deinit();
-	if (omx_err != OMX_ErrorNone)
+	if (omx_err != OMX_ErrorNone) {
+		ERROR("OMX_Deinit returned error in ilctts_finalize: %d", omx_err);
 		return -1;
+	}
 
 	return 0;
 } // end ilctts_finalize
@@ -204,8 +197,10 @@ int32_t ilctts_create(
 
 	// initialise buffer list semaphore
 	s = sem_init(&st->buffer_list_sema, 0, 1);
-	if (s < 0)
+	if (s < 0) {
+		ERROR("sem_init returned error in ilctts_create: %d", s);
 		return -1;
+	}
 
 	// free_buffer mutex and cv
 	pthread_mutex_init(&st->free_buffer_mutex, NULL);
@@ -226,15 +221,19 @@ int32_t ilctts_create(
 	st->tts_pause_state = TTS_PAUSE_OFF;
 
 	st->ringbuffer = ringbuffer_init(ringbuffer_length);
-	if (st->ringbuffer == NULL)
+	if (st->ringbuffer == NULL) {
+		ERROR("ringbuffer_init failed in ilctts_create", "");
 		return -1;
+	}
 
 	// set up callbacks
 	ilclient_set_empty_buffer_done_callback(st->client, input_buffer_callback, st);
 
 	ret = ilclient_create_component(st->client, &st->audio_render, "audio_render", ILCLIENT_ENABLE_INPUT_BUFFERS | ILCLIENT_DISABLE_ALL_PORTS);
-	if (ret == -1)
+	if (ret == -1) {
+		ERROR("ilclcient_create_component returned error in ilctts_create: %d", ret);
 		return ret;
+	}
 
 	st->list[0] = st->audio_render;
 
@@ -242,8 +241,10 @@ int32_t ilctts_create(
 		OMX_INIT_STRUCTURE(param);
 	param.nPortIndex = 100;
 	omx_err = OMX_GetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &param);
-	if (omx_err != OMX_ErrorNone)
+	if (omx_err != OMX_ErrorNone) {
+		ERROR("OMX_GetParameter returned error in ilctts_create: %d", omx_err);
 		return -1;
+	}
 
 	// set the buffer size to the requested size, or the minimum size returned, whichever is greater
 	st->buffer_size = max(buffer_size, param.nBufferSize);
@@ -251,8 +252,10 @@ int32_t ilctts_create(
 	param.nBufferCountActual = max(st->buffer_count, param.nBufferCountMin);
 
 	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &param);
-	if (omx_err != OMX_ErrorNone)
+	if (omx_err != OMX_ErrorNone) {
+		ERROR("OMX_SetParameter returned error in ilctts_create: %d", omx_err);
 		return -1;
+	}
 
 	// set the pcm parameters
 	OMX_INIT_STRUCTURE(pcm);
@@ -292,17 +295,21 @@ int32_t ilctts_create(
 	}
 
 	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamAudioPcm, &pcm);
-	if (omx_err != OMX_ErrorNone)
+	if (omx_err != OMX_ErrorNone) {
+		ERROR("OMX_SetParameter returned error in ilctts_create: %d", omx_err);
 		return -1;
+	}
 
 	// this function waits for the command to complete
 	ret = ilclient_change_component_state(st->audio_render, OMX_StateIdle);
-	if (ret < 0)
+	if (ret < 0) {
+		ERROR("ilctts_change_component_state returned error in ilctts_create: %d", ret);
 		return -1;
+	}
 
 	ret = ilclient_enable_port_buffers(st->audio_render, 100, NULL, NULL, NULL);
 	if (ret < 0) {
-		// error
+		ERROR("ilclient_enable_port_buffers returned error in ilctts_create: %d", ret);
 		ilclient_change_component_state(st->audio_render, OMX_StateLoaded);
 		ilclient_cleanup_components(st->list);
 		omx_err = OMX_Deinit();
@@ -328,12 +335,16 @@ int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
 	OMX_ERRORTYPE omx_err;
 
 	ret = ilclient_change_component_state(st->audio_render, OMX_StateIdle);
-	if (ret < 0)
+	if (ret < 0) {
+		ERROR("ilctts_change_component_state returned error in ilctts_delete: %d", ret);
 		return -1;
+	}
 
 	omx_err = OMX_SendCommand(ILC_GET_HANDLE(st->audio_render), OMX_CommandStateSet, OMX_StateLoaded, NULL);
-	if (omx_err != OMX_ErrorNone)
+	if (omx_err != OMX_ErrorNone) {
+		ERROR("OMX_SendCommand returned error in ilctts_delete: %d", omx_err);
 		return -1;
+	}
 
 	ilclient_disable_port_buffers(st->audio_render, 100, st->user_buffer_list, NULL, NULL);
 	ilclient_change_component_state(st->audio_render, OMX_StateLoaded);
@@ -369,11 +380,15 @@ int32_t ilctts_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t lengt
 	OMX_BUFFERHEADERTYPE *hdr = NULL, *prev = NULL;
 	int32_t ret = -1;
 
-	if(length % st->bytes_per_sample)
+	if(length % st->bytes_per_sample) {
+		ERROR("length invalid in ilctts_send_audio: %d", length);
 		return -1;
+	}
 
-	if (length > st->buffer_size)
+	if (length > st->buffer_size) {
+		ERROR("length exceeds component buffer size in ilctts_send_audio: %d, buffer size: %d", length, st->buffer_size); 
 		return -1;
+	}
 
 	sem_wait(&st->buffer_list_sema);
 
@@ -402,8 +417,10 @@ int32_t ilctts_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t lengt
 		hdr->nFilledLen = length;
 		INFO(LOGLEVEL_5, "Calling empty_this_buffer");
 		omx_err = OMX_EmptyThisBuffer(ILC_GET_HANDLE(st->audio_render), hdr);
-				if (omx_err != OMX_ErrorNone)
-							return -1;
+		if (omx_err != OMX_ErrorNone) {
+			ERROR("OMX_EmptyThisBuffer returned error in ilctts_send_audio: %d", omx_err);
+			return -1;
+		}
 	}
 	return ret;
 } // end ilctts_send_audio
@@ -420,8 +437,10 @@ int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name) {
 		strcpy((char *)dest.sName, name);
 
 		 omx_err = OMX_SetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigBrcmAudioDestination, &dest);
-		 	if (omx_err != OMX_ErrorNone)
+		 	if (omx_err != OMX_ErrorNone) {
+				ERROR("OMX_SetConfig returned error in ilctts_set_dest: %d", omx_err);
 				return ret;
+			}
 
 		ret = 0;
 	}
@@ -439,8 +458,10 @@ uint32_t ilctts_get_latency(TTSRENDER_STATE_T *st) {
 	param.nPortIndex = 100;
 
 	omx_err = OMX_GetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigAudioRenderingLatency, &param);
-		if (omx_err != OMX_ErrorNone)
-				return -1;
+	if (omx_err != OMX_ErrorNone) {
+		ERROR("OMX_GetConfig returned error in ilctts_get_latency: %d", omx_err);
+		return -1;
+	}
 
 	return param.nU32;
 } // end ilctts_get_latency
@@ -450,8 +471,10 @@ uint32_t ilctts_get_latency(TTSRENDER_STATE_T *st) {
 int32_t ilctts_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
 	ENTER(LOGLEVEL_4, "ilctts_get_state");
 	OMX_ERRORTYPE omx_err = OMX_GetState(ILC_GET_HANDLE(st->audio_render), state);
-	if (omx_err != OMX_ErrorNone)
+	if (omx_err != OMX_ErrorNone) {
+		ERROR("OMX_GetState returned error in ilctts_get_state: %d", omx_err);
 		return -1;
+	}
 
 	return 0;
 } // end ilctts_get_state
@@ -466,8 +489,10 @@ int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
 	volume.nPortIndex = 100;
 	volume.sVolume.nValue = vol;
 	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigAudioVolume, &volume);
-	if (omx_err != OMX_ErrorNone)
+	if (omx_err != OMX_ErrorNone) {
+		ERROR("OMX_SetParameter returned error in ilctts_set_volume: %d", omx_err);
 		return -1;
+	}
 
 	return 0;
 } // end ilctts_set_volume

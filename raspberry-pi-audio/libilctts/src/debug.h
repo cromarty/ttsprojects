@@ -47,17 +47,20 @@
 #define INFO(ll, text) ilctts_debug_info(ll, text)
 #define SHOW(ll, format,...) ilctts_debug_show(ll, format,__VA_ARGS__);
 #define SHOW_TIME(ll, text) ilctts_debug_time(text);
+#define ERROR(format,...) ilctts_debug_error(format,__VA_ARGS__);
 
 void ilctts_debug_enter(int loglevel, const char* text);
 void ilctts_debug_info(int loglevel, const char* text);
 void ilctts_debug_show(int loglevel, const char* format,...);
 void ilctts_debug_time(int loglevel, const char* text);
+void ilctts_debug_error(const char* format,...);
 
 #else
 
 #define SHOW(ll, format,...)
 #define SHOW_TIME(ll, text)
 #define ENTER(ll, text)
+#define ERROR(ll, format,...)
 
 #endif
 
