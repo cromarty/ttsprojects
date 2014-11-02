@@ -15,22 +15,19 @@ res
 *.zip
 *.log
 
-SciTE property files
+SciTE files
 *.properties
-
-
-# libomxilpcmrender test prog
-coretest
+*.session
 
 # ignore raw pcm and wav files
 *.raw
 *.wav
 
-# test executables
-raspberry-pi-audio/libilctts/testlib*/testlib
-raspberry-pi-audio/libilctts/testlist/testlist
-raspberry-pi-audio/libilctts/testqueue/testqueue
-raspberry-pi-audio/libilctts/testringbuffer/testrb
+# test binaries
+raspberry-pi-audio/libilctts/libtests/testlib*/testlib
+raspberry-pi-audio/libilctts/unit_tests/testlist/testlist
+raspberry-pi-audio/libilctts/unit_tests/testqueue/testqueue
+raspberry-pi-audio/libilctts/unit_tests/testringbuffer/testrb
 
 # dependancy files
 *.d

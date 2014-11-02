@@ -34,18 +34,21 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 int producer(TTSRENDER_STATE_T *st) {
 	int sample_rate;
 	int flags = espeakSSML | espeakCHARS_UTF8;
-	char buf[BUF_LEN];
+	//char *buf = malloc(BUF_LEN); 
+char buf[BUF_LEN];
 int bytesread;
 	int res;
 	sample_rate = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, 200, NULL, 0);
 
 	espeak_SetSynthCallback(synth_callback);
-
+espeak_SetParameter(espeakRATE, 400, 0);
 	sem_post(&st->ringbuffer_empty_sema);
-while( ! feof(stdin)) {
+printf("Start\n");
 memset(buf, 0, BUF_LEN);
-	bytesread = fread(buf, 1, BUF_LEN, stdin);
-	res = espeak_Synth(buf, bytesread, 0, POS_CHARACTER, 0, flags, NULL, st);
+
+while ( fgets (buf, BUF_LEN, stdin) != NULL) {
+	res = espeak_Synth(buf, strlen(buf), 0, POS_CHARACTER, 0, flags, NULL, st);
+memset(buf, 0, BUF_LEN);
 }
 //printf("All done in producer\n");
 	sleep(300);
