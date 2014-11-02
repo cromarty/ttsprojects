@@ -130,24 +130,26 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 		while( ! ringbuffer_isempty(st->ringbuffer)) {
 			// set bytes_to_send to either the OMX IL Client buffer size, or the number of bytes waiting in the ring buffer, whichever is the smaller
 			bytes_to_send = min(st->buffer_size, ringbuffer_used_space(st->ringbuffer));
-			printf(">> Bytes to send: %d\n", bytes_to_send);
+			//printf(">> Bytes to send: %d\n", bytes_to_send);
 			buf = ilctts_get_buffer((TTSRENDER_STATE_T*)st);
 			while(buf == NULL) {
-				pthread_mutex_lock((pthread_mutex_t*)&st->free_buffer_mutex);
-				pthread_cond_wait((pthread_cond_t*)&st->free_buffer_cv, (pthread_mutex_t*)&st->free_buffer_mutex);
+				//pthread_mutex_lock((pthread_mutex_t*)&st->free_buffer_mutex);
+				//pthread_cond_wait((pthread_cond_t*)&st->free_buffer_cv, (pthread_mutex_t*)&st->free_buffer_mutex);
 				buf = ilctts_get_buffer((TTSRENDER_STATE_T*)st);
-				pthread_mutex_unlock((pthread_mutex_t*)&st->free_buffer_mutex);
+				//pthread_mutex_unlock((pthread_mutex_t*)&st->free_buffer_mutex);
 			}// end while buf == NULL
-			printf(">> Before RB read, used space: %d\n", ringbuffer_used_space(st->ringbuffer));
+			int h = st->ringbuffer->head;
+			int t = st->ringbuffer->tail;
+			printf("In buffer: %d, try to read: %d, head: %d, tail: %d\n", ringbuffer_used_space(st->ringbuffer), bytes_to_send, h, t);
 			rc = ringbuffer_read(st->ringbuffer, (void*)buf, bytes_to_send);
-			printf("RB Read %d bytes\n", rc);
+
 			rc = ilctts_send_audio((TTSRENDER_STATE_T*)st, buf, bytes_to_send);
 		} // end while buffer is not empty
-		printf(">> RB Should be empty\n");
-		printf(">> RB Free space: %d\n", ringbuffer_freespace(st->ringbuffer));
+		//printf(">> RB Should be empty\n");
+		//printf(">> RB Free space: %d\n", ringbuffer_freespace(st->ringbuffer));
 		pthread_mutex_unlock((pthread_mutex_t*)&st->ringbuffer_mutex);
 		// post ringbuffer semaphore to tell producer thread to go ahead
-		printf(">> Posting empty semaphore\n");
+		//printf(">> Posting empty semaphore\n");
 		sem_post((sem_t*)&st->ringbuffer_empty_sema);
 		buf = NULL;
 		usleep(1000);

@@ -106,13 +106,19 @@ b_ptr = (char*)buffer->buffer + buffer->head;
 	} else {
 		// harder case, wrap
 		firstchunksize = buffer->length - buffer->head;
-		secondchunksize = readsize - firstchunksize;
-b_ptr = (char*)buffer->buffer + buffer->head;
-		memcpy( data, b_ptr, firstchunksize);
-b_ptr = (char*)buffer->buffer;
-d_ptr = (char*)data + firstchunksize;
-		memcpy( d_ptr, b_ptr, secondchunksize);
-		buffer->head = secondchunksize;
+		if (readsize <= firstchunksize) {
+			b_ptr = (char*)buffer->buffer + buffer->head;
+			memcpy(data, b_ptr, readsize);
+			buffer->head += readsize;
+		} else {
+			secondchunksize = readsize - firstchunksize;
+			b_ptr = (char*)buffer->buffer + buffer->head;
+			memcpy( data, b_ptr, firstchunksize);
+			b_ptr = (char*)buffer->buffer;
+			d_ptr = (char*)data + firstchunksize;
+			memcpy( d_ptr, b_ptr, secondchunksize);
+			buffer->head = secondchunksize;
+		}
 	}
 
 	return readsize;

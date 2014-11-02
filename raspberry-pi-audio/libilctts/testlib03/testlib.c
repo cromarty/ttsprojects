@@ -15,20 +15,28 @@
 
 int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)events->user_data;
-	int byteswritten;
+	int written;
 
 	if (numsamples) {
-		printf("Waiting for ringbuffer empty semaphore in espeak callback\n");
 		sem_wait(&st->ringbuffer_empty_sema);
-		printf("Trying to lock ringbuffer mutex in espeak callback\n");
 		pthread_mutex_lock(&st->ringbuffer_mutex);
-		printf("RB Free space before write: %d\n", ringbuffer_freespace(st->ringbuffer));
-		printf("Bytes to write: %d\n", numsamples<<1);
-		byteswritten = ringbuffer_write(st->ringbuffer, (void*)wav, numsamples<<1);
-		printf("RB Bytes written: %d\n", byteswritten);
-		printf("Unlocking ring buffer mutex in espeak callback\n");
+printf("CB> numsamples: %d, to write: %d, free space: %d, head: %d, tail %d\n",
+numsamples,
+numsamples<<1,
+ringbuffer_freespace(st->ringbuffer),
+st->ringbuffer->head,
+st->ringbuffer->tail);
+
+		written = ringbuffer_write(st->ringbuffer, (void*)wav, numsamples<<1);
+printf("CB> Wrote %d, used space: %d, free space: %d, head: %d, tail: %d\n", 
+written,
+ringbuffer_used_space(st->ringbuffer),
+ringbuffer_freespace(st->ringbuffer),
+st->ringbuffer->head,
+st->ringbuffer->tail
+);
+
 		pthread_mutex_unlock(&st->ringbuffer_mutex);
-		printf("Post ringbuffer data semaphore\n");
 		sem_post(&st->ringbuffer_data_sema);
 	}
 	return 0;
