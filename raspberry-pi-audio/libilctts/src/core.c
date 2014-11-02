@@ -32,10 +32,7 @@
 
 #include "bcm_host.h"
 #include "ilclient.h"
-//#include "list.h"
-//#include "queue.h"
 #include "ilctts_lib.h"
-//#include "espeak.h"
 #include "debug.h"
 
 
