@@ -17,8 +17,6 @@
 #include "debug.h"
 
 static t_wave_callback *my_callback_is_output_enabled = NULL;
-
-
 static TTSRENDER_STATE_T *g_st = NULL;
 
 #define N_WAV_BUF   10
@@ -53,7 +51,9 @@ static void start_stream () {
 	return;
 }
 
-void wave_flush (void *theHandler) {
+
+
+static void wave_flush (void *theHandler) {
 	return;
 }
 
@@ -67,61 +67,60 @@ static void select_device (const char *the_api) {
 
 void wave_set_callback_is_output_enabled (t_wave_callback * cb) {
 	return;
-}
-
-
-
+} // end wave_set_callback_is_output_enabled
 
 
 int wave_init(int samplerate) {
 	return 0;
-}
+} // end wave_init
+
 void*wave_open(const char* the_api) {
 	return NULL;
-}
+} // end wave_open
 
 size_t wave_write(void* theHandler, char* theMono16BitsWaveBuffer, size_t theSize) {
 	return 0;
-}
+} // end wave_write
 
 int wave_close(void* theHandler) {
 	return 0;
-}
+} // end wave_close
 
 int wave_is_busy(void* theHandler) {
 	return 0;
-}
+} // end wave_is_busy
 
 void wave_terminate() {
 	return;
-}
+} // end wave_terminate
 
 uint32_t wave_get_read_position(void* theHandler) {
 	return 0;
-}
+} // end wave_get_read_position
 
 uint32_t wave_get_write_position(void* theHandler) {
 	return 0;
-}
+} // end wave_get_write_position
 
 int wave_get_remaining_time(uint32_t sample, uint32_t* time) {
 	return 0;
-}
+} // end wave_get_remaining_time
 
-// general functions
+//-- general functions
+
 void clock_gettime2(struct timespec *ts) {
 	return;
-}
+} // end clock_get_time
 
 void add_time_in_ms(struct timespec *ts, int time_in_ms) {
 	return;
-}
+} // end add_time_in_ms
 
 
-// for tests
+//-- for tests
 void *wave_test_get_write_buffer() {
 	return NULL;
-}
+} // end wave_test_get_write_buffer
 
 
 #endif
