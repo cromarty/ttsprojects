@@ -24,7 +24,7 @@ SciTE files
 *.wav
 
 # test binaries
-raspberry-pi-audio/libilctts/libtests/testlib*/testlib
+raspberry-pi-audio/libilctts/libtests/test*/testlib
 raspberry-pi-audio/libilctts/unit_tests/testlist/testlist
 raspberry-pi-audio/libilctts/unit_tests/testqueue/testqueue
 raspberry-pi-audio/libilctts/unit_tests/testringbuffer/testrb
