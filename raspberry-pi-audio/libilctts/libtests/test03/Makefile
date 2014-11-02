@@ -1,11 +1,11 @@
 CC = gcc
-SRCDIR = ../src
+SRCDIR = ../../src
 INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads \
         -I$(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux \
         -I$(SDKSTAGE)/opt/vc/src/hello_pi/libs/ilclient \
         -I$(SDKSTAGE)/opt/vc/hello_pi/libs/vgfont \
-        -I$(SDKSTAGE)/opt/vc/include -I../src -I.
+        -I$(SDKSTAGE)/opt/vc/include -I$(SRCDIR) -I.
 
 CFLAGS = $(INCLUDES)
 LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib \
