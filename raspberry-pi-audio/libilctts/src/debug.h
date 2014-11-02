@@ -34,7 +34,7 @@
 
 #define LOGTYPE (LOGFILE|LOGSTDOUT)
 
-#define LOGLEVEL 5
+#define LOGLEVEL 3
 
 #define LOGLEVEL_0 0
 #define LOGLEVEL_1 1

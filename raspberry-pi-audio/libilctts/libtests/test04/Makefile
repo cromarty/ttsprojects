@@ -14,7 +14,7 @@ LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib \
                 -L../src
 LDLIBS = -lilctts -lopenmaxil \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
-        -lespeak -lrt
+        -lespeak -lpthread -lrt
 
 testlib : testlib.o
 	$(CC) -o testlib testlib.o $(LDFLAGS) $(LDLIBS)  

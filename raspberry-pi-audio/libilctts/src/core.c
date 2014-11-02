@@ -76,15 +76,16 @@ static void input_buffer_callback(void *data, COMPONENT_T *comp) {
 
 } // end input_buffer_callback
 
-/*
-static void config_changed_callback(void *data, COMPONENT_T *comp) {
 
+static void config_changed_callback(void *data, COMPONENT_T *comp) {
+	ENTER(LOGLEVEL_3, "config_changed_callback");
 } // end config_changed_callback
 
-static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 
+static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
+	ENTER(LOGLEVEL_3, "port_settings_changed_callback");
 } // end port_settings_changed_callback
-*/
+
 
 
 static void destroy_semaphores(TTSRENDER_STATE_T *st) {
@@ -228,6 +229,8 @@ int32_t ilctts_create(
 
 	// set up callbacks
 	ilclient_set_empty_buffer_done_callback(st->client, input_buffer_callback, st);
+	ilclient_set_configchanged_callback(st->client, config_changed_callback, st);
+	ilclient_set_port_settings_callback(st->client, port_settings_changed_callback, st);
 
 	ret = ilclient_create_component(st->client, &st->audio_render, "audio_render", ILCLIENT_ENABLE_INPUT_BUFFERS | ILCLIENT_DISABLE_ALL_PORTS);
 	if (ret == -1) {
@@ -345,6 +348,7 @@ int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
 		ERROR("OMX_SendCommand returned error in ilctts_delete: %d", omx_err);
 		return -1;
 	}
+
 
 	ilclient_disable_port_buffers(st->audio_render, 100, st->user_buffer_list, NULL, NULL);
 	ilclient_change_component_state(st->audio_render, OMX_StateLoaded);
