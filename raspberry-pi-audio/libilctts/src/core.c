@@ -99,6 +99,15 @@ static void destroy_mutexes(TTSRENDER_STATE_T *st) {
 
 
 static void*_ringbuffer_consumer_thread(void *arg) {
+/*
+*
+* Note: There are a lot of what might seem like pointless casts in this
+* function.  In args to pthread and semaphore functions.
+*
+* These casts are to suppress compiler warnings
+* about 'discarding the volatile directive'.
+*
+*/
 	ENTER(LOGLEVEL_3, "_ringbuffer_consume_thread");
 	volatile TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)arg;
 	uint8_t *buf = NULL;
@@ -119,8 +128,6 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 				buf = ilctts_get_buffer((TTSRENDER_STATE_T*)st);
 				//pthread_mutex_unlock((pthread_mutex_t*)&st->free_buffer_mutex);
 			}// end while buf == NULL
-			int h = st->ringbuffer->head;
-			int t = st->ringbuffer->tail;
 
 			rc = ringbuffer_read(st->ringbuffer, (void*)buf, bytes_to_send);
 			if (rc == -1) {
