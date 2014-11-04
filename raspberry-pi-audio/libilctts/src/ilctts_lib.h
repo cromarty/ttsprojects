@@ -46,7 +46,7 @@ typedef enum {
 	TTS_BEFORE_SYNTH,
 	TTS_BEFORE_PLAY,
 	TTS_SPEAKING,
-	TTS_STOP_REQUESTED
+	TTS_STOP
 } TTS_STATE_T;
 
 
@@ -55,6 +55,7 @@ typedef enum {
 	TTS_PAUSE_REQUESTED,
 	TTS_PAUSE_MARK_REPORTED
 } TTS_PAUSE_STATE_T;
+
 // TTSRENDER_STATE_T
 typedef struct {
 	ILCLIENT_T *client;
@@ -70,14 +71,17 @@ typedef struct {
 	uint32_t buffer_count;
 	uint32_t bytes_per_sample;
 	int64_t	position_in_message;
+// mutexes and semaphores
 	pthread_mutex_t ringbuffer_mutex;			// ringbuffer protection mutex
 	pthread_mutex_t free_buffer_mutex;
 	pthread_cond_t free_buffer_cv;
 	sem_t ringbuffer_data_sema;
 	sem_t ringbuffer_empty_sema;
 	sem_t buffer_list_sema;					// used during buffer setup
+// state variables
 	TTS_STATE_T tts_state;
 	TTS_PAUSE_STATE_T tts_pause_state;
+// ringbuffer (fifo) of pcm data
 	RINGBUFFER_T *ringbuffer;
 } TTSRENDER_STATE_T;
 
