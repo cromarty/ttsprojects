@@ -123,10 +123,10 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 			bytes_to_send = min(st->buffer_size, ringbuffer_used_space(st->ringbuffer));
 			buf = ilctts_get_buffer((TTSRENDER_STATE_T*)st);
 			while(buf == NULL) {
-				//pthread_mutex_lock((pthread_mutex_t*)&st->free_buffer_mutex);
-				//pthread_cond_wait((pthread_cond_t*)&st->free_buffer_cv, (pthread_mutex_t*)&st->free_buffer_mutex);
+				pthread_mutex_lock((pthread_mutex_t*)&st->free_buffer_mutex);
+				pthread_cond_wait((pthread_cond_t*)&st->free_buffer_cv, (pthread_mutex_t*)&st->free_buffer_mutex);
 				buf = ilctts_get_buffer((TTSRENDER_STATE_T*)st);
-				//pthread_mutex_unlock((pthread_mutex_t*)&st->free_buffer_mutex);
+				pthread_mutex_unlock((pthread_mutex_t*)&st->free_buffer_mutex);
 			}// end while buf == NULL
 
 			rc = ringbuffer_read(st->ringbuffer, (void*)buf, bytes_to_send);

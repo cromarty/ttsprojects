@@ -60,7 +60,7 @@ espeak_SetParameter(espeakRATE, wpm, 0);
 
 	while ( fgets (buf, BUF_LEN, stdin) != NULL) {
 printf("Length of line: %d\n", strlen(buf));
-		res = espeak_Synth(buf, strlen(buf), 0, POS_CHARACTER, 0, flags, NULL, st);
+		res = espeak_Synth(buf, strlen(buf)+1, 0, POS_CHARACTER, 0, flags, NULL, st);
 		sem_wait(&sema);
 	}
 sem_wait(&sema);
