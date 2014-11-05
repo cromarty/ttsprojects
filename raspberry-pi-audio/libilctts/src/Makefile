@@ -1,11 +1,12 @@
 CC = gcc
+PREFIX = /usr/local
 MAJOR = 1
 MINOR = 0
 REVISION = 0
 VERSION = $(MAJOR).$(MINOR).$(REVISION)
 TARGETLIB = libilctts.so
-INSTALLDIR = /usr/local/lib
-INCLUDEDIR = /usr/local/include/ilctts
+INSTALLDIR = $(PREFIX)/lib
+INCLUDEDIR = $(PREFIX)/include
 INCLUDES = -I$(SDKSTAGE)/opt/vc/include \
         -I$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads \
         -I$(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux \
@@ -56,13 +57,13 @@ install :
 	install $(TARGETLIB).$(VERSION) $(INSTALLDIR)
 	ln -s $(INSTALLDIR)/$(TARGETLIB).$(VERSION) $(INSTALLDIR)/$(TARGETLIB).$(MAJOR)
 	ln -s $(INSTALLDIR)/$(TARGETLIB).$(MAJOR) $(INSTALLDIR)/$(TARGETLIB)
-	mkdir -p $(INCLUDEDIR)
 	install ilctts_lib.h $(INCLUDEDIR)
 	ldconfig
 
 uninstall :
+	rm $(INSTALLDIR)/$(TARGETLIB)
 	rm $(INSTALLDIR)/$(TARGETLIB).*
-	rm -rf $(INCLUDEDIR)
+	rm $(INCLUDEDIR)/ilctts_lib.h
 
 clean :
 	$(RM) $(TARGETLIB).$(VERSION) $(OBJS) $(SRCS:.c=.d)

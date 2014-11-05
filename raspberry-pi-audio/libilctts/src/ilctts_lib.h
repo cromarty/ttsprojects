@@ -35,7 +35,7 @@
 #include "ilclient.h"
 //#include "list.h"
 //#include "queue.h"
-#include "ringbuffer.h"
+//#include "ringbuffer.h"
 
 
 typedef int int32_t;
@@ -55,6 +55,13 @@ typedef enum {
 	TTS_PAUSE_REQUESTED,
 	TTS_PAUSE_MARK_REPORTED
 } TTS_PAUSE_STATE_T;
+
+typedef struct {
+    void *buffer;
+    int length;
+    int head;
+    int tail;
+} RINGBUFFER_T;
 
 // TTSRENDER_STATE_T
 typedef struct {

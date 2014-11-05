@@ -33,17 +33,12 @@
 #include "bcm_host.h"
 #include "ilclient.h"
 #include "ilctts_lib.h"
+#include "core.h"
 #include "debug.h"
-
 
 
 #define OUT_CHANNELS(num_channels) ((num_channels) > 4 ? 8: (num_channels) > 2 ? 4: (num_channels))
 
-//#ifndef countof
-//   #define countof(arr) (sizeof(arr) / sizeof(arr[0]))
-//#endif
-
-//#define BUFFER_SIZE_SAMPLES 1024
 
 #define OMX_INIT_STRUCTURE(a) \
 	memset(&(a), 0, sizeof(a)); \
@@ -363,8 +358,8 @@ int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
 
 	ilclient_destroy(st->client);
 	//sem_destroy(&st->buffer_list_sema);
-	ilctts_destroy_semaphores(st);
-	ilctts_destroy_mutexes(st);
+	destroy_semaphores(st);
+	destroy_mutexes(st);
 	free(st);
 	return 0;
 } // end ilctts_delete
