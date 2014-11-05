@@ -1,1 +1,0 @@
-../../emacspeak/flex-lexer/emacspeak.l
