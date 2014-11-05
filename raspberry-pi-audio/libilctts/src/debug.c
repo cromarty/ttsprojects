@@ -86,6 +86,9 @@ void ilctts_debug_show(int loglevel, const char *format, ...) {
 	if (loglevel > LOGLEVEL)
 		return;
 
+	struct timeval tv;
+	gettimeofday(&tv, NULL);                  
+
 	va_list args;
 	va_start(args, format);
 	if (LOGTYPE & LOGFILE) {
@@ -93,11 +96,14 @@ void ilctts_debug_show(int loglevel, const char *format, ...) {
 			ilctts_debug_init();
 		}
 		if (fd_log) {
+			fprintf(fd_log, "%03d.%03dms > ",(int)(tv.tv_sec%1000), (int)(tv.tv_usec/1000));
 			vfprintf(fd_log, format, args);
 		}  
 	}
-	if (LOGTYPE & LOGSTDOUT)
+	if (LOGTYPE & LOGSTDOUT) {
+		fprintf(stderr, "%03d.%03dms > ",(int)(tv.tv_sec%1000), (int)(tv.tv_usec/1000));
 		vfprintf(stderr, format, args);
+	}
 
 	va_end(args);
 

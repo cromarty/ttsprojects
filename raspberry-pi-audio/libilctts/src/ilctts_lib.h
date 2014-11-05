@@ -115,6 +115,8 @@ int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol);
 int32_t ilctts_pause(TTSRENDER_STATE_T *st);
 int32_t ilctts_resume(TTSRENDER_STATE_T *st);
 int32_t ilctts_start_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st);
+void ilctts_stop_notify(TTSRENDER_STATE_T *st);
+
 //void ilctts_stop_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st);
 
 

@@ -522,6 +522,12 @@ int32_t ilctts_start_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st) {
 	return pthread_create(&th, NULL, _ringbuffer_consumer_thread, (void*)st);
 } // end ilctts_start_ringbuffer_consumer_thread
 
+void ilctts_stop_notify(TTSRENDER_STATE_T *st) {
+	INFO(LOGLEVEL_3, "Stop notified\n");
+	return;
+} // end ilctts_stop_notify
+
+
 /*
 void ilctts_stop_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st) {
 	ENTER(LOGLEVEL_5, "ilctts_stop_ringbuffer_consumer_thread");
