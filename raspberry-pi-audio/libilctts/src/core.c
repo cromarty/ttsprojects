@@ -88,12 +88,15 @@ static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 static void destroy_semaphores(TTSRENDER_STATE_T *st) {
 	ENTER(LOGLEVEL_3, "destroy_semaphores");
 	sem_destroy(&st->buffer_list_sema);
+	sem_destroy(&st->ringbuffer_data_sema);
+	sem_destroy(&st->ringbuffer_empty_sema);
 	return;
 } // end destroy_semaphores
 
 static void destroy_mutexes(TTSRENDER_STATE_T *st) {
 	ENTER(LOGLEVEL_3, "destroy_mutexes");
 	pthread_mutex_destroy(&st->free_buffer_mutex);
+	pthread_mutex_destroy(&st->ringbuffer_mutex);
 	return;
 } // end destroy_mutexes
 
@@ -359,9 +362,10 @@ int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
 	ilclient_cleanup_components(st->list);
 
 	ilclient_destroy(st->client);
-	sem_destroy(&st->buffer_list_sema);
+	//sem_destroy(&st->buffer_list_sema);
+	ilctts_destroy_semaphores(st);
+	ilctts_destroy_mutexes(st);
 	free(st);
-
 	return 0;
 } // end ilctts_delete
 

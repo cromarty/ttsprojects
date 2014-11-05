@@ -1,5 +1,8 @@
 CC = gcc
-VERSION = 0.1.0
+MAJOR = 1
+MINOR = 0
+REVISION = 0
+VERSION = $(MAJOR).$(MINOR).$(REVISION)
 TARGETLIB = libilctts.so
 INSTALLDIR = /usr/local/lib
 INCLUDEDIR = /usr/local/include/ilctts
@@ -30,8 +33,12 @@ LDLIBS = -lopenmaxil \
 
 RM = rm -f
 
-SRCS = core.c utils.c list.c queue.c ringbuffer.c \
-	debug.c ilclient.c ilcore.c
+SRCS = core.c \
+        utils.c \
+        ringbuffer.c \
+        debug.c \
+        ilclient.c \
+        ilcore.c
 
 OBJS = $(SRCS:.c=.o)
 
@@ -47,17 +54,14 @@ include $(SRCS:.c=.d)
 
 install :
 	install $(TARGETLIB).$(VERSION) $(INSTALLDIR)
-	ln -s $(INSTALLDIR)/$(TARGETLIB).$(VERSION) $(INSTALLDIR)/$(TARGETLIB)
+	ln -s $(INSTALLDIR)/$(TARGETLIB).$(VERSION) $(INSTALLDIR)/$(TARGETLIB).$(MAJOR)
+	ln -s $(INSTALLDIR)/$(TARGETLIB).$(MAJOR) $(INSTALLDIR)/$(TARGETLIB)
 	mkdir -p $(INCLUDEDIR)
 	install ilctts_lib.h $(INCLUDEDIR)
-	install list.h $(INCLUDEDIR)
-	install queue.h $(INCLUDEDIR)
-	install ringbuffer.h $(INCLUDEDIR)
 	ldconfig
 
 uninstall :
-	rm $(INSTALLDIR)/$(TARGETLIB)
-	rm $(INSTALLDIR)/$(TARGETLIB).$(VERSION)
+	rm $(INSTALLDIR)/$(TARGETLIB).*
 	rm -rf $(INCLUDEDIR)
 
 clean :

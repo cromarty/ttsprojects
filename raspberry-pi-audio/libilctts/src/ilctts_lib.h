@@ -33,8 +33,8 @@
 
 #include "bcm_host.h"
 #include "ilclient.h"
-#include "list.h"
-#include "queue.h"
+//#include "list.h"
+//#include "queue.h"
 #include "ringbuffer.h"
 
 
@@ -75,8 +75,8 @@ typedef struct {
 	pthread_mutex_t ringbuffer_mutex;			// ringbuffer protection mutex
 	pthread_mutex_t free_buffer_mutex;
 	pthread_cond_t free_buffer_cv;
-	sem_t ringbuffer_data_sema;
-	sem_t ringbuffer_empty_sema;
+	sem_t ringbuffer_data_sema;				// there is data in the ringbuffer
+	sem_t ringbuffer_empty_sema;				// there is space in the ringbuffer
 	sem_t buffer_list_sema;					// used during buffer setup
 // state variables
 	TTS_STATE_T tts_state;
