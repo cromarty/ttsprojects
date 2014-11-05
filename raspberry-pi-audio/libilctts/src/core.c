@@ -68,7 +68,7 @@ static void input_buffer_callback(void *data, COMPONENT_T *comp) {
 
 } // end input_buffer_callback
 
-
+/*
 static void config_changed_callback(void *data, COMPONENT_T *comp) {
 	ENTER(LOGLEVEL_3, "config_changed_callback");
 } // end config_changed_callback
@@ -77,7 +77,7 @@ static void config_changed_callback(void *data, COMPONENT_T *comp) {
 static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 	ENTER(LOGLEVEL_3, "port_settings_changed_callback");
 } // end port_settings_changed_callback
-
+*/
 
 
 static void destroy_semaphores(TTSRENDER_STATE_T *st) {
@@ -231,8 +231,8 @@ int32_t ilctts_create(
 
 	// set up callbacks
 	ilclient_set_empty_buffer_done_callback(st->client, input_buffer_callback, st);
-	ilclient_set_configchanged_callback(st->client, config_changed_callback, st);
-	ilclient_set_port_settings_callback(st->client, port_settings_changed_callback, st);
+	//ilclient_set_configchanged_callback(st->client, config_changed_callback, st);
+	//ilclient_set_port_settings_callback(st->client, port_settings_changed_callback, st);
 
 	ret = ilclient_create_component(st->client, &st->audio_render, "audio_render", ILCLIENT_ENABLE_INPUT_BUFFERS | ILCLIENT_DISABLE_ALL_PORTS);
 	if (ret == -1) {
@@ -434,25 +434,27 @@ int32_t ilctts_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t lengt
 
 
 int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name) {
-	ENTER(LOGLEVEL_3, "ilctts_set_dest");
-	int32_t ret = -1;
+	ENTER(LOGLEVEL_5, "ilctts_set_dest");
+	OMX_ERRORTYPE omx_err;
 	OMX_CONFIG_BRCMAUDIODESTINATIONTYPE dest;
+	char device[8];
 
-	if (name && strlen(name) < sizeof(dest.sName)) {
-		OMX_ERRORTYPE omx_err;
-		OMX_INIT_STRUCTURE(dest);
-		strcpy((char *)dest.sName, name);
+	if ( (strcmp(name, "local") != 0) && (strcmp(name, "hdmi") != 0) )
+		strcpy(device, "local");
+	else
+		strcpy(device, name);
 
-		 omx_err = OMX_SetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigBrcmAudioDestination, &dest);
-		 	if (omx_err != OMX_ErrorNone) {
-				ERROR("OMX_SetConfig returned error in ilctts_set_dest: %d", omx_err);
-				return ret;
-			}
+	OMX_INIT_STRUCTURE(dest);
+	strcpy((char *)dest.sName, device);
 
-		ret = 0;
+	 omx_err = OMX_SetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigBrcmAudioDestination, &dest);
+ 	if (omx_err != OMX_ErrorNone) {
+		ERROR("OMX_SetConfig returned error in ilctts_set_dest: %d", omx_err);
+		return -1;
 	}
 
-	return ret;
+	SHOW(LOGLEVEL_3, "Audio device set to: %s\n", device);
+	return 0;
 } // end ilctts_set_dest
 
 

@@ -59,12 +59,10 @@ espeak_SetParameter(espeakRATE, wpm, 0);
 	sem_post(&st->ringbuffer_empty_sema);
 
 	while ( fgets (buf, BUF_LEN, stdin) != NULL) {
-printf("Length of line: %d\n", strlen(buf));
 		res = espeak_Synth(buf, strlen(buf)+1, 0, POS_CHARACTER, 0, flags, NULL, st);
 		sem_wait(&sema);
 	}
 sem_wait(&sema);
-	//sleep(10);
 	sem_destroy(&sema);
 	return 0;
 } // end producer
@@ -88,8 +86,6 @@ wpm = atoi(argv[1]);
 	if (ret < 0) { 
 		printf("Failed to initialise OMX\n");
 		return 1;
-	} else {
-		printf("Initialised OMX ok\n");
 	}
 
 	omx_err = ilctts_create(
@@ -115,16 +111,15 @@ wpm = atoi(argv[1]);
 	ret = ilctts_get_state(st, &state);
 	if (ret < 0) {
 		printf("Failed to get state\n");
-		printf("Got state: %s\n", debug_str);
 	}
 
-	// processing code in here
 ret = ilctts_start_ringbuffer_consumer_thread(st);
-if (ret != 0)
+if (ret != 0) {
 		printf("Some kind of failure creating thread\n");
+		return 1;
+	}
 
 ret = producer(st, wpm);
-
 
 	omx_err = ilctts_delete(st);
 	if (omx_err != OMX_ErrorNone) {
