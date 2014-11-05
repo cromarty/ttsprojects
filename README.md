@@ -25,7 +25,7 @@ has 'autospawn' hard-coded.
 Read more about SpeakUp, speechd-up and speech-dispatcher in the 
 speech-dispatcher directory.
 
-In raspberry-pi-audio is a project to write a sound-driver to render PCM 
+In raspberry-pi is a project to write a sound-driver to render PCM 
 text-to-speech directly on the Raspberry Pi GPU.  Read more about that and 
 connected stuff in the README.md in that directory.
 
