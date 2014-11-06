@@ -24,7 +24,7 @@ SciTE files
 *.wav
 
 # test binaries
-raspberrypi/libilctts/libtests/test*/testlib
+testlib
 
 # dependancy files
 *.d
