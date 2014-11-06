@@ -52,12 +52,29 @@ typedef enum {
 	TTS_PAUSE_MARK_REPORTED
 } TTS_PAUSE_STATE_T;
 
+//-- linked list stuff
+
+typedef struct LLIST_ENTRY_ {
+void               *data;
+struct LLIST_ENTRY_   *next;
+} LLIST_ENTRY_T;
+
+typedef struct LLIST_ {
+int                size;
+void               (*destroy)(void *data);
+LLIST_ENTRY_T           *head;
+LLIST_ENTRY_T           *tail;
+} LLIST_T;
+
+typedef LLIST_T QUEUE_T;
+
 typedef struct {
     void *buffer;
     int length;
     int head;
     int tail;
 } RINGBUFFER_T;
+
 
 // TTSRENDER_STATE_T
 typedef struct {
@@ -111,9 +128,9 @@ int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol);
 int32_t ilctts_pause(TTSRENDER_STATE_T *st);
 int32_t ilctts_resume(TTSRENDER_STATE_T *st);
 int32_t ilctts_start_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st);
-void ilctts_stop_notify(TTSRENDER_STATE_T *st);
+void ilctts_stop_request(TTSRENDER_STATE_T *st);
 
-//void ilctts_stop_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st);
+
 
 
 #endif

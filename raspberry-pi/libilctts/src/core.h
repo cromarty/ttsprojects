@@ -31,19 +31,9 @@
 
 #include "ilctts_lib.h"
 
-//-- linked list stuff
 
-typedef struct LLIST_ENTRY_ {
-void               *data;
-struct LLIST_ENTRY_   *next;
-} LLIST_ENTRY_T;
+#define PI 3.14159265
 
-typedef struct LLIST_ {
-int                size;
-void               (*destroy)(void *data);
-LLIST_ENTRY_T           *head;
-LLIST_ENTRY_T           *tail;
-} LLIST_T;
 
 void list_init(LLIST_T *list, void (*destroy)(void *data));
 void list_destroy(LLIST_T *list);
@@ -59,10 +49,6 @@ int list_remove_next(LLIST_T *list, LLIST_ENTRY_T *element, void **data);
 #define list_data(element) ((element)->data)
 #define list_next(element) ((element)->next)
 #define list_append(list, data) (list_insert_next(list, ((list)->tail), data))
-
-//-- queue stuff
-
-typedef LLIST_T QUEUE_T;
 
 #define queue_init list_init
 #define queue_destroy list_destroy

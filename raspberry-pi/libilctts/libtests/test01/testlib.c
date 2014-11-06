@@ -9,7 +9,7 @@
 #include "ilctts_lib.h"
 #include "utils.h"
 
-#define M 10
+#define M 6
 
 #define N (1<<M)
        

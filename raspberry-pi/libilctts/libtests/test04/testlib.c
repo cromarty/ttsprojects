@@ -22,6 +22,7 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 
 	if (numsamples) {
 		sem_wait(&st->ringbuffer_empty_sema);
+		pthread_mutex_lock(&st->ringbuffer_mutex);
 
 		written = ringbuffer_write(st->ringbuffer, (void*)wav, numsamples<<1);
 
