@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-//#include "ringbuffer.h"
 #include "ilctts_lib.h"
 
 
@@ -45,7 +44,7 @@ RINGBUFFER_T *ringbuffer_init(int length) {
 		return NULL;
 	}
 	return buffer;
-}
+} // end ringbuffer_init
 
 void ringbuffer_destroy(RINGBUFFER_T *buffer)
 {
@@ -53,7 +52,7 @@ void ringbuffer_destroy(RINGBUFFER_T *buffer)
 		free(buffer->buffer);
 		free(buffer);
 	}
-}
+} // end ringbuffer_destroy
 
 int ringbuffer_write(RINGBUFFER_T *buffer, void *data, int writesize)
 {
@@ -66,7 +65,7 @@ char *d_ptr; // data pointer
 	if ( writesize > buffer->length )
 		return -1;
 
-	freespace = ringbuffer_freespace(buffer);
+	freespace = ringbuffer_free_space(buffer);
 	if (freespace < writesize)
 		return -1;
 
@@ -89,7 +88,7 @@ d_ptr = (char*)data + firstchunksize;
 
 	return writesize;
 
-}
+} // end ringbuffer_write
 
 int ringbuffer_read(RINGBUFFER_T *buffer, void *data, int readsize) {
 	int firstchunksize;
@@ -125,41 +124,26 @@ b_ptr = (char*)buffer->buffer + buffer->head;
 
 	return readsize;
 
-}
-
+} // end ringbuffer_read
 
 int ringbuffer_slurp(RINGBUFFER_T *buffer, void *data) {
-	int firstchunksize;
-	int secondchunksize;
-	int slurped;
-	char *b_ptr; // buffer pointer
-	char *d_ptr; // data pointer
-	if (buffer->head == buffer->tail)
+	int used = ringbuffer_used_space(buffer);
+
+	if (used == 0)
+		return 0;
+
+	if (used == -1)
 		return -1;
 
-	if (buffer->tail > buffer->head) {
-		// easy case, no wrap
-		slurped = (buffer->tail - buffer->head);
-		b_ptr = buffer->buffer + buffer->head;
-		memcpy(data, b_ptr, slurped);
-	} else {
-		// harder case, wrap
-		firstchunksize = buffer->length - buffer->head;
-		secondchunksize = buffer->tail;
-		slurped = firstchunksize + secondchunksize;
-		b_ptr = buffer->buffer + buffer->head;
-		memcpy( data, b_ptr, firstchunksize);
-		b_ptr = buffer->buffer;
-		d_ptr = data + firstchunksize;
-		memcpy(d_ptr, b_ptr, secondchunksize);
-	}
-	buffer->head = buffer->tail = 0;
-	return slurped;
-
+	return ringbuffer_read(buffer, data, used);
 } // end ringbuffer_slurp
 
+void ringbuffer_flush(RINGBUFFER_T *buffer) {
+	buffer->head = buffer->tail = 0;
+	return;
+} // end ringbuffer_flush
 
-int ringbuffer_freespace(RINGBUFFER_T *buffer) {
+int ringbuffer_free_space(RINGBUFFER_T *buffer) {
 if(buffer->head == buffer->tail)
                         return buffer->length;
 
@@ -168,7 +152,7 @@ if(buffer->head == buffer->tail)
 
 	return buffer->head - buffer->tail;
 
-} // end ringbuffer_freespace
+} // end ringbuffer_free_space
 
 int ringbuffer_used_space(RINGBUFFER_T *buffer) {
 	if (buffer->head == buffer->tail)
@@ -179,7 +163,7 @@ int ringbuffer_used_space(RINGBUFFER_T *buffer) {
 
 	return (buffer->length - buffer->head) + buffer->tail;
 
-} // end ringbuffer_datasize
+} // end ringbuffer_used_space
 
 int ringbuffer_spin(RINGBUFFER_T *buffer, int offset) {
 	if (offset == 0)
@@ -189,12 +173,10 @@ int ringbuffer_spin(RINGBUFFER_T *buffer, int offset) {
 	return buffer->head;
 } // end ringbuffer_spin
 
-int ringbuffer_isempty(RINGBUFFER_T *buffer) {
+int ringbuffer_is_empty(RINGBUFFER_T *buffer) {
 	return (buffer->head == buffer->tail);
-} // end ringbuffer_isempty
+} // end ringbuffer_is_empty
 
-int ringbuffer_isfull(RINGBUFFER_T *buffer) {
+int ringbuffer_is_full(RINGBUFFER_T *buffer) {
 	return (ringbuffer_freespace(buffer) == 0);
-}
-
-//
+} // end ringbuffer_is_full

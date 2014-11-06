@@ -116,7 +116,7 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 		// wait for ringbuffer data semaphore. this tells us there is data available in the ring buffer
 		sem_wait((sem_t*)&st->ringbuffer_data_sema);
 		pthread_mutex_lock((pthread_mutex_t*)&st->ringbuffer_mutex);
-		while( ! ringbuffer_isempty(st->ringbuffer)) {
+		while( ! ringbuffer_is_empty(st->ringbuffer)) {
 			// set bytes_to_send to either the OMX IL Client buffer size, or the number of bytes waiting in the ring buffer, whichever is the smaller
 			bytes_to_send = min(st->buffer_size, ringbuffer_used_space(st->ringbuffer));
 			buf = ilctts_get_buffer((TTSRENDER_STATE_T*)st);

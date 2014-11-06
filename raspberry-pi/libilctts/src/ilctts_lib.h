@@ -33,10 +33,6 @@
 
 #include "bcm_host.h"
 #include "ilclient.h"
-//#include "list.h"
-//#include "queue.h"
-//#include "ringbuffer.h"
-
 
 typedef int int32_t;
 
