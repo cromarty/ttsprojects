@@ -36,7 +36,7 @@ typedef struct {
 
 RINGBUFFER_T *ringbuffer_init(int length);
 void ringbuffer_destroy(RINGBUFFER_T *buffer);
-int ringbuffer_freespace(RINGBUFFER_T *buffer);
+int ringbuffer_free_space(RINGBUFFER_T *buffer);
 int ringbuffer_used_space(RINGBUFFER_T *buffer);
 int ringbuffer_read(RINGBUFFER_T *buffer, void *target, int amount);
 int ringbuffer_write(RINGBUFFER_T *buffer, void *data, int length);

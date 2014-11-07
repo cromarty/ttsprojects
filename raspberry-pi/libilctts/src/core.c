@@ -527,3 +527,23 @@ void ilctts_stop_request(TTSRENDER_STATE_T *st) {
 	return;
 } // end ilctts_stop_request
 
+void ilctts_wait_space(TTSRENDER_STATE_T *st) {
+	sem_wait(&st->ringbuffer_empty_sema);
+	return;
+} // end ilctts_wait_space
+
+void ilctts_post_space(TTSRENDER_STATE_T *st) {
+	sem_post(&st->ringbuffer_empty_sema);
+	return;
+} // end ilctts_post_space
+
+
+void ilctts_wait_data(TTSRENDER_STATE_T *st) {
+	sem_wait(&st->ringbuffer_data_sema);
+	return;
+} // end ilctts_wait_data
+
+void ilctts_post_data(TTSRENDER_STATE_T *st) {
+	sem_post(&st->ringbuffer_data_sema);
+	return;
+} // end ilctts_post_data

@@ -21,13 +21,15 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 	int written;
 
 	if (numsamples) {
-		sem_wait(&st->ringbuffer_empty_sema);
+		//sem_wait(&st->ringbuffer_empty_sema);
+ilctts_wait_space(st);
 		pthread_mutex_lock(&st->ringbuffer_mutex);
 
 		written = ringbuffer_write(st->ringbuffer, (void*)wav, numsamples<<1);
 
 		pthread_mutex_unlock(&st->ringbuffer_mutex);
-		sem_post(&st->ringbuffer_data_sema);
+		//sem_post(&st->ringbuffer_data_sema);
+ilctts_post_data(st);
 	}
 
 	while(events->type != espeakEVENT_LIST_TERMINATED) {
@@ -57,9 +59,12 @@ int bytesread;
 
 	espeak_SetSynthCallback(synth_callback);
 espeak_SetParameter(espeakRATE, wpm, 0);
-	sem_post(&st->ringbuffer_empty_sema);
+	//sem_post(&st->ringbuffer_empty_sema);
+ilctts_post_space(st);
 
 	while ( fgets (buf, BUF_LEN, stdin) != NULL) {
+if (strcmp(buf, "quit()\n") == 0)
+break;
 		res = espeak_Synth(buf, strlen(buf)+1, 0, POS_CHARACTER, 0, flags, NULL, st);
 		sem_wait(&sema);
 	}

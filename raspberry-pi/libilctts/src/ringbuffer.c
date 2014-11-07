@@ -178,5 +178,5 @@ int ringbuffer_is_empty(RINGBUFFER_T *buffer) {
 } // end ringbuffer_is_empty
 
 int ringbuffer_is_full(RINGBUFFER_T *buffer) {
-	return (ringbuffer_freespace(buffer) == 0);
+	return (ringbuffer_free_space(buffer) == 0);
 } // end ringbuffer_is_full
