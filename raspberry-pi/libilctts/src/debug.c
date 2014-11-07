@@ -98,11 +98,13 @@ void ilctts_debug_show(int loglevel, const char *format, ...) {
 		if (fd_log) {
 			fprintf(fd_log, "%03d.%03dms > ",(int)(tv.tv_sec%1000), (int)(tv.tv_usec/1000));
 			vfprintf(fd_log, format, args);
+			fprintf(stderr, "\n");
 		}  
 	}
 	if (LOGTYPE & LOGSTDOUT) {
 		fprintf(stderr, "%03d.%03dms > ",(int)(tv.tv_sec%1000), (int)(tv.tv_usec/1000));
 		vfprintf(stderr, format, args);
+		fprintf(stderr, "\n");
 	}
 
 	va_end(args);

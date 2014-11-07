@@ -453,7 +453,7 @@ int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name) {
 		return -1;
 	}
 
-	SHOW(LOGLEVEL_3, "Audio device set to: %s\n", device);
+	SHOW(LOGLEVEL_3, "Audio device set to: %s", device);
 	return 0;
 } // end ilctts_set_dest
 
@@ -523,39 +523,47 @@ int32_t ilctts_start_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st) {
 } // end ilctts_start_ringbuffer_consumer_thread
 
 void ilctts_stop_request(TTSRENDER_STATE_T *st) {
-	INFO(LOGLEVEL_3, "Stop requested\n");
+	INFO(LOGLEVEL_3, "Stop requested");
 	return;
 } // end ilctts_stop_request
 
 int ilctts_wait_space(TTSRENDER_STATE_T *st) {
+	INFO(LOGLEVEL_5, "wait for ringbuffer space");
 	return sem_wait(&st->ringbuffer_empty_sema);
 } // end ilctts_wait_space
 
 int ilctts_post_space(TTSRENDER_STATE_T *st) {
+	INFO(LOGLEVEL_5, "Post ringbuffer space");
 	return sem_post(&st->ringbuffer_empty_sema);
 } // end ilctts_post_space
 
 
 int ilctts_wait_data(TTSRENDER_STATE_T *st) {
+	INFO(LOGLEVEL_5, "Wait ringbuffer data");
 	return sem_wait(&st->ringbuffer_data_sema);
 } // end ilctts_wait_data
 
 int ilctts_post_data(TTSRENDER_STATE_T *st) {
+	INFO(LOGLEVEL_5, "Post ringbuffer data");
 	return sem_post(&st->ringbuffer_data_sema);
 } // end ilctts_post_data
 
 int ilctts_pcm_write(TTSRENDER_STATE_T *st, void *data, int length) {
-	return ringbuffer_write(st->ringbuffer, data, length);
+	ENTER(LOGLEVEL_5, "ilctts_pcm_write");
+	return ringbuffer_write(st->ringbuffer, data, length << 1);
 } // end ilctts_pcm_write
 
 int ilctts_pcm_read(TTSRENDER_STATE_T *st, void *data, int length) {
+	ENTER(LOGLEVEL_5, "ilctts_pcm_write\n");
 	return ringbuffer_read(st->ringbuffer, data, length);
 } // end ilctts_pcm_read
 
 int ilctts_lock_ringbuffer(TTSRENDER_STATE_T *st) {
+	INFO(LOGLEVEL_5, "Lock ringbuffer mutex");
 	return pthread_mutex_lock(&st->ringbuffer_mutex);
 } // end ilctts_lock_ringbuffer
 
 int ilctts_unlock_ringbuffer(TTSRENDER_STATE_T *st) {
+	INFO(LOGLEVEL_5, "Unlock ringbuffer mutex");
 	return pthread_mutex_unlock(&st->ringbuffer_mutex);
 } // end ilctts_unlock_ringbuffer

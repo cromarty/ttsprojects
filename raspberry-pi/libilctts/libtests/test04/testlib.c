@@ -55,7 +55,7 @@ int bytesread;
 
 	sem_init(&sema, 0, 1);
 
-	sample_rate = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, 200, NULL, 0);
+	sample_rate = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, 50, NULL, 0);
 
 	espeak_SetSynthCallback(synth_callback);
 espeak_SetParameter(espeakRATE, wpm, 0);

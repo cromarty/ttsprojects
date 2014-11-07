@@ -27,13 +27,6 @@
 #define RING_BUFFER_H
 
 
-typedef struct {
-    void *buffer;
-    int length;
-    int head;
-    int tail;
-} RINGBUFFER_T;
-
 RINGBUFFER_T *ringbuffer_init(int length);
 void ringbuffer_destroy(RINGBUFFER_T *buffer);
 int ringbuffer_free_space(RINGBUFFER_T *buffer);
