@@ -129,9 +129,15 @@ int32_t ilctts_pause(TTSRENDER_STATE_T *st);
 int32_t ilctts_resume(TTSRENDER_STATE_T *st);
 int32_t ilctts_start_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st);
 void ilctts_stop_request(TTSRENDER_STATE_T *st);
+int ilctts_pcm_write(TTSRENDER_STATE_T *st, void *data, int length);
+int ilctts_pcm_read(TTSRENDER_STATE_T *st, void *data, int length);
 
-
-
+int ilctts_wait_space(TTSRENDER_STATE_T *st);
+int ilctts_post_space(TTSRENDER_STATE_T *st);
+int ilctts_wait_data(TTSRENDER_STATE_T *st);
+int ilctts_post_data(TTSRENDER_STATE_T *st);
+int ilctts_lock_ringbuffer(TTSRENDER_STATE_T *st);
+int ilctts_unlock_ringbuffer(TTSRENDER_STATE_T *st);
 
 #endif
 

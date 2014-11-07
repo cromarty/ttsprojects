@@ -527,23 +527,35 @@ void ilctts_stop_request(TTSRENDER_STATE_T *st) {
 	return;
 } // end ilctts_stop_request
 
-void ilctts_wait_space(TTSRENDER_STATE_T *st) {
-	sem_wait(&st->ringbuffer_empty_sema);
-	return;
+int ilctts_wait_space(TTSRENDER_STATE_T *st) {
+	return sem_wait(&st->ringbuffer_empty_sema);
 } // end ilctts_wait_space
 
-void ilctts_post_space(TTSRENDER_STATE_T *st) {
-	sem_post(&st->ringbuffer_empty_sema);
-	return;
+int ilctts_post_space(TTSRENDER_STATE_T *st) {
+	return sem_post(&st->ringbuffer_empty_sema);
 } // end ilctts_post_space
 
 
-void ilctts_wait_data(TTSRENDER_STATE_T *st) {
-	sem_wait(&st->ringbuffer_data_sema);
-	return;
+int ilctts_wait_data(TTSRENDER_STATE_T *st) {
+	return sem_wait(&st->ringbuffer_data_sema);
 } // end ilctts_wait_data
 
-void ilctts_post_data(TTSRENDER_STATE_T *st) {
-	sem_post(&st->ringbuffer_data_sema);
-	return;
+int ilctts_post_data(TTSRENDER_STATE_T *st) {
+	return sem_post(&st->ringbuffer_data_sema);
 } // end ilctts_post_data
+
+int ilctts_pcm_write(TTSRENDER_STATE_T *st, void *data, int length) {
+	return ringbuffer_write(st->ringbuffer, data, length);
+} // end ilctts_pcm_write
+
+int ilctts_pcm_read(TTSRENDER_STATE_T *st, void *data, int length) {
+	return ringbuffer_read(st->ringbuffer, data, length);
+} // end ilctts_pcm_read
+
+int ilctts_lock_ringbuffer(TTSRENDER_STATE_T *st) {
+	return pthread_mutex_lock(&st->ringbuffer_mutex);
+} // end ilctts_lock_ringbuffer
+
+int ilctts_unlock_ringbuffer(TTSRENDER_STATE_T *st) {
+	return pthread_mutex_unlock(&st->ringbuffer_mutex);
+} // end ilctts_unlock_ringbuffer
