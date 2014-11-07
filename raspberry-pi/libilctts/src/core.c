@@ -229,8 +229,6 @@ int32_t ilctts_create(
 		return -1;
 	}
 
-	queue_init(st->tones_queue, free);
-
 	// set up callbacks
 	ilclient_set_empty_buffer_done_callback(st->client, input_buffer_callback, st);
 	//ilclient_set_configchanged_callback(st->client, config_changed_callback, st);
