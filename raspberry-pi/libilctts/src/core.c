@@ -136,6 +136,11 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 			if (rc == -1) {
 				ERROR("ilctts_send_audio returned error code -1 in ilctts_consumer_thread\n", "");
 			}
+			if (st->tts_stop) {
+				ringbuffer_flush(st->ringbuffer);
+				ilctts_flush(st);
+				st->tts_stop = 0;
+			}
 
 		} // end while buffer is not empty
 
@@ -220,7 +225,7 @@ int32_t ilctts_create(
 	st->buffer_size = (buffer_size + 15) & ~15;
 	st->num_buffers = num_buffers;
 	st->client = ilclient_init();
-	st->tts_state = TTS_INIT;
+	st->tts_stop = 0;
 	st->tts_pause_state = TTS_PAUSE_OFF;
 
 	st->ringbuffer = ringbuffer_init(ringbuffer_length);
@@ -524,6 +529,7 @@ int32_t ilctts_start_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st) {
 
 void ilctts_stop_request(TTSRENDER_STATE_T *st) {
 	INFO(LOGLEVEL_3, "Stop requested");
+	st->tts_stop = 1;
 	return;
 } // end ilctts_stop_request
 
@@ -567,3 +573,14 @@ int ilctts_unlock_ringbuffer(TTSRENDER_STATE_T *st) {
 	INFO(LOGLEVEL_5, "Unlock ringbuffer mutex");
 	return pthread_mutex_unlock(&st->ringbuffer_mutex);
 } // end ilctts_unlock_ringbuffer
+
+int32_t ilctts_flush(TTSRENDER_STATE_T *st) {
+	OMX_ERRORTYPE omx_err;
+	omx_err = OMX_SendCommand(ILC_GET_HANDLE(st->audio_render), OMX_CommandFlush, -1, NULL);
+	if (omx_err != OMX_ErrorNone) {
+		ERROR("OMX_SendCommand returned error in ilctts_flush: %d", omx_err);
+		return -1;
+	}
+	return 0;
+} // end ilctts_flush
+

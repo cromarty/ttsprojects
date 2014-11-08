@@ -36,6 +36,7 @@
 
 typedef int int32_t;
 
+/*
 typedef enum {
 	TTS_INIT,
 	TTS_IDLE,
@@ -44,7 +45,7 @@ typedef enum {
 	TTS_SPEAKING,
 	TTS_STOP
 } TTS_STATE_T;
-
+*/
 
 typedef enum {
 	TTS_PAUSE_OFF,
@@ -99,7 +100,7 @@ typedef struct {
 	sem_t ringbuffer_empty_sema;				// there is space in the ringbuffer
 	sem_t buffer_list_sema;					// used during buffer setup
 // state variables
-	TTS_STATE_T tts_state;
+	uint32_t tts_stop;
 	TTS_PAUSE_STATE_T tts_pause_state;
 // ringbuffer (fifo) of pcm data
 	RINGBUFFER_T *ringbuffer;
