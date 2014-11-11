@@ -99,8 +99,9 @@ wpm = atoi(argv[1]);
 		22050,			// sampling rate
 		1,			// number of channels
 		16,			// bit depth
-		5,			// number of IL client buffers
-	N,				// size of each IL client buffer
+		2,			// number of IL client buffers
+	50,
+BS_MILLISECONDS,
 		1024*16			// size of ring buffer
 	);
 	if (omx_err != OMX_ErrorNone) {

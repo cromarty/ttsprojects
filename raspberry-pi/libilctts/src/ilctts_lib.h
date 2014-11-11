@@ -36,6 +36,13 @@
 
 typedef int int32_t;
 
+
+
+typedef enum {
+	BS_MILLISECONDS,
+	BS_BYTES
+} BUFFER_SIZE_TYPE_T;
+
 /*
 typedef enum {
 	TTS_INIT,
@@ -115,7 +122,8 @@ int32_t ilctts_create(
 	uint32_t num_channels,
 	uint32_t bit_depth,
 	uint32_t num_buffers,
-	uint32_t buffer_size,
+	uint32_t buffer_size_ms,
+	BUFFER_SIZE_TYPE_T buffer_size_type,
 	uint32_t ringbuffer_length
 	);
 

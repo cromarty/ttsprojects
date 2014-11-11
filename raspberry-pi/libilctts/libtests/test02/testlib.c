@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
 		printf("Initialised OMX ok\n");
 	}
 
-	omx_err = ilctts_create(&st, 22050, 1, 16, 5, N, 1024*16);
+	omx_err = ilctts_create(&st, 22050, 1, 16, 2, 50, 0, 1024*16);
 	if (omx_err != OMX_ErrorNone) {
 		printf("Failed to create component\n");
 		return 1;

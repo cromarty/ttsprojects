@@ -96,6 +96,38 @@ static void destroy_mutexes(TTSRENDER_STATE_T *st) {
 } // end destroy_mutexes
 
 
+static int calc_buffer_size_from_ms(
+	int sample_rate,
+	int bit_depth,
+	int channels,
+	int ms,
+	int align
+)
+{
+	int buffer_size;
+
+	if (sample_rate <= 0)
+		return -1;
+
+	if (bit_depth <= 0)
+		return -1;
+
+	if (bit_depth & 8)
+		return -1;
+
+	if ( (channels < 1) || (channels > 2) )
+		return -1;
+
+	buffer_size = sample_rate * channels * (bit_depth / 8) * (ms/1000.0);
+	if (align)
+		return (buffer_size + 15) & ~15;
+	else
+		return buffer_size;
+
+} // end calc_buffer_size_from_ms
+
+
+
 static void*_ringbuffer_consumer_thread(void *arg) {
 /*
 *
@@ -127,6 +159,12 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 				pthread_mutex_unlock((pthread_mutex_t*)&st->free_buffer_mutex);
 			}// end while buf == NULL
 
+			if (st->tts_stop) {
+				ringbuffer_flush(st->ringbuffer);
+				ilctts_flush(st);
+				st->tts_stop = 0;
+			}
+
 			rc = ringbuffer_read(st->ringbuffer, (void*)buf, bytes_to_send);
 			if (rc == -1) {
 				ERROR("ringbuffer_read returned -1 error code in ilctts_consumer_thread\n", "");
@@ -135,11 +173,6 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 			rc = ilctts_send_audio((TTSRENDER_STATE_T*)st, buf, bytes_to_send);
 			if (rc == -1) {
 				ERROR("ilctts_send_audio returned error code -1 in ilctts_consumer_thread\n", "");
-			}
-			if (st->tts_stop) {
-				ringbuffer_flush(st->ringbuffer);
-				ilctts_flush(st);
-				st->tts_stop = 0;
 			}
 
 		} // end while buffer is not empty
@@ -183,12 +216,23 @@ int32_t ilctts_create(
 	uint32_t num_channels,
 	uint32_t bit_depth,
 	uint32_t num_buffers,
-	uint32_t buffer_size,
+	uint32_t buffer_size_ms,
+	BUFFER_SIZE_TYPE_T buffer_size_type,
 	uint32_t ringbuffer_length
 )
 {
 	ENTER(LOGLEVEL_1, "ilctts_create");
+
+	SHOW(LOGLEVEL_5, "Sample rate: %d", sample_rate);
+	SHOW(LOGLEVEL_5, "Number of channels: %d", num_channels);
+	SHOW(LOGLEVEL_5, "Bit depth: %d", bit_depth);
+	SHOW(LOGLEVEL_5, "Number of buffers: %d", num_buffers);
+	SHOW(LOGLEVEL_5, "Buffer size: %d", buffer_size_ms);
+	SHOW(LOGLEVEL_5, "Ring buffer length: %d", ringbuffer_length);
+
 	int32_t ret;
+	uint32_t buffer_size;
+
 		OMX_ERRORTYPE omx_err;
 	TTSRENDER_STATE_T *st;
 
@@ -222,7 +266,20 @@ int32_t ilctts_create(
 	st->num_channels = num_channels;
 	st->bit_depth = bit_depth;
 	st->bytes_per_sample = (bit_depth * OUT_CHANNELS(num_channels)) >> 3;
-	st->buffer_size = (buffer_size + 15) & ~15;
+
+	if (buffer_size_type == BS_MILLISECONDS) {
+		// supplied buffer size was in milliseconds, calculate the byte size
+		// note: calc_buffer_size_from_ms returns buffer size aligned for VCHI
+		st->buffer_size = calc_buffer_size_from_ms(sample_rate, bit_depth, num_channels, buffer_size_ms, 1);
+	} else {
+		// supplied buffer size was in bytes
+		// buffer size must be 16 byte aligned for VCHI
+		st->buffer_size = (buffer_size_ms + 15) & ~15;
+	}
+
+	SHOW(LOGLEVEL_5, "Bytes per sample: %d", st->bytes_per_sample);
+	SHOW(LOGLEVEL_5, "Calculated buffer size: %d", st->buffer_size);
+
 	st->num_buffers = num_buffers;
 	st->client = ilclient_init();
 	st->tts_stop = 0;
@@ -258,6 +315,7 @@ int32_t ilctts_create(
 
 	// set the buffer size to the requested size, or the minimum size returned, whichever is greater
 	st->buffer_size = max(buffer_size, param.nBufferSize);
+	SHOW(LOGLEVEL_3, "Buffer size set to: %d", st->buffer_size);
 	param.nBufferSize = st->buffer_size;
 	param.nBufferCountActual = max(st->buffer_count, param.nBufferCountMin);
 

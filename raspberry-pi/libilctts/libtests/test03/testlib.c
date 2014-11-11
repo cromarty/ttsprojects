@@ -13,6 +13,8 @@
 #define M 10
 #define N (1<<M)
 
+#define BUFFER_SIZE_MILLISECONDS 50
+
 int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)events->user_data;
 	int written;
@@ -23,7 +25,7 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 printf("CB> numsamples: %d, to write: %d, free space: %d, head: %d, tail %d\n",
 numsamples,
 numsamples<<1,
-ringbuffer_freespace(st->ringbuffer),
+ringbuffer_free_space(st->ringbuffer),
 st->ringbuffer->head,
 st->ringbuffer->tail);
 
@@ -31,7 +33,7 @@ st->ringbuffer->tail);
 printf("CB> Wrote %d, used space: %d, free space: %d, head: %d, tail: %d\n", 
 written,
 ringbuffer_used_space(st->ringbuffer),
-ringbuffer_freespace(st->ringbuffer),
+ringbuffer_free_space(st->ringbuffer),
 st->ringbuffer->head,
 st->ringbuffer->tail
 );
@@ -50,7 +52,12 @@ int producer(TTSRENDER_STATE_T *st) {
 	char text[] = "Now is the time for every good man to come to the aid of the party";
 	int bytes = strlen(text)+1;
 	int res;
-	sample_rate = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, 200, NULL, 0);
+	sample_rate = espeak_Initialize(
+	AUDIO_OUTPUT_RETRIEVAL,
+	BUFFER_SIZE_MILLISECONDS,
+	NULL,
+	0);
+
 	printf("About to set the synth callback\n");
 	espeak_SetSynthCallback(synth_callback);
 	printf("About to call espeak_Synth\n");
@@ -80,7 +87,7 @@ int main(int argc, char **argv) {
 		printf("Initialised OMX ok\n");
 	}
 
-	omx_err = ilctts_create(&st, 22050, 1, 16, 5, N, 1024*16);
+	omx_err = ilctts_create(&st, 22050, 1, 16, 5, BUFFER_SIZE_MILLISECONDS, BS_MILLISECONDS, 1024*16);
 	if (omx_err != OMX_ErrorNone) {
 		printf("Failed to create component\n");
 		return 1;

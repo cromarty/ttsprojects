@@ -32,7 +32,7 @@
 #define LOGFILE 1
 #define LOGSTDOUT 2
 
-#define LOGTYPE (LOGFILE)
+#define LOGTYPE (LOGFILE|LOGSTDOUT)
 
 #define LOGLEVEL 5
 
