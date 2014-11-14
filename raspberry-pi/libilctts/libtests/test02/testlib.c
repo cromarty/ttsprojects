@@ -31,16 +31,16 @@ int producer(TTSRENDER_STATE_T *st) {
 	bytesread = fread(buf, 2, N>>1, fp);
 	sem_post(&st->ringbuffer_empty_sema);
 	while(!feof(fp)) {
-		printf("Read %d bytes from file\n", bytesread);
-		printf("Waiting for empty semaphore\n");
+		//printf("Read %d bytes from file\n", bytesread);
+		//printf("Waiting for empty semaphore\n");
 		sem_wait(&st->ringbuffer_empty_sema);
-		printf("Empty semaphore signalled\n");
+		//printf("Empty semaphore signalled\n");
 		pthread_mutex_lock(&st->ringbuffer_mutex);
-		printf("ringbuffer_mutex locked\n");
+		//printf("ringbuffer_mutex locked\n");
 		byteswritten = ringbuffer_write(st->ringbuffer, buf, bytesread<<1);
-		printf("%d bytes written to ring buffer\n", byteswritten);
+		//printf("%d bytes written to ring buffer\n", byteswritten);
 		pthread_mutex_unlock(&st->ringbuffer_mutex);
-		printf("ringbuffer_mutex unlocked\n");
+		//printf("ringbuffer_mutex unlocked\n");
 		sem_post(&st->ringbuffer_data_sema);
 		bytesread = fread(buf, 2, N>>1, fp);
 	} // end while(!feof(fp))
