@@ -98,7 +98,7 @@ void ilctts_debug_show(int loglevel, const char *format, ...) {
 		if (fd_log) {
 			fprintf(fd_log, "%03d.%03dms > ",(int)(tv.tv_sec%1000), (int)(tv.tv_usec/1000));
 			vfprintf(fd_log, format, args);
-			fprintf(stderr, "\n");
+			fprintf(fd_log, "\n");
 		}  
 	}
 	if (LOGTYPE & LOGSTDOUT) {
@@ -151,6 +151,29 @@ void ilctts_debug_error(const char *format, ...) {
 	va_end(args);
 
 } // end ilctts_debug_error
+
+
+void ilctts_debug_benchmark(int loglevel, const char *func, int op) {
+	if (loglevel > LOGLEVEL)
+		return;
+
+	static double past;
+	struct timeval tv;
+	gettimeofday(&tv, NULL);
+	double bm;
+	double now = (tv.tv_sec%86400)+(tv.tv_usec/1000000.0);
+	if ( (past == 0) || (op == 0) ) {
+		past = now;
+		ilctts_debug_show(loglevel, "Benchmark initialized @: %s", func);
+		return;
+	}
+
+	bm = now - past;
+	ilctts_debug_show(loglevel, "Benchmark @ %s: %f", func, bm);
+	past = now;
+	return;
+} // end ilctts_debug_benchmark
+
 
 
 

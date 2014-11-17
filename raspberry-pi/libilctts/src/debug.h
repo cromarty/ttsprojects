@@ -25,7 +25,7 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-//#define DEBUG_ENABLED
+#define DEBUG_ENABLED
 
 #define LOGLEVEL_0 0
 #define LOGLEVEL_1 1
@@ -40,7 +40,7 @@
 #define LOGFILE 1
 #define LOGSTDOUT 2
 
-#define LOGTYPE (LOGFILE|LOGSTDOUT)
+#define LOGTYPE (LOGFILE)
 
 #define LOGLEVEL 5
 
@@ -50,20 +50,27 @@
 #define SHOW(ll, format,...) ilctts_debug_show(ll, format,__VA_ARGS__);
 #define SHOW_TIME(ll, text) ilctts_debug_time(text);
 #define ERROR(format,...) ilctts_debug_error(format,__VA_ARGS__);
+#define BENCHMARK_INIT(ll, text) ilctts_debug_benchmark(ll, text, 0);
+#define BENCHMARK_LOG(ll, text) ilctts_debug_benchmark(ll, text, 1);
+
 
 void ilctts_debug_enter(int loglevel, const char* text);
 void ilctts_debug_info(int loglevel, const char* text);
 void ilctts_debug_show(int loglevel, const char* format,...);
 void ilctts_debug_time(int loglevel, const char* text);
 void ilctts_debug_error(const char* format,...);
+void ilctts_debug_benchmark(int loglevel, const char *text, int op);
 
 #else
+
 
 #define INFO(ll, text)
 #define SHOW(ll, format,...)
 #define SHOW_TIME(ll, text)
 #define ENTER(ll, text)
 #define ERROR(ll, format,...)
+#define BENCHMARK_INIT(ll, text)
+#define BENCHMARK_LOG(ll, text)
 
 #endif
 
