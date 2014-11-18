@@ -36,6 +36,9 @@ raspberry-pi/libilctts/libtests/test04/testlib
 *.so
 *.so.*
 
+# piespeakup executable
+raspberry-pi/piespeakup/piespeakup
+
 # text files
 *.txt
 
