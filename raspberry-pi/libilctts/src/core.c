@@ -41,7 +41,6 @@
 
 #define OUT_CHANNELS(num_channels) ((num_channels) > 4 ? 8: (num_channels) > 2 ? 4: (num_channels))
 
-
 #define OMX_INIT_STRUCTURE(a) \
 	memset(&(a), 0, sizeof(a)); \
 		(a).nSize = sizeof(a); \
@@ -49,6 +48,9 @@
 				(a).nVersion.s.nVersionMinor = OMX_VERSION_MINOR; \
 					(a).nVersion.s.nRevision = OMX_VERSION_REVISION; \
 						(a).nVersion.s.nStep = OMX_VERSION_STEP
+
+#define CTTW_SLEEP_TIME 10
+#define MIN_LATENCY_TIME 20
 
 
 
@@ -61,29 +63,27 @@ static int min(int val1, int val2) {
 } // end min
 
 static void input_buffer_callback(void *data, COMPONENT_T *comp) {
-	ENTER(LOGLEVEL_5, "input_buffer_callback"); 
 	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)data;
 	ILC_GET_HANDLE(comp); // just to suppress warnings about unused parameter
-		pthread_mutex_lock(&st->free_buffer_mutex);
-			pthread_cond_signal(&st->free_buffer_cv);
-				pthread_mutex_unlock(&st->free_buffer_mutex);
+	pthread_mutex_lock(&st->free_buffer_mutex);
+	pthread_cond_signal(&st->free_buffer_cv);
+	pthread_mutex_unlock(&st->free_buffer_mutex);
 
 } // end input_buffer_callback
 
 /*
 static void config_changed_callback(void *data, COMPONENT_T *comp) {
-	ENTER(LOGLEVEL_3, "config_changed_callback");
+
 } // end config_changed_callback
 
 
 static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
-	ENTER(LOGLEVEL_3, "port_settings_changed_callback");
+
 } // end port_settings_changed_callback
 */
 
 
 static void destroy_semaphores(TTSRENDER_STATE_T *st) {
-	ENTER(LOGLEVEL_3, "destroy_semaphores");
 	sem_destroy(&st->buffer_list_sema);
 	sem_destroy(&st->ringbuffer_data_sema);
 	sem_destroy(&st->ringbuffer_empty_sema);
@@ -91,7 +91,6 @@ static void destroy_semaphores(TTSRENDER_STATE_T *st) {
 } // end destroy_semaphores
 
 static void destroy_mutexes(TTSRENDER_STATE_T *st) {
-	ENTER(LOGLEVEL_3, "destroy_mutexes");
 	pthread_mutex_destroy(&st->free_buffer_mutex);
 	pthread_mutex_destroy(&st->ringbuffer_mutex);
 	return;
@@ -129,7 +128,6 @@ static int calc_buffer_size_from_ms(
 } // end calc_buffer_size_from_ms
 
 
-
 static double get_benchmark_time()
 {
     struct timeval t;
@@ -137,8 +135,6 @@ static double get_benchmark_time()
     gettimeofday(&t, &tzp);
     return t.tv_sec + t.tv_usec*1e-6;
 } // end get_time
-
-
 
 
 static void*_ringbuffer_consumer_thread(void *arg) {
@@ -151,7 +147,7 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 * about 'discarding the volatile directive'.
 *
 */
-	ENTER(LOGLEVEL_3, "_ringbuffer_consume_thread");
+
 	volatile TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)arg;
 	uint8_t *buf = NULL;
 	int bytes_to_send;
@@ -166,6 +162,7 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 			bytes_to_send = min(st->buffer_size, ringbuffer_used_space(st->ringbuffer));
 			buf = ilctts_get_buffer((TTSRENDER_STATE_T*)st);
 			while(buf == NULL) {
+				// the free_buffer_cv variable is signalled inside the empty buffer callback
 				pthread_mutex_lock((pthread_mutex_t*)&st->free_buffer_mutex);
 				pthread_cond_wait((pthread_cond_t*)&st->free_buffer_cv, (pthread_mutex_t*)&st->free_buffer_mutex);
 				buf = ilctts_get_buffer((TTSRENDER_STATE_T*)st);
@@ -182,6 +179,9 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 			if (rc == -1) {
 				ERROR("ringbuffer_read returned -1 error code in ilctts_consumer_thread\n", "");
 			}
+
+			// try and wait for a minimum latency time (in ms) before sending the next packet
+			ilctts_latency_wait(st);
 
 			rc = ilctts_send_audio((TTSRENDER_STATE_T*)st, buf, bytes_to_send);
 			if (rc == -1) {
@@ -201,7 +201,6 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 } // end _ringbuffer_consumer_thread
 
 int32_t ilctts_initialize() {
-	ENTER(LOGLEVEL_1, "ilctts_initialize");
 	OMX_ERRORTYPE omx_err;
 	bcm_host_init();
 	omx_err = OMX_Init();
@@ -212,7 +211,6 @@ int32_t ilctts_initialize() {
 } // end ilctts_initialize
 
 int32_t ilctts_finalize() {
-	ENTER(LOGLEVEL_1, "ilctts_finalize");
 	OMX_ERRORTYPE omx_err;
 	omx_err = OMX_Deinit();
 	if (omx_err != OMX_ErrorNone) {
@@ -411,7 +409,6 @@ int32_t ilctts_create(
 
 
 int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
-	ENTER(LOGLEVEL_1, "ilctts_delete");
 	int32_t ret;
 	OMX_ERRORTYPE omx_err;
 
@@ -442,7 +439,6 @@ int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
 
 
 uint8_t *ilctts_get_buffer(TTSRENDER_STATE_T *st) {
-	ENTER(LOGLEVEL_5, "ilctts_get_buffer");
 	OMX_BUFFERHEADERTYPE *hdr = NULL;
 
 	hdr = ilclient_get_input_buffer(st->audio_render, 100, 0);
@@ -459,7 +455,6 @@ uint8_t *ilctts_get_buffer(TTSRENDER_STATE_T *st) {
 
 
 int32_t ilctts_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
-	ENTER(LOGLEVEL_5, "ilctts_send_audio");
 	OMX_BUFFERHEADERTYPE *hdr = NULL, *prev = NULL;
 	int32_t ret = -1;
 
@@ -510,7 +505,6 @@ int32_t ilctts_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t lengt
 
 
 int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name) {
-	ENTER(LOGLEVEL_5, "ilctts_set_dest");
 	OMX_ERRORTYPE omx_err;
 	OMX_CONFIG_BRCMAUDIODESTINATIONTYPE dest;
 	char device[8];
@@ -536,7 +530,6 @@ int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name) {
 
 
 uint32_t ilctts_get_latency(TTSRENDER_STATE_T *st) {
-	ENTER(LOGLEVEL_5, "ilctts_get_latency");
 	OMX_PARAM_U32TYPE param;
 	OMX_ERRORTYPE omx_err;
 	OMX_INIT_STRUCTURE(param);
@@ -554,7 +547,6 @@ uint32_t ilctts_get_latency(TTSRENDER_STATE_T *st) {
 
 
 int32_t ilctts_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
-	ENTER(LOGLEVEL_4, "ilctts_get_state");
 	OMX_ERRORTYPE omx_err = OMX_GetState(ILC_GET_HANDLE(st->audio_render), state);
 	if (omx_err != OMX_ErrorNone) {
 		ERROR("OMX_GetState returned error in ilctts_get_state: %d", omx_err);
@@ -566,7 +558,6 @@ int32_t ilctts_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
 
 
 int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
-	ENTER(LOGLEVEL_4, "ilctts_set_volume");
 	OMX_ERRORTYPE omx_err;
 	OMX_AUDIO_CONFIG_VOLUMETYPE volume;
 	OMX_INIT_STRUCTURE(volume);
@@ -583,17 +574,14 @@ int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
 } // end ilctts_set_volume
 
 int32_t ilctts_pause(TTSRENDER_STATE_T *st) {
-	ENTER(LOGLEVEL_4, "ilctts_pause");
 		return ilclient_change_component_state(st->audio_render, OMX_StatePause);
 		} //end ilctts_pause
 
 int32_t ilctts_resume(TTSRENDER_STATE_T *st) {
-	ENTER(LOGLEVEL_4, "ilctts_resume");
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
 } //end ilctts_resume
 
 int32_t ilctts_start_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st) {
-	ENTER(LOGLEVEL_5, "ilctts_start_ringbuffer_consumer_thread");
 	pthread_t th;
 	return pthread_create(&th, NULL, _ringbuffer_consumer_thread, (void*)st);
 } // end ilctts_start_ringbuffer_consumer_thread
@@ -626,12 +614,10 @@ int ilctts_post_data(TTSRENDER_STATE_T *st) {
 } // end ilctts_post_data
 
 int ilctts_pcm_write(TTSRENDER_STATE_T *st, void *data, int length) {
-	ENTER(LOGLEVEL_5, "ilctts_pcm_write");
 	return ringbuffer_write(st->ringbuffer, data, length << 1);
 } // end ilctts_pcm_write
 
 int ilctts_pcm_read(TTSRENDER_STATE_T *st, void *data, int length) {
-	ENTER(LOGLEVEL_5, "ilctts_pcm_write\n");
 	return ringbuffer_read(st->ringbuffer, data, length);
 } // end ilctts_pcm_read
 
@@ -654,4 +640,14 @@ int32_t ilctts_flush(TTSRENDER_STATE_T *st) {
 	}
 	return 0;
 } // end ilctts_flush
+
+void ilctts_latency_wait(TTSRENDER_STATE_T *st) {
+	uint32_t latency;
+	while( (latency = ilctts_get_latency(st)) > (st->sample_rate * (MIN_LATENCY_TIME + CTTW_SLEEP_TIME) / 1000))
+		usleep(CTTW_SLEEP_TIME*1000);
+
+	return;
+} // end ilctts_latency_wait
+
+
 

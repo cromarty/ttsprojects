@@ -138,6 +138,7 @@ int32_t ilctts_pause(TTSRENDER_STATE_T *st);
 int32_t ilctts_resume(TTSRENDER_STATE_T *st);
 int32_t ilctts_start_ringbuffer_consumer_thread(TTSRENDER_STATE_T *st);
 void ilctts_stop_request(TTSRENDER_STATE_T *st);
+int32_t ilctts_flush(TTSRENDER_STATE_T *st);
 int ilctts_pcm_write(TTSRENDER_STATE_T *st, void *data, int length);
 int ilctts_pcm_read(TTSRENDER_STATE_T *st, void *data, int length);
 
