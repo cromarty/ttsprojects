@@ -29,6 +29,8 @@
 #include <unistd.h>
 #include <pthread.h>
 #include <semaphore.h>
+#include <sys/time.h>
+#include <sys/resource.h>
 
 #include "bcm_host.h"
 #include "ilclient.h"
@@ -125,6 +127,17 @@ static int calc_buffer_size_from_ms(
 		return buffer_size;
 
 } // end calc_buffer_size_from_ms
+
+
+
+static double get_benchmark_time()
+{
+    struct timeval t;
+    struct timezone tzp;
+    gettimeofday(&t, &tzp);
+    return t.tv_sec + t.tv_usec*1e-6;
+} // end get_time
+
 
 
 
