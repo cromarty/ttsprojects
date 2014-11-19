@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# Build and install the libilctts library
+#
 
 if [ `whoami` != 'root' ]; then
 	echo "script must be run as root, try: 'sudo ./$(basename $0)'"

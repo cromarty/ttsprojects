@@ -1,5 +1,7 @@
 #!/bin/bash
 #
+# Install dependancies and make and install piespeakup
+#
 
 ESPEAKLIBDIR=/usr/lib/arm-linux-gnueabihf
 
@@ -11,18 +13,19 @@ fi
 which espeak &>/dev/null
 if [ $? -ne 0 ]; then
 	echo 'espeak is not installed, installing it...'
-	apt-get install espeak
+	apt-get install -yyq espeak
 fi
 
 set -e
 echo 'Fixing the missing espeak lib soft-link...'
-[ ! -f ${ESPEAKLIBDIR}/libespeak.so ] && ln -s ${ESPEAKLIBDIR}/libespeak.so.1 ${ESPEAKLIBDIR}/libespeak.so.1
+[ ! -f ${ESPEAKLIBDIR}/libespeak.so ] && ln -s ${ESPEAKLIBDIR}/libespeak.so.1 ${ESPEAKLIBDIR}/libespeak.so
 echo 'Adding speakup_soft to /etc/modules...'
 echo -e "\n# Load speakup_soft at boot\nspeakup_soft\n\n" >> /etc/modules
 echo 'Load it for this session...'
 modprobe speakup_soft
 echo 'Making the piespeakup connector...'
 make
+echo 'Installing the piespeakup connector...'
 make install
 echo 'Enabling the piespeakup service...'
 update-rc.d piespeakup defaults
