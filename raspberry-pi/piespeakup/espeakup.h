@@ -24,7 +24,7 @@
 #include <stddef.h>
 #include <pthread.h>
 
-#include <espeak/speak_lib.h>
+#include "speak_lib.h"
 
 #include <ilctts_lib.h>
 
