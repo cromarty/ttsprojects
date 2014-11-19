@@ -8,7 +8,7 @@ if [ `whoami` != 'root' ]; then
 	exit 1
 fi
 
-dpkg -s espeak &>/dev/null
+which espeak &>/dev/null
 if [ $? -ne 0 ]; then
 	echo 'espeak is not installed, installing it...'
 	apt-get install espeak
