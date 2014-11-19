@@ -1,4 +1,5 @@
 PREFIX = /usr/local
+LIBDIR = /usr/lib/arm-linux-gnueabihf
 BINDIR = ${PREFIX}/bin
 MANDIR = ${PREFIX}/share/man
 DEFDIR = /etc/default
@@ -47,7 +48,10 @@ uninstall: piespeakup
 	rm ${DEFDIR}/$<
 	rm ${SYSINITDIR}/$<
 
-piespeakup: ${OBJS}
+piespeakup : ${OBJS}
+
+fixlink:
+	ln -s /$(LIBDIR)libespeak.so.1 $(LIBDIR)/libespeak.so
 
 clean:
 	${RM} *.d *.o piespeakup
