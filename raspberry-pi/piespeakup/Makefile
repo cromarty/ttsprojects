@@ -38,7 +38,7 @@ install: piespeakup
 	${INSTALL} -m ${BINMODE} $< ${DESTDIR}${BINDIR}
 	${INSTALL} -d ${DESTDIR}${MANDIR}/man8
 	${INSTALL} -m ${MANMODE} $<.8 ${DESTDIR}${MANDIR}/man8
-	${INSTALL} -m ${BINMODE} init.d/$< ${SYSINITDIR}
+	${INSTALL} -m ${BINMODE} initd/$< ${SYSINITDIR}
 	${INSTALL} -m ${DEFMODE} default/$< ${DEFDIR}
 
 uninstall: piespeakup
