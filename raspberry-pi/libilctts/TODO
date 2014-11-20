@@ -1,5 +1,11 @@
 
+* Possibly reduce the size of the ringbuffer.  Bigger than it needs to be at the 
+moment.
+
+* Make tweaking of latency constants easier than recompiling each time.
+
 * Get out more
+
 * Eat less cheese
 
 

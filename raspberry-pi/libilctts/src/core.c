@@ -171,7 +171,7 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 
 			if (st->tts_stop) {
 				ringbuffer_flush(st->ringbuffer);
-				ilctts_flush(st);
+				ilctts_flush((TTSRENDER_STATE_T *)st);
 				st->tts_stop = 0;
 			}
 
@@ -181,7 +181,7 @@ static void*_ringbuffer_consumer_thread(void *arg) {
 			}
 
 			// try and wait for a minimum latency time (in ms) before sending the next packet
-			ilctts_latency_wait(st);
+			ilctts_latency_wait((TTSRENDER_STATE_T *)st);
 
 			rc = ilctts_send_audio((TTSRENDER_STATE_T*)st, buf, bytes_to_send);
 			if (rc == -1) {
@@ -281,15 +281,15 @@ int32_t ilctts_create(
 	if (buffer_size_type == BS_MILLISECONDS) {
 		// supplied buffer size was in milliseconds, calculate the byte size
 		// note: calc_buffer_size_from_ms returns buffer size aligned for VCHI
-		st->buffer_size = calc_buffer_size_from_ms(sample_rate, bit_depth, num_channels, buffer_size_ms, 1);
+		buffer_size = calc_buffer_size_from_ms(sample_rate, bit_depth, num_channels, buffer_size_ms, 1);
 	} else {
 		// supplied buffer size was in bytes
 		// buffer size must be 16 byte aligned for VCHI
-		st->buffer_size = (buffer_size_ms + 15) & ~15;
+		buffer_size = (buffer_size_ms + 15) & ~15;
 	}
 
 	SHOW(LOGLEVEL_5, "Bytes per sample: %d", st->bytes_per_sample);
-	SHOW(LOGLEVEL_5, "Calculated buffer size: %d", st->buffer_size);
+	SHOW(LOGLEVEL_5, "Calculated buffer size: %d", buffer_size);
 
 	st->num_buffers = num_buffers;
 	st->client = ilclient_init();

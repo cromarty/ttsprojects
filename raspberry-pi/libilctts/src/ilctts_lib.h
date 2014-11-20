@@ -148,6 +148,7 @@ int ilctts_wait_data(TTSRENDER_STATE_T *st);
 int ilctts_post_data(TTSRENDER_STATE_T *st);
 int ilctts_lock_ringbuffer(TTSRENDER_STATE_T *st);
 int ilctts_unlock_ringbuffer(TTSRENDER_STATE_T *st);
+void ilctts_latency_wait(TTSRENDER_STATE_T *st);
 
 #endif
 

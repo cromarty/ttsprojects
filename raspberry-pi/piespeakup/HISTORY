@@ -1,0 +1,10 @@
+
+This file is the HISTORY file for specifically the 'piespeakup' version of 
+'espeakup' contained in this repo.
+
+2014/11/20 Version 1.0.1 - Fixed hard-coded 'device' bug ('local' was 
+hard-coded)
+
+2014/11/19 Version 1.0.0 - Initial release
+
+
