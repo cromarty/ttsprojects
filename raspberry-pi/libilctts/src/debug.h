@@ -25,7 +25,7 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#define DEBUG_ENABLED
+//#define DEBUG_ENABLED
 
 #define LOGLEVEL_0 0
 #define LOGLEVEL_1 1
