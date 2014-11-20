@@ -279,7 +279,7 @@ int initialize_espeak(struct synth_t *s)
 		return -1;
 	}
 
-	ilctts_set_dest(st, "local");
+	ilctts_set_dest(st, outputDevice);
 
 	/* start the ilctts consumer thread */
 	res = ilctts_start_ringbuffer_consumer_thread(st);

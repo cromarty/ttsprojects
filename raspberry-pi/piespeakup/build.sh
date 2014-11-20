@@ -18,7 +18,10 @@ fi
 
 set -e
 echo 'Fixing the missing espeak lib soft-link...'
-[ ! -f ${ESPEAKLIBDIR}/libespeak.so ] && ln -s ${ESPEAKLIBDIR}/libespeak.so.1 ${ESPEAKLIBDIR}/libespeak.so
+if ! [ -L ${ESPEAKLIBDIR}/libespeak.so ]; then
+	ln -s ${ESPEAKLIBDIR}/libespeak.so.1 ${ESPEAKLIBDIR}/libespeak.so
+fi
+
 echo 'Adding speakup_soft to /etc/modules...'
 echo -e "\n# Load speakup_soft at boot\nspeakup_soft\n\n" >> /etc/modules
 echo 'Load it for this session...'

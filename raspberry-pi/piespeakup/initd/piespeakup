@@ -74,6 +74,7 @@ if [ -f /etc/default/$NAME ] ; then
 fi
 
 [ -z "$VOICE" ] || DAEMON_OPTS="$DAEMON_OPTS -V $VOICE"
+[ -z "$DEVICE" ] || DAEMON_OPTS="$DAEMON_OPTS -D $DEVICE"
 
 set -e
 
