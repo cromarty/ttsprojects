@@ -31,7 +31,7 @@ fi
 
 if [ -z "$(grep speakup_soft /etc/modules)" ]; then
 	echo 'Adding speakup_soft to the end of /etc/modules...'
-	echo -e "\n# Load speakup_soft at boot\nspeakup_soft\n\n >> /etc/modules"
+	echo -e "\n# Load speakup_soft at boot\nspeakup_soft\n\n" >> /etc/modules
 fi
 
 echo 'Load it for this session...'
