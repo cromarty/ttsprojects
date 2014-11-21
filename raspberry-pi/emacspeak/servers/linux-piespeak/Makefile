@@ -3,18 +3,18 @@
 INSTALL = install
 PREFIX = /usr
 LIBPARENTDIR = ${PREFIX}/share/emacs/site-lisp
-LIBDIR =$(LIBPARENTDIR)/emacspeak/servers/linux-espeak
+LIBDIR =$(LIBPARENTDIR)/emacspeak/servers/linux-piespeak
 TCL_VERSION = 8.4
 TCL_INCLUDE= /usr/include/tcl$(TCL_VERSION)
 CXXFLAGS+= -g    -O2 -fPIC  -DPIC  -pedantic -ansi -Wall -Wno-long-long -I$(TCL_INCLUDE)
 
-LIBS= -ltcl$(TCL_VERSION) -lespeak
+LIBS= -ltcl$(TCL_VERSION) -lespeak -lilctts
 
-TTS=tclespeak.so
+TTS=tclpiespeak.so
 
 all:   $(TTS)
 
-$(TTS): tclespeak.o
+$(TTS): tclpiespeak.o
 	$(CXX) $(LDFLAGS) -shared -o $@ $< $(LIBS)
 
 clean:

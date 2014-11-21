@@ -43,6 +43,8 @@
 #include <string>
 #include <assert.h>
 #include <espeak/speak_lib.h>
+#include <ilctts_lib.h>
+
 #ifndef ESPEAK_API_REVISION
 #define ESPEAK_API_REVISION 1
 #endif
