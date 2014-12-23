@@ -43,18 +43,27 @@
 #include <string>
 #include <assert.h>
 #include <espeak/speak_lib.h>
+
+extern "C" {
 #include <ilctts_lib.h>
+}
 
 #ifndef ESPEAK_API_REVISION
 #define ESPEAK_API_REVISION 1
 #endif
 
 #include <string>
+#include <ilctts_lib.h>
+
+
 using std::string;
 
 #define PACKAGENAME "tts"
 #define PACKAGEVERSION "1.0"
 #define EXPORT
+
+// nasty global
+TTSRENDER_STATE_T *st;
 
 //using namespace std;
 
@@ -123,7 +132,38 @@ static const char* ThePreferredLanguages[]=
 
 #define MaxPreferredLang (int)(sizeof(ThePreferredLanguages)/sizeof(ThePreferredLanguages[0]))
 
+//>
+  //<synth_callback
+  
+int
+  synth_callback(short *wav, int numsamples, espeak_EVENT *events)
+  {
+	TTSRENDER_STATE_T *tts = (TTSRENDER_STATE_T*)events->user_data;
+	int written;
 
+	if (stop_requested)
+		return 1;
+
+	if (numsamples) {
+		ilctts_wait_space(tts);
+		ilctts_lock_ringbuffer(tts);
+
+		written = ilctts_pcm_write(tts, (void*)wav, numsamples);
+
+		ilctts_unlock_ringbuffer(tts);
+		ilctts_post_data(tts);
+	}
+
+	while(events->type != espeakEVENT_LIST_TERMINATED) {
+		events++;
+	}
+
+	return 0;
+} // end Synth_callback
+
+
+  
+  
 //>
 //<TclEspeakFree
 
@@ -149,12 +189,32 @@ Tclespeak_Init (Tcl_Interp * interp)
       Tcl_AppendResult (interp, "Error loading ", PACKAGENAME, NULL);
       return TCL_ERROR;
     }
+    // set up ilctts stuff
+  if (ilctts_initialize() < 0)
+	      return error;
+  
+  res = ilctts_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0, (1024*6));
+  if (res == -1) {
+	    return -1;
+  }
+  //ilctts_set_dest(st, outputDevice);
+  ilctts_set_dest(st, 'local');
+  res = ilctts_start_ringbuffer_consumer_thread(st);
+  if (res == -1) {
+	      return -1;
+  }
+  
+  
+  
 #if ESPEAK_API_REVISION == 1
   espeak_Initialize(AUDIO_OUTPUT_PLAYBACK, 512, NULL);
 #else
-  espeak_Initialize(AUDIO_OUTPUT_PLAYBACK, 512, NULL, 0);
+//  espeak_Initialize(AUDIO_OUTPUT_PLAYBACK, 512, NULL, 0);
+  espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, 512, NULL, 0);
 #endif
 
+  espeak_SetSynthCallback(synth_callback);
+    
   //>
   //<register tcl commands
 
@@ -364,7 +424,7 @@ Say (ClientData handle, Tcl_Interp * interp,
 		  string a_ssml = a_begin_ssml + a_end_ssml;
 
 		  unsigned int unique_identifier=0;
-		  espeak_Synth(a_ssml.c_str(), a_ssml.length()+1, 0, POS_CHARACTER, 0, espeakCHARS_UTF8|espeakSSML, &unique_identifier, NULL);
+		  espeak_Synth(a_ssml.c_str(), a_ssml.length()+1, 0, POS_CHARACTER, 0, espeakCHARS_UTF8|espeakSSML, st, NULL);
 		}
 	      // TBD:: EE_BUFFER_FULL?
 	    }
