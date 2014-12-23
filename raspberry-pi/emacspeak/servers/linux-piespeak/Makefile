@@ -6,7 +6,11 @@ LIBPARENTDIR = ${PREFIX}/share/emacs/site-lisp
 LIBDIR =$(LIBPARENTDIR)/emacspeak/servers/linux-piespeak
 TCL_VERSION = 8.4
 TCL_INCLUDE= /usr/include/tcl$(TCL_VERSION)
-CXXFLAGS+= -g    -O2 -fPIC  -DPIC  -pedantic -ansi -Wall -Wno-long-long -I$(TCL_INCLUDE)
+CXXFLAGS+= -g -O2 -fPIC -DPIC -pedantic -ansi -Wall -Wno-long-long -I$(TCL_INCLUDE) \
+        -I/opt/vc/include \
+        -I/opt/vc/include/interface/vcos/pthreads \
+        -I/opt/vc/include/interface/vmcs_host/linux \
+        -I/opt/vc/hello_pi/libs/vgfont -I.
 
 LIBS= -ltcl$(TCL_VERSION) -lespeak -lilctts
 
