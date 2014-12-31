@@ -208,7 +208,7 @@ Tclespeak_Init (Tcl_Interp * interp)
 16, 
 ILC_BUF_COUNT, 
 BUF_SIZE_MS, 
-0, 
+(BUFFER_SIZE_TYPE_T)0, 
 (1024*6)) == -1) {
 	    return -1;
   }
