@@ -62,8 +62,14 @@ using std::string;
 #define PACKAGEVERSION "1.0"
 #define EXPORT
 
-// nasty global
+
+
+#define ILC_BUF_COUNT 5
+#define BUF_SIZE_MS 20
+
+// nasty globals
 TTSRENDER_STATE_T *st;
+int stop_requested = 0;
 
 //using namespace std;
 
@@ -141,8 +147,10 @@ int
 	TTSRENDER_STATE_T *tts = (TTSRENDER_STATE_T*)events->user_data;
 	int written;
 
-	if (stop_requested)
+	if (stop_requested) {
+	stop_requested = 0;
 		return 1;
+}
 
 	if (numsamples) {
 		ilctts_wait_space(tts);
@@ -191,16 +199,22 @@ Tclespeak_Init (Tcl_Interp * interp)
     }
     // set up ilctts stuff
   if (ilctts_initialize() < 0)
-	      return error;
+	      return TCL_ERROR;
   
-  res = ilctts_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0, (1024*6));
-  if (res == -1) {
+  if (ilctts_create(
+&st, 
+22050, 
+1, 
+16, 
+ILC_BUF_COUNT, 
+BUF_SIZE_MS, 
+0, 
+(1024*6)) == -1) {
 	    return -1;
   }
   //ilctts_set_dest(st, outputDevice);
   ilctts_set_dest(st, 'local');
-  res = ilctts_start_ringbuffer_consumer_thread(st);
-  if (res == -1) {
+  if (ilctts_start_ringbuffer_consumer_thread(st) == -1 ) {
 	      return -1;
   }
   
@@ -463,6 +477,7 @@ int
 Stop (ClientData handle,
       Tcl_Interp * interp, int objc, Tcl_Obj * CONST objv[])
 {
+stop_requested = 1;
   espeak_Cancel();
   return TCL_OK;
 }
