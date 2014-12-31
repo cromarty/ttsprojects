@@ -424,7 +424,7 @@ Say (ClientData handle, Tcl_Interp * interp,
 		  string a_ssml = a_begin_ssml + a_end_ssml;
 
 		  unsigned int unique_identifier=0;
-		  espeak_Synth(a_ssml.c_str(), a_ssml.length()+1, 0, POS_CHARACTER, 0, espeakCHARS_UTF8|espeakSSML, st, NULL);
+		  espeak_Synth(a_ssml.c_str(), a_ssml.length()+1, 0, POS_CHARACTER, 0, espeakCHARS_UTF8|espeakSSML, &unique_identifier, st);
 		}
 	      // TBD:: EE_BUFFER_FULL?
 	    }
