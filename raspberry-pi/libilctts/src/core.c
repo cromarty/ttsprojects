@@ -265,12 +265,14 @@ int32_t ilctts_create(
 		return -1;
 	}
 
+	// initial value of ringbuffer_empty_sema is 1 because at startup there is space
 	s = sem_init(&st->ringbuffer_empty_sema, 0, 1);
 	if (s < 0) {
 		ERROR("sem_init returned error initializing ringbuffer_empty_sema in ilctts_create: %d", s);
 		return -1;
 	}
 
+	// initial value of ringbuffer_data_sema is 0 because at startup there is no data
 	s = sem_init(&st->ringbuffer_data_sema, 0, 0);
 	if (s < 0) {
 		ERROR("sem_init returned error initializing ringbuffer_data_sema in ilctts_create: %d", s);
