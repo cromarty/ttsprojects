@@ -261,7 +261,19 @@ int32_t ilctts_create(
 	// initialise buffer list semaphore
 	s = sem_init(&st->buffer_list_sema, 0, 1);
 	if (s < 0) {
-		ERROR("sem_init returned error in ilctts_create: %d", s);
+		ERROR("sem_init returned error initializing buffer list semaphore in ilctts_create: %d", s);
+		return -1;
+	}
+
+	s = sem_init(&st->ringbuffer_empty_sema, 0, 1);
+	if (s < 0) {
+		ERROR("sem_init returned error initializing ringbuffer_empty_sema in ilctts_create: %d", s);
+		return -1;
+	}
+
+	s = sem_init(&st->ringbuffer_data_sema, 0, 0);
+	if (s < 0) {
+		ERROR("sem_init returned error initializing ringbuffer_data_sema in ilctts_create: %d", s);
 		return -1;
 	}
 
