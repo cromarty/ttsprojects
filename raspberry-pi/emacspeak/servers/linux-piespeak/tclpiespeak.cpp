@@ -148,16 +148,19 @@ int
   {
 	TTSRENDER_STATE_T *tts = (TTSRENDER_STATE_T*)events->user_data;
 	int written;
-
+printf("espeak synth callback\n");
 	if (stop_requested) {
 	stop_requested = 0;
 		return 1;
 }
 
 	if (numsamples) {
+printf("Num samples: %d\n", numsamples);
 		ilctts_wait_space(tts);
+printf("past wait space\n");
 		ilctts_lock_ringbuffer(tts);
-
+printf("past lock ring buffer\n");
+printf("pcm write\n");
 		written = ilctts_pcm_write(tts, (void*)wav, numsamples);
 
 		ilctts_unlock_ringbuffer(tts);
@@ -200,9 +203,11 @@ Tclpiespeak_Init (Tcl_Interp * interp)
       return TCL_ERROR;
     }
     // set up ilctts stuff
-  if (ilctts_initialize() < 0)
+  if (ilctts_initialize() < 0) {
+	printf("Failed to initialize ilctts\n");
 	      return TCL_ERROR;
-  
+  }
+
   if (ilctts_create(
 &st, 
 22050, 
@@ -212,6 +217,7 @@ ILC_BUF_COUNT,
 BUF_SIZE_MS, 
 (BUFFER_SIZE_TYPE_T)0, 
 (1024*6)) == -1) {
+printf("Failed to create ilctts status object\n");
 	    return -1;
   }
 
@@ -223,9 +229,12 @@ outputDevice = getenv("DTK_DEVICE");;
 	if ( (strcmp(outputDevice,"local") != 0) && (strcmp(outputDevice, "hdmi") != 0) )
 		outputDevice = "local";
 
+printf("Output device is: %s\n", outputDevice);
   ilctts_set_dest(st, outputDevice);
+ilctts_set_volume(st, 100);
 
   if (ilctts_start_ringbuffer_consumer_thread(st) == -1 ) {
+printf("Failed to start the ilctts ring buffer consumer thread\n");
 	      return -1;
   }
   
