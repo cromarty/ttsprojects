@@ -70,6 +70,8 @@ using std::string;
 // nasty globals
 TTSRENDER_STATE_T *st;
 int stop_requested = 0;
+char *outputDevice;
+
 
 //using namespace std;
 
@@ -212,8 +214,17 @@ BUF_SIZE_MS,
 (1024*6)) == -1) {
 	    return -1;
   }
-  //ilctts_set_dest(st, outputDevice);
-  ilctts_set_dest(st, 'local');
+
+outputDevice = getenv("DTK_DEVICE");;
+
+	if (outputDevice == NULL)
+		outputDevice = "local";
+
+	if ( (strcmp(outputDevice,"local") != 0) && (strcmp(outputDevice, "hdmi") != 0) )
+		outputDevice = "local";
+
+  ilctts_set_dest(st, outputDevice);
+
   if (ilctts_start_ringbuffer_consumer_thread(st) == -1 ) {
 	      return -1;
   }
