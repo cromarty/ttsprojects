@@ -78,7 +78,7 @@ char *outputDevice;
 //>
 //<decls and function prototypes
 
-extern "C" EXPORT int Tclespeak_Init (Tcl_Interp * interp);
+extern "C" EXPORT int Tclpiespeak_Init (Tcl_Interp * interp);
 
 int SetRate (ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
 int GetRate (ClientData, Tcl_Interp *, int, Tcl_Obj * CONST[]);
@@ -187,7 +187,7 @@ TclEspeakFree (ClientData handle)
 //<Tclespeak_init
 
 int
-Tclespeak_Init (Tcl_Interp * interp)
+Tclpiespeak_Init (Tcl_Interp * interp)
 {
   int rc;
   void* handle=NULL;

@@ -3,6 +3,7 @@
 INSTALL = install
 PREFIX = /usr
 LIBPARENTDIR = ${PREFIX}/share/emacs/site-lisp
+SERVERDIR = $(LIBPARENTDIR)/emacspeak/servers
 LIBDIR =$(LIBPARENTDIR)/emacspeak/servers/linux-piespeak
 TCL_VERSION = 8.4
 TCL_INCLUDE= /usr/include/tcl$(TCL_VERSION)
@@ -25,6 +26,7 @@ clean:
 	rm -f *.so *.o
 
 install: $(TTS)
-	$(INSTALL) -d $(DESTDIR)$(LIBDIR)
-	$(INSTALL) $< $(DESTDIR)$(LIBDIR)
+	$(INSTALL) -d $(LIBDIR)
+	$(INSTALL) $< $(LIBDIR)
+	$(INSTALL) ../piespeak $(SERVERDIR)
 
