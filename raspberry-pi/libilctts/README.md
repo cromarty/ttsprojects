@@ -1,22 +1,52 @@
 
-## Directories in this one ##
+## libilctts
+
+* COPYING
+* HISTORY
+* README.md
+* TODO
+* autoconfiscate/
+* build/
+* libtests/
+*src/
+
+This is the directory where the libilctts library code and additional stuff is to be found.
+
+### What is it?
+
+The Raspberry Pi currently has a nasty problem with the ALSA driver.  Text-to-speech using the 
+speakup screen-reader and the eSpeak software speech-synthesizer stutters very badly and causes a 
+regular kernel oops.
+
+The Raspberry Pi has a mechanism known as the 'VCHIQ', for 'video core hardware interface queue'.  
+It is this mechanism which regularly tries to pass the kernel a null-pointer from the ALSA driver.  
+The cause of the stuttering is not exactly known.
+
+The Pi has a GPU (Graphics Processing Unit) which is responsible for both video and audio rendering.
+
+This library uses the OpenMAX library, via the 'integration layer' to render audio from eSpeak 
+directly on the GPU, thus bypassing the ALSA driver.
+
+eSpeak has a mode in which it can be asked to return the PCM (pulse code modulation) data of 
+rendered text-to-speech back to a callback function.
+
+That's what this library does before queueing the audio PCM into the GPU.
 
 * build/
 
-Scripts and docs to help build the library and related software.
+Currently contains build scripts for both the library and 'piespeak', which is a fork of espeakup 
+which uses my library.
 
-* libtests/
+* autoconfiscate/
 
-Contains sequential test-harness programs which were written during the process 
-of writing the library.
+Contains an ongoing attempt to make use of Gnu autotools to do the build.  Learning as I do it.
 
 * src/
 
-The library source code.
+The library source.
 
-* unit_tests/
+* libtests/
 
-Programs that test the sub-systems in the library, like the linked-list, queue 
-and ringbuffer code.
+Incremental library test code.  Not necessarily kept up to date since the library worked.
 
 

@@ -1,11 +1,9 @@
 
-* Possibly reduce the size of the ringbuffer.  Bigger than it needs to be at the 
-moment.
-
+* Possibly reduce the size of the ringbuffer.  Bigger than it needs to be at the moment.
 * Make tweaking of latency constants easier than recompiling each time.
-
+* Check for memory leaks. Rill reports failure after several days. Possibly a bug in OpenMAX IL.
+* 'Autoconfiscate', make building with Gnu autotools possible.
 * Get out more
-
 * Eat less cheese
 
 
