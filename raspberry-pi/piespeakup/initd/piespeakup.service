@@ -9,11 +9,11 @@ After=systemd-udev-settle.service sound.target
 Type=forking
 PIDFile=/run/piespeakup.pid
 # Load previously saved speech settings.
-ExecStartPre=-/usr/bin/speakupconf load
+#ExecStartPre=-/usr/bin/speakupconf load
 ExecStart=/usr/local/bin/piespeakup
 ExecReload=/bin/kill -HUP $MAINPID
 # Save speech settings on reboot or when speech is stopped.
-ExecStop=-/usr/bin/speakupconf save
+#ExecStop=-/usr/bin/speakupconf save
 Restart=always
 
 [Install]
