@@ -1,9 +1,11 @@
 # If on Arch Linux, the following 2 values will be used.
 ARCHLIBDIR = /usr/lib
 ARCHSYSINITDIR = /usr/lib/systemd/system
+
 # If on Raspbian the following 2 values will be used instead.
 LIBDIR = /usr/lib/arm-linux-gnueabihf
 SYSINITDIR = /etc/init.d
+
 PREFIX = /usr/local
 BINDIR = ${PREFIX}/bin
 MANDIR = ${PREFIX}/share/man
@@ -38,7 +40,7 @@ OBJS = ${SRCS:.c=.o}
 
 all: piespeakup
 
-ArchInstall: piespeakup
+archinstall: piespeakup
    ${INSTALL} -d ${DESTDIR}${BINDIR}
    ${INSTALL} -m ${BINMODE} $< ${DESTDIR}${BINDIR}
    ${INSTALL} -d ${DESTDIR}${MANDIR}/man8
@@ -46,7 +48,7 @@ ArchInstall: piespeakup
    ${INSTALL} -m ${BINMODE} initd/$<.service ${ARCHSYSINITDIR}
    ${INSTALL} -m ${DEFMODE} default/$< ${DEFDIR}
 
-RaspbianInstall: piespeakup
+raspbianinstall: piespeakup
    ${INSTALL} -d ${DESTDIR}${BINDIR}
    ${INSTALL} -m ${BINMODE} $< ${DESTDIR}${BINDIR}
    ${INSTALL} -d ${DESTDIR}${MANDIR}/man8
