@@ -90,9 +90,9 @@ fi
 
 echo 'Installing the piespeakup connector...'
 if [ $ArchLinux -eq 1 ];then
-	make ArchInstall
+	make archinstall
 elif [ $Raspbian -eq 1 ]; then
-	make RaspbianInstall
+	make raspbianinstall
 fi
 
 echo 'Enabling the piespeakup service...'
