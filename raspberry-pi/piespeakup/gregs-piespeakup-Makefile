@@ -1,0 +1,90 @@
+# If on Arch Linux, the following 2 values will be used.
+ARCHLIBDIR = /usr/lib
+ARCHSYSINITDIR = /usr/lib/systemd/system
+# If on Raspbian the following 2 values will be used instead.
+LIBDIR = /usr/lib/arm-linux-gnueabihf
+SYSINITDIR = /etc/init.d
+PREFIX = /usr/local
+BINDIR = ${PREFIX}/bin
+MANDIR = ${PREFIX}/share/man
+DEFDIR = /etc/default
+
+DEPFLAGS = -MMD
+WARNFLAGS = -Wall
+CFLAGS += -I$(SDKSTAGE)/opt/vc/include \
+       -I$(SDKSTAGE)/opt/vc/include/interface/vcos/pthreads \
+       -I$(SDKSTAGE)/opt/vc/include/interface/vmcs_host/linux \
+       -I$(SDKSTAGE)/opt/vc/src/hello_pi/libs/ilclient \
+       -I$(SDKSTAGE)/opt/vc/hello_pi/libs/vgfont \
+       -I$(SDKSTAGE)/opt/vc/include -I$(SRCDIR) -I. \
+       ${DEPFLAGS} ${WARNFLAGS}
+
+LDLIBS = -lespeak -lpthread -lilctts
+
+INSTALL = install
+BINMODE = 0755
+DEFMODE = 0644
+MANMODE = 0644
+
+SRCS = cli.c \
+   espeak.c \
+   piespeakup.c  \
+   queue.c \
+   signal.c \
+   softsynth.c \
+   stringhandling.c
+
+OBJS = ${SRCS:.c=.o}
+
+all: piespeakup
+
+ArchInstall: piespeakup
+   ${INSTALL} -d ${DESTDIR}${BINDIR}
+   ${INSTALL} -m ${BINMODE} $< ${DESTDIR}${BINDIR}
+   ${INSTALL} -d ${DESTDIR}${MANDIR}/man8
+   ${INSTALL} -m ${MANMODE} $<.8 ${DESTDIR}${MANDIR}/man8
+   ${INSTALL} -m ${BINMODE} initd/$<.service ${ARCHSYSINITDIR}
+   ${INSTALL} -m ${DEFMODE} default/$< ${DEFDIR}
+
+RaspbianInstall: piespeakup
+   ${INSTALL} -d ${DESTDIR}${BINDIR}
+   ${INSTALL} -m ${BINMODE} $< ${DESTDIR}${BINDIR}
+   ${INSTALL} -d ${DESTDIR}${MANDIR}/man8
+   ${INSTALL} -m ${MANMODE} $<.8 ${DESTDIR}${MANDIR}/man8
+   ${INSTALL} -m ${BINMODE} initd/$< ${SYSINITDIR}
+   ${INSTALL} -m ${DEFMODE} default/$< ${DEFDIR}
+
+install: piespeakup
+   ${INSTALL} -d ${DESTDIR}${BINDIR}
+   ${INSTALL} -m ${BINMODE} $< ${DESTDIR}${BINDIR}
+   ${INSTALL} -d ${DESTDIR}${MANDIR}/man8
+   ${INSTALL} -m ${MANMODE} $<.8 ${DESTDIR}${MANDIR}/man8
+   if [ $ArchLinux -eq 1 ]; then
+   ${INSTALL} -m ${BINMODE} initd/$<.service ${SYSINITDIR}
+   elif [ $Raspian -eq 1 ]; then
+   ${INSTALL} -m ${BINMODE} initd/$< ${SYSINITDIR}
+   fi
+   ${INSTALL} -m ${DEFMODE} default/$< ${DEFDIR}
+
+uninstall: piespeakup
+   rm ${DESTDIR}${BINDIR}/$<
+   rm ${MANDIR}
+   rm ${DEFDIR}/$<
+   rm ${SYSINITDIR}/$<.service >/dev/null 2>&1
+   rm ${SYSINITDIR}/$< >/dev/null 2>&1
+
+piespeakup : ${OBJS}
+
+archfixlink:
+   ln -s /$(ARCHLIBDIR)libespeak.so.1 $(ARCHLIBDIR)/libespeak.so
+
+fixlink:
+   ln -s /$(LIBDIR)libespeak.so.1 $(LIBDIR)/libespeak.so
+
+clean:
+   ${RM} *.d *.o piespeakup
+
+distclean: clean
+   ${RM} piespeakup
+
+-include ${SRCS:.c=.d}

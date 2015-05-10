@@ -14,14 +14,14 @@ case "${OS}" in
 		ArchLinux=1
 		Raspbian=0
 		ESPEAKLIBDIR=/usr/lib
-		PackageInstaller="pacman -S --noconfirm "
+		PACKAGEINSTALLER="pacman -S --noconfirm --noprogressbar --needed "
 	;;
 	*)
 		echo 'Not running on Arch Linux...'
 		ArchLinux=0
 		Raspbian=1
 		ESPEAKLIBDIR=/usr/lib/arm-linux-gnueabihf
-		PackageInstaller="apt-get install -yyq "
+		PACKAGEINSTALLER="apt-get install -yyq "
 esac
 
 if [ `whoami` != 'root' ]; then
@@ -53,7 +53,7 @@ echo 'Checking to see if espeak is installed...'
 which espeak >/dev/null 2>&1
 if [ $? -ne 0 ]; then
    echo 'espeak is not installed, installing it...'
-   $PackageInstall espeak
+   $PACKAGEINSTALLER espeak
 fi
 
 set -e
