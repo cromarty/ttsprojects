@@ -1,0 +1,20 @@
+DLL = nvdaControllerClient64.dll
+CCPREFIX = /usr/bin/x86_64-w64-mingw32-
+CC = $(CCPREFIX)gcc
+CCSOURCES = nvdaController.h
+CCOBJECTS = $(CCSOURCES:.c=64.o)
+CFLAGS = 
+LDFLAGS = -shared -Wl,--out-implib,libnvdaController64.a
+RM = rm
+
+all: $(DLL)
+
+$(DLL): $(CCOBJECTS)
+	$(CC) -o $@ $(CCOBJECTS) $(LDFLAGS)
+
+nvdaController64.o: nvdaController.c
+	$(CC) $(CFLAGS) -c -o nvdaController64.o nvdaController.c
+
+clean:
+	$(RM) nvdaControllerClient64.dll libnvdaController64.a
+
