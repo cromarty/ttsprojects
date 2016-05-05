@@ -3,7 +3,7 @@ CCPREFIX = /usr/bin/x86_64-w64-mingw32-
 CC = $(CCPREFIX)gcc
 CCSOURCES = nvdaController.h
 CCOBJECTS = $(CCSOURCES:.c=64.o)
-CFLAGS = 
+CFLAGS = -DCOMPILING_CONTROLLER_CLIENT_DLL
 LDFLAGS = -shared -Wl,--out-implib,libnvdaController64.a
 RM = rm
 
