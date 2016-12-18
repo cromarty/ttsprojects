@@ -58,6 +58,7 @@ install :
 	ln -s $(INSTALLDIR)/$(TARGETLIB).$(VERSION) $(INSTALLDIR)/$(TARGETLIB).$(MAJOR)
 	ln -s $(INSTALLDIR)/$(TARGETLIB).$(MAJOR) $(INSTALLDIR)/$(TARGETLIB)
 	install ilctts_lib.h $(INCLUDEDIR)
+	install ilclient.h $(INCLUDEDIR)
 	ldconfig
 
 uninstall :
