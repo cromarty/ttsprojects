@@ -2823,7 +2823,15 @@ fi
 
 
 
+
+CPPFLAGS="-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux
+-I./include"
+
+
 eval LIBTOOL_VERSION_INFO="1:0:0"
+
+
+
 
 
 # Check whether --enable-static was given.
@@ -12142,7 +12150,6 @@ CC=$lt_save_CC
 
 
 
-CPPFLAGS = "-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux
 
 for ac_header in IL/OMX_Audio.h
 do :
