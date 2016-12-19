@@ -28,16 +28,10 @@ AC_CHECK_HEADERS([interface/vcos/vcos_semaphore.h],[],[AC_MSG_ERROR(['could not 
 AC_CHECK_HEADERS([interface/vmcs_host/vchost.h],[],[AC_MSG_ERROR(['could not find interface/vmcs_host/vchost.h'])])
 AC_CHECK_HEADERS([ilclient.h],[],[AC_MSG_ERROR(['could not find ilclient.h'])])
 
-
-
-
 dnl Check for libraries
 
 
 
-CPPFLAGS="-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux 
--I/opt/vc/src/hello_pi/libs/ilclient -I/opt/vc/src/hello_pi/libs/vgfont -I/opt/vc/include -I./include"
-LDFLAGS="-L/opt/vc/lib -L/opt/vc/src/hello_pi/libs/ilclient"
 
 
 AC_CHECK_LIB([bcm_host], [bcm_host_init])
@@ -47,10 +41,17 @@ AC_CHECK_LIB([vcos],[vcos_dlopen])
 AC_CHECK_LIB([pthread],[pthread_mutex_init])
 AC_CHECK_LIB([rt],[fork])
 
+#CPPFLAGS="-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux 
+#-I/opt/vc/src/hello_pi/libs/ilclient -I/opt/vc/src/hello_pi/libs/vgfont -I/opt/vc/include -I./include"
+
+#LDFLAGS="-L/opt/vc/lib -L/opt/vc/src/hello_pi/libs/ilclient"
+
+
 AC_CONFIG_HEADERS([src/config.h])
 
 AC_CONFIG_FILES([
  Makefile
+	include/Makefile
  src/Makefile
 ])
 AC_OUTPUT
