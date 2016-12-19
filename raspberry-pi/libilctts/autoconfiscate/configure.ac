@@ -41,8 +41,7 @@ AC_CHECK_LIB([vcos],[vcos_dlopen])
 AC_CHECK_LIB([pthread],[pthread_mutex_init])
 AC_CHECK_LIB([rt],[fork])
 
-#CPPFLAGS="-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux 
-#-I/opt/vc/src/hello_pi/libs/ilclient -I/opt/vc/src/hello_pi/libs/vgfont -I/opt/vc/include -I./include"
+#CPPFLAGS="-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux #-I/opt/vc/src/hello_pi/libs/ilclient -I/opt/vc/src/hello_pi/libs/vgfont -I/opt/vc/include -I./include"
 
 #LDFLAGS="-L/opt/vc/lib -L/opt/vc/src/hello_pi/libs/ilclient"
 
