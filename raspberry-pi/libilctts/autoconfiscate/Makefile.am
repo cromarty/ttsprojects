@@ -20,5 +20,5 @@ AM_CPPFLAGS += -DUSE_VCHIQ_ARM -Wno-psabi
 AM_CPPFLAGS += -O2 -Wextra -Wno-unused-function
 
 
-AM_LDFLAGS="-Wl,--verbose -L/opt/vc/lib -shared"
+#AM_LDFLAGS="-Wl,--verbose -L/opt/vc/lib -shared"
 
