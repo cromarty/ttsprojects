@@ -2,6 +2,23 @@ ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = include src
 dist_doc_DATA = README.md
 EXTRA_DIST=COPYING ChangeLog configure libtool depcomp
-AM_CPPFLAGS=$(top_srcdir)/include -I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux -I/opt/vc/src/hello_pi/libs/ilclient -I/opt/vc/src/hello_pi/libs/vgfont -I/opt/vc/include
+
+AM_CPPFLAGS = -I$(top_srcdir)/include 
+AM_CPPFLAGS += -I/opt/vc/include 
+AM_CPPFLAGS += -I/opt/vc/include/interface/vcos/pthreads 
+AM_CPPFLAGS += -I/opt/vc/include/interface/vmcs_host/linux 
+AM_CPPFLAGS += -DSTANDALONE -D__STDC_CONSTANT_MACROS
+AM_CPPFLAGS += -D__STDC_LIMIT_MACROS -DTARGET_POSIX
+AM_CPPFLAGS += -D_LINUX -fPIC -DPIC -D_REENTRANT
+AM_CPPFLAGS += -D_LARGEFILE64_SOURCE
+AM_CPPFLAGS += -D_FILE_OFFSET_BITS=64
+AM_CPPFLAGS += -U_FORTIFY_SOURCE -Wall -DHAVE_LIBOPENMAX=2
+AM_CPPFLAGS += -DOMX -DOMX_SKIP64BIT -ftree-vectorize
+AM_CPPFLAGS += -pipe -DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST
+AM_CPPFLAGS += -DUSE_EXTERNAL_LIBBCM_HOST
+AM_CPPFLAGS += -DUSE_VCHIQ_ARM -Wno-psabi
+AM_CPPFLAGS += -O2 -Wextra -Wno-unused-function
+
+
 AM_LDFLAGS="-Wl,--verbose -L/opt/vc/lib -shared"
 
