@@ -30,10 +30,6 @@ AC_CHECK_HEADERS([ilclient.h],[],[AC_MSG_ERROR(['could not find ilclient.h'])])
 
 dnl Check for libraries
 
-
-
-
-
 AC_CHECK_LIB([bcm_host], [bcm_host_init])
 AC_CHECK_LIB([openmaxil], [OMX_Init])
 AC_CHECK_LIB([vchiq_arm],[vchiq_connect])
@@ -41,10 +37,19 @@ AC_CHECK_LIB([vcos],[vcos_dlopen])
 AC_CHECK_LIB([pthread],[pthread_mutex_init])
 AC_CHECK_LIB([rt],[fork])
 
-#CPPFLAGS="-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux #-I/opt/vc/src/hello_pi/libs/ilclient -I/opt/vc/src/hello_pi/libs/vgfont -I/opt/vc/include -I./include"
 
 #LDFLAGS="-L/opt/vc/lib -L/opt/vc/src/hello_pi/libs/ilclient"
 
+
+dnl Do not build static and shared libraries together
+if test "$enable_static" = "$enable_shared" -a "$enable_static" = "yes"; then
+cat <<EOF
+  Please, do not try to compile static and shared libraries together.
+  See INSTALL file for more details (do not use --enable-shared=yes with
+  --enable-static=yes).
+EOF
+  exit 1
+fi
 
 AC_CONFIG_HEADERS([src/config.h])
 
