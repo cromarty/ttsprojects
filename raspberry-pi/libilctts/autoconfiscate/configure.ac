@@ -4,8 +4,16 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SRCDIR([src/core.c])
 AC_CONFIG_MACRO_DIR([m4])
+
+CPPFLAGS="-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux 
+-I./include"
+
+
 eval LIBTOOL_VERSION_INFO="1:0:0"
+
 AC_SUBST(AC_LIBTOOL_VERSION_INFO)
+
+
 
 AC_DISABLE_STATIC
 
@@ -20,7 +28,6 @@ AC_PROG_LIBTOOL
 
 dnl Check for headers
 
-CPPFLAGS = "-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux 
 
 AC_CHECK_HEADERS([IL/OMX_Audio.h], [], [AC_MSG_ERROR(['could not find IL/OMX_Audio.h'])])
 AC_CHECK_HEADERS([IL/OMX_Broadcom.h],[],[AC_MSG_ERROR([could not find IL/OMX_Broadcom.h'])])
