@@ -1,5 +1,5 @@
 #! /bin/sh
-# Generated automatically by config.status (libilctts) 1.0.0
+# Generated automatically by config.status (ilctts) 1.0.0
 # Libtool was configured on host alarmpi:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
@@ -37,15 +37,15 @@ available_tags=''
 
 # ### BEGIN LIBTOOL CONFIG
 
+# Whether or not to build static libraries.
+build_old_libs=no
+
 # Which release of libtool.m4 was used?
 macro_version=2.4.6
 macro_revision=2.4.6
 
 # Whether or not to build shared libraries.
 build_libtool_libs=yes
-
-# Whether or not to build static libraries.
-build_old_libs=yes
 
 # What type of objects to build.
 pic_mode=default
