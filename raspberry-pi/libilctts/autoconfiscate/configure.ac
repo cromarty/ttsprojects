@@ -2,7 +2,7 @@ AC_PREREQ([2.69])
 AC_INIT([ilctts], [1.0.0], [mike.ray@btinternet.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PREFIX_DEFAULT(/usr/local)
-AC_CONFIG_SRCDIR([core.c])
+AC_CONFIG_SRCDIR([src/core.c])
 AC_CONFIG_MACRO_DIR([m4])
 eval LIBTOOL_VERSION_INFO="1:0:0"
 AC_SUBST(AC_LIBTOOL_VERSION_INFO)
