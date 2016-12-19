@@ -20,6 +20,8 @@ AC_PROG_LIBTOOL
 
 dnl Check for headers
 
+CPPFLAGS = -I/opt/vc/include
+
 AC_CHECK_HEADERS([IL/OMX_Audio.h], [], [AC_MSG_ERROR(['could not find IL/OMX_Audio.h'])])
 AC_CHECK_HEADERS([IL/OMX_Broadcom.h],[],[AC_MSG_ERROR([could not find IL/OMX_Broadcom.h'])])
 AC_CHECK_HEADERS([IL/OMX_Component.h],[],[AC_MSG_ERROR(['could not find IL/OMX_Component.h'])])
