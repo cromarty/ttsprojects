@@ -39,7 +39,7 @@ AC_CHECK_HEADERS([ilclient.h],[],[AC_MSG_ERROR(['could not find ilclient.h'])])
 
 AC_CHECK_LIB([bcm_host], [bcm_host_init])
 AC_CHECK_LIB([openmaxil], [OMX_Init])
-AC_CHECK_LIB([ilclient], [ilclient_init], [], [AC_MSG_ERROR(['could not find libilclient'],[1])], [-lvcos -lpthread -lbcm_host -lopenmaxil])
+
 AC_CHECK_LIB([vchiq_arm],[vchiq_connect])
 AC_CHECK_LIB([vcos],[vcos_dlopen])
 
