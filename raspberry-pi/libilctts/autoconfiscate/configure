@@ -12146,6 +12146,8 @@ CC=$lt_save_CC
 
 
 
+ac_config_headers="$ac_config_headers src/config.h"
+
 
 for ac_header in IL/OMX_Audio.h
 do :
@@ -12540,8 +12542,6 @@ cat <<EOF
 EOF
   exit 1
 fi
-
-ac_config_headers="$ac_config_headers src/config.h"
 
 
 ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile"
