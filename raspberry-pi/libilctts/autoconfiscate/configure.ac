@@ -1,17 +1,16 @@
 AC_PREREQ([2.69])
-AC_INIT([ilctts], [1.0.0], [mike.ray@btinternet.com])
+AC_INIT([ilctts], [1.0], [mike.ray@btinternet.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SRCDIR([src/core.c])
 AC_CONFIG_MACRO_DIR([m4])
 
-CPPFLAGS="-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux -I$srcdir/include"
 
 
 eval LIBTOOL_VERSION_INFO="1:0:0"
-
 AC_SUBST(AC_LIBTOOL_VERSION_INFO)
 
+CPPFLAGS="-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux -I$srcdir/include"
 
 
 AC_DISABLE_STATIC
