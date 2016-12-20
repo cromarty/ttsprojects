@@ -1,6 +1,6 @@
 COMPATNUM=@LIBTOOL_VERSION_INFO@
 lib_LTLIBRARIES = libilctts.la
-libilctts_la_SOURCES = core.c debug.c ilclient.c ilcore.c list.c queue.c ringbuffer.c utils.c core.h debug.h ilclient.h ilctts_lib.h ringbuffer.h utils.h
+libilctts_la_SOURCES = core.c debug.c ilclient.c ilcore.c ringbuffer.c utils.c core.h debug.h ilclient.h ilctts_lib.h ringbuffer.h utils.h
 
 AM_CPPFLAGS = -I$(top_srcdir)/include -I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads
 AM_CPPFLAGS += -I/opt/vc/include/interface/vmcs_host/linux 
