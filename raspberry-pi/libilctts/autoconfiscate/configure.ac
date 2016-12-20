@@ -35,18 +35,17 @@ AC_CHECK_HEADERS([ilclient.h],[],[AC_MSG_ERROR(['could not find ilclient.h'])])
 
 dnl Check for libraries
 
-AC_CHECK_LIB([bcm_host], [bcm_host_init])
-AC_CHECK_LIB([openmaxil], [OMX_Init])
-AC_CHECK_LIB([vchiq_arm],[vchiq_connect])
-AC_CHECK_LIB([vcos],[vcos_dlopen])
+AC_CHECK_LIB([bcm_host], [bcm_host_init], [], [AC_MSG_ERROR([bcm_host_init was not found in libbcm_host, do you need to get and build the userland code?])])
+AC_CHECK_LIB([openmaxil], [OMX_Init], [], [AC_MSG_ERROR([OMX_Init was not found in libopenmaxil, do you need to get and build the userland code?])])
+AC_CHECK_LIB([vchiq_arm],[vchiq_connect], [], [AC_MSG_ERROR([vchiq_connect was not found in libvchiq_arm, do you need to get and build the userland code?])])
+AC_CHECK_LIB([vcos],[vcos_dlopen], [], [AC_MSG_ERROR([vcos_dlopen was not found in libvcos, do you need to get and build the userland code?])])
+
 AC_CHECK_LIB([pthread],[pthread_mutex_init])
 AC_CHECK_LIB([rt],[fork])
 
 
-#LDFLAGS="-L/opt/vc/lib -L/opt/vc/src/hello_pi/libs/ilclient"
-
-
 dnl Do not build static and shared libraries together
+
 if test "$enable_static" = "$enable_shared" -a "$enable_static" = "yes"; then
 cat <<EOF
   Please, do not try to compile static and shared libraries together.

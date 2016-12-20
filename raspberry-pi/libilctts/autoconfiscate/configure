@@ -12290,6 +12290,8 @@ _ACEOF
 
   LIBS="-lbcm_host $LIBS"
 
+else
+  as_fn_error $? "bcm_host_init was not found in libbcm_host, do you need to get and build the userland code?" "$LINENO" 5
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for OMX_Init in -lopenmaxil" >&5
@@ -12335,6 +12337,8 @@ _ACEOF
 
   LIBS="-lopenmaxil $LIBS"
 
+else
+  as_fn_error $? "OMX_Init was not found in libopenmaxil, do you need to get and build the userland code?" "$LINENO" 5
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for vchiq_connect in -lvchiq_arm" >&5
@@ -12380,6 +12384,8 @@ _ACEOF
 
   LIBS="-lvchiq_arm $LIBS"
 
+else
+  as_fn_error $? "vchiq_connect was not found in libvchiq_arm, do you need to get and build the userland code?" "$LINENO" 5
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for vcos_dlopen in -lvcos" >&5
@@ -12425,7 +12431,10 @@ _ACEOF
 
   LIBS="-lvcos $LIBS"
 
+else
+  as_fn_error $? "vcos_dlopen was not found in libvcos, do you need to get and build the userland code?" "$LINENO" 5
 fi
+
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for pthread_mutex_init in -lpthread" >&5
 $as_echo_n "checking for pthread_mutex_init in -lpthread... " >&6; }
@@ -12518,8 +12527,6 @@ _ACEOF
 fi
 
 
-
-#LDFLAGS="-L/opt/vc/lib -L/opt/vc/src/hello_pi/libs/ilclient"
 
 
 if test "$enable_static" = "$enable_shared" -a "$enable_static" = "yes"; then
