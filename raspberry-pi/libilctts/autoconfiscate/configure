@@ -12479,6 +12479,8 @@ _ACEOF
 
   LIBS="-lpthread $LIBS"
 
+else
+  as_fn_error $? "pthread_mutex_init was not found in libpthread" "$LINENO" 5
 fi
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for fork in -lrt" >&5
@@ -12524,8 +12526,9 @@ _ACEOF
 
   LIBS="-lrt $LIBS"
 
+else
+  as_fn_error $? "fork was not found in librt" "$LINENO" 5
 fi
-
 
 
 

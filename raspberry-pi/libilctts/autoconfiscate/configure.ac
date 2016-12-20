@@ -40,9 +40,8 @@ AC_CHECK_LIB([openmaxil], [OMX_Init], [], [AC_MSG_ERROR([OMX_Init was not found 
 AC_CHECK_LIB([vchiq_arm],[vchiq_connect], [], [AC_MSG_ERROR([vchiq_connect was not found in libvchiq_arm, do you need to get and build the userland code?])])
 AC_CHECK_LIB([vcos],[vcos_dlopen], [], [AC_MSG_ERROR([vcos_dlopen was not found in libvcos, do you need to get and build the userland code?])])
 
-AC_CHECK_LIB([pthread],[pthread_mutex_init])
-AC_CHECK_LIB([rt],[fork])
-
+AC_CHECK_LIB([pthread],[pthread_mutex_init], [], [AC_MSG_ERROR([pthread_mutex_init was not found in libpthread])])
+AC_CHECK_LIB([rt],[fork], [], [AC_MSG_ERROR([fork was not found in librt])])
 
 dnl Do not build static and shared libraries together
 
