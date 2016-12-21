@@ -12544,7 +12544,7 @@ EOF
 fi
 
 
-ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile stamp-h1"
+ac_config_files="$ac_config_files Makefile include/Makefile src/Makefile"
 
 
 cat >confcache <<\_ACEOF
@@ -13561,7 +13561,6 @@ do
     "Makefile") CONFIG_FILES="$CONFIG_FILES Makefile" ;;
     "include/Makefile") CONFIG_FILES="$CONFIG_FILES include/Makefile" ;;
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
-    "stamp-h1") CONFIG_FILES="$CONFIG_FILES stamp-h1" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
   esac
@@ -14793,10 +14792,6 @@ ltmain=$ac_aux_dir/ltmain.sh
   chmod +x "$ofile"
 
  ;;
-    "Makefile":F) echo timestamp > stamp-h1 ;;
-    "include/Makefile":F) echo timestamp > stamp-h1 ;;
-    "src/Makefile":F) echo timestamp > stamp-h1 ;;
-    "stamp-h1":F) echo timestamp > stamp-h1 ;;
 
   esac
 done # for ac_tag
