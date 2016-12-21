@@ -16,12 +16,12 @@ LDLIBS = -lilctts -lopenmaxil \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
         -lrt
 
-testlib : testlib.o
-	$(CC) -o testlib testlib.o $(LDFLAGS) $(LDLIBS)  
+testlib : testlib00.o
+	$(CC) -o testlib00 testlib00.o $(LDFLAGS) $(LDLIBS)  
 
-testlib.o : testlib.c $(SRCDIR)/ilctts_lib.h
-	$(CC) $(CFLAGS) -c testlib.c
+testlib00.o : testlib00.c $(SRCDIR)/ilctts_lib.h
+	$(CC) $(CFLAGS) -c testlib00.c
 
 
 clean :
-	rm testlib testlib.o
+	rm testlib00 testlib00.o
