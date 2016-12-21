@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([ilctts], [1.0], [mike.ray@btinternet.com])
+AC_INIT([ilctts],[1.0],[mike.ray@btinternet.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SRCDIR([src/core.c])
@@ -20,7 +20,7 @@ AC_PROG_INSTALL
 AM_PROG_AR
 AC_PROG_LN_S
 AC_PROG_MAKE_SET
-AC_PROG_LIBTOOL
+LT_INIT
 
 dnl Check for headers
 
