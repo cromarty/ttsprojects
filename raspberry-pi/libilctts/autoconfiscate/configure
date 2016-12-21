@@ -14793,10 +14793,10 @@ ltmain=$ac_aux_dir/ltmain.sh
   chmod +x "$ofile"
 
  ;;
-    "Makefile":F) echo timestamp > stamp-1h ;;
-    "include/Makefile":F) echo timestamp > stamp-1h ;;
-    "src/Makefile":F) echo timestamp > stamp-1h ;;
-    "stamp-h1":F) echo timestamp > stamp-1h ;;
+    "Makefile":F) echo timestamp > stamp-h1 ;;
+    "include/Makefile":F) echo timestamp > stamp-h1 ;;
+    "src/Makefile":F) echo timestamp > stamp-h1 ;;
+    "stamp-h1":F) echo timestamp > stamp-h1 ;;
 
   esac
 done # for ac_tag

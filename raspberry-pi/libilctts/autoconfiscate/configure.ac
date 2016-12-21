@@ -61,6 +61,6 @@ AC_CONFIG_FILES([
 	include/Makefile
  src/Makefile
  stamp-h1
-],[echo timestamp > stamp-1h])
+],[echo timestamp > stamp-h1])
 
 AC_OUTPUT
