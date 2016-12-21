@@ -1,4 +1,4 @@
-/* src/config.h.in.  Generated from configure.ac by autoheader.  */
+/* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Define to 1 if you have the <bcm_host.h> header file. */
 #undef HAVE_BCM_HOST_H
