@@ -3,7 +3,7 @@
 
 AC_PREREQ([2.69])
 AC_INIT([FULL-PACKAGE-NAME], [VERSION], [BUG-REPORT-ADDRESS])
-AC_CONFIG_SRCDIR([test03/testlib03.c])
+AC_CONFIG_SRCDIR([test00/testlib00.c])
 
 dnl Checks for programs
 
@@ -13,7 +13,7 @@ dnl Checks for libraries
 
 
 dnl Checks for header files
-
+AC_CHECK_HEADERS([ilctts_lib.h])
 AC_CHECK_HEADERS([stdlib.h string.h unistd.h])
 
 dnl Checks for typedefs, structures, and compiler characteristics.
