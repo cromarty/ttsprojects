@@ -1,7 +1,12 @@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = include src
 dist_doc_DATA = README
-EXTRA_DIST=COPYING ChangeLog configure libtool depcomp
+EXTRA_DIST=AUTHORS COPYING ChangeLog INSTALL NEWS NOTES TODO configure depcomp libtool m4/
+
+compile
+depcomp
+missing
+tests
 
 AM_CPPFLAGS = -I$(top_srcdir)/include 
 AM_CPPFLAGS += -I/opt/vc/include 

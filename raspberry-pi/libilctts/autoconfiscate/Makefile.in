@@ -354,7 +354,7 @@ top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = include src
 dist_doc_DATA = README
-EXTRA_DIST = COPYING ChangeLog configure libtool depcomp
+EXTRA_DIST = AUTHORS COPYING ChangeLog INSTALL NEWS NOTES TODO configure depcomp libtool m4/
 AM_CPPFLAGS = -I$(top_srcdir)/include -I/opt/vc/include \
 	-I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux -DSTANDALONE \
@@ -871,6 +871,11 @@ uninstall-am: uninstall-dist_docDATA
 
 .PRECIOUS: Makefile
 
+
+compile
+depcomp
+missing
+tests
 
 #AM_LDFLAGS="-Wl,--verbose -L/opt/vc/lib -shared"
 
