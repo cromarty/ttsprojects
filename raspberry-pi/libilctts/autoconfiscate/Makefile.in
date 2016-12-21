@@ -872,11 +872,6 @@ uninstall-am: uninstall-dist_docDATA
 .PRECIOUS: Makefile
 
 
-compile
-depcomp
-missing
-tests
-
 #AM_LDFLAGS="-Wl,--verbose -L/opt/vc/lib -shared"
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
