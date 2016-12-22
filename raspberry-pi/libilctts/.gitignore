@@ -1,0 +1,15 @@
+# Usual rubbish
+res
+
+# Created files
+Makefile
+autom4te.cache/requests
+*.script
+src/.deps
+src/.libs
+*.lo
+*.la
+config.status
+#config.h
+#stamp-h1
+
