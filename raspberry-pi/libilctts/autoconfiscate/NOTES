@@ -4,9 +4,9 @@ Notes
 
 Do this to fix the problem of git not preserving the timestamps of files, which causes make to rerun configure:
 
-./configure
-find . -type f -print0 | xargs -r0 touch --reference .
-make
+ ./configure
+ find . -type f -print0 | xargs -r0 touch --reference .
+ make
 
 Then install as usual.
 
