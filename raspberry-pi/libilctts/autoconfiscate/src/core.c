@@ -3,7 +3,7 @@
 * core.c - The main code of the library
 *
 * Main code of the library libilctts.so.
-* See the top-level README.md file for details of what the library does.
+* See the top-level README file for details of what the library does.
 *
 * Copyright (C) 2014, Mike Ray, <mike.ray@btinternet.com>
 *
