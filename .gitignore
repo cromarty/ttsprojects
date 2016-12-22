@@ -11,13 +11,10 @@
 
 # my usual nonsense
 res
-*.bat
+# *.bat removed since I added Windows related stuff
+#*.bat
 *.zip
 *.log
-
-SciTE files
-*.properties
-*.session
 
 # ignore raw pcm and wav files
 *.raw
@@ -39,7 +36,5 @@ raspberry-pi/libilctts/libtests/test04/testlib
 # piespeakup executable
 raspberry-pi/piespeakup/piespeakup
 
-# text files
-*.txt
 
 
