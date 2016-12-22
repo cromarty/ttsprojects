@@ -1,0 +1,20 @@
+# modified from espeakup.service with a few additions.
+[Unit]
+Description=Software speech output for Speakup
+# piespeakup needs to start after the audio devices appear, hopefully this should go away in the future
+#Wants=systemd-udev-settle.service
+#After=systemd-udev-settle.service sound.target
+
+[Service]
+Type=forking
+PIDFile=/run/piespeakup.pid
+# Load previously saved speech settings.
+#ExecStartPre=-/usr/bin/speakupconf load
+ExecStart=/usr/local/bin/piespeakup --device=local
+ExecReload=/bin/kill -HUP $MAINPID
+# Save speech settings on reboot or when speech is stopped.
+#ExecStop=-/usr/bin/speakupconf save
+Restart=always
+
+#[Install]
+#WantedBy=sound.target
