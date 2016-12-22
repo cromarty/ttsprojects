@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <ilctts_lib.h>
+#include <ilctts/ilctts_lib.h>
 #include "bcm_host.h"
 #include "espeakup.h"
 

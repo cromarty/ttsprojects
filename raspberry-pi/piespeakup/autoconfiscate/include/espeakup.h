@@ -26,7 +26,7 @@
 
 #include "speak_lib.h"
 
-#include <ilctts_lib.h>
+#include <ilctts/ilctts_lib.h>
 
 #include "queue.h"
 

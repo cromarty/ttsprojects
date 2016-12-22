@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ilctts_lib.h>
+#include <ilctts/ilctts_lib.h>
 
 #include "espeakup.h"
 
