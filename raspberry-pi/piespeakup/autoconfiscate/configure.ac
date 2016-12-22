@@ -1,6 +1,7 @@
 AC_PREREQ([2.69])
 AC_INIT([piespeakup], [1.0.0], [mike.ray@btinternet.com])
-AC_CONFIG_SRCDIR([src/espeakup.c])
+AM_INIT_AUTOMAKE([-Wall -Werror foreign])
+AC_CONFIG_SRCDIR([src/piespeakup.c])
 AC_CONFIG_HEADERS([config.h])
 
 dnl Checks for programs.
