@@ -38,6 +38,6 @@ AC_CONFIG_FILES([
  Makefile
  include/Makefile
  src/Makefile
- systemd/Makefile
+ service/Makefile
 ])
 AC_OUTPUT
