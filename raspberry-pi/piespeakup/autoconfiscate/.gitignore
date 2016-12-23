@@ -1,0 +1,10 @@
+# usual working files
+*~
+res
+
+# Created files
+Makefile
+include/Makefile
+src/Makefile
+
+
