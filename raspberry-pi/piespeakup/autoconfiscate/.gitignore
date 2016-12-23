@@ -7,5 +7,8 @@ Makefile
 include/Makefile
 src/Makefile
 autom4te.cache/
+config.h
+config.status
+stamp-h1
 
 
