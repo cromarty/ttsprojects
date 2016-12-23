@@ -6,5 +6,6 @@ res
 Makefile
 include/Makefile
 src/Makefile
+autom4te.cache/
 
 
