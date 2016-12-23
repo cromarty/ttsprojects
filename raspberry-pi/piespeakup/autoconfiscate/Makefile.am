@@ -1,2 +1,2 @@
-SUBDIRS = src systemd
+SUBDIRS = src conf
 dist_doc_DATA = README
