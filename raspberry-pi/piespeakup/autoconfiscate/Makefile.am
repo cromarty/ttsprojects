@@ -1,2 +1,4 @@
-SUBDIRS = src include
+SUBDIRS = src
 dist_doc_DATA = README
+EXTRA_DIST = BROADCOM HISTORY INSTALL NOTES fix-timestamps.sh
+
