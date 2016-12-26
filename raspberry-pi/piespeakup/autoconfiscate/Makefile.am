@@ -1,2 +1,2 @@
-SUBDIRS = src conf
+SUBDIRS = src
 dist_doc_DATA = README

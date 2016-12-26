@@ -39,6 +39,5 @@ AC_CONFIG_FILES([
  Makefile
  include/Makefile
  src/Makefile
- service/Makefile
 ])
 AC_OUTPUT
