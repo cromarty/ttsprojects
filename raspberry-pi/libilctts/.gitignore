@@ -3,13 +3,13 @@ res
 
 # Created files
 Makefile
-autom4te.cache/requests
+autom4te.cache/
 *.script
 src/.deps
 src/.libs
 *.lo
 *.la
 config.status
-#config.h
-#stamp-h1
+config.h
+stamp-h1
 
