@@ -249,7 +249,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-piespeakup_SOURCES = cli.c espeak.c piespeakup.c queue.c signal.c softsynth.c stringhandling.c espeakup.h queue.h speak_lib.h stringhandling.h
+piespeakup_SOURCES = cli.c espeak.c piespeakup.c queue.c signal.c softsynth.c stringhandling.c espeakup.h queue.h stringhandling.h
 AM_CPPFLAGS = -I/opt/vc/include
 all: all-am
 

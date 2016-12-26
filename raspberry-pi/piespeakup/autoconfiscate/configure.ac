@@ -37,7 +37,6 @@ AC_CHECK_FUNCS([memmove memset select strdup strrchr])
 
 AC_CONFIG_FILES([
  Makefile
- include/Makefile
  src/Makefile
 ])
 AC_OUTPUT
