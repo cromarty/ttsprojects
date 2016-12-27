@@ -246,6 +246,7 @@ top_srcdir = @top_srcdir@
 dist_modulesload_DATA = speakup_soft.conf
 nodist_systemdunit_DATA = piespeakup.service
 nodist_piespeakupunitconf_DATA = piespeakup.conf
+CLEANFILES = piespeakup.service piespeakup.conf
 all: all-am
 
 .SUFFIXES:
@@ -407,6 +408,7 @@ install-strip:
 mostlyclean-generic:
 
 clean-generic:
+	-test -z "$(CLEANFILES)" || rm -f $(CLEANFILES)
 
 distclean-generic:
 	-test -z "$(CONFIG_CLEAN_FILES)" || rm -f $(CONFIG_CLEAN_FILES)

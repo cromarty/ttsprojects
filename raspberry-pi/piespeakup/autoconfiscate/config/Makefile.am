@@ -9,3 +9,7 @@ piespeakup.service : piespeakup.service.in
 piespeakup.conf : piespeakup.conf.in
 	$(SED) "s|prefix|$(prefix)|" $< > $@
 
+
+CLEANFILES = piespeakup.service piespeakup.conf
+
+
