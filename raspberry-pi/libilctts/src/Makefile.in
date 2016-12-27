@@ -14,6 +14,7 @@
 
 @SET_MAKE@
 
+
 VPATH = @srcdir@
 am__is_gnu_make = { \
   if test -z '$(MAKELEVEL)'; then \
@@ -96,7 +97,8 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
+DIST_COMMON = $(srcdir)/Makefile.am $(ilcttsinclude_HEADERS) \
+	$(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
@@ -128,7 +130,8 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(libdir)"
+am__installdirs = "$(DESTDIR)$(libdir)" \
+	"$(DESTDIR)$(ilcttsincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libilctts_la_LIBADD =
 am_libilctts_la_OBJECTS = core.lo debug.lo ilclient.lo ilcore.lo \
@@ -182,6 +185,7 @@ am__can_run_installinfo = \
     n|no|NO) false;; \
     *) (install-info --version) >/dev/null 2>&1;; \
   esac
+HEADERS = $(ilcttsinclude_HEADERS)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 # Read a list of newline-separated strings from the standard input,
 # and print each of them once, without duplicates.  Input order is
@@ -321,8 +325,10 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 COMPATNUM = @LIBTOOL_VERSION_INFO@
 lib_LTLIBRARIES = libilctts.la
-libilctts_la_SOURCES = core.c debug.c ilclient.c ilcore.c ringbuffer.c utils.c
-AM_CPPFLAGS = -I$(top_srcdir)/include -I/opt/vc/include \
+libilctts_la_SOURCES = core.c debug.c ilclient.c ilcore.c ringbuffer.c utils.c core.h debug.h ilclient.h ilctts_lib.h ringbuffer.h utils.h
+ilcttsincludedir = ${includedir}/ilctts
+ilcttsinclude_HEADERS = ilctts_lib.h
+AM_CPPFLAGS = -I/opt/vc/include \
 	-I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux -DSTANDALONE \
 	-D__STDC_CONSTANT_MACROS -D__STDC_LIMIT_MACROS -DTARGET_POSIX \
@@ -442,6 +448,27 @@ mostlyclean-libtool:
 
 clean-libtool:
 	-rm -rf .libs _libs
+install-ilcttsincludeHEADERS: $(ilcttsinclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	@list='$(ilcttsinclude_HEADERS)'; test -n "$(ilcttsincludedir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(ilcttsincludedir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(ilcttsincludedir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_HEADER) $$files '$(DESTDIR)$(ilcttsincludedir)'"; \
+	  $(INSTALL_HEADER) $$files "$(DESTDIR)$(ilcttsincludedir)" || exit $$?; \
+	done
+
+uninstall-ilcttsincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(ilcttsinclude_HEADERS)'; test -n "$(ilcttsincludedir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(ilcttsincludedir)'; $(am__uninstall_files_from_dir)
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique
@@ -527,9 +554,9 @@ distdir: $(DISTFILES)
 	done
 check-am: all-am
 check: check-am
-all-am: Makefile $(LTLIBRARIES)
+all-am: Makefile $(LTLIBRARIES) $(HEADERS)
 installdirs:
-	for dir in "$(DESTDIR)$(libdir)"; do \
+	for dir in "$(DESTDIR)$(libdir)" "$(DESTDIR)$(ilcttsincludedir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -585,7 +612,7 @@ info: info-am
 
 info-am:
 
-install-data-am:
+install-data-am: install-ilcttsincludeHEADERS
 
 install-dvi: install-dvi-am
 
@@ -631,7 +658,7 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-libLTLIBRARIES
+uninstall-am: uninstall-ilcttsincludeHEADERS uninstall-libLTLIBRARIES
 
 .MAKE: install-am install-strip
 
@@ -641,13 +668,15 @@ uninstall-am: uninstall-libLTLIBRARIES
 	distclean-libtool distclean-tags distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
 	install-data-am install-dvi install-dvi-am install-exec \
-	install-exec-am install-html install-html-am install-info \
-	install-info-am install-libLTLIBRARIES install-man install-pdf \
-	install-pdf-am install-ps install-ps-am install-strip \
-	installcheck installcheck-am installdirs maintainer-clean \
+	install-exec-am install-html install-html-am \
+	install-ilcttsincludeHEADERS install-info install-info-am \
+	install-libLTLIBRARIES install-man install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-compile \
 	mostlyclean-generic mostlyclean-libtool pdf pdf-am ps ps-am \
-	tags tags-am uninstall uninstall-am uninstall-libLTLIBRARIES
+	tags tags-am uninstall uninstall-am \
+	uninstall-ilcttsincludeHEADERS uninstall-libLTLIBRARIES
 
 .PRECIOUS: Makefile
 
