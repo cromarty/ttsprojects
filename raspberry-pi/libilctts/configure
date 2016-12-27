@@ -2827,7 +2827,7 @@ fi
 eval LIBTOOL_VERSION_INFO="1:0:0"
 
 
-CPPFLAGS="-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux -I$srcdir/include"
+CPPFLAGS="-I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads -I/opt/vc/include/interface/vmcs_host/linux -I$srcdir/src"
 LDFLAGS="-L/opt/vc/lib"
 
 # Check whether --enable-static was given.
