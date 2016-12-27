@@ -44,9 +44,11 @@ AC_SUBST([systemdunitdir])
 piespeakupunitconfdir='/etc/systemd/system'
 AC_SUBST([piespeakupunitconfdir])
 
+
 AC_CONFIG_FILES([
  Makefile
  src/Makefile
  config/Makefile
+ doc/Makefile
 ])
 AC_OUTPUT
