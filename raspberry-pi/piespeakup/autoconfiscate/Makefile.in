@@ -324,7 +324,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = src config
 dist_doc_DATA = README
-EXTRA_DIST = BROADCOM HISTORY INSTALL NOTES fix-timestamps.sh config/piespeakup.conf.in 
+EXTRA_DIST = BROADCOM HISTORY INSTALL NOTES fix-timestamps.sh config/piespeakup.conf.in config/piespeakup.service.in config/speakup_soft.conf
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
@@ -820,7 +820,6 @@ uninstall-am: uninstall-dist_docDATA
 
 .PRECIOUS: Makefile
 
-config/piespeakup.service.in config/speakup_soft.conf
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

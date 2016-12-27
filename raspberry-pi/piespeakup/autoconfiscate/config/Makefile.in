@@ -506,6 +506,12 @@ uninstall-am: uninstall-dist_modulesloadDATA \
 .PRECIOUS: Makefile
 
 
+piespeakup.service : piespeakup.service.in
+	$(SED) -e "s|prefix|$(prefix)|" $< > $@
+
+piespeakup.conf : piespeakup.conf.in
+	$(SED) "s|prefix|$(prefix)|" $< > $@
+
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
