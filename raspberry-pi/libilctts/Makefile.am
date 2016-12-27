@@ -1,7 +1,7 @@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src
 dist_doc_DATA = README
-EXTRA_DIST=AUTHORS BROADCOM COPYING ChangeLog INSTALL NEWS NOTES TODO configure depcomp libtool m4/ fix-timestamps.sh
+EXTRA_DIST=BROADCOM NOTES configure libtool m4/ fix-timestamps.sh
 
 AM_CPPFLAGS = -I$(top_srcdir)/include 
 AM_CPPFLAGS += -I/opt/vc/include 
