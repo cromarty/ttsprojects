@@ -35,7 +35,7 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memmove memset select strdup strrchr])
 
-modulesloaddir='/etc/module-load.d'
+modulesloaddir='/etc/modules-load.d'
 AC_SUBST([modulesloaddir])
 
 AC_CONFIG_FILES([
