@@ -1,0 +1,1 @@
+../../../generic/emacspeak/bison-parser/emacspeak.y
