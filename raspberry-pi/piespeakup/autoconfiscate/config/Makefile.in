@@ -143,8 +143,11 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(modulesloaddir)"
-DATA = $(dist_modulesload_DATA)
+am__installdirs = "$(DESTDIR)$(modulesloaddir)" \
+	"$(DESTDIR)$(piespeakupunitconfdir)" \
+	"$(DESTDIR)$(systemdunitdir)"
+DATA = $(dist_modulesload_DATA) $(nodist_piespeakupunitconf_DATA) \
+	$(nodist_systemdunit_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(srcdir)/Makefile.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -227,6 +230,7 @@ mkdir_p = @mkdir_p@
 modulesloaddir = @modulesloaddir@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
+piespeakupunitconfdir = @piespeakupunitconfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
@@ -234,11 +238,14 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
 sysconfdir = @sysconfdir@
+systemdunitdir = @systemdunitdir@
 target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 dist_modulesload_DATA = speakup_soft.conf
+nodist_systemdunit_DATA = piespeakup.service
+nodist_piespeakupunitconf_DATA = piespeakup.conf
 all: all-am
 
 .SUFFIXES:
@@ -292,6 +299,48 @@ uninstall-dist_modulesloadDATA:
 	@list='$(dist_modulesload_DATA)'; test -n "$(modulesloaddir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(modulesloaddir)'; $(am__uninstall_files_from_dir)
+install-nodist_piespeakupunitconfDATA: $(nodist_piespeakupunitconf_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(nodist_piespeakupunitconf_DATA)'; test -n "$(piespeakupunitconfdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(piespeakupunitconfdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(piespeakupunitconfdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(piespeakupunitconfdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(piespeakupunitconfdir)" || exit $$?; \
+	done
+
+uninstall-nodist_piespeakupunitconfDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(nodist_piespeakupunitconf_DATA)'; test -n "$(piespeakupunitconfdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(piespeakupunitconfdir)'; $(am__uninstall_files_from_dir)
+install-nodist_systemdunitDATA: $(nodist_systemdunit_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(nodist_systemdunit_DATA)'; test -n "$(systemdunitdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(systemdunitdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(systemdunitdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(systemdunitdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(systemdunitdir)" || exit $$?; \
+	done
+
+uninstall-nodist_systemdunitDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(nodist_systemdunit_DATA)'; test -n "$(systemdunitdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(systemdunitdir)'; $(am__uninstall_files_from_dir)
 tags TAGS:
 
 ctags CTAGS:
@@ -333,7 +382,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(modulesloaddir)"; do \
+	for dir in "$(DESTDIR)$(modulesloaddir)" "$(DESTDIR)$(piespeakupunitconfdir)" "$(DESTDIR)$(systemdunitdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -386,7 +435,9 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_modulesloadDATA
+install-data-am: install-dist_modulesloadDATA \
+	install-nodist_piespeakupunitconfDATA \
+	install-nodist_systemdunitDATA
 
 install-dvi: install-dvi-am
 
@@ -430,7 +481,9 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-dist_modulesloadDATA
+uninstall-am: uninstall-dist_modulesloadDATA \
+	uninstall-nodist_piespeakupunitconfDATA \
+	uninstall-nodist_systemdunitDATA
 
 .MAKE: install-am install-strip
 
@@ -440,11 +493,15 @@ uninstall-am: uninstall-dist_modulesloadDATA
 	install-data-am install-dist_modulesloadDATA install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
-	install-pdf install-pdf-am install-ps install-ps-am \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-generic pdf pdf-am ps ps-am tags-am uninstall \
-	uninstall-am uninstall-dist_modulesloadDATA
+	install-nodist_piespeakupunitconfDATA \
+	install-nodist_systemdunitDATA install-pdf install-pdf-am \
+	install-ps install-ps-am install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
+	pdf-am ps ps-am tags-am uninstall uninstall-am \
+	uninstall-dist_modulesloadDATA \
+	uninstall-nodist_piespeakupunitconfDATA \
+	uninstall-nodist_systemdunitDATA
 
 .PRECIOUS: Makefile
 
