@@ -306,6 +306,7 @@ localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
+modulesloaddir = @modulesloaddir@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
 prefix = @prefix@
@@ -319,7 +320,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = src
+SUBDIRS = src config
 dist_doc_DATA = README
 EXTRA_DIST = BROADCOM HISTORY INSTALL NOTES fix-timestamps.sh
 all: config.h

@@ -35,8 +35,12 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memmove memset select strdup strrchr])
 
+modulesloaddir='/etc/module-load.d'
+AC_SUBST([modulesloaddir])
+
 AC_CONFIG_FILES([
  Makefile
  src/Makefile
+ config/Makefile
 ])
 AC_OUTPUT
