@@ -5,6 +5,15 @@ AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SRCDIR([src/piespeakup.c])
 AC_CONFIG_HEADERS([config.h])
 
+dnl *************************************************
+dnl current:revision:age
+dnl change (without API) = c:r+1:a
+dnl change API = c+1:0:a
+dnl add API = c+1:0:a+1
+dnl remove API = c+1:0:0
+dnl *************************************************
+
+
 dnl Checks for programs.
 
 AC_PROG_CC

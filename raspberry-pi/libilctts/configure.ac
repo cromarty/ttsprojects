@@ -5,6 +5,15 @@ AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SRCDIR([src/core.c])
 AC_CONFIG_MACRO_DIR([m4])
 
+dnl *************************************************
+dnl current:revision:age
+dnl change (without API) = c:r+1:a
+dnl change API = c+1:0:a
+dnl add API = c+1:0:a+1
+dnl remove API = c+1:0:0
+dnl *************************************************
+
+
 eval LIBTOOL_VERSION_INFO="1:0:0"
 AC_SUBST(LIBTOOL_VERSION_INFO)
 
