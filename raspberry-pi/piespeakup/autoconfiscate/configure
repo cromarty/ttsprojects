@@ -626,6 +626,7 @@ ac_includes_default="\
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
+piespeakupldconfigdir
 piespeakupunitconfdir
 systemdunitdir
 modulesloaddir
@@ -4715,6 +4716,8 @@ systemdunitdir='/lib/systemd/system'
 
 piespeakupunitconfdir='/etc/systemd/system'
 
+
+piespeakupldconfigdir='/etc/ld.so.conf.d'
 
 
 ac_config_files="$ac_config_files Makefile src/Makefile config/Makefile doc/Makefile"

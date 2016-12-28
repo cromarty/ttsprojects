@@ -309,6 +309,7 @@ mkdir_p = @mkdir_p@
 modulesloaddir = @modulesloaddir@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
+piespeakupldconfigdir = @piespeakupldconfigdir@
 piespeakupunitconfdir = @piespeakupunitconfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@

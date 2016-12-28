@@ -53,6 +53,8 @@ AC_SUBST([systemdunitdir])
 piespeakupunitconfdir='/etc/systemd/system'
 AC_SUBST([piespeakupunitconfdir])
 
+piespeakupldconfigdir='/etc/ld.so.conf.d'
+AC_SUBST([piespeakupldconfigdir])
 
 AC_CONFIG_FILES([
  Makefile
