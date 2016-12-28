@@ -1,5 +1,5 @@
 ACLOCAL_AMFLAGS = -I m4
-SUBDIRS = src
+SUBDIRS = src config
 dist_doc_DATA = README
 EXTRA_DIST=BROADCOM NOTES configure libtool m4/ fix-timestamps.sh config/01-libilctts.conf.in
 

@@ -285,7 +285,7 @@ hardcode_into_libs=yes
 sys_lib_search_path_spec="/usr/lib/gcc/armv7l-unknown-linux-gnueabihf/6.2.1 /usr/lib /lib "
 
 # Detected run-time system search path for libraries.
-sys_lib_dlsearch_path_spec="/lib /usr/lib /opt/vc/lib/ /usr/local/lib/ /usr/lib/libfakeroot "
+sys_lib_dlsearch_path_spec="/lib /usr/lib /opt/vc/lib/ /usr/lib/libfakeroot "
 
 # Explicit LT_SYS_LIBRARY_PATH set during ./configure time.
 configure_time_lt_sys_library_path=""
