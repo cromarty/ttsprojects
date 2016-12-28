@@ -1,0 +1,36 @@
+
+Installation
+============
+
+Before installing piespeakup you need to install the library libilctts.
+
+You will need espeak installed. Some Linux distributions, like Raspbian, separate the development files and the 
+executable of espeak into two different packages.
+
+Installation from Archive
+-------------------------
+
+If you are installing from a .tar.gz archive which you downloaded. After cding to the directory into which you 
+unpacked the archive:
+
+	./configure
+	make
+	sudo make install
+
+After which you will need to reboot for the speakup_soft module to be loaded.
+
+Installation from github
+------------------------
+
+If you have grabbed the files from github you will need to perform one extra step, because git does not preserve 
+file timestamps:
+
+	./configure
+	./fix-timestamps.sh
+	make
+	sudo make install
+
+You will now need to reboot.
+
+
+
