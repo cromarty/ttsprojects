@@ -3,7 +3,7 @@ lib_LTLIBRARIES = libilctts.la
 libilctts_la_SOURCES = core.c debug.c ilclient.c ilcore.c ringbuffer.c utils.c core.h debug.h ilclient.h ilctts_lib.h ringbuffer.h utils.h
 
 ilcttsincludedir = ${includedir}/ilctts
-ilcttsinclude_HEADERS = ilctts_lib.h
+ilcttsinclude_HEADERS = ilctts_lib.h utils.h
 
 
 AM_CPPFLAGS = -I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads
