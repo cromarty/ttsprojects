@@ -1,4 +1,3 @@
-# modified from espeakup.service with a few additions.
 [Unit]
 Description=Software speech output for Speakup
 
@@ -8,3 +7,7 @@ PIDFile=/run/piespeakup.pid
 ExecStart=prefix/bin/piespeakup --device=local
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
+
+
+[Install]
+WantedBy=sound.target
