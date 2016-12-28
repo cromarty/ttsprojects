@@ -86,13 +86,17 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+build_triplet = @build@
+host_triplet = @host@
 subdir = config
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/m4/libtool.m4 \
+	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
+	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
+	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
-DIST_COMMON = $(srcdir)/Makefile.am $(dist_modulesload_DATA) \
-	$(am__DIST_COMMON)
+DIST_COMMON = $(srcdir)/Makefile.am $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
@@ -143,17 +147,15 @@ am__uninstall_files_from_dir = { \
     || { echo " ( cd '$$dir' && rm -f" $$files ")"; \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
-am__installdirs = "$(DESTDIR)$(modulesloaddir)" \
-	"$(DESTDIR)$(piespeakupunitconfdir)" \
-	"$(DESTDIR)$(systemdunitdir)"
-DATA = $(dist_modulesload_DATA) $(nodist_piespeakupunitconf_DATA) \
-	$(nodist_systemdunit_DATA)
+am__installdirs = "$(DESTDIR)$(piespeakupldconfigdir)"
+DATA = $(nodist_piespeakupldconfig_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(srcdir)/Makefile.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 ACLOCAL = @ACLOCAL@
 AMTAR = @AMTAR@
 AM_DEFAULT_VERBOSITY = @AM_DEFAULT_VERBOSITY@
+AR = @AR@
 AUTOCONF = @AUTOCONF@
 AUTOHEADER = @AUTOHEADER@
 AUTOMAKE = @AUTOMAKE@
@@ -166,25 +168,40 @@ CPPFLAGS = @CPPFLAGS@
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
+DSYMUTIL = @DSYMUTIL@
+DUMPBIN = @DUMPBIN@
 ECHO_C = @ECHO_C@
 ECHO_N = @ECHO_N@
 ECHO_T = @ECHO_T@
 EGREP = @EGREP@
 EXEEXT = @EXEEXT@
+FGREP = @FGREP@
 GREP = @GREP@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+LD = @LD@
 LDFLAGS = @LDFLAGS@
 LIBOBJS = @LIBOBJS@
 LIBS = @LIBS@
+LIBTOOL = @LIBTOOL@
+LIBTOOL_VERSION_INFO = @LIBTOOL_VERSION_INFO@
+LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAKEINFO = @MAKEINFO@
+MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
+NM = @NM@
+NMEDIT = @NMEDIT@
+OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
+OTOOL = @OTOOL@
+OTOOL64 = @OTOOL64@
 PACKAGE = @PACKAGE@
 PACKAGE_BUGREPORT = @PACKAGE_BUGREPORT@
 PACKAGE_NAME = @PACKAGE_NAME@
@@ -193,6 +210,7 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
+RANLIB = @RANLIB@
 SED = @SED@
 SET_MAKE = @SET_MAKE@
 SHELL = @SHELL@
@@ -202,21 +220,31 @@ abs_builddir = @abs_builddir@
 abs_srcdir = @abs_srcdir@
 abs_top_builddir = @abs_top_builddir@
 abs_top_srcdir = @abs_top_srcdir@
+ac_ct_AR = @ac_ct_AR@
 ac_ct_CC = @ac_ct_CC@
+ac_ct_DUMPBIN = @ac_ct_DUMPBIN@
 am__include = @am__include@
 am__leading_dot = @am__leading_dot@
 am__quote = @am__quote@
 am__tar = @am__tar@
 am__untar = @am__untar@
 bindir = @bindir@
+build = @build@
 build_alias = @build_alias@
+build_cpu = @build_cpu@
+build_os = @build_os@
+build_vendor = @build_vendor@
 builddir = @builddir@
 datadir = @datadir@
 datarootdir = @datarootdir@
 docdir = @docdir@
 dvidir = @dvidir@
 exec_prefix = @exec_prefix@
+host = @host@
 host_alias = @host_alias@
+host_cpu = @host_cpu@
+host_os = @host_os@
+host_vendor = @host_vendor@
 htmldir = @htmldir@
 includedir = @includedir@
 infodir = @infodir@
@@ -227,11 +255,9 @@ localedir = @localedir@
 localstatedir = @localstatedir@
 mandir = @mandir@
 mkdir_p = @mkdir_p@
-modulesloaddir = @modulesloaddir@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
 piespeakupldconfigdir = @piespeakupldconfigdir@
-piespeakupunitconfdir = @piespeakupunitconfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
@@ -239,15 +265,12 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
 sysconfdir = @sysconfdir@
-systemdunitdir = @systemdunitdir@
 target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-dist_modulesload_DATA = speakup_soft.conf
-nodist_systemdunit_DATA = piespeakup.service
-nodist_piespeakupunitconf_DATA = piespeakup.conf
-CLEANFILES = piespeakup.service piespeakup.conf
+nodist_piespeakupldconfig_DATA = 01-libilctts.conf
+CLEANFILES = 01-libilctts.conf
 all: all-am
 
 .SUFFIXES:
@@ -280,69 +303,33 @@ $(top_srcdir)/configure:  $(am__configure_deps)
 $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
 $(am__aclocal_m4_deps):
-install-dist_modulesloadDATA: $(dist_modulesload_DATA)
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+install-nodist_piespeakupldconfigDATA: $(nodist_piespeakupldconfig_DATA)
 	@$(NORMAL_INSTALL)
-	@list='$(dist_modulesload_DATA)'; test -n "$(modulesloaddir)" || list=; \
+	@list='$(nodist_piespeakupldconfig_DATA)'; test -n "$(piespeakupldconfigdir)" || list=; \
 	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(modulesloaddir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(modulesloaddir)" || exit 1; \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(piespeakupldconfigdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(piespeakupldconfigdir)" || exit 1; \
 	fi; \
 	for p in $$list; do \
 	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
 	  echo "$$d$$p"; \
 	done | $(am__base_list) | \
 	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(modulesloaddir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(modulesloaddir)" || exit $$?; \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(piespeakupldconfigdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(piespeakupldconfigdir)" || exit $$?; \
 	done
 
-uninstall-dist_modulesloadDATA:
+uninstall-nodist_piespeakupldconfigDATA:
 	@$(NORMAL_UNINSTALL)
-	@list='$(dist_modulesload_DATA)'; test -n "$(modulesloaddir)" || list=; \
+	@list='$(nodist_piespeakupldconfig_DATA)'; test -n "$(piespeakupldconfigdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(modulesloaddir)'; $(am__uninstall_files_from_dir)
-install-nodist_piespeakupunitconfDATA: $(nodist_piespeakupunitconf_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(nodist_piespeakupunitconf_DATA)'; test -n "$(piespeakupunitconfdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(piespeakupunitconfdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(piespeakupunitconfdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(piespeakupunitconfdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(piespeakupunitconfdir)" || exit $$?; \
-	done
-
-uninstall-nodist_piespeakupunitconfDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(nodist_piespeakupunitconf_DATA)'; test -n "$(piespeakupunitconfdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(piespeakupunitconfdir)'; $(am__uninstall_files_from_dir)
-install-nodist_systemdunitDATA: $(nodist_systemdunit_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(nodist_systemdunit_DATA)'; test -n "$(systemdunitdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(systemdunitdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(systemdunitdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(systemdunitdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(systemdunitdir)" || exit $$?; \
-	done
-
-uninstall-nodist_systemdunitDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(nodist_systemdunit_DATA)'; test -n "$(systemdunitdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(systemdunitdir)'; $(am__uninstall_files_from_dir)
+	dir='$(DESTDIR)$(piespeakupldconfigdir)'; $(am__uninstall_files_from_dir)
 tags TAGS:
 
 ctags CTAGS:
@@ -384,7 +371,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(modulesloaddir)" "$(DESTDIR)$(piespeakupunitconfdir)" "$(DESTDIR)$(systemdunitdir)"; do \
+	for dir in "$(DESTDIR)$(piespeakupldconfigdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -420,7 +407,7 @@ maintainer-clean-generic:
 	@echo "it deletes files that may require special tools to rebuild."
 clean: clean-am
 
-clean-am: clean-generic mostlyclean-am
+clean-am: clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
 	-rm -f Makefile
@@ -438,9 +425,7 @@ info: info-am
 
 info-am:
 
-install-data-am: install-dist_modulesloadDATA \
-	install-nodist_piespeakupunitconfDATA \
-	install-nodist_systemdunitDATA
+install-data-am: install-nodist_piespeakupldconfigDATA
 
 install-dvi: install-dvi-am
 
@@ -474,7 +459,7 @@ maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-generic
+mostlyclean-am: mostlyclean-generic mostlyclean-libtool
 
 pdf: pdf-am
 
@@ -484,35 +469,27 @@ ps: ps-am
 
 ps-am:
 
-uninstall-am: uninstall-dist_modulesloadDATA \
-	uninstall-nodist_piespeakupunitconfDATA \
-	uninstall-nodist_systemdunitDATA
+uninstall-am: uninstall-nodist_piespeakupldconfigDATA
 
 .MAKE: install-am install-strip
 
-.PHONY: all all-am check check-am clean clean-generic cscopelist-am \
-	ctags-am distclean distclean-generic distdir dvi dvi-am html \
-	html-am info info-am install install-am install-data \
-	install-data-am install-dist_modulesloadDATA install-dvi \
+.PHONY: all all-am check check-am clean clean-generic clean-libtool \
+	cscopelist-am ctags-am distclean distclean-generic \
+	distclean-libtool distdir dvi dvi-am html html-am info info-am \
+	install install-am install-data install-data-am install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
-	install-nodist_piespeakupunitconfDATA \
-	install-nodist_systemdunitDATA install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
-	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
-	pdf-am ps ps-am tags-am uninstall uninstall-am \
-	uninstall-dist_modulesloadDATA \
-	uninstall-nodist_piespeakupunitconfDATA \
-	uninstall-nodist_systemdunitDATA
+	install-nodist_piespeakupldconfigDATA install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-generic \
+	mostlyclean-libtool pdf pdf-am ps ps-am tags-am uninstall \
+	uninstall-am uninstall-nodist_piespeakupldconfigDATA
 
 .PRECIOUS: Makefile
 
 
-piespeakup.service : piespeakup.service.in
-	$(SED) -e "s|prefix|$(prefix)|" $< > $@
-
-piespeakup.conf : piespeakup.conf.in
+01-libilctts.conf : 01-libilctts.conf.in
 	$(SED) "s|prefix|$(prefix)|" $< > $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

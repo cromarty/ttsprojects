@@ -28,6 +28,7 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AM_PROG_AR
 AC_PROG_LN_S
+AC_PROG_SED
 AC_PROG_MAKE_SET
 LT_INIT
 
@@ -64,10 +65,14 @@ EOF
   exit 1
 fi
 
+piespeakupldconfigdir='/etc/ld.so.conf.d'
+AC_SUBST([piespeakupldconfigdir])
+
 
 AC_CONFIG_FILES([
  Makefile
  src/Makefile
+ config/Makefile
 ])
 
 AC_OUTPUT

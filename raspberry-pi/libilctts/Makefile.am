@@ -1,7 +1,7 @@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src
 dist_doc_DATA = README
-EXTRA_DIST=BROADCOM NOTES configure libtool m4/ fix-timestamps.sh
+EXTRA_DIST=BROADCOM NOTES configure libtool m4/ fix-timestamps.sh config/01-libilctts.conf.in
 
 AM_CPPFLAGS = -I$(top_srcdir)/include 
 AM_CPPFLAGS += -I/opt/vc/include 
@@ -18,7 +18,4 @@ AM_CPPFLAGS += -pipe -DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST
 AM_CPPFLAGS += -DUSE_EXTERNAL_LIBBCM_HOST
 AM_CPPFLAGS += -DUSE_VCHIQ_ARM -Wno-psabi
 AM_CPPFLAGS += -O2 -Wextra -Wno-unused-function
-
-
-#AM_LDFLAGS="-Wl,--verbose -L/opt/vc/lib -shared"
 

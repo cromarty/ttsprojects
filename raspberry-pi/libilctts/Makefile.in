@@ -341,6 +341,7 @@ mandir = @mandir@
 mkdir_p = @mkdir_p@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
+piespeakupldconfigdir = @piespeakupldconfigdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
@@ -355,7 +356,7 @@ top_srcdir = @top_srcdir@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src
 dist_doc_DATA = README
-EXTRA_DIST = BROADCOM NOTES configure libtool m4/ fix-timestamps.sh
+EXTRA_DIST = BROADCOM NOTES configure libtool m4/ fix-timestamps.sh config/01-libilctts.conf.in
 AM_CPPFLAGS = -I$(top_srcdir)/include -I/opt/vc/include \
 	-I/opt/vc/include/interface/vcos/pthreads \
 	-I/opt/vc/include/interface/vmcs_host/linux -DSTANDALONE \
@@ -872,8 +873,6 @@ uninstall-am: uninstall-dist_docDATA
 
 .PRECIOUS: Makefile
 
-
-#AM_LDFLAGS="-Wl,--verbose -L/opt/vc/lib -shared"
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
