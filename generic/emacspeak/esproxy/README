@@ -1,4 +1,7 @@
-### esproxy
+
+esproxy
+=======
+
 
 This is a simple bash script that I used to collect protocol data from 
 Emacspeak.
@@ -12,12 +15,13 @@ In your .bashrc with:
 
 DTK=/usr/local/bin/esproxy
 
-What it does:
+What it does
+------------
 
 1.  Reads data from standard input, logs it and then writes it to standard 
-output.  Thus it is interposed in the Emacspeak speech-server path.
+output.  Thus it is interposed in the Emacspeak speech-server path, like this:
 
-Emacspeak protocol.
+Emacspeak --> esproxy --> <configured server>
 
 
 
