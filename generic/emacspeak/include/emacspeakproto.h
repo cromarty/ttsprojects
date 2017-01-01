@@ -1,4 +1,3 @@
-
 /*
  *
  * Copyright (C) 2014 Mike Ray <mike.ray.1964@gmail.com>
