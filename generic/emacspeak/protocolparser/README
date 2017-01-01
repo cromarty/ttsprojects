@@ -1,0 +1,33 @@
+
+emacspeak protocol parser using Flex and Bison
+==============================================
+
+Files:
+
+emacspeak.y
+emacspeak.l
+
+Bison
+-----
+
+To produce C files from the Bison grammar:
+
+	bison -d emacspeak.y
+
+The above will produce:
+
+emacspeak.tab.c
+emacspeak.tab.h
+
+Flex
+----
+
+To produce a lexer from emacspeak.l:
+
+flex emacspeak.l
+
+Which produces:
+
+lex.yy.c
+
+

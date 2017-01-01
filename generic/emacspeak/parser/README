@@ -1,8 +1,0 @@
-
-emacspeak protocol parser using Flex and Bison
-==============================================
-
-Files:
-
-emacspeak.y
-emacspeak.l
