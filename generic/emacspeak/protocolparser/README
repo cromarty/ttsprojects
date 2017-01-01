@@ -30,4 +30,12 @@ Which produces:
 
 lex.yy.c
 
+Protocol Specs
+--------------
+
+Here is a link to the protocol specs:
+
+http://tvraman.github.io/emacspeak/manual/TTS-Servers.html
+
+
 
