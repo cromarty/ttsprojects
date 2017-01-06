@@ -28,6 +28,7 @@
 #define PUNCT_LEVEL_NONE 0
 #define PUNCT_LEVEL_SOME 1
 #define PUNCT_LEVEL_ALL 2
+
 int esp_version(void);
 int esp_tts_say(char*);
 int esp_l(const char);
@@ -50,6 +51,9 @@ int esp_tts_capitalize(int flag);
 int esp_tts_allcaps_beep(int flag);
 
 int esp_sync_state(int, int, int, int, int);
+
+int esp_initialize(void);
+int esp_finalize(void);
 
 
 #endif
