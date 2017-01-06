@@ -31,21 +31,21 @@
 
 int esp_version(void);
 int esp_tts_say(char*);
-int esp_l(const char);
+int esp_l(const char *ch);
 int esp_d(void);
 int esp_tts_pause(void);
 int esp_tts_resume(void);
 int esp_s(void);
-int esp_q(const *char);
-int esp_c(const *char);
-int esp_a(const *filename);
+int esp_q(const char *text);
+int esp_c(const char *code);
+int esp_a(const char *filename);
 int esp_t(int freq, int length);
 int esp_sh(int durationms);
 
 int esp_tts_reset(void);
-int esp_set_punctuations(int);
+int esp_tts_set_punctuations(int);
 int esp_tts_set_speech_rate(int);
-int esp_tts_set_character_scale factor(double scale);
+int esp_tts_set_character_scale(double factor);
 int esp_tts_split_caps(int flag);
 int esp_tts_capitalize(int flag);
 int esp_tts_allcaps_beep(int flag);

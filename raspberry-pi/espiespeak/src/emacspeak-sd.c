@@ -14,9 +14,9 @@ int esp_tts_say(char *text)
 	return 0;
 } /* end tts_say */
 
-int esp_l(char *c)
+int esp_l(const char *ch)
 {
-	printf("Called esp_l\n");
+	printf("Called esp_l: %s\n", ch);
 	return 0;
 } /* end tts_l */
 
@@ -44,19 +44,19 @@ int esp_s(void)
 	return 0;
 } /* end tts_s */
 
-int esp_q(char *text)
+int esp_q(const char *text)
 {
 	printf("Called esp_q to queue text: %s\n", text);
 	return 0;
 } /* end esp_q */
 
-int esp_c(char *code)
+int esp_c(const char *code)
 {
 	printf("Called esp_c: %s\n", code);
 	return 0;
 } /* end tts_c */
 
-int esp_a(char *filename)
+int esp_a(const char *filename)
 {
 	printf("Called esp_a: %s\n", filename);
 	return 0;
@@ -80,7 +80,7 @@ int esp_tts_reset(void)
 	return 0;
 } /* end esp_tts_reset */
 
-int esp_set_punctuations(int punct_level)
+int esp_tts_set_punctuations(int punct_level)
 {
 	printf("Called set punct level: %d\n", punct_level);
 	return 0;
@@ -92,9 +92,9 @@ int esp_tts_set_speech_rate(int speech_rate)
 	return 0;
 } /* end esp_tts_set_speech_rate */
 
-int esp_tts_set_character_scale(double scale)
+int esp_tts_set_character_scale(double factor)
 {
-	printf("Called esp_tts_set_character_scale: %f\n", scale);
+	printf("Called esp_tts_set_character_scale: %f\n", factor);
 	return 0;
 } /* end tts_set_character_scale */
 
@@ -110,9 +110,9 @@ int esp_tts_capitalize(int flag)
 	return 0;
 } /* end esp_tts_capitalize */
 
-int esp_tts_allcaps_beep(void)
+int esp_tts_allcaps_beep(int flag)
 {
-	printf("Called esp_tts_allcaps_beep\n");
+	printf("Called esp_tts_allcaps_beep: %d\n", flag);
 	return 0;
 } /* end esp_tts_allcaps_beep */
 
@@ -141,15 +141,4 @@ int esp_finalize(void)
 	printf("Called esp_finalize\n");
 	return 0;
 } /* end esp_finalize */
-
-
-
-
-
-
-
-
-
-
-
 

@@ -419,7 +419,7 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  2
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   39
+#define YYLAST   41
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  31
@@ -428,7 +428,7 @@ union yyalloc
 /* YYNRULES -- Number of rules.  */
 #define YYNRULES  27
 /* YYNSTATES -- Number of states.  */
-#define YYNSTATES  44
+#define YYNSTATES  46
 
 /* YYTRANSLATE[YYX] -- Symbol number corresponding to YYX as returned
    by yylex, with out-of-bounds checking.  */
@@ -510,10 +510,10 @@ static const yytype_uint16 yytoknum[] =
 };
 # endif
 
-#define YYPACT_NINF -20
+#define YYPACT_NINF -19
 
 #define yypact_value_is_default(Yystate) \
-  (!!((Yystate) == (-20)))
+  (!!((Yystate) == (-19)))
 
 #define YYTABLE_NINF -1
 
@@ -524,11 +524,11 @@ static const yytype_uint16 yytoknum[] =
      STATE-NUM.  */
 static const yytype_int8 yypact[] =
 {
-     -20,     0,   -20,   -20,   -20,   -20,   -20,   -20,   -19,   -15,
-       4,   -13,   -20,     4,    -5,   -20,     3,    -3,   -20,   -20,
-     -20,     7,    11,     9,   -20,   -20,   -20,   -20,   -20,   -20,
-     -20,   -20,    17,   -20,   -20,   -20,   -20,    18,   -20,    19,
-     -20,    20,    21,   -20
+     -19,     0,   -19,   -16,   -19,   -19,   -19,   -19,   -18,   -13,
+       4,    -2,     3,     4,    -3,   -19,    10,     8,   -19,   -19,
+     -19,     9,    17,    15,   -19,   -19,   -19,   -19,   -19,   -19,
+     -19,   -19,   -19,   -19,    19,   -19,   -19,   -19,   -19,    20,
+     -19,    21,   -19,    22,    23,   -19
 };
 
   /* YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
@@ -536,23 +536,23 @@ static const yytype_int8 yypact[] =
      means the default is an error.  */
 static const yytype_uint8 yydefact[] =
 {
-       2,     0,     1,     5,     6,     7,     8,     9,     0,     0,
-       0,     0,    14,     0,     0,     4,     0,     0,    16,    20,
-      23,     0,     0,     0,     3,    10,    11,    25,    26,    27,
-      12,    13,     0,    18,    17,    19,    22,     0,    24,     0,
-      21,     0,     0,    15
+       2,     0,     1,     0,     6,     7,     8,     9,     0,     0,
+       0,     0,     0,     0,     0,     4,     0,     0,    16,    20,
+      23,     0,     0,     0,     3,     5,    10,    11,    25,    26,
+      27,    12,    13,    14,     0,    18,    17,    19,    22,     0,
+      24,     0,    21,     0,     0,    15
 };
 
   /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -20,   -20,   -20,    26
+     -19,   -19,   -19,    28
 };
 
   /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
-      -1,     1,    24,    30
+      -1,     1,    24,    31
 };
 
   /* YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
@@ -560,18 +560,20 @@ static const yytype_int8 yydefgoto[] =
      number is the opposite.  If YYTABLE_NINF, syntax error.  */
 static const yytype_uint8 yytable[] =
 {
-       2,    25,    26,     3,    31,     4,     5,     6,     7,     8,
-       9,    10,    11,    12,    13,    33,    14,    35,    15,    16,
-      34,    17,    18,    19,    20,    21,    22,    36,    37,    38,
-      23,    27,    28,    29,    39,    40,    41,    42,    43,    32
+       2,    25,    26,     3,    27,     4,     5,     6,     7,     8,
+       9,    10,    11,    12,    13,    32,    14,    35,    15,    16,
+      33,    17,    18,    19,    20,    21,    22,    36,    37,    38,
+      23,    28,    29,    30,    39,    40,    41,    42,    43,    44,
+      45,    34
 };
 
 static const yytype_uint8 yycheck[] =
 {
-       0,    20,    17,     3,    17,     5,     6,     7,     8,     9,
-      10,    11,    12,    13,    14,    20,    16,    20,    18,    19,
-      17,    21,    22,    23,    24,    25,    26,    20,    17,    20,
-      30,    27,    28,    29,    17,    17,    17,    17,    17,    13
+       0,    17,    20,     3,    17,     5,     6,     7,     8,     9,
+      10,    11,    12,    13,    14,    17,    16,    20,    18,    19,
+      17,    21,    22,    23,    24,    25,    26,    17,    20,    20,
+      30,    27,    28,    29,    17,    20,    17,    17,    17,    17,
+      17,    13
 };
 
   /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -580,9 +582,9 @@ static const yytype_uint8 yystos[] =
 {
        0,    32,     0,     3,     5,     6,     7,     8,     9,    10,
       11,    12,    13,    14,    16,    18,    19,    21,    22,    23,
-      24,    25,    26,    30,    33,    20,    17,    27,    28,    29,
-      34,    17,    34,    20,    17,    20,    20,    17,    20,    17,
-      17,    17,    17,    17
+      24,    25,    26,    30,    33,    17,    20,    17,    27,    28,
+      29,    34,    17,    17,    34,    20,    17,    20,    20,    17,
+      20,    17,    17,    17,    17,    17
 };
 
   /* YYR1[YYN] -- Symbol number of symbol that rule YYN derives.  */
@@ -596,8 +598,8 @@ static const yytype_uint8 yyr1[] =
   /* YYR2[YYN] -- Number of symbols on the right hand side of rule YYN.  */
 static const yytype_uint8 yyr2[] =
 {
-       0,     2,     0,     2,     1,     1,     1,     1,     1,     1,
-       2,     2,     2,     2,     1,     6,     1,     2,     2,     2,
+       0,     2,     0,     2,     1,     2,     1,     1,     1,     1,
+       2,     2,     2,     2,     2,     6,     1,     2,     2,     2,
        1,     3,     2,     1,     2,     1,     1,     1
 };
 
@@ -1277,67 +1279,67 @@ yyreduce:
         case 4:
 #line 89 "emacspeak.y" /* yacc.c:1646  */
     { /* do nothing */ }
-#line 1281 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1283 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
 #line 90 "emacspeak.y" /* yacc.c:1646  */
-    { esp_allcaps_beep(); }
-#line 1287 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_tts_allcaps_beep((yyvsp[0].number)); }
+#line 1289 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
 #line 91 "emacspeak.y" /* yacc.c:1646  */
     { esp_initialize(); }
-#line 1293 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1295 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 92 "emacspeak.y" /* yacc.c:1646  */
-    { esp_pause(); }
-#line 1299 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_tts_pause(); }
+#line 1301 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
 #line 93 "emacspeak.y" /* yacc.c:1646  */
-    { esp_reset(); }
-#line 1305 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_tts_reset(); }
+#line 1307 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
 #line 94 "emacspeak.y" /* yacc.c:1646  */
-    { esp_resume(); }
-#line 1311 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_tts_resume(); }
+#line 1313 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
 #line 95 "emacspeak.y" /* yacc.c:1646  */
-    { esp_say((yyvsp[0].string)); }
-#line 1317 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_tts_say((yyvsp[0].string)); }
+#line 1319 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
 #line 96 "emacspeak.y" /* yacc.c:1646  */
-    { esp_set_character_scale((yyvsp[0].number)); }
-#line 1323 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_tts_set_character_scale((yyvsp[0].number)); }
+#line 1325 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 97 "emacspeak.y" /* yacc.c:1646  */
-    { esp_set_punctuations(sync_punct_level); }
-#line 1329 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_tts_set_punctuations(sync_punct_level); }
+#line 1331 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
 #line 98 "emacspeak.y" /* yacc.c:1646  */
-    { esp_set_speech_rate((yyvsp[0].number)); }
-#line 1335 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_tts_set_speech_rate((yyvsp[0].number)); }
+#line 1337 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
 #line 99 "emacspeak.y" /* yacc.c:1646  */
-    { esp_split_caps(); }
-#line 1341 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_tts_split_caps((yyvsp[0].number)); }
+#line 1343 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
@@ -1347,67 +1349,67 @@ yyreduce:
 					sync_dtk_allcaps_beep = (yyvsp[-2].number);
 					sync_dtk_split_caps = (yyvsp[-1].number);
 					sync_speech_rate = (yyvsp[0].number);
-					esp_sync_state(sync_punct_level, sync_dtk_caps_pitch_rise, sync_dtk_allcaps_beep, sync_dtk_split_caps, sync_speech_rate);
+					esp_tts_sync_state(sync_punct_level, sync_dtk_caps_pitch_rise, sync_dtk_allcaps_beep, sync_dtk_split_caps, sync_speech_rate);
 				}
-#line 1353 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1355 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
 #line 108 "emacspeak.y" /* yacc.c:1646  */
-    { esp_flush(); }
-#line 1359 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_s(); }
+#line 1361 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
 #line 109 "emacspeak.y" /* yacc.c:1646  */
-    { esp_silence((yyvsp[0].number)); }
-#line 1365 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_sh((yyvsp[0].number)); }
+#line 1367 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
 #line 110 "emacspeak.y" /* yacc.c:1646  */
     { esp_q((yyvsp[0].string)); }
-#line 1371 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1373 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
 #line 111 "emacspeak.y" /* yacc.c:1646  */
-    { esp_letter((yyvsp[0].string)); }
-#line 1377 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_l((yyvsp[0].string)); }
+#line 1379 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
 #line 112 "emacspeak.y" /* yacc.c:1646  */
-    { esp_dispatch(); }
-#line 1383 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_d(); }
+#line 1385 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
 #line 113 "emacspeak.y" /* yacc.c:1646  */
-    { esp_tone((yyvsp[-1].number), (yyvsp[0].number)); }
-#line 1389 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_t((yyvsp[-1].number), (yyvsp[0].number)); }
+#line 1391 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
 #line 114 "emacspeak.y" /* yacc.c:1646  */
-    { esp_play_file((yyvsp[0].string)); }
-#line 1395 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_a((yyvsp[0].string)); }
+#line 1397 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
 #line 115 "emacspeak.y" /* yacc.c:1646  */
     { esp_version(); }
-#line 1401 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1403 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
 #line 116 "emacspeak.y" /* yacc.c:1646  */
-    { esp_code((yyvsp[0].string)); }
-#line 1407 "emacspeak.tab.c" /* yacc.c:1646  */
+    { esp_c((yyvsp[0].string)); }
+#line 1409 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1411 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1413 "emacspeak.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1638,15 +1640,15 @@ yyreturn:
 #line 125 "emacspeak.y" /* yacc.c:1906  */
 
 
-main(int argc, char **argv) 
+int main(int argc, char **argv) 
 {
 
 	yyparse(); 
 
-} 
+} /* end main */ 
 
 yyerror(char *s) 
 { 
 	fprintf(stderr, "error: %s\n", s); 
-} /* end main */
+} /* end yyerror */
 

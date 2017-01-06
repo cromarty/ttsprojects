@@ -32,10 +32,10 @@
 #include "emacspeak-module.h"
 
 /* these are declared in emacspeak.y */
-extern sync_punct_level;
-extern sync_dtk_caps_pitch_rise;
-extern sync_dtk_allcaps_beep;
-extern sync_dtk_split_caps;
+extern int sync_punct_level;
+extern int sync_dtk_caps_pitch_rise;
+extern int sync_dtk_allcaps_beep;
+extern int sync_dtk_split_caps;
 
 %}
 

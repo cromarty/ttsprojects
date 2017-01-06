@@ -87,33 +87,33 @@ commands : /* empty */
 ;
 
 command : EOL { /* do nothing */ }
-			| TTS_ALLCAPS_BEEP			{ esp_allcaps_beep(); }
+			| TTS_ALLCAPS_BEEP NUM			{ esp_tts_allcaps_beep($2); }
 		| TTS_INITIALIZE					{ esp_initialize(); }
-		| TTS_PAUSE					{ esp_pause(); }
-		| TTS_RESET					{ esp_reset(); }
-		| TTS_RESUME					{ esp_resume(); }
-		| TTS_SAY CTEXT					{ esp_say($2); }
-		| TTS_SET_CHARACTER_SCALE NUM					{ esp_set_character_scale($2); }
-		| TTS_SET_PUNCTUATIONS identifier					{ esp_set_punctuations(sync_punct_level); }
-		| TTS_SET_SPEECH_RATE NUM					{ esp_set_speech_rate($2); }
-		| TTS_SPLIT_CAPS					{ esp_split_caps(); }
+		| TTS_PAUSE					{ esp_tts_pause(); }
+		| TTS_RESET					{ esp_tts_reset(); }
+		| TTS_RESUME					{ esp_tts_resume(); }
+		| TTS_SAY CTEXT					{ esp_tts_say($2); }
+		| TTS_SET_CHARACTER_SCALE NUM					{ esp_tts_set_character_scale($2); }
+		| TTS_SET_PUNCTUATIONS identifier					{ esp_tts_set_punctuations(sync_punct_level); }
+		| TTS_SET_SPEECH_RATE NUM					{ esp_tts_set_speech_rate($2); }
+		| TTS_SPLIT_CAPS NUM					{ esp_tts_split_caps($2); }
 		| TTS_SYNC_STATE identifier NUM NUM NUM NUM 
 				{
 					sync_dtk_caps_pitch_rise = $3;
 					sync_dtk_allcaps_beep = $4;
 					sync_dtk_split_caps = $5;
 					sync_speech_rate = $6;
-					esp_sync_state(sync_punct_level, sync_dtk_caps_pitch_rise, sync_dtk_allcaps_beep, sync_dtk_split_caps, sync_speech_rate);
+					esp_tts_sync_state(sync_punct_level, sync_dtk_caps_pitch_rise, sync_dtk_allcaps_beep, sync_dtk_split_caps, sync_speech_rate);
 				}
-		| FLUSH					{ esp_flush(); }
-		| SILENCE NUM					{ esp_silence($2); }
+		| FLUSH					{ esp_s(); }
+		| SILENCE NUM					{ esp_sh($2); }
 		| QSPEECH CTEXT					{ esp_q($2); }
-		| LETTER CTEXT					{ esp_letter($2); }
-		| DISPATCH					{ esp_dispatch(); }
-		| TONE NUM NUM					{ esp_tone($2, $3); }
-		| PLAYFILE CTEXT					{ esp_play_file($2); }
+		| LETTER CTEXT					{ esp_l($2); }
+		| DISPATCH					{ esp_d(); }
+		| TONE NUM NUM					{ esp_t($2, $3); }
+		| PLAYFILE CTEXT					{ esp_a($2); }
 		| VERSION					{ esp_version(); }
-		| CODE CTEXT			{ esp_code($2); }
+		| CODE CTEXT			{ esp_c($2); }
 ;
 
 identifier : PUNCTLEVEL
@@ -124,15 +124,15 @@ identifier : PUNCTLEVEL
 
 %%
 
-main(int argc, char **argv) 
+int main(int argc, char **argv) 
 {
 
 	yyparse(); 
 
-} 
+} /* end main */ 
 
 yyerror(char *s) 
 { 
 	fprintf(stderr, "error: %s\n", s); 
-} /* end main */
+} /* end yyerror */
 
