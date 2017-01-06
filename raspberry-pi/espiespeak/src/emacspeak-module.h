@@ -50,7 +50,7 @@ int esp_tts_split_caps(int flag);
 int esp_tts_capitalize(int flag);
 int esp_tts_allcaps_beep(int flag);
 
-int esp_sync_state(int, int, int, int, int);
+int esp_tts_sync_state(int, int, int, int, int);
 
 int esp_initialize(void);
 int esp_finalize(void);

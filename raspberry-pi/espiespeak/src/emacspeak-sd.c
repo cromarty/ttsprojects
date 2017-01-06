@@ -118,16 +118,16 @@ int esp_tts_allcaps_beep(int flag)
 
 
 
-int esp_sync_state(
+int esp_tts_sync_state(
 	int punct_level,
 	int pitch_rise,
 	int caps_beep,
 	int split_caps,
 	int speech_rate)
 {
-	printf("Called esp_Sync state: %d %d %d %d %d\n", punct_level, pitch_rise, caps_beep, split_caps, speech_rate);
+	printf("Called esp_tts_sync_state: %d %d %d %d %d\n", punct_level, pitch_rise, caps_beep, split_caps, speech_rate);
 	return 0;
-} /* end tts_sync_state */
+} /* end esp_tts_sync_state */
 
 
 int esp_initialize(void)
