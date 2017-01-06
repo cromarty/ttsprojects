@@ -1,0 +1,1 @@
+../../../generic/emacspeak/protocolparser/emacspeak.l

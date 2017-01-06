@@ -1,0 +1,14 @@
+# Usual stuff
+res
+*~
+
+# Various
+Makefile
+emacspeakproto.h
+emspk
+*.log
+
+# Bison and Flex generated files
+emacspeak.tab.c
+emacspeak.tab.h
+lex.yy.c
