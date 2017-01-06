@@ -18,7 +18,8 @@
 * Boston, MA 02110-1301, USA.
 *
 * $Id: emspk-sd.h
-*/
+*--code--*/
+
 #ifndef EMACSPEAK_PROTO_H
 #define EMACSPEAK_PROTO_H
 
@@ -27,18 +28,28 @@
 #define PUNCT_LEVEL_NONE 0
 #define PUNCT_LEVEL_SOME 1
 #define PUNCT_LEVEL_ALL 2
+int esp_version(void);
+int esp_tts_say(char*);
+int esp_l(const char);
+int esp_d(void);
+int esp_tts_pause(void);
+int esp_tts_resume(void);
+int esp_s(void);
+int esp_q(const *char);
+int esp_c(const *char);
+int esp_a(const *filename);
+int esp_t(int freq, int length);
+int esp_sh(int durationms);
+
+int esp_tts_reset(void);
+int esp_set_punctuations(int);
+int esp_tts_set_speech_rate(int);
+int esp_tts_set_character_scale factor(double scale);
+int esp_tts_split_caps(int flag);
+int esp_tts_capitalize(int flag);
+int esp_tts_allcaps_beep(int flag);
 
 int esp_sync_state(int, int, int, int, int);
-int esp_set_speech_rate(int);
-int esp_set_punctuations(int);
-int esp_pause(void);
-int esp_pause(void);
-int esp_reset(void);
-int esp_resume(void);
-int esp_q(char*);
-int esp_say(char*);
-
-
 
 
 #endif
