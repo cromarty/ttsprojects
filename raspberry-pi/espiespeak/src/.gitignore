@@ -9,6 +9,6 @@ emspk
 *.log
 
 # Bison and Flex generated files
-emacspeak.tab.c
-emacspeak.tab.h
-lex.yy.c
+#emacspeak.tab.c
+#emacspeak.tab.h
+#lex.yy.c

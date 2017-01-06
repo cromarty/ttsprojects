@@ -2,9 +2,9 @@
 *~
 
 # ignore flex and bison intermediate files
-*.yy.c
-*.tab.c
-*.tab.h
+#*.yy.c
+#*.tab.c
+#*.tab.h
 
 # ignore *.o
 *.o
