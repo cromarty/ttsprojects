@@ -62,7 +62,7 @@ extern int sync_dtk_split_caps;
 "{"				{ BEGIN(INBRACES); }
 "}"				{ BEGIN(INITIAL); }
 [0-9]+				{ yylval.number = atoi(yytext); return NUM; }
-<INBRACES>.*/\}\n	{ BEGIN(INITIAL); yylval.string = yytext; return CTEXT; } 
+<INBRACES>[^}]+	{ BEGIN(INITIAL); yylval.string = yytext; return CTEXT; } 
 all		{ sync_punct_level = PUNCT_LEVEL_ALL; return PUNCTLEVEL; }
 some		{ sync_punct_level = PUNCT_LEVEL_SOME; return PUNCTLEVEL; }
 none		{ sync_punct_level = PUNCT_LEVEL_NONE; return PUNCTLEVEL; }
