@@ -89,17 +89,17 @@ commands : /* empty */
 ;
 
 command : EOL { /* do nothing */ }
-			| TTS_ALLCAPS_BEEP INTEGER			{ esp_tts_allcaps_beep($2); }
-		| TTS_INITIALIZE					{ esp_initialize(); }
-		| TTS_PAUSE					{ esp_tts_pause(); }
-		| TTS_RESET					{ esp_tts_reset(); }
-		| TTS_RESUME					{ esp_tts_resume(); }
-		| TTS_SAY CTEXT					{ esp_tts_say($2); }
-		| TTS_SET_CHARACTER_SCALE NONINTEGER					{ esp_tts_set_character_scale($2); }
-		| TTS_SET_PUNCTUATIONS identifier					{ esp_tts_set_punctuations(sync_punct_level); }
-		| TTS_SET_SPEECH_RATE INTEGER					{ esp_tts_set_speech_rate($2); }
-		| TTS_SPLIT_CAPS INTEGER					{ esp_tts_split_caps($2); }
-		| TTS_SYNC_STATE identifier INTEGER INTEGER INTEGER INTEGER 
+			| TTS_ALLCAPS_BEEP INTEGER	EOL		{ esp_tts_allcaps_beep($2); }
+		| TTS_INITIALIZE	EOL				{ esp_initialize(); }
+		| TTS_PAUSE	EOL				{ esp_tts_pause(); }
+		| TTS_RESET	EOL				{ esp_tts_reset(); }
+		| TTS_RESUME	EOL				{ esp_tts_resume(); }
+		| TTS_SAY CTEXT	EOL				{ esp_tts_say($2); }
+		| TTS_SET_CHARACTER_SCALE NONINTEGER	EOL				{ esp_tts_set_character_scale($2); }
+		| TTS_SET_PUNCTUATIONS identifier	EOL				{ esp_tts_set_punctuations(sync_punct_level); }
+		| TTS_SET_SPEECH_RATE INTEGER	EOL				{ esp_tts_set_speech_rate($2); }
+		| TTS_SPLIT_CAPS INTEGER	EOL				{ esp_tts_split_caps($2); }
+		| TTS_SYNC_STATE identifier INTEGER INTEGER INTEGER INTEGER EOL
 				{
 					sync_dtk_caps_pitch_rise = $3;
 					sync_dtk_allcaps_beep = $4;
@@ -107,15 +107,15 @@ command : EOL { /* do nothing */ }
 					sync_speech_rate = $6;
 					esp_tts_sync_state(sync_punct_level, sync_dtk_caps_pitch_rise, sync_dtk_allcaps_beep, sync_dtk_split_caps, sync_speech_rate);
 				}
-		| FLUSH					{ esp_s(); }
-		| SILENCE INTEGER					{ esp_sh($2); }
-		| QSPEECH CTEXT					{ esp_q($2); }
-		| LETTER CTEXT					{ esp_l($2); }
-		| DISPATCH					{ esp_d(); }
-		| TONE INTEGER INTEGER					{ esp_t($2, $3); }
-		| PLAYFILE CTEXT					{ esp_a($2); }
-		| VERSION					{ esp_version(); }
-		| CODE CTEXT			{ esp_c($2); }
+		| FLUSH	EOL				{ esp_s(); }
+		| SILENCE INTEGER	EOL				{ esp_sh($2); }
+		| QSPEECH CTEXT	EOL				{ esp_q($2); }
+		| LETTER CTEXT	EOL				{ esp_l($2); }
+		| DISPATCH	EOL				{ esp_d(); }
+		| TONE INTEGER INTEGER EOL					{ esp_t($2, $3); }
+		| PLAYFILE CTEXT	EOL				{ esp_a($2); }
+		| VERSION	EOL				{ esp_version(); }
+		| CODE CTEXT	EOL		{ esp_c($2); }
 ;
 
 identifier : PUNCTLEVEL
