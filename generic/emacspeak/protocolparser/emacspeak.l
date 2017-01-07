@@ -61,8 +61,9 @@ extern int sync_dtk_split_caps;
 "tts_sync_state"			{ return TTS_SYNC_STATE; }
 "{"				{ BEGIN(INBRACES); }
 "}"				{ BEGIN(INITIAL); }
-[0-9]+				{ yylval.number = atoi(yytext); return NUM; }
-<INBRACES>[^}]+	{ BEGIN(INITIAL); yylval.string = yytext; return CTEXT; } 
+[0-9]+				{ yylval.n = atoi(yytext); return INTEGER; }
+[-+]?([0-9]*\.?[0-9]+|[0-9]+\.) { yylval.d = atof(yytext); return NONINTEGER; }
+<INBRACES>[^}]+	{ BEGIN(INITIAL); yylval.s = yytext; return CTEXT; } 
 all		{ sync_punct_level = PUNCT_LEVEL_ALL; return PUNCTLEVEL; }
 some		{ sync_punct_level = PUNCT_LEVEL_SOME; return PUNCTLEVEL; }
 none		{ sync_punct_level = PUNCT_LEVEL_NONE; return PUNCTLEVEL; }

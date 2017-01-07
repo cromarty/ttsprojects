@@ -45,38 +45,40 @@ int sync_speech_rate;
 
 %union 
 {
-        int number;
-        char *string;
+        int n;
+        double d;
+        char *s;
 }
 
-%token <number> TTS_ALLCAPS_BEEP
-%token <number> TTS_CAPITALIZE
-%token <number> TTS_INITIALIZE
-%token <number> TTS_PAUSE
-%token <number> TTS_RESET
-%token <number> TTS_RESUME
-%token <number> TTS_SAY
-%token <number> TTS_SET_CHARACTER_SCALE
-%token <number> TTS_SET_PUNCTUATIONS
-%token <number> TTS_SET_SPEECH_RATE
-%token <number> TTS_SPLIT_CAPS
-%token <number> TTS_SYNC_STATE
-%token <string> NAME
-%token <number> QSPEECH
-%token <number> NUM
-%token <number> EOL
-%token <number> SILENCE
-%token <string> CTEXT
-%token <number> LETTER
-%token <number> FLUSH
-%token <number> DISPATCH
-%token <number> VERSION
-%token <number> PLAYFILE
-%token <number> TONE
-%token <number> PUNCTLEVEL
-%token <number> LANGUAGE
-%token <number> VOICE
-%token <number> CODE
+%token <n> TTS_ALLCAPS_BEEP
+%token <n> TTS_CAPITALIZE
+%token <n> TTS_INITIALIZE
+%token <n> TTS_PAUSE
+%token <n> TTS_RESET
+%token <n> TTS_RESUME
+%token <n> TTS_SAY
+%token <n> TTS_SET_CHARACTER_SCALE
+%token <n> TTS_SET_PUNCTUATIONS
+%token <n> TTS_SET_SPEECH_RATE
+%token <n> TTS_SPLIT_CAPS
+%token <n> TTS_SYNC_STATE
+%token <s> NAME
+%token <n> QSPEECH
+%token <n> INTEGER
+%token <d> NONINTEGER
+%token <n> EOL
+%token <n> SILENCE
+%token <s> CTEXT
+%token <n> LETTER
+%token <n> FLUSH
+%token <n> DISPATCH
+%token <n> VERSION
+%token <n> PLAYFILE
+%token <n> TONE
+%token <n> PUNCTLEVEL
+%token <n> LANGUAGE
+%token <n> VOICE
+%token <n> CODE
 
 %%
 
@@ -87,17 +89,17 @@ commands : /* empty */
 ;
 
 command : EOL { /* do nothing */ }
-			| TTS_ALLCAPS_BEEP NUM			{ esp_tts_allcaps_beep($2); }
+			| TTS_ALLCAPS_BEEP INTEGER			{ esp_tts_allcaps_beep($2); }
 		| TTS_INITIALIZE					{ esp_initialize(); }
 		| TTS_PAUSE					{ esp_tts_pause(); }
 		| TTS_RESET					{ esp_tts_reset(); }
 		| TTS_RESUME					{ esp_tts_resume(); }
 		| TTS_SAY CTEXT					{ esp_tts_say($2); }
-		| TTS_SET_CHARACTER_SCALE NUM					{ esp_tts_set_character_scale($2); }
+		| TTS_SET_CHARACTER_SCALE NONINTEGER					{ esp_tts_set_character_scale($2); }
 		| TTS_SET_PUNCTUATIONS identifier					{ esp_tts_set_punctuations(sync_punct_level); }
-		| TTS_SET_SPEECH_RATE NUM					{ esp_tts_set_speech_rate($2); }
-		| TTS_SPLIT_CAPS NUM					{ esp_tts_split_caps($2); }
-		| TTS_SYNC_STATE identifier NUM NUM NUM NUM 
+		| TTS_SET_SPEECH_RATE INTEGER					{ esp_tts_set_speech_rate($2); }
+		| TTS_SPLIT_CAPS INTEGER					{ esp_tts_split_caps($2); }
+		| TTS_SYNC_STATE identifier INTEGER INTEGER INTEGER INTEGER 
 				{
 					sync_dtk_caps_pitch_rise = $3;
 					sync_dtk_allcaps_beep = $4;
@@ -106,11 +108,11 @@ command : EOL { /* do nothing */ }
 					esp_tts_sync_state(sync_punct_level, sync_dtk_caps_pitch_rise, sync_dtk_allcaps_beep, sync_dtk_split_caps, sync_speech_rate);
 				}
 		| FLUSH					{ esp_s(); }
-		| SILENCE NUM					{ esp_sh($2); }
+		| SILENCE INTEGER					{ esp_sh($2); }
 		| QSPEECH CTEXT					{ esp_q($2); }
 		| LETTER CTEXT					{ esp_l($2); }
 		| DISPATCH					{ esp_d(); }
-		| TONE NUM NUM					{ esp_t($2, $3); }
+		| TONE INTEGER INTEGER					{ esp_t($2, $3); }
 		| PLAYFILE CTEXT					{ esp_a($2); }
 		| VERSION					{ esp_version(); }
 		| CODE CTEXT			{ esp_c($2); }

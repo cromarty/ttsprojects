@@ -59,20 +59,21 @@ extern int yydebug;
     TTS_SYNC_STATE = 269,
     NAME = 270,
     QSPEECH = 271,
-    NUM = 272,
-    EOL = 273,
-    SILENCE = 274,
-    CTEXT = 275,
-    LETTER = 276,
-    FLUSH = 277,
-    DISPATCH = 278,
-    VERSION = 279,
-    PLAYFILE = 280,
-    TONE = 281,
-    PUNCTLEVEL = 282,
-    LANGUAGE = 283,
-    VOICE = 284,
-    CODE = 285
+    INTEGER = 272,
+    NONINTEGER = 273,
+    EOL = 274,
+    SILENCE = 275,
+    CTEXT = 276,
+    LETTER = 277,
+    FLUSH = 278,
+    DISPATCH = 279,
+    VERSION = 280,
+    PLAYFILE = 281,
+    TONE = 282,
+    PUNCTLEVEL = 283,
+    LANGUAGE = 284,
+    VOICE = 285,
+    CODE = 286
   };
 #endif
 
@@ -83,10 +84,11 @@ union YYSTYPE
 {
 #line 47 "emacspeak.y" /* yacc.c:1909  */
 
-        int number;
-        char *string;
+        int n;
+        double d;
+        char *s;
 
-#line 90 "emacspeak.tab.h" /* yacc.c:1909  */
+#line 92 "emacspeak.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;
