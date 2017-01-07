@@ -1,11 +1,6 @@
 # ignore anything ending in a tilde
 *~
 
-# ignore flex and bison intermediate files
-#*.yy.c
-#*.tab.c
-#*.tab.h
-
 # ignore *.o
 *.o
 
