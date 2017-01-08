@@ -20,8 +20,8 @@
 * $Id: emspk-sd.h
 *--code--*/
 
-#ifndef EMACSPEAK_PROTO_H
-#define EMACSPEAK_PROTO_H
+#ifndef TTS_ENGINE_H
+#define TTS_ENGINE_H
 
 #define NO_SYNC -1
 

@@ -563,7 +563,7 @@ char *yytext;
 
 #include "emacspeak.tab.h"
 
-#include "emacspeak-module.h"
+#include "tts_engine.h"
 
 
 /* these are declared in emacspeak.y */

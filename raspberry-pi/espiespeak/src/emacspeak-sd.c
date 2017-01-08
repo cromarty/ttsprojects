@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "emacspeak-module.h"
+
+#include "tts_engine.h"
  
 int esp_version(void)
 {

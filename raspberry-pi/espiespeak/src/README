@@ -8,6 +8,6 @@ files further up the tree:
 
 Other files:
 
-* emacspeak-module.h
+* tts_engine.h
 * emacspeak-sd.c
 * Makefile

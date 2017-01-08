@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "emacspeak-module.h"
+#include "tts_engine.h"
 
 
 int sync_punct_level;
