@@ -46,7 +46,7 @@ int esp_s(void)
 
 int esp_q(const char *text)
 {
-	printf("Called esp_q to queue text: %s\n", text);
+	printf("Called esp_q to queue text: ->%s<-\n", text);
 	return 0;
 } /* end esp_q */
 
