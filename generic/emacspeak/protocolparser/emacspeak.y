@@ -48,7 +48,6 @@ int sync_speech_rate;
 
 %token <n> INTEGER
 %token <d> NONINTEGER
-%token <n> BOOLEANFLAG
 
 %token <n> QCODE
 %token <n> QLETTER
@@ -99,8 +98,8 @@ command : EOL { /* do nothing */ }
 					sync_speech_rate = $6;
 					esp_tts_sync_state(sync_punct_level, sync_dtk_caps_pitch_rise, sync_dtk_allcaps_beep, sync_dtk_split_caps, sync_speech_rate);
 				}
-			| TTS_ALLCAPS_BEEP BOOLEANFLAG		{ esp_tts_allcaps_beep($2); }
-	| TTS_CAPITALIZE BOOLEANFLAG { esp_tts_capitalize($2); } 
+			| TTS_ALLCAPS_BEEP INTEGER		{ esp_tts_allcaps_beep($2); }
+	| TTS_CAPITALIZE INTEGER { esp_tts_capitalize($2); } 
 	| TTS_PAUSE { esp_tts_pause(); }
 	| TTS_RESET { esp_tts_reset(); }
 	| TTS_RESUME { esp_tts_resume(); }
@@ -108,7 +107,7 @@ command : EOL { /* do nothing */ }
 	| TTS_SET_CHARACTER_SCALE NONINTEGER { esp_tts_set_character_scale($2); }
 		| TTS_SET_PUNCTUATIONS identifier				{ esp_tts_set_punctuations(sync_punct_level); }
 	| TTS_SET_SPEECH_RATE INTEGER { esp_tts_set_speech_rate($2); }
-	| TTS_SPLIT_CAPS BOOLEANFLAG { esp_tts_split_caps($2); }
+	| TTS_SPLIT_CAPS INTEGER { esp_tts_split_caps($2); }
 	| DISPATCH { esp_d(); }
 	| FLUSH { esp_s(); }
 	| SILENCE INTEGER { esp_sh($2); }

@@ -47,7 +47,6 @@ ws [ \t\r\n]+
 
 %%
 
-[01] { yylval.n = atoi(yytext); return BOOLEANFLAG; }
 [0-9]+				{ yylval.n = atoi(yytext); return INTEGER; }
 [-+]?([0-9]*\.?[0-9]+|[0-9]+\.) { yylval.d = atof(yytext); return NONINTEGER; }
 
