@@ -141,13 +141,19 @@ ws [ \t\r\n]+
 
 
 
-
+	/* tts_sync_state never has braces around the parameters */
 tts_sync_state { return TTS_SYNC_STATE; }
+
 tts_allcaps_beep { return TTS_ALLCAPS_BEEP; }
 tts_capitalize { return TTS_CAPITALIZE; }
+
+
+	/* These have no parameters at all */
 tts_pause { return TTS_PAUSE; }
 tts_reset { return TTS_RESET; }
 tts_resume { return TTS_RESUME; }
+
+
 tts_say { return TTS_SAY; }
 tts_set_character_scale { return TTS_SET_CHARACTER_SCALE; }
 tts_set_punctuations { return TTS_SET_PUNCTUATIONS; }
