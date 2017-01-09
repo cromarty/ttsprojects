@@ -41,7 +41,7 @@ extern int sync_dtk_split_caps;
 
 %}
 
-%x LBRACE SPEECH RBRACE
+%x Q LBRACE SPEECH RBRACE
 
 ws [ \t\r\n]+
 
@@ -52,13 +52,15 @@ ws [ \t\r\n]+
 
 c { return QCODE; }
 l { return QLETTER; }
-q { return QSPEECH; }
+^q { BEGIN(Q); return QSPEECH; }
+
+
 
 {ws} /* skip */
 
 	/* start stuff */
 
-<INITIAL>"{" {
+<Q>"{" {
         BEGIN(LBRACE);
         }
 <LBRACE>[^\}]*/"}" {
@@ -75,6 +77,8 @@ q { return QSPEECH; }
 
 	/* end stuff */
 
+<Q>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
+
 tts_sync_state { return TTS_SYNC_STATE; }
 tts_allcaps_beep { return TTS_ALLCAPS_BEEP; }
 tts_capitalize { return TTS_CAPITALIZE; }
@@ -87,10 +91,10 @@ tts_set_punctuations { return TTS_SET_PUNCTUATIONS; }
 tts_set_speech_rate { return TTS_SET_SPEECH_RATE; }
 tts_split_caps { return TTS_SPLIT_CAPS; }
 
-d { return DISPATCH; }
-s { return FLUSH; }
-sh { return SILENCE; }
-t { return TONE; }
+^d { return DISPATCH; }
+^s { return FLUSH; }
+^sh { return SILENCE; }
+^t { return TONE; }
 
 all		{ sync_punct_level = PUNCT_LEVEL_ALL; return PUNCTLEVEL; }
 some		{ sync_punct_level = PUNCT_LEVEL_SOME; return PUNCTLEVEL; }
