@@ -45,6 +45,9 @@ extern int sync_dtk_split_caps;
 %x C clb csp
 %x Q qlb qsp
 %x L llb lsp
+%x SH shlb shsp
+
+
 
 
 
@@ -61,6 +64,7 @@ ws [ \t\r\n]+
 ^c { BEGIN(C); return QCODE; }
 ^l { BEGIN(L); return QLETTER; }
 ^q { BEGIN(Q); return QSPEECH; }
+^sh { BEGIN(SH); return SILENCE; }
 
 
 	/* start c {...} */
@@ -112,12 +116,31 @@ ws [ \t\r\n]+
 
 	/* end l {...} */
 
+	/* start sh {...} */
 
+<SH>"{" {
+        BEGIN(shlb);
+        }
+<shlb>[^\}]*/"}" {
+        BEGIN(shsp);
+     yylval.n = atoi(yytext);
+    return INTEGER;
+        }
+<shsp>"}" {
+       BEGIN(INITIAL);
+      }
+
+	/* end sh {...} */
 
 
 <C>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
 <Q>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
 <L>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
+<SH>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.n = atoi(yytext); return INTEGER; }
+
+
+
+
 
 tts_sync_state { return TTS_SYNC_STATE; }
 tts_allcaps_beep { return TTS_ALLCAPS_BEEP; }
@@ -133,7 +156,6 @@ tts_split_caps { return TTS_SPLIT_CAPS; }
 
 ^d { return DISPATCH; }
 ^s { return FLUSH; }
-^sh { return SILENCE; }
 ^t { return TONE; }
 
 all		{ sync_punct_level = PUNCT_LEVEL_ALL; return PUNCTLEVEL; }
