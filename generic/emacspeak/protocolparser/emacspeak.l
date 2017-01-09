@@ -41,6 +41,7 @@ extern int sync_dtk_split_caps;
 
 %}
 
+
 %x Q LBRACE SPEECH RBRACE
 
 ws [ \t\r\n]+
@@ -50,13 +51,15 @@ ws [ \t\r\n]+
 [0-9]+				{ yylval.n = atoi(yytext); return INTEGER; }
 [-+]?([0-9]*\.?[0-9]+|[0-9]+\.) { yylval.d = atof(yytext); return NONINTEGER; }
 
+{ws} /* skip */
+
+
 c { return QCODE; }
 l { return QLETTER; }
 ^q { BEGIN(Q); return QSPEECH; }
 
 
 
-{ws} /* skip */
 
 	/* start stuff */
 
@@ -69,11 +72,8 @@ l { return QLETTER; }
     return CTEXT;
         }
 <SPEECH>"}" {
-       BEGIN(RBRACE);
+       BEGIN(INITIAL);
       }
-<RBRACE>"\n" {
-        BEGIN(INITIAL);
-        }
 
 	/* end stuff */
 
@@ -100,5 +100,6 @@ all		{ sync_punct_level = PUNCT_LEVEL_ALL; return PUNCTLEVEL; }
 some		{ sync_punct_level = PUNCT_LEVEL_SOME; return PUNCTLEVEL; }
 none		{ sync_punct_level = PUNCT_LEVEL_NONE; return PUNCTLEVEL; }
 
+. ;
 
 
