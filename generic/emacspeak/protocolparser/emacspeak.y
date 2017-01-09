@@ -36,6 +36,7 @@ int sync_dtk_allcaps_beep;
 int sync_dtk_split_caps;
 int sync_speech_rate;
 
+char yylex();
 
 %}
 
@@ -123,15 +124,19 @@ identifier : PUNCTLEVEL
 
 %%
 
+void yyerror(char *s) 
+{
+	fprintf(stderr, "error: %s\n", s); 
+}
+
+
+
+
+
 int main(int argc, char **argv) 
 {
 
 	yyparse(); 
 
 } /* end main */ 
-
-void yyerror(char *s) 
-{ 
-	fprintf(stderr, "error: %s\n", s); 
-} /* end yyerror */
 

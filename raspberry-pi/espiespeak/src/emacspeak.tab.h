@@ -78,7 +78,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 43 "emacspeak.y" /* yacc.c:1909  */
+#line 44 "emacspeak.y" /* yacc.c:1909  */
 
         int n;
         double d;

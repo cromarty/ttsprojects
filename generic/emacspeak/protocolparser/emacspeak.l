@@ -42,7 +42,11 @@ extern int sync_dtk_split_caps;
 %}
 
 
-%x Q LBRACE SPEECH RBRACE
+%x C clb csp
+%x Q qlb qsp
+%x L llb lsp
+
+
 
 ws [ \t\r\n]+
 
@@ -54,30 +58,66 @@ ws [ \t\r\n]+
 {ws} /* skip */
 
 
-c { return QCODE; }
-l { return QLETTER; }
+^c { BEGIN(C); return QCODE; }
+^l { BEGIN(L); return QLETTER; }
 ^q { BEGIN(Q); return QSPEECH; }
 
 
+	/* start c {...} */
 
-
-	/* start stuff */
-
-<Q>"{" {
-        BEGIN(LBRACE);
+<C>"{" {
+        BEGIN(clb);
         }
-<LBRACE>[^\}]*/"}" {
-        BEGIN(SPEECH);
+<clb>[^\}]*/"}" {
+        BEGIN(csp);
      yylval.s = yytext;
     return CTEXT;
         }
-<SPEECH>"}" {
+<csp>"}" {
        BEGIN(INITIAL);
       }
 
-	/* end stuff */
+	/* end c {...} */
 
+	/* start q {...} */
+
+<Q>"{" {
+        BEGIN(qlb);
+        }
+<qlb>[^\}]*/"}" {
+        BEGIN(qsp);
+     yylval.s = yytext;
+    return CTEXT;
+        }
+<qsp>"}" {
+       BEGIN(INITIAL);
+      }
+
+	/* end q {...} */
+
+
+	/* start l {...} */
+
+<L>"{" {
+        BEGIN(llb);
+        }
+<llb>[^\}]*/"}" {
+        BEGIN(lsp);
+     yylval.s = yytext;
+    return CTEXT;
+        }
+<lsp>"}" {
+       BEGIN(INITIAL);
+      }
+
+	/* end l {...} */
+
+
+
+
+<C>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
 <Q>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
+<L>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
 
 tts_sync_state { return TTS_SYNC_STATE; }
 tts_allcaps_beep { return TTS_ALLCAPS_BEEP; }

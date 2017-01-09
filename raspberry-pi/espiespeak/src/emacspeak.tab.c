@@ -78,9 +78,10 @@ int sync_dtk_allcaps_beep;
 int sync_dtk_split_caps;
 int sync_speech_rate;
 
+char yylex();
 
 
-#line 84 "emacspeak.tab.c" /* yacc.c:339  */
+#line 85 "emacspeak.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -148,13 +149,13 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 43 "emacspeak.y" /* yacc.c:355  */
+#line 44 "emacspeak.y" /* yacc.c:355  */
 
         int n;
         double d;
         char *s;
 
-#line 158 "emacspeak.tab.c" /* yacc.c:355  */
+#line 159 "emacspeak.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -171,7 +172,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 175 "emacspeak.tab.c" /* yacc.c:358  */
+#line 176 "emacspeak.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -471,9 +472,9 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    85,    85,    86,    89,    90,    91,    92,    93,   101,
-     102,   103,   104,   105,   106,   107,   108,   109,   110,   111,
-     112,   113,   114,   117,   118,   119
+       0,    86,    86,    87,    90,    91,    92,    93,    94,   102,
+     103,   104,   105,   106,   107,   108,   109,   110,   111,   112,
+     113,   114,   115,   118,   119,   120
 };
 #endif
 
@@ -1269,31 +1270,31 @@ yyreduce:
   switch (yyn)
     {
         case 4:
-#line 89 "emacspeak.y" /* yacc.c:1646  */
+#line 90 "emacspeak.y" /* yacc.c:1646  */
     { /* do nothing */ }
-#line 1275 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1276 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 5:
-#line 90 "emacspeak.y" /* yacc.c:1646  */
+#line 91 "emacspeak.y" /* yacc.c:1646  */
     { esp_c((yyvsp[0].n)); }
-#line 1281 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1282 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 6:
-#line 91 "emacspeak.y" /* yacc.c:1646  */
+#line 92 "emacspeak.y" /* yacc.c:1646  */
     { esp_l((yyvsp[0].n)); }
-#line 1287 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1288 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
-#line 92 "emacspeak.y" /* yacc.c:1646  */
+#line 93 "emacspeak.y" /* yacc.c:1646  */
     { esp_q((yyvsp[0].n)); }
-#line 1293 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1294 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 8:
-#line 94 "emacspeak.y" /* yacc.c:1646  */
+#line 95 "emacspeak.y" /* yacc.c:1646  */
     {
 					sync_dtk_caps_pitch_rise = (yyvsp[-3].n);
 					sync_dtk_allcaps_beep = (yyvsp[-2].n);
@@ -1301,95 +1302,95 @@ yyreduce:
 					sync_speech_rate = (yyvsp[0].n);
 					esp_tts_sync_state(sync_punct_level, sync_dtk_caps_pitch_rise, sync_dtk_allcaps_beep, sync_dtk_split_caps, sync_speech_rate);
 				}
-#line 1305 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1306 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 9:
-#line 101 "emacspeak.y" /* yacc.c:1646  */
+#line 102 "emacspeak.y" /* yacc.c:1646  */
     { esp_tts_allcaps_beep((yyvsp[0].n)); }
-#line 1311 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1312 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
-#line 102 "emacspeak.y" /* yacc.c:1646  */
+#line 103 "emacspeak.y" /* yacc.c:1646  */
     { esp_tts_capitalize((yyvsp[0].n)); }
-#line 1317 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1318 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
-#line 103 "emacspeak.y" /* yacc.c:1646  */
+#line 104 "emacspeak.y" /* yacc.c:1646  */
     { esp_tts_pause(); }
-#line 1323 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1324 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
-#line 104 "emacspeak.y" /* yacc.c:1646  */
+#line 105 "emacspeak.y" /* yacc.c:1646  */
     { esp_tts_reset(); }
-#line 1329 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1330 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
-#line 105 "emacspeak.y" /* yacc.c:1646  */
+#line 106 "emacspeak.y" /* yacc.c:1646  */
     { esp_tts_resume(); }
-#line 1335 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1336 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
-#line 106 "emacspeak.y" /* yacc.c:1646  */
+#line 107 "emacspeak.y" /* yacc.c:1646  */
     { esp_tts_say((yyvsp[0].n)); }
-#line 1341 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1342 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
-#line 107 "emacspeak.y" /* yacc.c:1646  */
+#line 108 "emacspeak.y" /* yacc.c:1646  */
     { esp_tts_set_character_scale((yyvsp[0].d)); }
-#line 1347 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1348 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
-#line 108 "emacspeak.y" /* yacc.c:1646  */
+#line 109 "emacspeak.y" /* yacc.c:1646  */
     { esp_tts_set_punctuations(sync_punct_level); }
-#line 1353 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1354 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
-#line 109 "emacspeak.y" /* yacc.c:1646  */
+#line 110 "emacspeak.y" /* yacc.c:1646  */
     { esp_tts_set_speech_rate((yyvsp[0].n)); }
-#line 1359 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1360 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
-#line 110 "emacspeak.y" /* yacc.c:1646  */
+#line 111 "emacspeak.y" /* yacc.c:1646  */
     { esp_tts_split_caps((yyvsp[0].n)); }
-#line 1365 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1366 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
-#line 111 "emacspeak.y" /* yacc.c:1646  */
+#line 112 "emacspeak.y" /* yacc.c:1646  */
     { esp_d(); }
-#line 1371 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1372 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 20:
-#line 112 "emacspeak.y" /* yacc.c:1646  */
+#line 113 "emacspeak.y" /* yacc.c:1646  */
     { esp_s(); }
-#line 1377 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1378 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 21:
-#line 113 "emacspeak.y" /* yacc.c:1646  */
+#line 114 "emacspeak.y" /* yacc.c:1646  */
     { esp_sh((yyvsp[0].n)); }
-#line 1383 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1384 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
-#line 114 "emacspeak.y" /* yacc.c:1646  */
+#line 115 "emacspeak.y" /* yacc.c:1646  */
     { esp_t((yyvsp[-1].n), (yyvsp[0].n)); }
-#line 1389 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1390 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1393 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1394 "emacspeak.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1617,7 +1618,16 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 124 "emacspeak.y" /* yacc.c:1906  */
+#line 125 "emacspeak.y" /* yacc.c:1906  */
+
+
+void yyerror(char *s) 
+{
+	fprintf(stderr, "error: %s\n", s); 
+}
+
+
+
 
 
 int main(int argc, char **argv) 
@@ -1626,9 +1636,4 @@ int main(int argc, char **argv)
 	yyparse(); 
 
 } /* end main */ 
-
-void yyerror(char *s) 
-{ 
-	fprintf(stderr, "error: %s\n", s); 
-} /* end yyerror */
 
