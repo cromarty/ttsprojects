@@ -1153,106 +1153,110 @@ YY_RULE_SETUP
 case 23:
 YY_RULE_SETUP
 #line 141 "emacspeak.l"
-{ BEGIN(INITIAL); yylval.n = atoi(yytext); return INTEGER; }
+{
+ BEGIN(INITIAL);
+ yylval.n = atoi(yytext);
+ return INTEGER;
+ }
 	YY_BREAK
 /* tts_sync_state never has braces around the parameters */
 case 24:
 YY_RULE_SETUP
-#line 147 "emacspeak.l"
+#line 151 "emacspeak.l"
 { return TTS_SYNC_STATE; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 149 "emacspeak.l"
+#line 153 "emacspeak.l"
 { return TTS_ALLCAPS_BEEP; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 150 "emacspeak.l"
+#line 154 "emacspeak.l"
 { return TTS_CAPITALIZE; }
 	YY_BREAK
 /* These have no parameters at all */
 case 27:
 YY_RULE_SETUP
-#line 154 "emacspeak.l"
+#line 158 "emacspeak.l"
 { return TTS_PAUSE; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 155 "emacspeak.l"
+#line 159 "emacspeak.l"
 { return TTS_RESET; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 156 "emacspeak.l"
+#line 160 "emacspeak.l"
 { return TTS_RESUME; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 159 "emacspeak.l"
+#line 163 "emacspeak.l"
 { return TTS_SAY; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 160 "emacspeak.l"
+#line 164 "emacspeak.l"
 { return TTS_SET_CHARACTER_SCALE; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 161 "emacspeak.l"
+#line 165 "emacspeak.l"
 { return TTS_SET_PUNCTUATIONS; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 162 "emacspeak.l"
+#line 166 "emacspeak.l"
 { return TTS_SET_SPEECH_RATE; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 163 "emacspeak.l"
+#line 167 "emacspeak.l"
 { return TTS_SPLIT_CAPS; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 165 "emacspeak.l"
+#line 169 "emacspeak.l"
 { return DISPATCH; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 166 "emacspeak.l"
+#line 170 "emacspeak.l"
 { return FLUSH; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 167 "emacspeak.l"
+#line 171 "emacspeak.l"
 { return TONE; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 169 "emacspeak.l"
+#line 173 "emacspeak.l"
 { sync_punct_level = PUNCT_LEVEL_ALL; return PUNCTLEVEL; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 170 "emacspeak.l"
+#line 174 "emacspeak.l"
 { sync_punct_level = PUNCT_LEVEL_SOME; return PUNCTLEVEL; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 171 "emacspeak.l"
+#line 175 "emacspeak.l"
 { sync_punct_level = PUNCT_LEVEL_NONE; return PUNCTLEVEL; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 173 "emacspeak.l"
+#line 177 "emacspeak.l"
 ;
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 176 "emacspeak.l"
+#line 180 "emacspeak.l"
 ECHO;
 	YY_BREAK
-#line 1256 "lex.yy.c"
+#line 1260 "lex.yy.c"
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(C):
 			case YY_STATE_EOF(clb):
@@ -2242,4 +2246,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 176 "emacspeak.l"
+#line 180 "emacspeak.l"
