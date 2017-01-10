@@ -55,7 +55,7 @@ ws [ \t\r\n]+
 
 %%
 
-[0-9]+				{ yylval.n = atoi(yytext); return INTEGER; }
+	/* [0-9]+				{ yylval.n = atoi(yytext); return INTEGER; } */
 [-+]?([0-9]*\.?[0-9]+|[0-9]+\.) { yylval.d = atof(yytext); return NONINTEGER; }
 
 {ws} /* skip */
@@ -121,7 +121,8 @@ ws [ \t\r\n]+
 <SH>"{" {
         BEGIN(shlb);
         }
-<shlb>[^\}]*/"}" {
+     <shlb>[ \t]* /* consume and drop */   
+<shlb>[0-9]+/[ \t]*"}" {
         BEGIN(shsp);
      yylval.n = atoi(yytext);
     return INTEGER;
@@ -133,6 +134,7 @@ ws [ \t\r\n]+
 	/* end sh {...} */
 
 
+	/* These patterns are matched when there are no braces */
 <C>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
 <Q>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
 <L>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
