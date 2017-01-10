@@ -138,7 +138,9 @@ ws [ \t\r\n]+
 <C>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
 <Q>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
 <L>[^ \{\}\t\n\r\f\v]+ { BEGIN(INITIAL); yylval.s = yytext; return CTEXT; }
-<SH>[^ \{\}\t\n\r\f\v]+ {
+
+<SH>[^0-9]* /* consume and drop */
+<SH>[0-9]+ {
  BEGIN(INITIAL);
  yylval.n = atoi(yytext);
  return INTEGER;
