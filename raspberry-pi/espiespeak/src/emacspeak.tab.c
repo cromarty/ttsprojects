@@ -1,8 +1,8 @@
-/* A Bison parser, made by GNU Bison 3.0.4.  */
+/* A Bison parser, made by GNU Bison 3.0.2.  */
 
 /* Bison implementation for Yacc-like parsers in C
 
-   Copyright (C) 1984, 1989-1990, 2000-2015 Free Software Foundation, Inc.
+   Copyright (C) 1984, 1989-1990, 2000-2013 Free Software Foundation, Inc.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@
 #define YYBISON 1
 
 /* Bison version.  */
-#define YYBISON_VERSION "3.0.4"
+#define YYBISON_VERSION "3.0.2"
 
 /* Skeleton name.  */
 #define YYSKELETON_NAME "yacc.c"
@@ -140,7 +140,7 @@ extern int yydebug;
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-
+typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
 #line 18 "emacspeak.y" /* yacc.c:355  */
@@ -151,8 +151,6 @@ union YYSTYPE
 
 #line 153 "emacspeak.tab.c" /* yacc.c:355  */
 };
-
-typedef union YYSTYPE YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
 #endif
@@ -166,7 +164,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 170 "emacspeak.tab.c" /* yacc.c:358  */
+#line 168 "emacspeak.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -1327,239 +1325,239 @@ yyreduce:
         case 6:
 #line 69 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got dispatch\n"); }
-#line 1331 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1329 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 7:
 #line 70 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got flush\n"); }
-#line 1337 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1335 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 10:
 #line 73 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got pause\n"); }
-#line 1343 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1341 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 11:
 #line 74 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got reset\n"); }
-#line 1349 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1347 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 12:
 #line 75 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got resume\n"); }
-#line 1355 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1353 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 13:
 #line 76 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got all caps beep: %d\n", (yyvsp[0].n)); }
-#line 1361 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1359 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 14:
 #line 77 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got capitalize: %d\n", (yyvsp[0].n)); }
-#line 1367 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1365 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 15:
 #line 78 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got set character scale: %f\n", (yyvsp[0].d)); }
-#line 1373 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1371 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 16:
 #line 79 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got set punctuations: %d\n", (yyvsp[0].n)); }
-#line 1379 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1377 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 17:
 #line 80 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got set speech rate: %d\n", (yyvsp[0].n)); }
-#line 1385 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1383 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 18:
 #line 81 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got split caps: %d\n", (yyvsp[0].n)); }
-#line 1391 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1389 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 19:
 #line 82 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got set sync state\n"); }
-#line 1397 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1395 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 22:
 #line 90 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.s) = (yyvsp[0].s); printf("Got immediate speech\n"); }
-#line 1403 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1401 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 23:
 #line 91 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.s) = (yyvsp[0].s); printf("Got queued speech\n"); }
-#line 1409 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1407 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
 #line 95 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.s) = (yyvsp[-2].s); }
-#line 1415 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1413 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 25:
 #line 96 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.s) = (yyvsp[-1].s); }
-#line 1421 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1419 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 26:
 #line 97 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.s) = (yyvsp[-2].s); }
-#line 1427 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1425 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 27:
 #line 98 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.s) = (yyvsp[-1].s); }
-#line 1433 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1431 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 28:
 #line 102 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.s) = (yyvsp[-2].s); }
-#line 1439 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1437 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 29:
 #line 103 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.s) = (yyvsp[-1].s); }
-#line 1445 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1443 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 32:
 #line 115 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-2].n); }
-#line 1451 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1449 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 33:
 #line 116 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-1].n); }
-#line 1457 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1455 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 34:
 #line 120 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got tone: %d %d\n", (yyvsp[-3].n), (yyvsp[-2].n)); (yyval.n) = (yyvsp[-5].n); }
-#line 1463 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1461 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 35:
 #line 121 "emacspeak.y" /* yacc.c:1646  */
     { printf("Got tone: %d %d\n", (yyvsp[-2].n), (yyvsp[-1].n)); (yyval.n) = (yyvsp[-3].n); }
-#line 1469 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1467 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 39:
 #line 137 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-2].n); }
-#line 1475 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1473 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 40:
 #line 138 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-1].n); }
-#line 1481 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1479 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 41:
 #line 142 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-2].n); }
-#line 1487 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1485 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 42:
 #line 143 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-1].n); }
-#line 1493 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1491 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 43:
 #line 147 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.d) = (yyvsp[-2].d); }
-#line 1499 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1497 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 44:
 #line 148 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.d) = (yyvsp[-1].d); }
-#line 1505 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1503 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 45:
 #line 152 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-2].n); }
-#line 1511 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1509 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 46:
 #line 153 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-1].n); }
-#line 1517 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1515 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 47:
 #line 157 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-2].n); }
-#line 1523 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1521 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 48:
 #line 158 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-1].n); }
-#line 1529 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1527 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 49:
 #line 162 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-2].n); }
-#line 1535 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1533 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 50:
 #line 163 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = (yyvsp[-1].n); }
-#line 1541 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1539 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 53:
 #line 172 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = PUNCT_LEVEL_NONE; }
-#line 1547 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1545 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 54:
 #line 173 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = PUNCT_LEVEL_SOME; }
-#line 1553 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1551 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
   case 55:
 #line 174 "emacspeak.y" /* yacc.c:1646  */
     { (yyval.n) = PUNCT_LEVEL_ALL; }
-#line 1559 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1557 "emacspeak.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1563 "emacspeak.tab.c" /* yacc.c:1646  */
+#line 1561 "emacspeak.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
