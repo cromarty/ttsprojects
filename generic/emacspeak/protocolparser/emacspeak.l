@@ -178,7 +178,7 @@ ws [ \t\r\f\v]
 		return yytext[0];
 	}
 
-<CODE,LETTER,QUEUE,SAY,SYNC,TONE,SILENCE,TTS,PUNCTLEVEL,SYNC,SCALE>("}"|"\n") {
+<CODE,LETTER,QUEUE,SAY,TONE,SILENCE,TTS,PUNCTLEVEL,SYNC,SCALE>("}"|"\n") {
 		if (yytext[0] == '}') {
 			/* do nothing */
 		} else {

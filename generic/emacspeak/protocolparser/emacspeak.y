@@ -9,6 +9,9 @@
 
 #define YYDEBUG 1
 
+int yylex();
+void yyerror(const char *s);
+
 %}
 
 %union
@@ -173,14 +176,14 @@ punctlevel
 
 %%
 
-main()
+int main()
 {
 	yydebug = 0;
 
 	yyparse();
 }
 
-yyerror(char *s)
+void yyerror(const char *s)
 {
 	fprintf(stderr, "%s\n", s);
 }
