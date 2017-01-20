@@ -3,143 +3,143 @@
 
 #include "tts_engine.h"
  
-int esp_version(void)
+int tts_version(void)
 {
 	printf("Called version\n");
 	return 0;
 }
 
-int esp_tts_say(char *text)
+int tts_say(char *text)
 {
-	printf("Called esp_say: %s\n", text);
+	printf("Called tts_say: %s\n", text);
 	return 0;
 } /* end tts_say */
 
-int esp_l(const char *ch)
+int tts_l(const char *ch)
 {
-	printf("Called esp_l: %s\n", ch);
+	printf("Called tts_l: %s\n", ch);
 	return 0;
 } /* end tts_l */
 
-int esp_d(void)
+int tts_d(void)
 {
-	printf("Called esp_d function\n");
+	printf("Called tts_d function\n");
 	return 0;
 } /* end tts_d */
 
-int esp_tts_pause(void)
+int tts_pause(void)
 {
-	printf("Called esp_tts_pause\n");
+	printf("Called tts_pause\n");
 	return 0;
-} /* end esp_tts_pause */
+} /* end tts_pause */
 
-int esp_tts_resume(void)
+int tts_resume(void)
 {
-	printf("Called esp_tts_resume\n");
+	printf("Called tts_resume\n");
 	return 0;
-} /* end esp_tts_resume */
+} /* end tts_resume */
 
-int esp_s(void)
+int tts_s(void)
 {
-	printf("Called esp_s function\n");
+	printf("Called tts_s function\n");
 	return 0;
 } /* end tts_s */
 
-int esp_q(const char *text)
+int tts_q(const char *text)
 {
-	printf("Called esp_q to queue text: ->%s<-\n", text);
+	printf("Called tts_q to queue text: ->%s<-\n", text);
 	return 0;
-} /* end esp_q */
+} /* end tts_q */
 
-int esp_c(const char *code)
+int tts_c(const char *code)
 {
-	printf("Called esp_c: %s\n", code);
+	printf("Called tts_c: %s\n", code);
 	return 0;
 } /* end tts_c */
 
-int esp_a(const char *filename)
+int tts_a(const char *filename)
 {
-	printf("Called esp_a: %s\n", filename);
+	printf("Called tts_a: %s\n", filename);
 	return 0;
 } /* end tts_a */
 
-int esp_t(int pitch, int duration)
+int tts_t(int pitch, int duration)
 {
-	printf("Called esp_t function: %d %d\n", pitch, duration);
+	printf("Called tts_t function: %d %d\n", pitch, duration);
 	return 0;
 } /* end tts_t */
 
-int esp_sh(int duration_milliseconds)
+int tts_sh(int duration_milliseconds)
 {
-	printf("Called esp_sh: %d\n", duration_milliseconds);
+	printf("Called tts_sh: %d\n", duration_milliseconds);
 	return 0;
 } /* end tts_sh */
 
-int esp_tts_reset(void)
+int tts_reset(void)
 {
-	printf("Called esp_tts_reset\n");
+	printf("Called tts_reset\n");
 	return 0;
-} /* end esp_tts_reset */
+} /* end tts_reset */
 
-int esp_tts_set_punctuations(int punct_level)
+int tts_set_punctuations(int punct_level)
 {
 	printf("Called set punct level: %d\n", punct_level);
 	return 0;
 } /* end tts_set_punctuations */
 
-int esp_tts_set_speech_rate(int speech_rate)
+int tts_set_speech_rate(int speech_rate)
 {
-	printf("Called esp_tts_set_speech_rate: %d\n", speech_rate);
+	printf("Called tts_set_speech_rate: %d\n", speech_rate);
 	return 0;
-} /* end esp_tts_set_speech_rate */
+} /* end tts_set_speech_rate */
 
-int esp_tts_set_character_scale(double factor)
+int tts_set_character_scale(double factor)
 {
-	printf("Called esp_tts_set_character_scale: %f\n", factor);
+	printf("Called tts_set_character_scale: %f\n", factor);
 	return 0;
 } /* end tts_set_character_scale */
 
-int esp_tts_split_caps(int split)
+int tts_split_caps(int split)
 {
-	printf("Called esp_tts_split_caps: %d\n", split);
+	printf("Called tts_split_caps: %d\n", split);
 	return 0;
-} /* end esp_tts_split_caps */
+} /* end tts_split_caps */
 
-int esp_tts_capitalize(int flag)
+int tts_capitalize(int flag)
 {
-	printf("Called esp_tts_capitalize: %d\n", flag);
+	printf("Called tts_capitalize: %d\n", flag);
 	return 0;
-} /* end esp_tts_capitalize */
+} /* end tts_capitalize */
 
-int esp_tts_allcaps_beep(int flag)
+int tts_allcaps_beep(int flag)
 {
-	printf("Called esp_tts_allcaps_beep: %d\n", flag);
+	printf("Called tts_allcaps_beep: %d\n", flag);
 	return 0;
-} /* end esp_tts_allcaps_beep */
+} /* end tts_allcaps_beep */
 
 
 
-int esp_tts_sync_state(
+int tts_sync_state(
 	int punct_level,
 	int pitch_rise,
 	int caps_beep,
 	int split_caps,
 	int speech_rate)
 {
-	printf("Called esp_tts_sync_state: %d %d %d %d %d\n", punct_level, pitch_rise, caps_beep, split_caps, speech_rate);
+	printf("Called tts_sync_state: %d %d %d %d %d\n", punct_level, pitch_rise, caps_beep, split_caps, speech_rate);
 	return 0;
-} /* end esp_tts_sync_state */
+} /* end tts_sync_state */
 
 
-int esp_initialize(void)
+int tts_initialize(void)
 {
-	printf("Called esp_initialize\n");
+	printf("Called tts_initialize\n");
 	return 0;
 } /* end tts_initialize */
 
-int esp_finalize(void)
+int tts_finalize(void)
 {
-	printf("Called esp_finalize\n");
+	printf("Called tts_finalize\n");
 	return 0;
-} /* end esp_finalize */
+} /* end tts_finalize */
 
