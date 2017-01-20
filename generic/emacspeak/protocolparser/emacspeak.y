@@ -1,142 +1,187 @@
-/*
-*
-* emacspeak.y - Bison parser file for the Emacspeak tts protocol
-*
-* Copyright (C) 2014 Mike Ray <mike.ray@btinternet.com>
-*
-* This is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by
-* the Free Software Foundation; either version 3, or (at your option)
-* any later version.
-*
-* This software is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this package; see the file COPYING.  If not, write to
-* the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-* Boston, MA 02110-1301, USA.
-*
-*--code--*/
 
 %{
 
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include "tts_engine.h"
 
-
-int sync_punct_level;
-int sync_dtk_caps_pitch_rise;
-int sync_dtk_allcaps_beep;
-int sync_dtk_split_caps;
-int sync_speech_rate;
-
-char yylex();
+#define YYDEBUG 1
 
 %}
 
-%union 
+%union
 {
-        int n;
-        double d;
-        char *s;
-}
-
-%token <n> INTEGER
-%token <d> NONINTEGER
-
-%token <n> QCODE
-%token <n> QLETTER
-%token <n> QSPEECH
-%token <n> CTEXT
-
-%token <n> TTS_SYNC_STATE
-%token <n> TTS_ALLCAPS_BEEP
-%token <n> TTS_CAPITALIZE
-%token <n> TTS_PAUSE
-%token <n> TTS_RESET
-%token <n> TTS_RESUME
-%token <n> TTS_SAY
-%token <n> TTS_SET_CHARACTER_SCALE
-%token <n> TTS_SET_PUNCTUATIONS
-%token <n> TTS_SET_SPEECH_RATE
-%token <n> TTS_SPLIT_CAPS
-
-%token <n> PUNCTLEVEL
-%token <n> LANGUAGE
-%token <n> VOICE
-
-%token <n> DISPATCH
-%token <n> FLUSH
-%token <n> SILENCE
-%token <n> TONE
-
-%token <n> EOL
-
-
-%%
-
- /* rules */
-
-commands : /* empty */ 
-| commands command 
-;
-
-command : EOL { /* do nothing */ }
-		| QCODE CTEXT { esp_c($2); }
-		| QLETTER CTEXT { esp_l($2); }
-		| QSPEECH CTEXT				{ esp_q($2); }
-		| TTS_SYNC_STATE identifier INTEGER INTEGER INTEGER INTEGER
-				{
-					sync_dtk_caps_pitch_rise = $3;
-					sync_dtk_allcaps_beep = $4;
-					sync_dtk_split_caps = $5;
-					sync_speech_rate = $6;
-					esp_tts_sync_state(sync_punct_level, sync_dtk_caps_pitch_rise, sync_dtk_allcaps_beep, sync_dtk_split_caps, sync_speech_rate);
-				}
-			| TTS_ALLCAPS_BEEP INTEGER		{ esp_tts_allcaps_beep($2); }
-	| TTS_CAPITALIZE INTEGER { esp_tts_capitalize($2); } 
-	| TTS_PAUSE { esp_tts_pause(); }
-	| TTS_RESET { esp_tts_reset(); }
-	| TTS_RESUME { esp_tts_resume(); }
-	| TTS_SAY CTEXT { esp_tts_say($2); }
-	| TTS_SET_CHARACTER_SCALE NONINTEGER { esp_tts_set_character_scale($2); }
-		| TTS_SET_PUNCTUATIONS identifier				{ esp_tts_set_punctuations(sync_punct_level); }
-	| TTS_SET_SPEECH_RATE INTEGER { esp_tts_set_speech_rate($2); }
-	| TTS_SPLIT_CAPS INTEGER { esp_tts_split_caps($2); }
-	| DISPATCH { esp_d(); }
-	| FLUSH { esp_s(); }
-	| SILENCE INTEGER { esp_sh($2); }
-	| TONE INTEGER INTEGER { esp_t($2, $3); }
-;
-
-identifier : PUNCTLEVEL
-	| LANGUAGE
-	| VOICE
-;
-
-
-
-%%
-
-void yyerror(char *s) 
-{
-	fprintf(stderr, "error: %s\n", s); 
+	int n;
+	double d;
+	char *s;
 }
 
 
+%token <n>C
+%token <n>L
+%token <n>Q
 
+%token <n>S
+%token <n>T
 
+%token <s>TEXT
+%token <n>TTS_SAY
 
-int main(int argc, char **argv) 
+%token <n>TTS_PAUSE
+%token <n>TTS_RESET
+%token <n>TTS_RESUME
+
+%token <n>TTS_ALLCAPS_BEEP
+%token <n>TTS_CAPITALIZE
+%token <n>TTS_SET_CHARACTER_SCALE
+%token <n>TTS_SET_PUNCTUATIONS
+%token <n>TTS_SET_SPEECH_RATE
+%token <n>TTS_SPLIT_CAPS
+%token TTS_SYNC_STATE
+
+%token <d>DOUBLE
+%token <n>INTEGER
+%token <n>FLAG
+
+%token <n>PUNCT_NONE
+%token <n>PUNCT_SOME
+%token <n>PUNCT_ALL
+
+%type <s>speech immediate_speech queued_speech
+%type <n>silence tone tts_allcaps_beep tts_capitalize tts_set_punctuations tts_set_speech_rate tts_split_caps punctlevel
+%type <d>tts_set_character_scale
+
+%%
+
+cmdlist
+	: 
+	| cmdlist cmd
+	;
+
+cmd
+	: code
+	| speech
+	| dispatch { printf("Got dispatch\n"); }
+	| flush { printf("Got flush\n"); }
+	| silence
+	| tone
+		| tts_pause { printf("Got pause\n"); }
+	| tts_reset { printf("Got reset\n"); }
+	| tts_resume { printf("Got resume\n"); }
+	| tts_allcaps_beep { printf("Got all caps beep: %d\n", $1); }
+	| tts_capitalize { printf("Got capitalize: %d\n", $1); }
+	| tts_set_character_scale { printf("Got set character scale: %f\n", $1); }
+	| tts_set_punctuations { printf("Got set punctuations: %d\n", $1); }
+	| tts_set_speech_rate { printf("Got set speech rate: %d\n", $1); }
+	| tts_split_caps { printf("Got split caps: %d\n", $1); }
+	| tts_sync_state { printf("Got set sync state\n"); }
+	;
+code
+	: C '{' TEXT '}' '\n'
+	| C TEXT '\n'
+	;
+
+speech
+	: immediate_speech { $$ = $1; printf("Got immediate speech\n"); }
+	| queued_speech { $$ = $1; printf("Got queued speech\n"); }
+	;
+
+immediate_speech
+	: TTS_SAY '{' TEXT '}' '\n' { $$ = $3; }
+	| TTS_SAY TEXT '\n' { $$ = $2; }
+	| L '{' TEXT '}' '\n' { $$ = $3; }
+	| L TEXT '\n' { $$ = $2; }
+	;
+
+queued_speech
+	: Q '{' TEXT '}' '\n' { $$ = $3; }
+	| Q TEXT '\n' { $$ = $2; }
+	;
+
+dispatch
+	: 'd' '\n'
+	;
+
+flush
+	: 's' '\n'
+	;
+
+silence
+	: S '{' INTEGER '}' '\n' { $$ = $3; }
+	| S INTEGER '\n' { $$ = $2; }
+	;
+
+tone
+	: T '{' INTEGER INTEGER '}' '\n' { printf("Got tone: %d %d\n", $3, $4); $$ = $1; }
+	| T INTEGER INTEGER '\n' { printf("Got tone: %d %d\n", $2, $3); $$ = $1; }
+	;
+
+tts_pause
+	: TTS_PAUSE '\n'
+	;
+
+tts_reset
+	: TTS_RESET '\n'
+	;
+
+tts_resume
+	: TTS_RESUME '\n'
+	;
+
+tts_allcaps_beep
+	: TTS_ALLCAPS_BEEP '{' FLAG '}' '\n' { $$ = $3; }
+	| TTS_ALLCAPS_BEEP FLAG '\n' { $$ = $2; }
+	;
+
+tts_capitalize
+	: TTS_CAPITALIZE '{' FLAG '}' '\n' { $$ = $3; }
+	| TTS_CAPITALIZE FLAG '\n' { $$ = $2; }
+	;
+
+tts_set_character_scale
+	: TTS_SET_CHARACTER_SCALE '{' DOUBLE '}' '\n' { $$ = $3; }
+	| TTS_SET_CHARACTER_SCALE DOUBLE '\n' { $$ = $2; }
+	;
+
+tts_set_punctuations
+	:	TTS_SET_PUNCTUATIONS '{' punctlevel '}' '\n' { $$ = $3; }
+	| TTS_SET_PUNCTUATIONS punctlevel '\n' { $$ = $2; }
+	;
+
+tts_set_speech_rate
+	: TTS_SET_SPEECH_RATE '{' INTEGER '}' '\n' { $$ = $3; }
+	| TTS_SET_SPEECH_RATE INTEGER '\n' { $$ = $2; }
+	;
+
+tts_split_caps
+	: TTS_SPLIT_CAPS '{' FLAG '}' '\n' { $$ = $3; }
+	| TTS_SPLIT_CAPS FLAG '\n' { $$ = $2; }
+	;
+
+tts_sync_state
+	: TTS_SYNC_STATE '{' punctlevel FLAG FLAG FLAG INTEGER '}' '\n'
+	| TTS_SYNC_STATE punctlevel FLAG FLAG FLAG INTEGER '\n'
+	;
+
+punctlevel
+	: PUNCT_NONE { $$ = PUNCT_LEVEL_NONE; }
+	| PUNCT_SOME { $$ = PUNCT_LEVEL_SOME; }
+	| PUNCT_ALL { $$ = PUNCT_LEVEL_ALL; }
+	;
+
+%%
+
+main()
 {
+	yydebug = 0;
 
-	yyparse(); 
+	yyparse();
+}
 
-} /* end main */ 
+yyerror(char *s)
+{
+	fprintf(stderr, "%s\n", s);
+}
 
