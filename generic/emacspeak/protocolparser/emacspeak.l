@@ -13,7 +13,7 @@ char *buf;
 %}
 
 
-%x CODE LETTER QUEUE SAY TONE SILENCE SYNC PUNCTLEVEL TTS SCALE DISPATCH FLUSH
+%x CODE LETTER QUEUE SAY TONE SILENCE SYNC PUNCTLEVEL TTS SCALE DISPATCH FLUSH VRSN
 
 	/* code */
 code 	^(c[ ]+[^{\n]|c[ ]+"{")
@@ -32,6 +32,9 @@ tone 	^(t[ ]+[^{\n]|t[ ]+"{")
 
 	/* silence */
 silence 	^(sh[ ]+[^{\n]|sh[ ]+"{")
+
+	/* Version */
+version		^version\n
 
 	/* punctuation levels */
 none	none
@@ -187,7 +190,7 @@ ws [ \t\r\f\v]
 		return yytext[0];
 	}
 
-<FLUSH,DISPATCH>"\n" {
+<FLUSH,DISPATCH,VRSN>"\n" {
 		BEGIN 0;
 		return yytext[0];
 	}
@@ -198,6 +201,7 @@ ws [ \t\r\f\v]
 
 <QUEUE,SAY>[^{}\n]+ {
 		/* printf("Found some speech: %s\n", yytext); */
+		yylval.s = yytext;
 		return TEXT;
 	}
 
@@ -230,6 +234,12 @@ ws [ \t\r\f\v]
 		BEGIN FLUSH;
 		yyless(1);
 		return yytext[0];
+	}
+
+{version} {
+		BEGIN VRSN;
+		yyless(yyleng-1);
+		return VERSION;
 	}
 
 . ;

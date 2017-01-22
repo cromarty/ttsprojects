@@ -28,6 +28,7 @@ void yyerror(const char *s);
 
 %token <n>S
 %token <n>T
+%token <n>VERSION
 
 %token <s>TEXT
 %token <n>TTS_SAY
@@ -54,7 +55,7 @@ void yyerror(const char *s);
 
 %type <s>speech immediate_speech queued_speech
 %type <n>silence tone tts_allcaps_beep tts_capitalize tts_set_punctuations tts_set_speech_rate tts_split_caps punctlevel
-%type <d>tts_set_character_scale
+%type <d>tts_set_character_scale tts_pause tts_reset tts_resume
 
 %%
 
@@ -66,29 +67,31 @@ cmdlist
 cmd
 	: code
 	| speech
-	| dispatch { printf("Got dispatch\n"); }
-	| flush { printf("Got flush\n"); }
+	| dispatch { tts_d(); }
+	| flush { tts_s(); }
+	| version { tts_version(); }
 	| silence
 	| tone
-		| tts_pause { printf("Got pause\n"); }
-	| tts_reset { printf("Got reset\n"); }
-	| tts_resume { printf("Got resume\n"); }
-	| tts_allcaps_beep { printf("Got all caps beep: %d\n", $1); }
-	| tts_capitalize { printf("Got capitalize: %d\n", $1); }
-	| tts_set_character_scale { printf("Got set character scale: %f\n", $1); }
-	| tts_set_punctuations { printf("Got set punctuations: %d\n", $1); }
-	| tts_set_speech_rate { printf("Got set speech rate: %d\n", $1); }
-	| tts_split_caps { printf("Got split caps: %d\n", $1); }
+		| tts_pause { tts_pause(); }
+	| tts_reset { tts_reset(); }
+	| tts_resume { tts_resume(); }
+	| tts_allcaps_beep { tts_allcaps_beep($1); }
+	| tts_capitalize { tts_capitalize($1); }
+	| tts_set_character_scale { tts_set_character_scale($1); }
+	| tts_set_punctuations { tts_set_punctuations($1); }
+	| tts_set_speech_rate { tts_set_speech_rate($1); }
+	| tts_split_caps { tts_split_caps($1); }
 	| tts_sync_state { printf("Got set sync state\n"); }
 	;
+
 code
 	: C '{' TEXT '}' '\n'
 	| C TEXT '\n'
 	;
 
 speech
-	: immediate_speech { $$ = $1; printf("Got immediate speech\n"); }
-	| queued_speech { $$ = $1; printf("Got queued speech\n"); }
+	: immediate_speech { $$ = $1; tts_say($1); }
+	| queued_speech { $$ = $1; tts_q($1); }
 	;
 
 immediate_speech
@@ -107,6 +110,10 @@ dispatch
 	: 'd' '\n'
 	;
 
+version
+	: VERSION '\n'
+	;
+
 flush
 	: 's' '\n'
 	;
@@ -117,20 +124,20 @@ silence
 	;
 
 tone
-	: T '{' INTEGER INTEGER '}' '\n' { printf("Got tone: %d %d\n", $3, $4); $$ = $1; }
-	| T INTEGER INTEGER '\n' { printf("Got tone: %d %d\n", $2, $3); $$ = $1; }
+	: T '{' INTEGER INTEGER '}' '\n' { tts_t($3, $4); $$ = $1; }
+	| T INTEGER INTEGER '\n' { tts_t($2, $3); $$ = $1; }
 	;
 
 tts_pause
-	: TTS_PAUSE '\n'
+	: TTS_PAUSE '\n' { $$ = $1; }
 	;
 
 tts_reset
-	: TTS_RESET '\n'
+	: TTS_RESET '\n' { $$ = $1; }
 	;
 
 tts_resume
-	: TTS_RESUME '\n'
+	: TTS_RESUME '\n' { $$ = $1; }
 	;
 
 tts_allcaps_beep
@@ -164,8 +171,8 @@ tts_split_caps
 	;
 
 tts_sync_state
-	: TTS_SYNC_STATE '{' punctlevel FLAG FLAG FLAG INTEGER '}' '\n'
-	| TTS_SYNC_STATE punctlevel FLAG FLAG FLAG INTEGER '\n'
+	: TTS_SYNC_STATE '{' punctlevel FLAG FLAG FLAG INTEGER '}' '\n' { tts_sync_state($3, $4, $5, $6, $7); }
+	| TTS_SYNC_STATE punctlevel FLAG FLAG FLAG INTEGER '\n' { tts_sync_state($2,$3, $4, $5, $6); }
 	;
 
 punctlevel

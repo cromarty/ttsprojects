@@ -50,24 +50,25 @@ extern int yydebug;
     Q = 260,
     S = 261,
     T = 262,
-    TEXT = 263,
-    TTS_SAY = 264,
-    TTS_PAUSE = 265,
-    TTS_RESET = 266,
-    TTS_RESUME = 267,
-    TTS_ALLCAPS_BEEP = 268,
-    TTS_CAPITALIZE = 269,
-    TTS_SET_CHARACTER_SCALE = 270,
-    TTS_SET_PUNCTUATIONS = 271,
-    TTS_SET_SPEECH_RATE = 272,
-    TTS_SPLIT_CAPS = 273,
-    TTS_SYNC_STATE = 274,
-    DOUBLE = 275,
-    INTEGER = 276,
-    FLAG = 277,
-    PUNCT_NONE = 278,
-    PUNCT_SOME = 279,
-    PUNCT_ALL = 280
+    VERSION = 263,
+    TEXT = 264,
+    TTS_SAY = 265,
+    TTS_PAUSE = 266,
+    TTS_RESET = 267,
+    TTS_RESUME = 268,
+    TTS_ALLCAPS_BEEP = 269,
+    TTS_CAPITALIZE = 270,
+    TTS_SET_CHARACTER_SCALE = 271,
+    TTS_SET_PUNCTUATIONS = 272,
+    TTS_SET_SPEECH_RATE = 273,
+    TTS_SPLIT_CAPS = 274,
+    TTS_SYNC_STATE = 275,
+    DOUBLE = 276,
+    INTEGER = 277,
+    FLAG = 278,
+    PUNCT_NONE = 279,
+    PUNCT_SOME = 280,
+    PUNCT_ALL = 281
   };
 #endif
 
@@ -82,7 +83,7 @@ union YYSTYPE
 	double d;
 	char *s;
 
-#line 86 "emacspeak.tab.h" /* yacc.c:1909  */
+#line 87 "emacspeak.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

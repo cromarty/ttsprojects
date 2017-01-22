@@ -45,9 +45,9 @@ int tts_s(void)
 	return 0;
 } /* end tts_s */
 
-int tts_q(const char *text)
+int tts_q(const char *speech)
 {
-	printf("Called tts_q to queue text: ->%s<-\n", text);
+	printf("Called tts_q to queue speech: ->%s<-\n", speech);
 	return 0;
 } /* end tts_q */
 
