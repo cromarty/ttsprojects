@@ -2,6 +2,20 @@
 #include <stdlib.h>
 
 #include "tts_engine.h"
+
+
+typedef struct tts_state_
+{
+	int punct_level;
+	int pitch_rise;
+	int caps_beep;
+	int split_caps;
+	int speech_rate;
+	int capitalize;
+	double character_scale;
+} TTS_STATE_T;
+
+TTS_STATE_T tts_state;
  
 int tts_version(void)
 {
@@ -89,31 +103,36 @@ int tts_set_punctuations(int punct_level)
 
 int tts_set_speech_rate(int speech_rate)
 {
+	tts_state.speech_rate = speech_rate;
 	printf("Called tts_set_speech_rate: %d\n", speech_rate);
 	return 0;
 } /* end tts_set_speech_rate */
 
-int tts_set_character_scale(double factor)
+int tts_set_character_scale(double character_scale)
 {
-	printf("Called tts_set_character_scale: %f\n", factor);
+	tts_state.character_scale = character_scale;
+	printf("Called tts_set_character_scale: %f\n", character_scale);
 	return 0;
 } /* end tts_set_character_scale */
 
-int tts_split_caps(int split)
+int tts_split_caps(int split_caps)
 {
-	printf("Called tts_split_caps: %d\n", split);
+	tts_state.split_caps = split_caps;
+	printf("Called tts_split_caps: %d\n", split_caps);
 	return 0;
 } /* end tts_split_caps */
 
-int tts_capitalize(int flag)
+int tts_capitalize(int capitalize)
 {
-	printf("Called tts_capitalize: %d\n", flag);
+	tts_state.capitalize = capitalize;
+	printf("Called tts_capitalize: %d\n", capitalize);
 	return 0;
 } /* end tts_capitalize */
 
-int tts_allcaps_beep(int flag)
+int tts_allcaps_beep(int allcaps_beep)
 {
-	printf("Called tts_allcaps_beep: %d\n", flag);
+	tts_state.caps_beep = allcaps_beep;
+	printf("Called tts_allcaps_beep: %d\n", allcaps_beep);
 	return 0;
 } /* end tts_allcaps_beep */
 
@@ -126,7 +145,14 @@ int tts_sync_state(
 	int split_caps,
 	int speech_rate)
 {
+	tts_state.punct_level = punct_level;
+	tts_state.pitch_rise = pitch_rise;
+	tts_state.caps_beep = caps_beep;
+	tts_state.split_caps = split_caps;
+	tts_state.speech_rate = speech_rate;
+
 	printf("Called tts_sync_state: %d %d %d %d %d\n", punct_level, pitch_rise, caps_beep, split_caps, speech_rate);
+
 	return 0;
 } /* end tts_sync_state */
 
