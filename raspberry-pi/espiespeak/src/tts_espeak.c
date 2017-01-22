@@ -137,9 +137,9 @@ int tts_initialize(void)
 	return 0;
 } /* end tts_initialize */
 
-int tts_finalize(void)
+int tts_terminate(void)
 {
-	printf("Called tts_finalize\n");
+	printf("Called tts_terminate\n");
 	return 0;
-} /* end tts_finalize */
+} /* end tts_terminate */
 

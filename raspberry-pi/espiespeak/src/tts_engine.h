@@ -53,7 +53,7 @@ int tts_allcaps_beep(int flag);
 int tts_sync_state(int, int, int, int, int);
 
 int tts_initialize(void);
-int tts_finalize(void);
+int tts_terminate(void);
 
 
 #endif
