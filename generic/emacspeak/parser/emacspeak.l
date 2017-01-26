@@ -36,7 +36,7 @@ char *buf;
 %}
 
 
-%x CODE LETTER QUEUE SAY TONE SILENCE SYNC PUNCTLEVEL TTS SCALE DISPATCH FLUSH VRSN
+%x CODE LETTER QUEUE SAY TONE SND SILENCE SYNC PUNCTLEVEL TTS SCALE DISPATCH FLUSH VRSN
 
 	/* code */
 code 	^(c[ ]+[^{\n]|c[ ]+"{")
@@ -52,6 +52,9 @@ say 	^(tts_say[ ]+[^{\n]|tts_say[ ]+"{")
 
 	/* tone */
 tone 	^(t[ ]+[^{\n]|t[ ]+"{")
+
+	/* sound file */
+sound 	^(a[ ]+[^{\n]|a[ ]+"{")
 
 	/* silence */
 silence 	^(sh[ ]+[^{\n]|sh[ ]+"{")
@@ -118,6 +121,11 @@ ws [ \t\r\f\v]
 		return T;
 	}
 
+{sound} {
+		yyless(yyleng-1);
+		BEGIN SND;
+		return A;
+	}
 {silence}	{
 		yyless(yyleng-1);
 		BEGIN SILENCE;
@@ -200,11 +208,11 @@ ws [ \t\r\f\v]
 
 	/* End of Perl generated rules */
 
-<CODE,LETTER,QUEUE,SAY,SYNC,TONE,SILENCE,TTS,SCALE>"{" {
+<CODE,LETTER,QUEUE,SAY,SYNC,TONE,SND,SILENCE,TTS,SCALE>"{" {
 		return yytext[0];
 	}
 
-<CODE,LETTER,QUEUE,SAY,TONE,SILENCE,TTS,PUNCTLEVEL,SYNC,SCALE>("}"|"\n") {
+<CODE,LETTER,QUEUE,SAY,TONE,SND,SILENCE,TTS,PUNCTLEVEL,SYNC,SCALE>("}"|"\n") {
 		if (yytext[0] == '}') {
 			/* do nothing */
 		} else {
@@ -222,8 +230,7 @@ ws [ \t\r\f\v]
 		return TEXT;
 	}
 
-<QUEUE,SAY>[^{}\n]+ {
-		/* printf("Found some speech: %s\n", yytext); */
+<QUEUE,SAY,SND>[^{}\n]+ {
 		yylval.s = malloc(yyleng);
 		strcpy(yylval.s, yytext);
 		return TEXT;

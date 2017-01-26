@@ -49,6 +49,7 @@ void yyerror(const char *s);
 %token <n>C
 %token <n>L
 %token <n>Q
+%token <n>A
 
 %token <n>S
 %token <n>T
@@ -77,7 +78,7 @@ void yyerror(const char *s);
 %token <n>PUNCT_SOME
 %token <n>PUNCT_ALL
 
-%type <s>speech immediate_speech queued_speech
+%type <s>speech immediate_speech queued_speech sound
 %type <n>silence tone tts_allcaps_beep tts_capitalize tts_set_punctuations tts_set_speech_rate tts_split_caps punctlevel
 %type <d>tts_set_character_scale tts_pause tts_reset tts_resume
 
@@ -96,6 +97,7 @@ cmd
 	| version { tts_version(); }
 	| silence
 	| tone
+	| sound { tts_a($1); }
 		| tts_pause { tts_pause(); }
 	| tts_reset { tts_reset(); }
 	| tts_resume { tts_resume(); }
@@ -150,6 +152,11 @@ silence
 tone
 	: T '{' INTEGER INTEGER '}' '\n' { tts_t($3, $4); $$ = $1; }
 	| T INTEGER INTEGER '\n' { tts_t($2, $3); $$ = $1; }
+	;
+
+sound
+	: A '{' TEXT '}' '\n' { $$ = $3; }
+	| A TEXT '\n' { $$ = $2; }
 	;
 
 tts_pause

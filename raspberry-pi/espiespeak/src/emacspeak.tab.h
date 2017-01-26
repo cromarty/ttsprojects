@@ -48,27 +48,28 @@ extern int yydebug;
     C = 258,
     L = 259,
     Q = 260,
-    S = 261,
-    T = 262,
-    VERSION = 263,
-    TEXT = 264,
-    TTS_SAY = 265,
-    TTS_PAUSE = 266,
-    TTS_RESET = 267,
-    TTS_RESUME = 268,
-    TTS_ALLCAPS_BEEP = 269,
-    TTS_CAPITALIZE = 270,
-    TTS_SET_CHARACTER_SCALE = 271,
-    TTS_SET_PUNCTUATIONS = 272,
-    TTS_SET_SPEECH_RATE = 273,
-    TTS_SPLIT_CAPS = 274,
-    TTS_SYNC_STATE = 275,
-    DOUBLE = 276,
-    INTEGER = 277,
-    FLAG = 278,
-    PUNCT_NONE = 279,
-    PUNCT_SOME = 280,
-    PUNCT_ALL = 281
+    A = 261,
+    S = 262,
+    T = 263,
+    VERSION = 264,
+    TEXT = 265,
+    TTS_SAY = 266,
+    TTS_PAUSE = 267,
+    TTS_RESET = 268,
+    TTS_RESUME = 269,
+    TTS_ALLCAPS_BEEP = 270,
+    TTS_CAPITALIZE = 271,
+    TTS_SET_CHARACTER_SCALE = 272,
+    TTS_SET_PUNCTUATIONS = 273,
+    TTS_SET_SPEECH_RATE = 274,
+    TTS_SPLIT_CAPS = 275,
+    TTS_SYNC_STATE = 276,
+    DOUBLE = 277,
+    INTEGER = 278,
+    FLAG = 279,
+    PUNCT_NONE = 280,
+    PUNCT_SOME = 281,
+    PUNCT_ALL = 282
   };
 #endif
 
@@ -77,13 +78,13 @@ extern int yydebug;
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 18 "emacspeak.y" /* yacc.c:1909  */
+#line 42 "emacspeak.y" /* yacc.c:1909  */
 
 	int n;
 	double d;
 	char *s;
 
-#line 87 "emacspeak.tab.h" /* yacc.c:1909  */
+#line 88 "emacspeak.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
