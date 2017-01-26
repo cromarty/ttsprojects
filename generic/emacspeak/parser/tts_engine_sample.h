@@ -1,6 +1,6 @@
 /*
 *
-* Copyright (C) 2014 Mike Ray <mike.ray@btinternet.com>
+* Copyright (C) 2017 Mike Ray <mike.ray@btinternet.com>
 *
 * This is free software; you can redistribute it and/or modify it
 * under the terms of the GNU General Public License as published by
@@ -29,31 +29,31 @@
 #define PUNCT_LEVEL_SOME 1
 #define PUNCT_LEVEL_ALL 2
 
-int esp_version(void);
-int esp_tts_say(char*);
-int esp_l(const char *ch);
-int esp_d(void);
-int esp_tts_pause(void);
-int esp_tts_resume(void);
-int esp_s(void);
-int esp_q(const char *text);
-int esp_c(const char *code);
-int esp_a(const char *filename);
-int esp_t(int freq, int length);
-int esp_sh(int durationms);
+int tts_version(void);
+int tts_tts_say(char*);
+int tts_l(const char *ch);
+int tts_d(void);
+int tts_tts_pause(void);
+int tts_tts_resume(void);
+int tts_s(void);
+int tts_q(const char *text);
+int tts_c(const char *code);
+int tts_a(const char *filename);
+int tts_t(int freq, int length);
+int tts_sh(int durationms);
 
-int esp_tts_reset(void);
-int esp_tts_set_punctuations(int);
-int esp_tts_set_speech_rate(int);
-int esp_tts_set_character_scale(double factor);
-int esp_tts_split_caps(int flag);
-int esp_tts_capitalize(int flag);
-int esp_tts_allcaps_beep(int flag);
+int tts_tts_reset(void);
+int tts_tts_set_punctuations(int);
+int tts_tts_set_speech_rate(int);
+int tts_tts_set_character_scale(double factor);
+int tts_tts_split_caps(int flag);
+int tts_tts_capitalize(int flag);
+int tts_tts_allcaps_beep(int flag);
 
-int esp_tts_sync_state(int, int, int, int, int);
+int tts_tts_sync_state(int, int, int, int, int);
 
-int esp_initialize(void);
-int esp_finalize(void);
+int tts_initialize(void);
+int tts_finalize(void);
 
 
 #endif
