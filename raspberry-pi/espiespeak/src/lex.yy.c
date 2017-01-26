@@ -1123,20 +1123,21 @@ YY_RULE_SETUP
 #line 202 "emacspeak.l"
 {
 		/* printf("Found some speech: %s\n", yytext); */
-		yylval.s = yytext;
+		yylval.s = malloc(yyleng);
+		strcpy(yylval.s, yytext);
 		return TEXT;
 	}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 208 "emacspeak.l"
+#line 209 "emacspeak.l"
 {
 		return TEXT;
 	}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 212 "emacspeak.l"
+#line 213 "emacspeak.l"
 {
 		yylval.n = atoi(yytext);
 		return FLAG;
@@ -1144,7 +1145,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 217 "emacspeak.l"
+#line 218 "emacspeak.l"
 {
 		yylval.n = atoi(yytext);
 		return INTEGER;
@@ -1152,7 +1153,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 222 "emacspeak.l"
+#line 223 "emacspeak.l"
 {
 		yylval.d = atof(yytext);
 		return DOUBLE;
@@ -1161,7 +1162,7 @@ YY_RULE_SETUP
 case 29:
 /* rule 29 can match eol */
 YY_RULE_SETUP
-#line 227 "emacspeak.l"
+#line 228 "emacspeak.l"
 {
 		BEGIN DISPATCH;
 		yyless(1);
@@ -1171,7 +1172,7 @@ YY_RULE_SETUP
 case 30:
 /* rule 30 can match eol */
 YY_RULE_SETUP
-#line 233 "emacspeak.l"
+#line 234 "emacspeak.l"
 {
 		BEGIN FLUSH;
 		yyless(1);
@@ -1181,7 +1182,7 @@ YY_RULE_SETUP
 case 31:
 /* rule 31 can match eol */
 YY_RULE_SETUP
-#line 239 "emacspeak.l"
+#line 240 "emacspeak.l"
 {
 		BEGIN VRSN;
 		yyless(yyleng-1);
@@ -1190,15 +1191,15 @@ YY_RULE_SETUP
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 245 "emacspeak.l"
+#line 246 "emacspeak.l"
 ;
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 246 "emacspeak.l"
+#line 247 "emacspeak.l"
 ECHO;
 	YY_BREAK
-#line 1202 "lex.yy.c"
+#line 1203 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 case YY_STATE_EOF(CODE):
 case YY_STATE_EOF(LETTER):
@@ -2209,4 +2210,4 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 245 "emacspeak.l"
+#line 246 "emacspeak.l"

@@ -29,28 +29,28 @@
 #define PUNCT_LEVEL_SOME 1
 #define PUNCT_LEVEL_ALL 2
 
-int tts_version(void);
-int tts_say(char*);
-int tts_l(const char *ch);
-int tts_d(void);
-int tts_pause(void);
-int tts_resume(void);
-int tts_s(void);
-int tts_q(const char *text);
-int tts_c(const char *code);
-int tts_a(const char *filename);
-int tts_t(int freq, int length);
-int tts_sh(int durationms);
+void tts_version(void);
+void tts_say(char*);
+void tts_l(const char *ch);
+void tts_d(void);
+void tts_pause(void);
+void tts_resume(void);
+void tts_s(void);
+void tts_q(const char *text);
+void tts_c(const char *code);
+void tts_a(const char *filename);
+void tts_t(int freq, int length);
+void tts_sh(int durationms);
 
-int tts_reset(void);
-int tts_set_punctuations(int);
-int tts_set_speech_rate(int);
-int tts_set_character_scale(double factor);
-int tts_split_caps(int flag);
-int tts_capitalize(int flag);
-int tts_allcaps_beep(int flag);
+void tts_reset(void);
+void tts_set_punctuations(int);
+void tts_set_speech_rate(int);
+void tts_set_character_scale(double factor);
+void tts_split_caps(int flag);
+void tts_capitalize(int flag);
+void tts_allcaps_beep(int flag);
 
-int tts_sync_state(int, int, int, int, int);
+void tts_sync_state(int, int, int, int, int);
 
 int tts_initialize(void);
 int tts_terminate(void);

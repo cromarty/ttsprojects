@@ -201,7 +201,8 @@ ws [ \t\r\f\v]
 
 <QUEUE,SAY>[^{}\n]+ {
 		/* printf("Found some speech: %s\n", yytext); */
-		yylval.s = yytext;
+		yylval.s = malloc(yyleng);
+		strcpy(yylval.s, yytext);
 		return TEXT;
 	}
 
