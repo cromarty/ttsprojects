@@ -2,6 +2,8 @@
 *
 * Copyright (C) 2017 Mike Ray <mike.ray@btinternet.com>
 *
+* Flex lexer for the Emacspeak text-to-speech protocol. Requires emacspeak.y.
+*
 * This is free software; you can redistribute it and/or modify it
 * under the terms of the GNU General Public License as published by
 * the Free Software Foundation; either version 2, or (at your option)
