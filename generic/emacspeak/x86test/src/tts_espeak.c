@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
 #include <espeak/speak_lib.h>
 
 #include "tts_engine.h"
@@ -22,6 +23,8 @@ typedef struct tts_state_
 
 TTS_STATE_T tts_state;
  
+Queue tts_queue;
+
 void tts_version(void)
 {
 	printf("Called tts_version\n");
@@ -165,13 +168,14 @@ void tts_sync_state(
 
 int tts_initialize(void)
 {
-	printf("Called tts_initialize\n");
-	return 0;
+	queue_init(&tts_queue, free);
+
+	return espeak_Initialize(AUDIO_OUTPUT_PLAYBACK, 50, NULL, 0);
 } /* end tts_initialize */
 
 int tts_terminate(void)
 {
-	printf("Called tts_terminate\n");
+	espeak_Terminate();
 	return 0;
 } /* end tts_terminate */
 

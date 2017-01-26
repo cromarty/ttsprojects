@@ -23,11 +23,19 @@
 #ifndef TTS_ENGINE_H
 #define TTS_ENGINE_H
 
+#include "queue.h"
+
 #define NO_SYNC -1
 
 #define PUNCT_LEVEL_NONE 0
 #define PUNCT_LEVEL_SOME 1
 #define PUNCT_LEVEL_ALL 2
+
+typedef struct tts_queue_entry
+{
+	int			type;
+	void			*payload;
+} TTS_QUEUE_ENTRY_T;
 
 void tts_version(void);
 void tts_say(char*);

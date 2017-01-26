@@ -1858,5 +1858,16 @@ void yyerror(const char *s)
 	fprintf(stderr, "%s\n", s);
 }
 
+int main() {
+	int yydebug = 0;
+	int res = tts_initialize();
+	if (res == -1) {
+		printf("Failed\n");
+		return 1;
+	}
+
+	yyparse();
+	return 0;
+}
 
 
