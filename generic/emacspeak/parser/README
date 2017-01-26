@@ -1,0 +1,54 @@
+
+emacspeak protocol parser using Flex and Bison
+==============================================
+
+Files:
+
+emacspeak.y
+emacspeak.l
+tts_engine_sample.h
+module_sample.c
+
+The file tts_engine_sample.h contains the definition of every function called in the Bison parser 
+and it should be renamed to tts_engine.h before use, and after copying it to the development source 
+directory for a tts module.
+
+The file module_sample.c is an example C file with one function per Emacspeak TTS protocol function. 
+It should be copied into the development directory of the module you intend to write and renamed 
+accordingly.
+
+
+
+
+Bison
+-----
+
+To produce C files from the Bison grammar:
+
+	bison -d emacspeak.y
+
+The above will produce:
+
+emacspeak.tab.c
+emacspeak.tab.h
+
+Flex
+----
+
+To produce a lexer from emacspeak.l:
+
+flex emacspeak.l
+
+Which produces:
+
+lex.yy.c
+
+Protocol Specs
+--------------
+
+Here is a link to the protocol specs:
+
+http://tvraman.github.io/emacspeak/manual/TTS-Servers.html
+
+
+

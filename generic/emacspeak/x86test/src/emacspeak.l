@@ -1,1 +1,1 @@
-../../protocolparser/emacspeak.l
+../../parser/emacspeak.l

@@ -1,1 +1,1 @@
-../../../generic/emacspeak/protocolparser/emacspeak.l
+../../../generic/emacspeak/parser/emacspeak.l
