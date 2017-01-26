@@ -31,7 +31,7 @@
 
 #include "tts_engine.h"
 
-#define YYDEBUG 1
+//#define YYDEBUG 1
 
 int yylex();
 void yyerror(const char *s);
@@ -214,15 +214,10 @@ punctlevel
 
 %%
 
-int main()
-{
-	yydebug = 0;
-
-	yyparse();
-}
-
 void yyerror(const char *s)
 {
 	fprintf(stderr, "%s\n", s);
 }
+
+
 

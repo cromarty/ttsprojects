@@ -1,8 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <espeak/speak_lib.h>
 
 #include "tts_engine.h"
+
+#include "emacspeak.tab.h"
+
 
 
 typedef struct tts_state_
