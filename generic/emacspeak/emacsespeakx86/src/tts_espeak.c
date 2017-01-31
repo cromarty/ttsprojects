@@ -9,6 +9,10 @@
 
 #include "emacspeak.tab.h"
 
+#define NO_PUNCTUATION			""
+#define SOME_PUNCTUATION			"$%&/@"
+#define ALL_PUNCTUATION			"!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
+
 typedef struct tts_state
 {
 	int punct_level;
