@@ -169,7 +169,6 @@ void tts_s(void)
 
 void tts_q(char *speech)
 {
-	printf("Called tts_q to queue speech: %d %s\n", strlen(speech), speech);
 	pthread_mutex_lock(&queue_guard_mutex);
 	queue_speech(1, speech);
 	pthread_mutex_unlock(&queue_guard_mutex);
@@ -179,7 +178,9 @@ void tts_q(char *speech)
 
 void tts_c(const char *code)
 {
-	printf("Called tts_c: %s\n", code);
+	pthread_mutex_lock(&queue_guard_mutex);
+	queue_speech(2, code);
+	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_c */
 

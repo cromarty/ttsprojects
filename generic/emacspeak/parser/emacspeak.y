@@ -45,42 +45,43 @@ void yyerror(const char *s);
 	char *s;
 }
 
+%token <d>DOUBLE
 
-%token <n>C
-%token <n>L
-%token <n>Q
 %token <n>A
+%token <n>C
+%token <n>FLAG
+%token <n>INTEGER
+%token <n>L
 
+%token <n>PUNCT_ALL
+%token <n>PUNCT_NONE
+%token <n>PUNCT_SOME
+
+%token <n>Q
 %token <n>S
 %token <n>T
-%token <n>VERSION
-
-%token <s>TEXT
-%token <n>TTS_SAY
-
-%token <n>TTS_PAUSE
-%token <n>TTS_RESET
-%token <n>TTS_RESUME
 
 %token <n>TTS_ALLCAPS_BEEP
 %token <n>TTS_CAPITALIZE
+%token <n>TTS_PAUSE
+%token <n>TTS_RESET
+%token <n>TTS_RESUME
+%token <n>TTS_SAY
 %token <n>TTS_SET_CHARACTER_SCALE
 %token <n>TTS_SET_PUNCTUATIONS
 %token <n>TTS_SET_SPEECH_RATE
 %token <n>TTS_SPLIT_CAPS
-%token TTS_SYNC_STATE
+%token <n>TTS_SYNC_STATE
+%token <n>VERSION
 
-%token <d>DOUBLE
-%token <n>INTEGER
-%token <n>FLAG
+%token <s>TEXT
 
-%token <n>PUNCT_NONE
-%token <n>PUNCT_SOME
-%token <n>PUNCT_ALL
+%type <d>tts_set_character_scale
+
+%type <n>silence tone tts_allcaps_beep tts_capitalize tts_set_punctuations tts_set_speech_rate tts_split_caps punctlevel
+%type <n>tts_pause tts_reset tts_resume
 
 %type <s>speech immediate_speech queued_speech sound
-%type <n>silence tone tts_allcaps_beep tts_capitalize tts_set_punctuations tts_set_speech_rate tts_split_caps punctlevel
-%type <d>tts_set_character_scale tts_pause tts_reset tts_resume
 
 %%
 
