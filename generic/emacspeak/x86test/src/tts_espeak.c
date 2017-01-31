@@ -76,6 +76,22 @@ static int send_speech(void) {
 	return 0;
 } /* send_speech */
 
+
+static int empty_queue(void) {
+	void *data;
+	int i, s = queue_size(&tts_queue);
+
+	for (i = 0; i < s; i++) {
+		if (queue_pop(&tts_queue, (void **)data) == 0)
+			free(data);
+		else
+			return -1;
+	}
+
+	return 0;
+} /* empty_queue */
+
+
 static void *dispatch_thread(void *arg) {
 	TTS_QUEUE_ENTRY_T *qe;
 	char *speech;
@@ -107,7 +123,12 @@ void tts_version(void)
 
 void tts_say(char *text)
 {
-	printf("Called tts_say: %s\n", text);
+	int res;
+	pthread_mutex_lock(&queue_guard_mutex);
+	res = espeak_Cancel();
+	res = empty_queue();
+	res = espeak_Synth(text, strlen(text)+1, 0, POS_CHARACTER, 0, espeakPHONEMES, NULL, NULL);
+	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_say */
 
@@ -138,7 +159,11 @@ void tts_resume(void)
 
 void tts_s(void)
 {
-	printf("Called tts_s\n");
+	int res;
+	pthread_mutex_lock(&queue_guard_mutex);
+	res = espeak_Cancel();
+	empty_queue();
+	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_s */
 
