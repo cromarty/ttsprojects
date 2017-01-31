@@ -34,7 +34,8 @@
 typedef struct tts_queue_entry
 {
 	int			type;
-	void			*payload;
+	int length;
+	void			*speech;
 } TTS_QUEUE_ENTRY_T;
 
 void tts_version(void);
