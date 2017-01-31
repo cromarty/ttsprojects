@@ -76,7 +76,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = emacspeakx86$(EXEEXT)
+bin_PROGRAMS = emacsespeakx86$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/depcomp
@@ -90,10 +90,11 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_emacspeakx86_OBJECTS = tts_espeak.$(OBJEXT) emacspeak.tab.$(OBJEXT) \
-	lex.yy.$(OBJEXT) queue.$(OBJEXT) list.$(OBJEXT)
-emacspeakx86_OBJECTS = $(am_emacspeakx86_OBJECTS)
-emacspeakx86_LDADD = $(LDADD)
+am_emacsespeakx86_OBJECTS = tts_espeak.$(OBJEXT) \
+	emacspeak.tab.$(OBJEXT) lex.yy.$(OBJEXT) queue.$(OBJEXT) \
+	list.$(OBJEXT)
+emacsespeakx86_OBJECTS = $(am_emacsespeakx86_OBJECTS)
+emacsespeakx86_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -122,8 +123,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(emacspeakx86_SOURCES)
-DIST_SOURCES = $(emacspeakx86_SOURCES)
+SOURCES = $(emacsespeakx86_SOURCES)
+DIST_SOURCES = $(emacsespeakx86_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -242,8 +243,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-emacspeakx86_SOURCES = tts_espeak.c emacspeak.tab.c lex.yy.c queue.c list.c tts_engine.h emacspeak.tab.h queue.h list.h
-AM_CPPFLAGS = 
+emacsespeakx86_SOURCES = tts_espeak.c emacspeak.tab.c lex.yy.c queue.c list.c tts_engine.h 
 all: all-am
 
 .SUFFIXES:
@@ -321,9 +321,9 @@ uninstall-binPROGRAMS:
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
-emacspeakx86$(EXEEXT): $(emacspeakx86_OBJECTS) $(emacspeakx86_DEPENDENCIES) $(EXTRA_emacspeakx86_DEPENDENCIES) 
-	@rm -f emacspeakx86$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(emacspeakx86_OBJECTS) $(emacspeakx86_LDADD) $(LIBS)
+emacsespeakx86$(EXEEXT): $(emacsespeakx86_OBJECTS) $(emacsespeakx86_DEPENDENCIES) $(EXTRA_emacsespeakx86_DEPENDENCIES) 
+	@rm -f emacsespeakx86$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(emacsespeakx86_OBJECTS) $(emacsespeakx86_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -555,6 +555,7 @@ uninstall-am: uninstall-binPROGRAMS
 	ps ps-am tags tags-am uninstall uninstall-am \
 	uninstall-binPROGRAMS
 
+emacspeak.tab.h queue.h list.h
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
