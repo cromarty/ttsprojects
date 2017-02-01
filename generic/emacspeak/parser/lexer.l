@@ -112,7 +112,7 @@ ws [ \t\r\f\v]
 {say}	{
 		yyless(yyleng-1);
 		BEGIN XSAY;
-		return TTS_XSAY;
+		return TTS_SAY;
 	}
 
 {tone}	{
