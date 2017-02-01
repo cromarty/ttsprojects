@@ -21,13 +21,11 @@ Queue tts_queue;
 pthread_mutex_t queue_guard_mutex;
 sem_t dispatch_semaphore;
 
-
-
 void tts_version(void)
 {
 	printf("Called tts_version\n");
 	return;
-}
+} /* end tts_version */
 
 void tts_say(char *text)
 {

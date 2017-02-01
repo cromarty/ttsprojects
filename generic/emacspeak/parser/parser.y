@@ -2,8 +2,7 @@
 *
 * Copyright (C) 2017 Mike Ray <mike.ray@btinternet.com>
 *
-*
-* Bison parser for the Emacspeak text-to-speech protocol. Requires emacspeak.l.
+* Bison parser for the Emacspeak text-to-speech protocol. Requires lexer.l
 *
 * This is free software; you can redistribute it and/or modify it
 * under the terms of the GNU General Public License as published by

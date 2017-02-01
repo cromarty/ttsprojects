@@ -1,0 +1,19 @@
+
+Thanks
+======
+
+Of course thanks to TV Raman over all for emacspeak.
+
+Thanks to Kyle Loudon for:
+
+Mastering Algorithms with C, Copyright (R) O'Reilly Media Inc.
+
+ISBN-13: 978-1-565-92453-6
+
+From where I took the code for creating a queue.
+
+Thanks to Fernando of the F123 Project, who gave me the impetus to finish a stagnant project to use 
+Flex and Bison to generate an emacspeak protocol parser from which I could build all kinds of 
+emacspeak text-to-speech servers.
+
+

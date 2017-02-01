@@ -2,10 +2,9 @@
 emacsespeakx86
 ============
 
-This is an experimental Emacspeak eSpeak text-to-speech server which was written to test the Flex 
-and Bison based parser in this repository.
+A proof-of-concept but useful emacspeak text-to-speech server using the espeak software speech 
+synthesiser and the parser elsewhere in this repository.
 
-See commentary in ../parser/README for details of the parser.
-
+See ../parser/README for details of the parser.
 
 
