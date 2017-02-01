@@ -2,7 +2,7 @@
 *
 * Copyright (C) 2017 Mike Ray <mike.ray@btinternet.com>
 *
-* Flex lexer for the Emacspeak text-to-speech protocol. Requires emacspeak.y.
+* Flex lexer for the Emacspeak text-to-speech protocol. Requires parser.y.
 *
 * This is free software; you can redistribute it and/or modify it
 * under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "emacspeak.tab.h"
+#include "parser.h"
 #include "tts_server.h"
 
 char *buf;

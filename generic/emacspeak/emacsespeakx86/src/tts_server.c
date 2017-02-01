@@ -8,7 +8,7 @@
 #include "tts_server.h"
 #include "tts_espeak.h"
 
-#include "emacspeak.tab.h"
+#include "parser.h"
 
 #define NO_PUNCTUATION			""
 #define SOME_PUNCTUATION			"$%&/@"

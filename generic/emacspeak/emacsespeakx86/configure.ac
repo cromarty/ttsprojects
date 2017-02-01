@@ -7,19 +7,16 @@ AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_CONFIG_SRCDIR([src/tts_server.c])
 AC_CONFIG_HEADERS([config.h])
 
-dnl *************************************************
-dnl current:revision:age
-dnl change (without API) = c:r+1:a
-dnl change API = c+1:0:a
-dnl add API = c+1:0:a+1
-dnl remove API = c+1:0:0
-dnl *************************************************
-
 dnl Checks for programs.
 
 AC_PROG_YACC
 AC_PROG_CC
-AC_PROG_LEX
+# Sometimes Flex is installed as Lex, e.g., NetBSD.
+AC_CHECK_PROG([FLEX], [flex lex], [flex])
+# Force the use of `missing' to wrap Flex invocations.
+#AM_MISSING_PROG([LEX], [$FLEX])
+
+AM_PROG_LEX
 
 dnl Checks for libraries.
 

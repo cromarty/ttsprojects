@@ -8,7 +8,7 @@
 #include "tts_server.h"
 #include "tts_espeak.h"
 
-#include "emacspeak.tab.h"
+#include "parser.h"
 
 
 TTS_STATE_T tts_state;

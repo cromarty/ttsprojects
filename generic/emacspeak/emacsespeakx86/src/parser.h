@@ -30,8 +30,8 @@
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
-#ifndef YY_YY_EMACSPEAK_TAB_H_INCLUDED
-# define YY_YY_EMACSPEAK_TAB_H_INCLUDED
+#ifndef YY_YY_PARSER_H_INCLUDED
+# define YY_YY_PARSER_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -73,20 +73,47 @@ extern int yydebug;
     TEXT = 283
   };
 #endif
+/* Tokens.  */
+#define DOUBLE 258
+#define A 259
+#define C 260
+#define FLAG 261
+#define INTEGER 262
+#define L 263
+#define PUNCT_ALL 264
+#define PUNCT_NONE 265
+#define PUNCT_SOME 266
+#define Q 267
+#define S 268
+#define T 269
+#define TTS_ALLCAPS_BEEP 270
+#define TTS_CAPITALIZE 271
+#define TTS_PAUSE 272
+#define TTS_RESET 273
+#define TTS_RESUME 274
+#define TTS_SAY 275
+#define TTS_SET_CHARACTER_SCALE 276
+#define TTS_SET_PUNCTUATIONS 277
+#define TTS_SET_SPEECH_RATE 278
+#define TTS_SPLIT_CAPS 279
+#define TTS_SYNC_STATE 280
+#define VERSION 281
+#define CHAR 282
+#define TEXT 283
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE YYSTYPE;
 union YYSTYPE
 {
-#line 42 "emacspeak.y" /* yacc.c:1909  */
+#line 42 "parser.y" /* yacc.c:1909  */
 
 	int n;
 	double d;
 	char *s;
 	char c;
 
-#line 90 "emacspeak.tab.h" /* yacc.c:1909  */
+#line 117 "parser.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1
@@ -97,4 +124,4 @@ extern YYSTYPE yylval;
 
 int yyparse (void);
 
-#endif /* !YY_YY_EMACSPEAK_TAB_H_INCLUDED  */
+#endif /* !YY_YY_PARSER_H_INCLUDED  */
