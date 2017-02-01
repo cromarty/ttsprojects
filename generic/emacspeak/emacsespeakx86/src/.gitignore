@@ -3,3 +3,7 @@ emacsespeakx86
 
 
 
+parser.c
+parser.h
+lexer.c
+
