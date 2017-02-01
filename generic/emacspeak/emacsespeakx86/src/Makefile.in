@@ -244,6 +244,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 emacsespeakx86_SOURCES = tts_espeak.c emacspeak.tab.c lex.yy.c queue.c list.c tts_engine.h emacspeak.tab.h queue.h list.h
+AM_CPPFLAGS = -DYYDEBUG=1
 all: all-am
 
 .SUFFIXES:

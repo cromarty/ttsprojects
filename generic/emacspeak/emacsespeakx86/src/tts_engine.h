@@ -40,7 +40,7 @@ typedef struct tts_queue_entry
 
 void tts_version(void);
 void tts_say(char*);
-void tts_l(const char *ch);
+void tts_l(const char ch);
 void tts_d(void);
 void tts_pause(void);
 void tts_resume(void);

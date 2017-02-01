@@ -69,7 +69,8 @@ extern int yydebug;
     TTS_SPLIT_CAPS = 279,
     TTS_SYNC_STATE = 280,
     VERSION = 281,
-    TEXT = 282
+    CHAR = 282,
+    TEXT = 283
   };
 #endif
 
@@ -83,8 +84,9 @@ union YYSTYPE
 	int n;
 	double d;
 	char *s;
+	char c;
 
-#line 88 "emacspeak.tab.h" /* yacc.c:1909  */
+#line 90 "emacspeak.tab.h" /* yacc.c:1909  */
 };
 # define YYSTYPE_IS_TRIVIAL 1
 # define YYSTYPE_IS_DECLARED 1

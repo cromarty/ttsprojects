@@ -136,9 +136,9 @@ void tts_say(char *text)
 	return;
 } /* end tts_say */
 
-void tts_l(const char *ch)
+void tts_l(const char ch)
 {
-	printf("Called tts_l: %s\n", ch);
+	printf("Called tts_l: %d\n", ch);
 	return;
 } /* end tts_l */
 

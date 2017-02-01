@@ -208,11 +208,12 @@ ws [ \t\r\f\v]
 
 	/* End of Perl generated rules */
 
-<CODE,LETTER,QUEUE,SAY,SYNC,TONE,SND,SILENCE,TTS,SCALE>"{" {
+	/* here */
+<CODE,QUEUE,SAY,SYNC,TONE,SND,SILENCE,TTS,SCALE>"{" {
 		return yytext[0];
 	}
 
-<CODE,LETTER,QUEUE,SAY,TONE,SND,SILENCE,TTS,PUNCTLEVEL,SYNC,SCALE>("}"|"\n") {
+<CODE,QUEUE,SAY,TONE,SND,SILENCE,TTS,PUNCTLEVEL,SYNC,SCALE>("}"|"\n") {
 		if (yytext[0] == '}') {
 			/* do nothing */
 		} else {
@@ -237,8 +238,23 @@ ws [ \t\r\f\v]
 	}
 
 <LETTER>[^{}\n] {
-		return TEXT;
+		yylval.c = yytext[0];
+		return CHAR;
 	}
+
+<LETTER>"{" {
+		return yytext[0];
+	}
+
+<LETTER>("}"|"\n") {
+		if (yytext[0] == '}') {
+			/* do nothing */
+		} else {
+			BEGIN 0;
+		}
+		return yytext[0];
+	}
+
 
 <TTS,SYNC>{flag}	{
 		yylval.n = atoi(yytext);

@@ -31,7 +31,7 @@
 
 #include "tts_engine.h"
 
-//#define YYDEBUG 1
+
 
 int yylex();
 void yyerror(const char *s);
@@ -43,6 +43,7 @@ void yyerror(const char *s);
 	int n;
 	double d;
 	char *s;
+	char c;
 }
 
 %token <d>DOUBLE
@@ -74,8 +75,10 @@ void yyerror(const char *s);
 %token <n>TTS_SYNC_STATE
 %token <n>VERSION
 
+%token <c>CHAR
 %token <s>TEXT
 
+%type <c>character
 %type <d>tts_set_character_scale
 
 %type <n>silence tone tts_allcaps_beep tts_capitalize tts_set_punctuations tts_set_speech_rate tts_split_caps punctlevel
@@ -119,13 +122,17 @@ code
 speech
 	: immediate_speech { $$ = $1; tts_say($1); }
 	| queued_speech { $$ = $1; tts_q($1); }
+	| character { $$ = $1; tts_l($1); }
 	;
 
 immediate_speech
 	: TTS_SAY '{' TEXT '}' '\n' { $$ = $3; }
 	| TTS_SAY TEXT '\n' { $$ = $2; }
-	| L '{' TEXT '}' '\n' { $$ = $3; }
-	| L TEXT '\n' { $$ = $2; }
+	;
+
+character
+	: L '{' CHAR '}' '\n' { $$ = $3; }
+	| L CHAR '\n' { $$ = $2; }
 	;
 
 queued_speech
@@ -220,8 +227,11 @@ void yyerror(const char *s)
 	fprintf(stderr, "%s\n", s);
 }
 
-int main() {
-	int yydebug = 0;
+int main(int argc, char **argv) {
+	if(argc > 1 && !strcmp(argv[1], "-d")) {
+		yydebug = 1; argc--; argv++;
+	}
+
 	int res = tts_initialize();
 	if (res == -1) {
 		printf("Failed\n");
