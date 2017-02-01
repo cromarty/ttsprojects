@@ -36,7 +36,7 @@ char *buf;
 %}
 
 
-%x CODE LETTER QUEUE SAY TONE SND SILENCE SYNC PUNCTLEVEL TTS SCALE DISPATCH FLUSH VRSN
+%x XA XC XD XL XPL XQ XS XSAY XSH XSYNC XT XTTS XSCALE XVERSION
 
 	/* code */
 code 	^(c[ ]+[^{\n]|c[ ]+"{")
@@ -93,56 +93,56 @@ ws [ \t\r\f\v]
 
 {code} {
 		yyless(yyleng-1);
-		BEGIN CODE;
+		BEGIN XC;
 		return C;
 	}
 
 {letter} {
 		yyless(yyleng-1);
-		BEGIN LETTER;
+		BEGIN XL;
 		return L;
 	}
 
 {queue} {
 		yyless(yyleng-1);
-		BEGIN QUEUE;
+		BEGIN XQ;
 		return Q;
 	}
 
 {say}	{
 		yyless(yyleng-1);
-		BEGIN SAY;
-		return TTS_SAY;
+		BEGIN XSAY;
+		return TTS_XSAY;
 	}
 
 {tone}	{
 		yyless(yyleng-1);
-		BEGIN TONE;
+		BEGIN XT;
 		return T;
 	}
 
 {sound} {
 		yyless(yyleng-1);
-		BEGIN SND;
+		BEGIN XA;
 		return A;
 	}
 {silence}	{
 		yyless(yyleng-1);
-		BEGIN SILENCE;
+		BEGIN XSH;
 		return S;
 	}
 
-<PUNCTLEVEL,SYNC>{none} {
+<XPL,XSYNC>{none} {
 		yylval.n = PUNCT_LEVEL_NONE;
 		return PUNCT_NONE;
 	}
 
-<PUNCTLEVEL,SYNC>{some} {
+<XPL,XSYNC>{some} {
 		yylval.n = PUNCT_LEVEL_SOME;
 		return PUNCT_SOME;
 	}
 
-<PUNCTLEVEL,SYNC>{all} {
+<XPL,XSYNC>{all} {
 		yylval.n = PUNCT_LEVEL_ALL;
 		return PUNCT_ALL;
 	}
@@ -150,141 +150,143 @@ ws [ \t\r\f\v]
 	/* Beginning of Perl generated rules */
 
 {pause} {
-		BEGIN TTS;
+		BEGIN XTTS;
 		return TTS_PAUSE;
 	}
 
 {reset} {
-		BEGIN TTS;
+		BEGIN XTTS;
 		return TTS_RESET;
 	}
 
 {resume} {
-		BEGIN TTS;
+		BEGIN XTTS;
 		return TTS_RESUME;
 	}
 
 {allcapsbeep}	{
 		yyless(yyleng-1);
-		BEGIN TTS;
+		BEGIN XTTS;
 		return TTS_ALLCAPS_BEEP;
 	}
 
 {capitalize}	{
 		yyless(yyleng-1);
-		BEGIN TTS;
+		BEGIN XTTS;
 		return TTS_CAPITALIZE;
 	}
 
 {setcharacterscale}	{
 		yyless(yyleng-1);
-		BEGIN SCALE;
+		BEGIN XSCALE;
 		return TTS_SET_CHARACTER_SCALE;
 	}
 
 {setpunctuations}	{
 		yyless(yyleng-1);
-		BEGIN PUNCTLEVEL;
+		BEGIN XPL;
 		return TTS_SET_PUNCTUATIONS;
 	}
 
 {setspeechrate}	{
 		yyless(yyleng-1);
-		BEGIN TTS;
+		BEGIN XTTS;
 		return TTS_SET_SPEECH_RATE;
 	}
 
 {splitcaps}	{
 		yyless(yyleng-1);
-		BEGIN TTS;
+		BEGIN XTTS;
 		return TTS_SPLIT_CAPS;
 	}
 
 {syncstate} {
 		yyless(yyleng-1);
-		BEGIN SYNC;
+		BEGIN XSYNC;
 		return TTS_SYNC_STATE;
 	}
 
 	/* End of Perl generated rules */
 
-	/* here */
-<CODE,QUEUE,SAY,SYNC,TONE,SND,SILENCE,TTS,SCALE>"{" {
+
+<XC,XQ,XSAY,XSYNC,XT,XA,XSH,XTTS,XSCALE>"{" {
 		return yytext[0];
 	}
 
-<CODE,QUEUE,SAY,TONE,SND,SILENCE,TTS,PUNCTLEVEL,SYNC,SCALE>("}"|"\n") {
+<XC,XQ,XSAY,XT,XA,XSH,XTTS,XPL,XSYNC,XSCALE>("}"|"\n") {
 		if (yytext[0] == '}') {
 			/* do nothing */
 		} else {
-			BEGIN 0;
+			BEGIN INITIAL;
 		}
 		return yytext[0];
 	}
 
-<FLUSH,DISPATCH,VRSN>"\n" {
-		BEGIN 0;
+<XS,XD,XVERSION>"\n" {
+		BEGIN INITIAL;
 		return yytext[0];
 	}
 
-<CODE>[^{}\n]+ {
+<XC>[^{}\n]+ {
 		return TEXT;
 	}
 
-<QUEUE,SAY,SND>[^{}\n]+ {
+<XQ,XSAY,XA>[^{}\n]+ {
 		yylval.s = malloc(yyleng);
 		strcpy(yylval.s, yytext);
 		return TEXT;
 	}
 
-<LETTER>[^{}\n] {
+<XL>[^{}\n] {
 		yylval.c = yytext[0];
 		return CHAR;
 	}
 
-<LETTER>"{" {
+<XL>"{" {
 		return yytext[0];
 	}
 
-<LETTER>("}"|"\n") {
+<XL>("}"|"\n") {
 		if (yytext[0] == '}') {
 			/* do nothing */
 		} else {
-			BEGIN 0;
+			BEGIN INITIAL;
 		}
 		return yytext[0];
 	}
 
 
-<TTS,SYNC>{flag}	{
+<XTTS,XSYNC>{flag}	{
 		yylval.n = atoi(yytext);
+		if (yylval.n > 1)
+			yylval.n = 1;
 		return FLAG;
 	}
 
-<SILENCE,TONE,TTS,SYNC>{integer}	{
+<XSH,XT,XTTS,XSYNC>{integer}	{
 		yylval.n = atoi(yytext);
 		return INTEGER;
 	}
 
-<SCALE>{double} {
+<XSCALE>{double} {
 		yylval.d = atof(yytext);
 		return DOUBLE;
 	}
 
 ^d\n {
-		BEGIN DISPATCH;
+		BEGIN XD;
 		yyless(1);
 		return yytext[0];
 	}
 
 ^s\n {
-		BEGIN FLUSH;
+		BEGIN XS;
 		yyless(1);
 		return yytext[0];
 	}
 
 {version} {
-		BEGIN VRSN;
+		BEGIN XVERSION;
 		yyless(yyleng-1);
 		return VERSION;
 	}
