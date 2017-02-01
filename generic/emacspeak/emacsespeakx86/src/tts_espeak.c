@@ -70,7 +70,7 @@ int send_speech(void) {
 int empty_queue(void) {
 	void *data;
 	int i, s = queue_size(&tts_queue);
-
+	printf("Before loop in empty_queue\n");
 	for (i = 0; i < s; i++) {
 		if (queue_pop(&tts_queue, (void **)data) == 0)
 			free(data);
@@ -88,16 +88,13 @@ void *dispatch_thread(void *arg) {
 	printf("Started dispatch_thread\n");
 	while(1) {
 		sem_wait(&dispatch_semaphore);
-		printf("dispatch_semaphore signalled\n");
 		while(queue_size(&tts_queue) > 0) {
 			pthread_mutex_lock(&queue_guard_mutex);
-			printf("Got lock in thread\n");
 			/* Is queue size still > 0 after getting mutex lock? */
 			if (queue_size(&tts_queue) > 0)
 				send_speech();
 
 			pthread_mutex_unlock(&queue_guard_mutex);
-			printf("Unlocked mutex in dispatch_thread\n");
 		}
 	}
 
