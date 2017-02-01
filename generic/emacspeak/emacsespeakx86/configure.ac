@@ -4,7 +4,7 @@
 AC_PREREQ([2.69])
 AC_INIT([emacspeakx86], [1.0.0], [mike.ray@btinternet.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
-AC_CONFIG_SRCDIR([src/tts_espeak.c])
+AC_CONFIG_SRCDIR([src/tts_server.c])
 AC_CONFIG_HEADERS([config.h])
 
 dnl *************************************************

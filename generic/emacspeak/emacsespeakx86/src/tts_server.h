@@ -20,8 +20,8 @@
 * $Id: emspk-sd.h
 *--code--*/
 
-#ifndef TTS_ENGINE_H
-#define TTS_ENGINE_H
+#ifndef TTS_SERVER_H
+#define TTS_SERVER_H
 
 #include "queue.h"
 

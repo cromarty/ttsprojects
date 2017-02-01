@@ -90,7 +90,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_emacsespeakx86_OBJECTS = tts_espeak.$(OBJEXT) \
+am_emacsespeakx86_OBJECTS = tts_server.$(OBJEXT) tts_espeak.$(OBJEXT) \
 	emacspeak.tab.$(OBJEXT) lex.yy.$(OBJEXT) queue.$(OBJEXT) \
 	list.$(OBJEXT)
 emacsespeakx86_OBJECTS = $(am_emacsespeakx86_OBJECTS)
@@ -243,7 +243,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-emacsespeakx86_SOURCES = tts_espeak.c emacspeak.tab.c lex.yy.c queue.c list.c tts_engine.h emacspeak.tab.h queue.h list.h
+emacsespeakx86_SOURCES = tts_server.c tts_espeak.c emacspeak.tab.c lex.yy.c queue.c list.c tts_server.h tts_espeak.h emacspeak.tab.h queue.h list.h
 AM_CPPFLAGS = -DYYDEBUG=1
 all: all-am
 
@@ -337,6 +337,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tts_espeak.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tts_server.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

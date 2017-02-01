@@ -637,7 +637,7 @@ char *yytext;
 #include <string.h>
 
 #include "emacspeak.tab.h"
-#include "tts_engine.h"
+#include "tts_server.h"
 
 char *buf;
 
