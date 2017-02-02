@@ -29,9 +29,9 @@
 #include <string.h>
 
 #include "parser.h"
-#include "tts_server.h"
+#include "server.h"
 
-char *buf;
+//char *buf;
 
 %}
 

@@ -90,7 +90,7 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_emacsespeakx86_OBJECTS = tts_server.$(OBJEXT) tts_espeak.$(OBJEXT) \
+am_emacsespeakx86_OBJECTS = server.$(OBJEXT) espeak.$(OBJEXT) \
 	parser.$(OBJEXT) lexer.$(OBJEXT) queue.$(OBJEXT) \
 	list.$(OBJEXT)
 emacsespeakx86_OBJECTS = $(am_emacsespeakx86_OBJECTS)
@@ -258,7 +258,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 BUILT_SOURCES = parser.c parser.h lexer.c
-emacsespeakx86_SOURCES = tts_server.c tts_espeak.c parser.y lexer.l queue.c list.c tts_server.h tts_espeak.h queue.h list.h
+emacsespeakx86_SOURCES = server.c espeak.c parser.y lexer.l queue.c list.c server.h espeak.h queue.h list.h
 AM_CPPFLAGS = -DYYDEBUG=1
 AM_YFLAGS = -d
 all: $(BUILT_SOURCES)
@@ -352,12 +352,12 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/espeak.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lexer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parser.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queue.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tts_espeak.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tts_server.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server.Po@am__quote@
 
 .c.o:
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(COMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<

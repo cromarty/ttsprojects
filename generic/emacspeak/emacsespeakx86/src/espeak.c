@@ -5,8 +5,8 @@
 #include <semaphore.h>
 #include <espeak/speak_lib.h>
 
-#include "tts_server.h"
-#include "tts_espeak.h"
+#include "server.h"
+#include "espeak.h"
 
 #include "parser.h"
 
