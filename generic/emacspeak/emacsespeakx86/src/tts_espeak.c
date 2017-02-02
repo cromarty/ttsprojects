@@ -68,16 +68,8 @@ int send_speech(void) {
 
 
 int empty_queue(void) {
-	void *data;
-	int i, s = queue_size(&tts_queue);
-	printf("Before loop in empty_queue\n");
-	for (i = 0; i < s; i++) {
-		if (queue_pop(&tts_queue, (void **)data) == 0)
-			free(data);
-		else
-			return -1;
-	}
-
+	queue_destroy(&tts_queue);
+	queue_init(&tts_queue, free_queue_entry);
 	return 0;
 } /* empty_queue */
 
