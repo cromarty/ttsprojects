@@ -3,17 +3,17 @@
 #include <string.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include <espeak/speak_lib.h>
+
+//#include <espeak/speak_lib.h>
 
 #include "server.h"
 #include "espeak.h"
-
 #include "parser.h"
 
 
-TTS_STATE_T tts_state;
+//TTS_STATE_T tts_state;
  
-Queue tts_queue;
+//Queue tts_queue;
 
 pthread_mutex_t queue_guard_mutex;
 sem_t dispatch_semaphore;
@@ -26,7 +26,7 @@ void free_queue_entry(void *data) {
 	return;
 } /* free_queue_entry */
 
-int queue_speech(int entry_type, const char *speech) {
+int queue_speech(Queue *tts_queue, int entry_type, const char *speech) {
 	TTS_QUEUE_ENTRY_T *qe;
 
    	if ((qe = (TTS_QUEUE_ENTRY_T *)malloc(sizeof(TTS_QUEUE_ENTRY_T))) == NULL)
@@ -39,24 +39,24 @@ int queue_speech(int entry_type, const char *speech) {
 	qe->length = strlen(speech);
 	sprintf(qe->speech, speech);
 
-	if (queue_push(&tts_queue, qe) != 0)
+	if (queue_push(tts_queue, qe) != 0)
 		return -1;
 
 	return 0;
 } /* queue_speech */
 
-int send_speech(void) {
+int send_speech(Queue *tts_queue) {
 	int res;
 	TTS_QUEUE_ENTRY_T *qe;
 	ListElmt *element;
 
-	if (queue_size(&tts_queue) < 1)
+	if (queue_size(tts_queue) < 1)
 		return -1;
 
 	if ( (element = malloc(sizeof(ListElmt))) == NULL)
 		return -1;
 
-	queue_pop(&tts_queue, (void*)element);
+	queue_pop(tts_queue, (void*)element);
 	qe = (TTS_QUEUE_ENTRY_T*)list_data(element);
 
 	res = espeak_Synth(qe->speech, qe->length+1, 0, POS_CHARACTER, 0, espeakPHONEMES, NULL, NULL);
@@ -67,24 +67,25 @@ int send_speech(void) {
 } /* send_speech */
 
 
-int empty_queue(void) {
-	queue_destroy(&tts_queue);
-	queue_init(&tts_queue, free_queue_entry);
+int empty_queue(Queue *tts_queue) {
+	queue_destroy(tts_queue);
+	queue_init(tts_queue, free_queue_entry);
 	return 0;
 } /* empty_queue */
 
 
 void *dispatch_thread(void *arg) {
+	Queue *tts_queue = (Queue*)arg;
 	TTS_QUEUE_ENTRY_T *qe;
 	char *speech;
 	printf("Started dispatch_thread\n");
 	while(1) {
 		sem_wait(&dispatch_semaphore);
-		while(queue_size(&tts_queue) > 0) {
+		while(queue_size(tts_queue) > 0) {
 			pthread_mutex_lock(&queue_guard_mutex);
 			/* Is queue size still > 0 after getting mutex lock? */
-			if (queue_size(&tts_queue) > 0)
-				send_speech();
+			if (queue_size(tts_queue) > 0)
+				send_speech(tts_queue);
 
 			pthread_mutex_unlock(&queue_guard_mutex);
 		}

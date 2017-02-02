@@ -3,22 +3,21 @@
 #include <string.h>
 #include <pthread.h>
 #include <semaphore.h>
-#include <espeak/speak_lib.h>
+
+//#include <espeak/speak_lib.h>
 
 #include "server.h"
 #include "espeak.h"
 
 #include "parser.h"
 
-#define NO_PUNCTUATION			""
-#define SOME_PUNCTUATION			"$%&/@"
-#define ALL_PUNCTUATION			"!\"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"
-
 TTS_STATE_T tts_state;
- 
 Queue tts_queue;
 
+/* mutex protecting the queue */
 pthread_mutex_t queue_guard_mutex;
+
+/* semaphore signalled when the dispatch function is received from emacspeak */
 sem_t dispatch_semaphore;
 
 void tts_version(void)
@@ -32,7 +31,7 @@ void tts_say(char *text)
 	int res;
 	pthread_mutex_lock(&queue_guard_mutex);
 	res = espeak_Cancel();
-	res = empty_queue();
+	res = empty_queue(&tts_queue);
 	res = espeak_Synth(text, strlen(text)+1, 0, POS_CHARACTER, 0, espeakPHONEMES, NULL, NULL);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
@@ -68,7 +67,7 @@ void tts_s(void)
 	int res;
 	pthread_mutex_lock(&queue_guard_mutex);
 	res = espeak_Cancel();
-	empty_queue();
+	empty_queue(&tts_queue);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_s */
@@ -76,7 +75,7 @@ void tts_s(void)
 void tts_q(char *speech)
 {
 	pthread_mutex_lock(&queue_guard_mutex);
-	queue_speech(1, speech);
+	queue_speech(&tts_queue, 1, speech);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	free(speech);
 	return;
@@ -85,7 +84,7 @@ void tts_q(char *speech)
 void tts_c(const char *code)
 {
 	pthread_mutex_lock(&queue_guard_mutex);
-	queue_speech(2, code);
+	queue_speech(&tts_queue, 2, code);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_c */
@@ -192,7 +191,7 @@ int tts_initialize(void)
 
 	queue_init(&tts_queue, free_queue_entry);
 
-result = pthread_create(&qthr, NULL, dispatch_thread, NULL);
+result = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
 
 	return espeak_Initialize(AUDIO_OUTPUT_PLAYBACK, 50, NULL, 0);

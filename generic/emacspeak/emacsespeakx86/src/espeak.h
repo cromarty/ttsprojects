@@ -1,5 +1,5 @@
-#ifndef TTS_ESPEAK_H
-#define TTS_ESPEAK_H
+#ifndef ESPEAK_H
+#define ESPEAK_H
 
 
 typedef struct tts_state
@@ -14,9 +14,9 @@ typedef struct tts_state
 } TTS_STATE_T;
 
 void free_queue_entry(void *data);
-int queue_speech(int entry_type, const char *speech);
-int send_speech(void);
-int empty_queue(void);
+int queue_speech(Queue *queue, int entry_type, const char *speech);
+int send_speech(Queue*);
+int empty_queue(Queue*);
 void *dispatch_thread(void *arg);
 
 #endif

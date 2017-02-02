@@ -20,16 +20,18 @@
 * $Id: emspk-sd.h
 *--code--*/
 
-#ifndef TTS_SERVER_H
-#define TTS_SERVER_H
+#ifndef SERVER_H
+#define SERVER_H
+
+#include <espeak/speak_lib.h>
 
 #include "queue.h"
 
 #define NO_SYNC -1
 
-#define PUNCT_LEVEL_NONE 0
-#define PUNCT_LEVEL_SOME 1
-#define PUNCT_LEVEL_ALL 2
+#define PUNCT_LEVEL_NONE espeakPUNCT_NONE
+#define PUNCT_LEVEL_SOME espeakPUNCT_SOME
+#define PUNCT_LEVEL_ALL espeakPUNCT_ALL
 
 typedef struct tts_queue_entry
 {
