@@ -1,15 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include <pthread.h>
 #include <semaphore.h>
 
-//#include <espeak/speak_lib.h>
-
-#include "server.h"
-#include "espeak.h"
-
 #include "parser.h"
+#include "queue.h"
+#include "server.h"
 
 TTS_STATE_T tts_state;
 Queue tts_queue;
@@ -20,6 +18,97 @@ pthread_mutex_t queue_guard_mutex;
 /* semaphore signalled when the dispatch function is received from emacspeak */
 sem_t dispatch_semaphore;
 
+
+/*
+*
+* These are internally used functions, IOW not called from the parser.
+*
+*/
+
+
+void free_queue_entry(void *data) {
+	TTS_QUEUE_ENTRY_T *qe = (TTS_QUEUE_ENTRY_T*)data;
+	free((char*)qe->speech);
+	free(qe);
+	return;
+} /* free_queue_entry */
+
+int queue_speech(int entry_type, const char *speech) {
+	TTS_QUEUE_ENTRY_T *qe;
+
+   	if ((qe = (TTS_QUEUE_ENTRY_T *)malloc(sizeof(TTS_QUEUE_ENTRY_T))) == NULL)
+		return -1;
+
+	if ((qe->speech = (char *)malloc(strlen(speech)+1)) == NULL)
+		return -1;
+
+	qe->type = entry_type;
+	qe->length = strlen(speech);
+	sprintf(qe->speech, speech);
+
+	if (queue_push(&tts_queue, qe) != 0)
+		return -1;
+
+	return 0;
+} /* queue_speech */
+
+int send_speech(void) {
+	int rc;
+	TTS_QUEUE_ENTRY_T *qe;
+	ListElmt *element;
+
+	if (queue_size(&tts_queue) < 1)
+		return -1;
+
+	if ( (element = malloc(sizeof(ListElmt))) == NULL)
+		return -1;
+
+	queue_pop(&tts_queue, (void*)element);
+	qe = (TTS_QUEUE_ENTRY_T*)list_data(element);
+
+	rc = espeak_Synth(qe->speech, qe->length+1, 0, POS_CHARACTER, 0, espeakPHONEMES, NULL, 
+NULL);
+
+	free(qe->speech);
+	free(element);
+	return 0;
+} /* send_speech */
+
+
+int empty_queue(void) {
+	queue_destroy(&tts_queue);
+	queue_init(&tts_queue, free_queue_entry);
+	return 0;
+} /* empty_queue */
+
+
+void *dispatch_thread(void *arg) {
+	TTS_QUEUE_ENTRY_T *qe;
+	char *speech;
+	printf("Started dispatch_thread\n");
+	while(1) {
+		sem_wait(&dispatch_semaphore);
+		while(queue_size(&tts_queue) > 0) {
+			pthread_mutex_lock(&queue_guard_mutex);
+			/* Is queue size still > 0 after getting mutex lock? */
+			if (queue_size(&tts_queue) > 0)
+				send_speech();
+
+			pthread_mutex_unlock(&queue_guard_mutex);
+		}
+	}
+
+	return NULL;
+} /* dispatch_thread */
+
+
+/*
+*
+* Below this point are functions called from the parser
+*
+*/
+
+
 void tts_version(void)
 {
 	printf("Called tts_version\n");
@@ -28,11 +117,11 @@ void tts_version(void)
 
 void tts_say(char *text)
 {
-	int res;
+	int rc;
 	pthread_mutex_lock(&queue_guard_mutex);
-	res = espeak_Cancel();
-	res = empty_queue(&tts_queue);
-	res = espeak_Synth(text, strlen(text)+1, 0, POS_CHARACTER, 0, espeakPHONEMES, NULL, NULL);
+	rc = espeak_Cancel();
+	rc = empty_queue();
+	rc = espeak_Synth(text, strlen(text)+1, 0, POS_CHARACTER, 0, espeakPHONEMES, NULL, NULL);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_say */
@@ -64,10 +153,10 @@ void tts_resume(void)
 
 void tts_s(void)
 {
-	int res;
+	int rc;
 	pthread_mutex_lock(&queue_guard_mutex);
-	res = espeak_Cancel();
-	empty_queue(&tts_queue);
+	rc = espeak_Cancel();
+	empty_queue();
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_s */
@@ -75,7 +164,7 @@ void tts_s(void)
 void tts_q(char *speech)
 {
 	pthread_mutex_lock(&queue_guard_mutex);
-	queue_speech(&tts_queue, 1, speech);
+	queue_speech(1, speech);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	free(speech);
 	return;
@@ -84,7 +173,7 @@ void tts_q(char *speech)
 void tts_c(const char *code)
 {
 	pthread_mutex_lock(&queue_guard_mutex);
-	queue_speech(&tts_queue, 2, code);
+	queue_speech(2, code);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_c */
@@ -177,21 +266,21 @@ void tts_sync_state(
 
 int tts_initialize(void)
 {
-	int result;
+	int rc;
 	pthread_t qthr;
 
-	result = sem_init(&dispatch_semaphore, 0, 0);
-	if (result < 0) {
+	rc = sem_init(&dispatch_semaphore, 0, 0);
+	if (rc < 0) {
 		return 1;
 	}
-	result = pthread_mutex_init(&queue_guard_mutex, NULL);
-	if (result < 0) {
+	rc = pthread_mutex_init(&queue_guard_mutex, NULL);
+	if (rc < 0) {
 		return 1;
 	}
 
 	queue_init(&tts_queue, free_queue_entry);
 
-result = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
+rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
 
 	return espeak_Initialize(AUDIO_OUTPUT_PLAYBACK, 50, NULL, 0);
