@@ -54,7 +54,7 @@ say 	^(tts_say[ ]+[^{\n]|tts_say[ ]+"{")
 tone 	^(t[ ]+[^{\n]|t[ ]+"{")
 
 	/* sound file */
-sound 	^(a[ ]+[^{\n]|a[ ]+"{")
+sound 	^((a|p)[ ]+[^{\n]|(a|p)[ ]+"{")
 
 	/* silence */
 silence 	^(sh[ ]+[^{\n]|sh[ ]+"{")

@@ -96,9 +96,9 @@ cmd
 	: code
 	| speech
 	| dispatch { tts_d(); }
-	| flush { tts_s(); }
+	| stop { tts_s(); }
 	| version { tts_version(); }
-	| silence
+	| silence { printf("Called silence: %d\n", $1); }
 	| tone
 	| sound { tts_a($1); }
 		| tts_pause { tts_pause(); }
@@ -147,7 +147,7 @@ version
 	: VERSION '\n'
 	;
 
-flush
+stop
 	: 's' '\n'
 	;
 

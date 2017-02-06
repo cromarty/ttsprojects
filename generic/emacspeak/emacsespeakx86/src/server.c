@@ -109,14 +109,12 @@ void *dispatch_thread(void *arg) {
 */
 
 
-void tts_version(void)
-{
+void tts_version(void) {
 	printf("Called tts_version\n");
 	return;
 } /* end tts_version */
 
-void tts_say(char *text)
-{
+void tts_say(char *text) {
 	int rc;
 	pthread_mutex_lock(&queue_guard_mutex);
 	rc = espeak_Cancel();
@@ -126,33 +124,28 @@ void tts_say(char *text)
 	return;
 } /* end tts_say */
 
-void tts_l(const char ch)
-{
+void tts_l(const char ch) {
 	printf("Called tts_l: %d\n", ch);
 	return;
 } /* end tts_l */
 
-void tts_d(void)
-{
+void tts_d(void) {
 	printf("Called tts_d function\n");
 	sem_post(&dispatch_semaphore);
 	return;
 } /* end tts_d */
 
-void tts_pause(void)
-{
+void tts_pause(void) {
 	printf("Called tts_pause\n");
 	return;
 } /* end tts_pause */
 
-void tts_resume(void)
-{
+void tts_resume(void) {
 	printf("Called tts_resume\n");
 	return;
 } /* end tts_resume */
 
-void tts_s(void)
-{
+void tts_s(void) {
 	int rc;
 	pthread_mutex_lock(&queue_guard_mutex);
 	rc = espeak_Cancel();
@@ -161,85 +154,78 @@ void tts_s(void)
 	return;
 } /* end tts_s */
 
-void tts_q(char *speech)
-{
+void tts_q(char *speech) {
 	pthread_mutex_lock(&queue_guard_mutex);
+
 	queue_speech(1, speech);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	free(speech);
 	return;
 } /* end tts_q */
 
-void tts_c(const char *code)
-{
+void tts_c(const char *code) {
 	pthread_mutex_lock(&queue_guard_mutex);
 	queue_speech(2, code);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_c */
 
-void tts_a(const char *filename)
-{
+void tts_a(const char *filename) {
 	printf("Called tts_a: %s\n", filename);
 	return;
 } /* end tts_a */
 
-void tts_t(int pitch, int duration)
-{
+void tts_t(int pitch, int duration) {
 	printf("Called tts_t function: %d %d\n", pitch, duration);
 	return;
 } /* end tts_t */
 
-void tts_sh(int duration_milliseconds)
-{
+void tts_sh(int duration_milliseconds) {
 	printf("Called tts_sh: %d\n", duration_milliseconds);
 	return;
 } /* end tts_sh */
 
-void tts_reset(void)
-{
+void tts_reset(void) {
 	printf("Called tts_reset\n");
 	return;
 } /* end tts_reset */
 
-void tts_set_punctuations(int punct_level)
-{
+void tts_set_punctuations(int punct_level) {
 	printf("Called set punct level: %d\n", punct_level);
 	return;
 } /* end tts_set_punctuations */
 
-void tts_set_speech_rate(int speech_rate)
-{
+void tts_set_speech_rate(int speech_rate) {
 	tts_state.speech_rate = speech_rate;
 	printf("Called tts_set_speech_rate: %d\n", speech_rate);
 	return;
 } /* end tts_set_speech_rate */
 
-void tts_set_character_scale(double character_scale)
-{
+void tts_set_character_scale(double character_scale) {
 	tts_state.character_scale = character_scale;
 	printf("Called tts_set_character_scale: %f\n", character_scale);
 	return;
 } /* end tts_set_character_scale */
 
-void tts_split_caps(int split_caps)
-{
+void tts_split_caps(int split_caps) {
+	espeak_ERROR erc;
 	tts_state.split_caps = split_caps;
 	printf("Called tts_split_caps: %d\n", split_caps);
+	espeak_SetParameter(espeakCAPITALS, (split_caps ? 2 : 0), 0);
 	return;
 } /* end tts_split_caps */
 
-void tts_capitalize(int capitalize)
-{
+void tts_capitalize(int capitalize) {
 	tts_state.capitalize = capitalize;
 	printf("Called tts_capitalize: %d\n", capitalize);
 	return;
 } /* end tts_capitalize */
 
-void tts_allcaps_beep(int allcaps_beep)
-{
+void tts_allcaps_beep(int allcaps_beep) {
+	espeak_ERROR erc;
 	tts_state.caps_beep = allcaps_beep;
 	printf("Called tts_allcaps_beep: %d\n", allcaps_beep);
+	erc = espeak_SetParameter(espeakCAPITALS, allcaps_beep, 0);
 	return;
 } /* end tts_allcaps_beep */
 
@@ -264,8 +250,7 @@ void tts_sync_state(
 } /* end tts_sync_state */
 
 
-int tts_initialize(void)
-{
+int tts_initialize(void) {
 	int rc;
 	pthread_t qthr;
 
@@ -287,8 +272,7 @@ rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
 } /* end tts_initialize */
 
-int tts_terminate(void)
-{
+int tts_terminate(void) {
 	espeak_Terminate();
 	return 0;
 } /* end tts_terminate */
