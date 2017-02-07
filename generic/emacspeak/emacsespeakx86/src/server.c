@@ -5,6 +5,7 @@
 #include <pthread.h>
 #include <semaphore.h>
 
+#include "debug.h"
 #include "parser.h"
 #include "queue.h"
 #include "server.h"
@@ -85,7 +86,7 @@ int empty_queue(void) {
 void *dispatch_thread(void *arg) {
 	TTS_QUEUE_ENTRY_T *qe;
 	char *speech;
-	printf("Started dispatch_thread\n");
+	DEBUG_SHOW("Started dispatch_thread\n");
 	while(1) {
 		sem_wait(&dispatch_semaphore);
 		while(queue_size(&tts_queue) > 0) {
@@ -110,7 +111,7 @@ void *dispatch_thread(void *arg) {
 
 
 void tts_version(void) {
-	printf("Called tts_version\n");
+	DEBUG_SHOW("Called tts_version\n");
 	return;
 } /* end tts_version */
 
@@ -125,23 +126,23 @@ void tts_say(char *text) {
 } /* end tts_say */
 
 void tts_l(const char ch) {
-	printf("Called tts_l: %d\n", ch);
+	DEBUG_SHOW_ARGS("Called tts_l: %d\n", ch);
 	return;
 } /* end tts_l */
 
 void tts_d(void) {
-	printf("Called tts_d function\n");
+	DEBUG_SHOW("Called tts_d function\n");
 	sem_post(&dispatch_semaphore);
 	return;
 } /* end tts_d */
 
 void tts_pause(void) {
-	printf("Called tts_pause\n");
+	DEBUG_SHOW("Called tts_pause\n");
 	return;
 } /* end tts_pause */
 
 void tts_resume(void) {
-	printf("Called tts_resume\n");
+	DEBUG_SHOW("Called tts_resume\n");
 	return;
 } /* end tts_resume */
 
@@ -163,7 +164,8 @@ void tts_q(char *speech) {
 	return;
 } /* end tts_q */
 
-void tts_c(const char *code) {
+void tts_c(char *code) {
+	DEBUG_SHOW_ARGS("Called tts_c: %s\n", code);
 	pthread_mutex_lock(&queue_guard_mutex);
 	queue_speech(2, code);
 	pthread_mutex_unlock(&queue_guard_mutex);
@@ -172,60 +174,60 @@ void tts_c(const char *code) {
 } /* end tts_c */
 
 void tts_a(const char *filename) {
-	printf("Called tts_a: %s\n", filename);
+	DEBUG_SHOW_ARGS("Called tts_a: %s\n", filename);
 	return;
 } /* end tts_a */
 
 void tts_t(int pitch, int duration) {
-	printf("Called tts_t function: %d %d\n", pitch, duration);
+	DEBUG_SHOW_ARGS("Called tts_t function: %d %d\n", pitch, duration);
 	return;
 } /* end tts_t */
 
 void tts_sh(int duration_milliseconds) {
-	printf("Called tts_sh: %d\n", duration_milliseconds);
+	DEBUG_SHOW_ARGS("Called tts_sh: %d\n", duration_milliseconds);
 	return;
 } /* end tts_sh */
 
 void tts_reset(void) {
-	printf("Called tts_reset\n");
+	DEBUG_SHOW("Called tts_reset\n");
 	return;
 } /* end tts_reset */
 
 void tts_set_punctuations(int punct_level) {
-	printf("Called set punct level: %d\n", punct_level);
+	DEBUG_SHOW_ARGS("Called set punct level: %d\n", punct_level);
 	return;
 } /* end tts_set_punctuations */
 
 void tts_set_speech_rate(int speech_rate) {
 	tts_state.speech_rate = speech_rate;
-	printf("Called tts_set_speech_rate: %d\n", speech_rate);
+	DEBUG_SHOW_ARGS("Called tts_set_speech_rate: %d\n", speech_rate);
 	return;
 } /* end tts_set_speech_rate */
 
 void tts_set_character_scale(double character_scale) {
 	tts_state.character_scale = character_scale;
-	printf("Called tts_set_character_scale: %f\n", character_scale);
+	DEBUG_SHOW_ARGS("Called tts_set_character_scale: %f\n", character_scale);
 	return;
 } /* end tts_set_character_scale */
 
 void tts_split_caps(int split_caps) {
 	espeak_ERROR erc;
 	tts_state.split_caps = split_caps;
-	printf("Called tts_split_caps: %d\n", split_caps);
+	DEBUG_SHOW_ARGS("Called tts_split_caps: %d\n", split_caps);
 	espeak_SetParameter(espeakCAPITALS, (split_caps ? 2 : 0), 0);
 	return;
 } /* end tts_split_caps */
 
 void tts_capitalize(int capitalize) {
 	tts_state.capitalize = capitalize;
-	printf("Called tts_capitalize: %d\n", capitalize);
+	DEBUG_SHOW_ARGS("Called tts_capitalize: %d\n", capitalize);
 	return;
 } /* end tts_capitalize */
 
 void tts_allcaps_beep(int allcaps_beep) {
 	espeak_ERROR erc;
 	tts_state.caps_beep = allcaps_beep;
-	printf("Called tts_allcaps_beep: %d\n", allcaps_beep);
+	DEBUG_SHOW_ARGS("Called tts_allcaps_beep: %d\n", allcaps_beep);
 	erc = espeak_SetParameter(espeakCAPITALS, allcaps_beep, 0);
 	return;
 } /* end tts_allcaps_beep */
@@ -245,8 +247,7 @@ void tts_sync_state(
 	tts_state.split_caps = split_caps;
 	tts_state.speech_rate = speech_rate;
 
-	printf("Called tts_sync_state: %d %d %d %d %d\n", punct_level, pitch_rise, caps_beep, split_caps, speech_rate);
-
+	DEBUG_SHOW_ARGS("Called tts_sync_state: %d %d %d %d %d\n", punct_level, pitch_rise, caps_beep, split_caps, speech_rate);
 	return;
 } /* end tts_sync_state */
 

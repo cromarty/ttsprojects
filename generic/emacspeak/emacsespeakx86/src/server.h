@@ -68,7 +68,7 @@ void tts_pause(void);
 void tts_resume(void);
 void tts_s(void);
 void tts_q(char *text);
-void tts_c(const char *code);
+void tts_c(char *code);
 void tts_a(const char *filename);
 void tts_t(int freq, int length);
 void tts_sh(int durationms);
