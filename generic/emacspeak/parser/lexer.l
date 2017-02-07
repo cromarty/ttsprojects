@@ -228,6 +228,8 @@ ws [ \t\r\f\v]
 	}
 
 <XC>[^{}\n]+ {
+	yylval.s = malloc(yyleng);
+		strcpy(yylval.s, yytext);
 		return TEXT;
 	}
 

@@ -114,8 +114,8 @@ cmd
 	;
 
 code
-	: C '{' TEXT '}' '\n'
-	| C TEXT '\n'
+	: C '{' TEXT '}' '\n' {tts_c($3); }
+	| C TEXT '\n' { tts_c($2); }
 	;
 
 speech

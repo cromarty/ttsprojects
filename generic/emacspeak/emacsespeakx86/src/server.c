@@ -167,6 +167,7 @@ void tts_c(const char *code) {
 	pthread_mutex_lock(&queue_guard_mutex);
 	queue_speech(2, code);
 	pthread_mutex_unlock(&queue_guard_mutex);
+	free(code);
 	return;
 } /* end tts_c */
 
