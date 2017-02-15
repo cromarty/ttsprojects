@@ -33,35 +33,34 @@
 #include "parser.h"
 #include "server.h"
 
-//char *buf;
 
 %}
 
-
+/* start conditions, in most cases X plus the emacspeak proto function name */
 %x XA XC XD XL XPL XQ XS XSAY XSH XSYNC XT XTTS XSCALE XVERSION
 
-	/* code */
+	/* code, with or without braces */
 code 	^(c[ ]+[^{\n]|c[ ]+"{")
 
-	/* single letter */
+	/* single letter, with or without braces  */
 letter 	^(l[ ]+[^{\n]|l[ ]+"{")
 
-	/* queued speech */
+	/* queued speech, with or without braces */
 queue 	^(q[ ]+[^{\n]|q[ ]+"{")
 
-	/* tts_say, immediate speech */
+	/* tts_say, immediate speech, with or without braces */
 say 	^(tts_say[ ]+[^{\n]|tts_say[ ]+"{")
 
-	/* tone */
+	/* tone, with or without braces */
 tone 	^(t[ ]+[^{\n]|t[ ]+"{")
 
-	/* sound file */
+	/* sound file, with or without braces */
 sound 	^((a|p)[ ]+[^{\n]|(a|p)[ ]+"{")
 
-	/* silence */
+	/* silence, with or without braces */
 silence 	^(sh[ ]+[^{\n]|sh[ ]+"{")
 
-	/* Version */
+	/* Version, no arguments */
 version		^version\n
 
 	/* punctuation levels */
@@ -71,24 +70,30 @@ all	all
 
 	/* Beginning of Perl generated patterns */
 
+/* no arguments */
 pause ^tts_pause
 reset ^tts_reset
 resume ^tts_resume
 
+/* with or without braces */
 allcapsbeep		^(tts_allcaps_beep[ ]+[^{\n]|tts_allcaps_beep[ ]+"{")
 capitalize		^(tts_capitalize[ ]+[^{\n]|tts_capitalize[ ]+"{")
 setcharacterscale		^(tts_set_character_scale[ ]+[^{\n]|tts_set_character_scale[ ]+"{")
 setpunctuations		^(tts_set_punctuations[ ]+[^{\n]|tts_set_punctuations[ ]+"{")
 setspeechrate		^(tts_set_speech_rate[ ]+[^{\n]|tts_set_speech_rate[ ]+"{")
 splitcaps		^(tts_split_caps[ ]+[^{\n]|tts_split_caps[ ]+"{")
+
+/* with or without braces but I've never seen braces */
 syncstate		^(tts_sync_state[ ]+[^{\n]|tts_sync_state[ ]+"{")
 	
 /* End of Perl generated patterns */
 
+/* numeric patterns */
 flag [01]
 integer [0-9][0-9]+
 double			[-+]?([0-9]*\.?[0-9]+|[0-9]+\.)
 
+/* whitespace, don't include newline */
 ws [ \t\r\f\v]
 
 %%
@@ -211,48 +216,56 @@ ws [ \t\r\f\v]
 	/* End of Perl generated rules */
 
 
+	/* opening brace */
 <XC,XQ,XSAY,XSYNC,XT,XA,XSH,XTTS,XSCALE>"{" {
 		return yytext[0];
 	}
 
+	/* closing brace or newline */
 <XC,XQ,XSAY,XT,XA,XSH,XTTS,XPL,XSYNC,XSCALE>("}"|"\n") {
 		if (yytext[0] == '}') {
-			/* do nothing */
+			/* do nothing with closing brace */
 		} else {
 			BEGIN INITIAL;
 		}
 		return yytext[0];
 	}
 
+	/* newline after funcs with no arguments */
 <XS,XD,XVERSION>"\n" {
 		BEGIN INITIAL;
 		return yytext[0];
 	}
 
+	/* c function payload */
 <XC>[^{}\n]+ {
 	yylval.s = malloc(yyleng);
 		strcpy(yylval.s, yytext);
 		return TEXT;
 	}
 
+	/* q, tts_say or audio payload */
 <XQ,XSAY,XA>[^{}\n]+ {
 		yylval.s = malloc(yyleng);
 		strcpy(yylval.s, yytext);
 		return TEXT;
 	}
 
+	/* single letter payload */
 <XL>[^{}\n] {
 		yylval.c = yytext[0];
 		return CHAR;
 	}
 
+	/* single letter opening brace */
 <XL>"{" {
 		return yytext[0];
 	}
 
+	/* single letter closing brace or newline */
 <XL>("}"|"\n") {
 		if (yytext[0] == '}') {
-			/* do nothing */
+			/* do nothing with closing brace */
 		} else {
 			BEGIN INITIAL;
 		}
@@ -260,29 +273,35 @@ ws [ \t\r\f\v]
 	}
 
 
+	/* tts_* or tts_sync_state flag (single digit */
 <XTTS,XSYNC>{flag}	{
 		yylval.n = atoi(yytext);
+		/* don't think this is really necessary */
 		if (yylval.n > 1)
 			yylval.n = 1;
 		return FLAG;
 	}
 
+	/* sh, tone, tts_* or tts_sync_state integer */
 <XSH,XT,XTTS,XSYNC>{integer}	{
 		yylval.n = atoi(yytext);
 		return INTEGER;
 	}
 
+	/* tts_set_character_scale double (eg 1.2) */
 <XSCALE>{double} {
 		yylval.d = atof(yytext);
 		return DOUBLE;
 	}
 
+	/* dispatch */
 ^d\n {
 		BEGIN XD;
 		yyless(1);
 		return yytext[0];
 	}
 
+	/* stop */
 ^s\n {
 		BEGIN XS;
 		yyless(1);
@@ -295,4 +314,5 @@ ws [ \t\r\f\v]
 		return VERSION;
 	}
 
+	/* default pattern */
 . ;

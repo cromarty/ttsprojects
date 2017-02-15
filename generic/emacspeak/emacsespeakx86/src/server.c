@@ -1,3 +1,24 @@
+/*
+*
+* Copyright (C) 2017 Mike Ray <mike.ray@btinternet.com>
+*
+* This is free software; you can redistribute it and/or modify it
+* under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2, or (at your option)
+* any later version.
+*
+* This software is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with this package; see the file COPYING.  If not, write to
+* the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+* Boston, MA 02110-1301, USA.
+*
+*--code--*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,7 +78,7 @@ int queue_speech(int entry_type, const char *speech)
 
 int send_speech(void)
 {
-	int rc;
+	espeak_ERROR erc;
 	TTS_QUEUE_ENTRY_T *qe;
 	ListElmt *element;
 
@@ -70,9 +91,9 @@ int send_speech(void)
 	queue_pop(&tts_queue, (void*)element);
 	qe = (TTS_QUEUE_ENTRY_T*)list_data(element);
 
-	rc = espeak_Synth(qe->speech, qe->length+1, 0, POS_CHARACTER, 0, espeakPHONEMES, NULL, 
-NULL);
+	erc = espeak_Synth(qe->speech, qe->length+1, 0, POS_CHARACTER, 0, espeakPHONEMES, NULL, NULL);
 
+	/* not sure yet about these free() calls here */
 	free(qe->speech);
 	free(element);
 	return 0;
@@ -117,11 +138,14 @@ void *dispatch_thread(void *arg)
 
 void tts_version(void)
 {
+	/* not implemented yet */
 	DEBUG_SHOW("Called tts_version\n");
 	return;
 } /* end tts_version */
 
-void tts_say(char *text) {
+void tts_say(char *text)
+{
+	/* still to improve paranoia checking */
 	int rc;
 	espeak_ERROR erc;
 	pthread_mutex_lock(&queue_guard_mutex);
@@ -134,6 +158,7 @@ void tts_say(char *text) {
 
 void tts_l(const char ch)
 {
+	/* still to improve paranoia checking */
 	espeak_ERROR erc;
 	DEBUG_SHOW_ARGS("Called tts_l: %d\n", ch);
 	erc = espeak_Cancel();
@@ -144,18 +169,21 @@ void tts_l(const char ch)
 void tts_d(void)
 {
 	DEBUG_SHOW("Called tts_d function\n");
+	/* post semaphore to start queue processing */
 	sem_post(&dispatch_semaphore);
 	return;
 } /* end tts_d */
 
 void tts_pause(void)
 {
+	/* not implemented yet */
 	DEBUG_SHOW("Called tts_pause\n");
 	return;
 } /* end tts_pause */
 
 void tts_resume(void)
 {
+	/* not implemented yet */
 	DEBUG_SHOW("Called tts_resume\n");
 	return;
 } /* end tts_resume */
@@ -165,6 +193,7 @@ void tts_s(void)
 	int rc;
 	pthread_mutex_lock(&queue_guard_mutex);
 	rc = espeak_Cancel();
+	/* flush the queue */
 	empty_queue();
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
@@ -176,6 +205,7 @@ void tts_q(char *speech)
 
 	queue_speech(1, speech);
 	pthread_mutex_unlock(&queue_guard_mutex);
+	// free here causes a crash. now leave free to dequeue op?
 	//free(speech);
 	return;
 } /* end tts_q */
@@ -186,42 +216,49 @@ void tts_c(char *code)
 	pthread_mutex_lock(&queue_guard_mutex);
 	queue_speech(2, code);
 	pthread_mutex_unlock(&queue_guard_mutex);
+	// free here causes a crash, see tts_q
 	//free(code);
 	return;
 } /* end tts_c */
 
 void tts_a(const char *filename)
 {
+	/* not implemented yet */
 	DEBUG_SHOW_ARGS("Called tts_a: %s\n", filename);
 	return;
 } /* end tts_a */
 
 void tts_t(int pitch, int duration)
 {
+	/* not implemented yet */
 	DEBUG_SHOW_ARGS("Called tts_t function: %d %d\n", pitch, duration);
 	return;
 } /* end tts_t */
 
 void tts_sh(int duration_milliseconds)
 {
+	/* not implemented yet */
 	DEBUG_SHOW_ARGS("Called tts_sh: %d\n", duration_milliseconds);
 	return;
 } /* end tts_sh */
 
 void tts_reset(void)
 {
+	/* not implemented yet */
 	DEBUG_SHOW("Called tts_reset\n");
 	return;
 } /* end tts_reset */
 
 void tts_set_punctuations(int punct_level)
 {
+	/* not implemented yet */
 	DEBUG_SHOW_ARGS("Called set punct level: %d\n", punct_level);
 	return;
 } /* end tts_set_punctuations */
 
 void tts_set_speech_rate(int speech_rate)
 {
+	/* still to improve paranoia checking */
 	espeak_ERROR erc;
 	tts_state.speech_rate = speech_rate;
 	DEBUG_SHOW_ARGS("Called tts_set_speech_rate: %d\n", speech_rate);
@@ -231,6 +268,7 @@ void tts_set_speech_rate(int speech_rate)
 
 void tts_set_character_scale(double character_scale)
 {
+	/* not implemented yet */
 	tts_state.character_scale = character_scale;
 	DEBUG_SHOW_ARGS("Called tts_set_character_scale: %f\n", character_scale);
 	return;
@@ -238,6 +276,7 @@ void tts_set_character_scale(double character_scale)
 
 void tts_split_caps(int split_caps)
 {
+	/* still to improve paranoia checking */
 	espeak_ERROR erc;
 	tts_state.split_caps = split_caps;
 	DEBUG_SHOW_ARGS("Called tts_split_caps: %d\n", split_caps);
@@ -247,6 +286,7 @@ void tts_split_caps(int split_caps)
 
 void tts_capitalize(int capitalize)
 {
+	/* not implemented yet */
 	tts_state.capitalize = capitalize;
 	DEBUG_SHOW_ARGS("Called tts_capitalize: %d\n", capitalize);
 	return;
@@ -254,6 +294,7 @@ void tts_capitalize(int capitalize)
 
 void tts_allcaps_beep(int allcaps_beep)
 {
+	/* still to improve paranoia checking */
 	espeak_ERROR erc;
 	tts_state.caps_beep = allcaps_beep;
 	DEBUG_SHOW_ARGS("Called tts_allcaps_beep: %d\n", allcaps_beep);
@@ -270,6 +311,7 @@ void tts_sync_state(
 	int split_caps,
 	int speech_rate)
 {
+	/* not implemented yet */
 	tts_state.punct_level = punct_level;
 	tts_state.pitch_rise = pitch_rise;
 	tts_state.caps_beep = caps_beep;
@@ -283,6 +325,7 @@ void tts_sync_state(
 
 int tts_initialize(void)
 {
+	/* still to improve paranoia checking */
 	int rc;
 	pthread_t qthr;
 
@@ -299,13 +342,14 @@ int tts_initialize(void)
 
 rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
-
+	/* change this. don't just return result of espeak call */
 	return espeak_Initialize(AUDIO_OUTPUT_PLAYBACK, 50, NULL, 0);
 
 } /* end tts_initialize */
 
 int tts_terminate(void)
 {
+	/* still to improve paranoia checking */
 	espeak_Terminate();
 	return 0;
 } /* end tts_terminate */
