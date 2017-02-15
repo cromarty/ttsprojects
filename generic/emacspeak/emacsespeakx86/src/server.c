@@ -176,7 +176,7 @@ void tts_q(char *speech)
 
 	queue_speech(1, speech);
 	pthread_mutex_unlock(&queue_guard_mutex);
-	free(speech);
+	//free(speech);
 	return;
 } /* end tts_q */
 
@@ -186,7 +186,7 @@ void tts_c(char *code)
 	pthread_mutex_lock(&queue_guard_mutex);
 	queue_speech(2, code);
 	pthread_mutex_unlock(&queue_guard_mutex);
-	free(code);
+	//free(code);
 	return;
 } /* end tts_c */
 

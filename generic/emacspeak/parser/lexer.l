@@ -22,6 +22,8 @@
 * $Id: emspk-sd.h
 *--code--*/
 
+%option noyywrap
+
 %{
 
 #include <stdlib.h>
