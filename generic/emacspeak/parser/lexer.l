@@ -19,7 +19,6 @@
 * the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
 * Boston, MA 02110-1301, USA.
 *
-* $Id: emspk-sd.h
 *--code--*/
 
 %option noyywrap
@@ -133,10 +132,11 @@ ws [ \t\r\f\v]
 		BEGIN XA;
 		return A;
 	}
+
 {silence}	{
 		yyless(yyleng-1);
 		BEGIN XSH;
-		return S;
+		return SH;
 	}
 
 <XPL,XSYNC>{none} {
@@ -298,7 +298,7 @@ ws [ \t\r\f\v]
 ^d\n {
 		BEGIN XD;
 		yyless(1);
-		return yytext[0];
+		return D;
 	}
 
 	/* stop */
