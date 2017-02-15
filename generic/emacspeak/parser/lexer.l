@@ -303,7 +303,7 @@ ws [ \t\r\f\v]
 ^s\n {
 		BEGIN XS;
 		yyless(1);
-		return yytext[0];
+		return S;
 	}
 
 {version} {

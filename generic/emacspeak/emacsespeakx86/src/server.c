@@ -192,6 +192,7 @@ void tts_resume(void)
 void tts_s(void)
 {
 	int rc;
+	DEBUG_SHOW("Called tts_s\n");
 	pthread_mutex_lock(&queue_guard_mutex);
 	rc = espeak_Cancel();
 	/* flush the queue */
@@ -334,7 +335,7 @@ int tts_initialize(void)
 	/* still to improve paranoia checking */
 	int rc;
 	pthread_t qthr;
-	fclose(stderr);
+	//fclose(stderr);
 	rc = sem_init(&dispatch_semaphore, 0, 0);
 	if (rc < 0) {
 		return 1;

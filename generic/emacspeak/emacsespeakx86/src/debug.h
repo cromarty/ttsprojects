@@ -24,6 +24,8 @@
 
 #include <stdarg.h>
 
+//#define DEBUG_MESSAGES 1
+
 #ifdef DEBUG_MESSAGES
 #define DEBUG_SHOW_ARGS(format,...) debug_printf_args(format,__VA_ARGS__)
 #define DEBUG_SHOW(format)  debug_printf(format)
