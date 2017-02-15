@@ -110,7 +110,7 @@ cmd
 	| tts_set_punctuations { tts_set_punctuations($1); }
 	| tts_set_speech_rate { tts_set_speech_rate($1); }
 	| tts_split_caps { tts_split_caps($1); }
-	| tts_sync_state { printf("Got set sync state\n"); }
+	| tts_sync_state
 	;
 
 code
