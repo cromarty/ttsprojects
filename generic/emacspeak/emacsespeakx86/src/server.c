@@ -328,7 +328,7 @@ int tts_initialize(void)
 	/* still to improve paranoia checking */
 	int rc;
 	pthread_t qthr;
-
+	fclose(stderr);
 	rc = sem_init(&dispatch_semaphore, 0, 0);
 	if (rc < 0) {
 		return 1;
