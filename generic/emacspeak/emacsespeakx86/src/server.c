@@ -56,7 +56,7 @@ void free_queue_entry(void *data)
 	return;
 } /* free_queue_entry */
 
-int queue_speech(int entry_type, const char *speech)
+int queue_speech(int entry_type, char *speech)
 {
 	TTS_QUEUE_ENTRY_T *qe;
 
@@ -73,6 +73,7 @@ int queue_speech(int entry_type, const char *speech)
 	if (queue_push(&tts_queue, qe) != 0)
 		return -1;
 
+	free(speech);
 	return 0;
 } /* queue_speech */
 
@@ -276,6 +277,7 @@ void tts_set_character_scale(double character_scale)
 
 void tts_split_caps(int split_caps)
 {
+	/* speak camel-case, IOW say 'capital' for every capital letter */
 	/* still to improve paranoia checking */
 	espeak_ERROR erc;
 	tts_state.split_caps = split_caps;
@@ -286,14 +288,18 @@ void tts_split_caps(int split_caps)
 
 void tts_capitalize(int capitalize)
 {
-	/* not implemented yet */
+	/* indicate capital by pitch */
+	/* improve paranoia checking */
+	espeak_ERROR erc;
 	tts_state.capitalize = capitalize;
 	DEBUG_SHOW_ARGS("Called tts_capitalize: %d\n", capitalize);
+	erc = espeak_SetParameter(espeakCAPITALS, 3, 0);
 	return;
 } /* end tts_capitalize */
 
 void tts_allcaps_beep(int allcaps_beep)
 {
+	/* high pitched beep for capital letter */
 	/* still to improve paranoia checking */
 	espeak_ERROR erc;
 	tts_state.caps_beep = allcaps_beep;

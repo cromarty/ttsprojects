@@ -239,15 +239,13 @@ ws [ \t\r\f\v]
 
 	/* c function payload */
 <XC>[^{}\n]+ {
-	yylval.s = malloc(yyleng);
-		strcpy(yylval.s, yytext);
+	yylval.s = strdup(yytext);
 		return TEXT;
 	}
 
 	/* q, tts_say or audio payload */
 <XQ,XSAY,XA>[^{}\n]+ {
-		yylval.s = malloc(yyleng);
-		strcpy(yylval.s, yytext);
+		yylval.s = strdup(yytext);
 		return TEXT;
 	}
 

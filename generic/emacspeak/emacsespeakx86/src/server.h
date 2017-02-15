@@ -54,7 +54,7 @@ typedef struct tts_queue_entry
 
 
 void free_queue_entry(void *data);
-int queue_speech(int entry_type, const char *speech);
+int queue_speech(int entry_type, char *speech);
 int send_speech(void);
 int empty_queue(void);
 void *dispatch_thread(void *arg);
