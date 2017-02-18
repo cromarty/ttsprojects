@@ -22,16 +22,9 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-#include <stdarg.h>
+#define CPF_CLOEXEC 1
 
-//#define DEBUG_MESSAGES 1
-
-#ifdef DEBUG_MESSAGES
-#define DEBUG_SHOW_ARGS(format,...) debug_printf_args(format,__VA_ARGS__)
-#define DEBUG_SHOW(format)  debug_printf(format)
-#else
-#define DEBUG_SHOW_ARGS(format,...)
-#define DEBUG_SHOW(format)
-#endif
+int create_log_file(const char *basename, int flags);
+void debug_log(int fd, const char *format,...);
 
 #endif

@@ -237,7 +237,7 @@ void yyerror(const char *s)
 {
 	fprintf(stderr, "%s\n", s);
 }
-
+/*
 int main(int argc, char **argv) {
 	if(argc > 1 && !strcmp(argv[1], "-d")) {
 		yydebug = 1; argc--; argv++;
@@ -253,4 +253,6 @@ int main(int argc, char **argv) {
 	return 0;
 }
 
+
+*/
 
