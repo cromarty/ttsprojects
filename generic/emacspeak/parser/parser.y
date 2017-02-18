@@ -88,7 +88,8 @@ void yyerror(const char *s);
 %type <n>tts_sync_state
 %type <n>tts_pause tts_reset tts_resume
 
-%type <s>speech immediate_speech queued_speech sound version
+%type <n>speech queued_speech immediate_speech sound version
+
 
 %%
 
@@ -105,7 +106,7 @@ cmd
 	| version { $$ = $1; tts_version(); }
 	| silence { $$ = $1; tts_sh($1); }
 	| tone { $$ = $1; }
-	| sound { $$ = $1; tts_a($1); }
+	| sound { $$ = $1; }
 		| tts_pause { $$ = $1; tts_pause(); }
 	| tts_reset { $$ = $1; tts_reset(); }
 	| tts_resume { $$ = $1; tts_resume(); }
@@ -124,14 +125,22 @@ code
 	;
 
 speech
-	: immediate_speech { $$ = $1; tts_say($1); }
-	| queued_speech { $$ = $1; tts_q($1); }
+	: immediate_speech { $$ = $1; }
+	| queued_speech { $$ = $1; }
 	| character { $$ = $1; tts_l($1); }
 	;
 
 immediate_speech
-	: TTS_SAY '{' TEXT '}' '\n' { $$ = $3; }
-	| TTS_SAY TEXT '\n' { $$ = $2; }
+	: TTS_SAY '{' TEXT '}' '\n'
+		{
+			$$ = $1;
+			tts_say($3);
+		}
+	| TTS_SAY TEXT '\n'
+		{
+			$$ = $1;
+			tts_say($2);
+		}
 	;
 
 character
@@ -140,8 +149,16 @@ character
 	;
 
 queued_speech
-	: Q '{' TEXT '}' '\n' { $$ = $3; }
-	| Q TEXT '\n' { $$ = $2; }
+	: Q '{' TEXT '}' '\n'
+		{
+			$$ = $1;
+			tts_q($3);
+		}
+	| Q TEXT '\n'
+		{
+			$$ = $1;
+			tts_q($2);
+		}
 	;
 
 dispatch
@@ -149,7 +166,7 @@ dispatch
 	;
 
 version
-	: VERSION '\n' { $$ = $1; }
+	: VERSION '\n' { $$ = $1; tts_version(); }
 	;
 
 stop
@@ -167,8 +184,16 @@ tone
 	;
 
 sound
-	: A '{' TEXT '}' '\n' { $$ = $3; }
-	| A TEXT '\n' { $$ = $2; }
+	: A '{' TEXT '}' '\n'
+		{
+			$$ = $1;
+			tts_a($3);
+		}
+	| A TEXT '\n'
+		{
+			$$ = $1;
+			tts_a($2);
+		}
 	;
 
 tts_pause
