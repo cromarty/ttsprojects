@@ -161,10 +161,10 @@ void tts_say(char *text)
 	espeak_ERROR erc;
 	pthread_mutex_lock(&queue_guard_mutex);
 	erc = espeak_Cancel();
-	debug_log(logfd, "espeak_Cancel returned %d\n", erc);
+	debug_log(logfd, "In tts_say espeak_Cancel returned %d\n", erc);
 	rc = empty_queue();
 	erc = espeak_Synth(text, strlen(text)+1, 0, POS_CHARACTER, 0, espeakPHONEMES, NULL, NULL);
-	debug_log(logfd,"espeak_Synth returned %d\n", erc);
+	debug_log(logfd,"In tts_say espeak_Synth returned %d\n", erc);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_say */
@@ -173,9 +173,10 @@ void tts_l(const char ch)
 {
 	/* still to improve paranoia checking */
 	espeak_ERROR erc;
-		debug_log(logfd,"Called tts_l\n");
 	erc = espeak_Cancel();
+	debug_log(logfd, "In tts_l espeak_Cancel returned: %d\n", erc);
 	erc = espeak_Char(ch);
+	debug_log(logfd, "In tts_l espeak_Char returned: %d\n", erc);
 	return;
 } /* end tts_l */
 
@@ -215,13 +216,11 @@ void tts_s(void)
 
 void tts_q(char *speech)
 {
-	debug_log(logfd, "Called tts_q: %s\n", speech);
+	debug_log(logfd, "Called tts_q to queue: %s\n", speech);
 	pthread_mutex_lock(&queue_guard_mutex);
 
 	queue_speech(1, speech);
 	pthread_mutex_unlock(&queue_guard_mutex);
-	// free here causes a crash. now leave free to dequeue op?
-	//free(speech);
 	return;
 } /* end tts_q */
 
@@ -231,8 +230,6 @@ void tts_c(char *code)
 	pthread_mutex_lock(&queue_guard_mutex);
 	queue_speech(2, code);
 	pthread_mutex_unlock(&queue_guard_mutex);
-	// free here causes a crash, see tts_q
-	//free(code);
 	return;
 } /* end tts_c */
 
@@ -273,11 +270,11 @@ void tts_set_punctuations(int punct_level)
 
 void tts_set_speech_rate(int speech_rate)
 {
-	/* still to improve paranoia checking */
-	debug_log(logfd, "Called tts_set_speech_rate\n");
 	espeak_ERROR erc;
+	debug_log(logfd, "Called tts_set_speech_rate: %d\n", speech_rate);
 	tts_state.speech_rate = speech_rate;
-	erc = espeak_SetParameter(espeakRATE, speech_rate, 0);
+	erc = espeak_SetParameter(espeakRATE, speech_rate+100, 0);
+	debug_log(logfd, "In tts_set_speech_rate espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_set_speech_rate */
 
@@ -294,9 +291,10 @@ void tts_split_caps(int split_caps)
 	/* speak camel-case, IOW say 'capital' for every capital letter */
 	/* still to improve paranoia checking */
 	espeak_ERROR erc;
-	debug_log(logfd, "Called tts_split_caps\n");
+	debug_log(logfd, "Called tts_split_caps: %d\n", split_caps); 
 	tts_state.split_caps = split_caps;
 	erc = espeak_SetParameter(espeakCAPITALS, (split_caps ? 2 : 0), 0);
+	debug_log(logfd, "In tts_split_caps espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_split_caps */
 
@@ -305,9 +303,10 @@ void tts_capitalize(int capitalize)
 	/* indicate capital by pitch */
 	/* improve paranoia checking */
 	espeak_ERROR erc;
+	debug_log(logfd, "Called tts_capitalize: %d\n", capitalize);
 	tts_state.capitalize = capitalize;
-	debug_log(logfd, "Called tts_capitalize\n");
 	erc = espeak_SetParameter(espeakCAPITALS, 3, 0);
+	debug_log(logfd, "In tts_capitalize espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_capitalize */
 
@@ -317,11 +316,11 @@ void tts_allcaps_beep(int allcaps_beep)
 	/* still to improve paranoia checking */
 	espeak_ERROR erc;
 	tts_state.caps_beep = allcaps_beep;
-	debug_log(logfd, "Called tts_allcaps_beep\n");
+	debug_log(logfd, "Called tts_allcaps_beep: %d\n", allcaps_beep);
 	erc = espeak_SetParameter(espeakCAPITALS, allcaps_beep, 0);
+	debug_log(logfd, "In tts_allcaps_beep espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_allcaps_beep */
-
 
 
 void tts_sync_state(
@@ -338,7 +337,7 @@ void tts_sync_state(
 	tts_state.split_caps = split_caps;
 	tts_state.speech_rate = speech_rate;
 
-	debug_log(logfd, "Called tts_sync_state\n");
+	debug_log(logfd, "Called tts_sync_state: %d %d %d %d %d\n", punct_level, pitch_rise, caps_beep, split_caps, speech_rate);
 	return;
 } /* end tts_sync_state */
 
@@ -354,10 +353,13 @@ int tts_initialize(void)
 	fclose(stderr);
 	rc = sem_init(&dispatch_semaphore, 0, 0);
 	if (rc < 0) {
+		debug_log(logfd, "Failed to initialize dispatch_semaphore in tts_initialize\n");
 		return 1;
 	}
+
 	rc = pthread_mutex_init(&queue_guard_mutex, NULL);
 	if (rc < 0) {
+		debug_log(logfd, "Failed to initialize queue_guard_mutex in tts_initialize\n");
 		return 1;
 	}
 
@@ -365,9 +367,8 @@ int tts_initialize(void)
 
 rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
-	/* change this. don't just return result of espeak call */
 	erc = espeak_Initialize(AUDIO_OUTPUT_PLAYBACK, 50, NULL, 0);
-	debug_log(logfd, "espeak_Initialize returned: %d\n", erc);
+	debug_log(logfd, "In tts_initialize espeak_Initialize returned: %d\n", erc);
 	return erc;
 } /* end tts_initialize */
 
