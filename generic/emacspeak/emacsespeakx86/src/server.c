@@ -31,6 +31,8 @@
 #include "queue.h"
 #include "server.h"
 
+int yydebug;
+
 
 TTS_STATE_T tts_state;
 Queue tts_queue;
@@ -351,7 +353,6 @@ int tts_initialize(void)
 	pthread_t qthr;
 	logfd = create_log_file("/tmp/emacsespeakx86-", CPF_CLOEXEC);
 	debug_log(logfd, "Called tts_initialize\n");
-	fclose(stderr);
 	rc = sem_init(&dispatch_semaphore, 0, 0);
 	if (rc < 0) {
 		debug_log(logfd, "Failed to initialize dispatch_semaphore in tts_initialize\n");
@@ -386,8 +387,11 @@ int tts_terminate(void)
 int main(int argc, char **argv)
 {
 
-	if(argc > 1 && !strcmp(argv[1], "-d"))
+	if(argc > 1 && !strcmp(argv[1], "-d")) {
 		yydebug = 1; argc--; argv++;
+	} else {
+		fclose(stderr);
+	}
 
 	int rc = tts_initialize();
 	if (rc == -1) {
