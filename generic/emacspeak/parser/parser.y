@@ -79,16 +79,32 @@ void yyerror(const char *s);
 %token <c>CHAR
 %token <s>TEXT
 
-%type <c>character
+
 %type <d>tts_set_character_scale
 
-%type <n>cmd code dispatch stop
+%type <n>character
+%type <n>cmd
+%type <n>code
+%type <n>dispatch
+%type <n>immediate_speech
+%type <n>punctlevel
+%type <n>queued_speech
+%type <n>silence
+%type <n>sound
+%type <n>speech
+%type <n>stop
+%type <n>tone
+%type <n>version
 
-%type <n>silence tone tts_allcaps_beep tts_capitalize tts_set_punctuations tts_set_speech_rate tts_split_caps punctlevel
+%type <n>tts_allcaps_beep
+%type <n>tts_capitalize
+%type <n>tts_set_punctuations
+%type <n>tts_set_speech_rate
+%type <n>tts_split_caps
 %type <n>tts_sync_state
-%type <n>tts_pause tts_reset tts_resume
-
-%type <n>speech queued_speech immediate_speech sound version
+%type <n>tts_pause
+%type <n>tts_reset
+%type <n>tts_resume
 
 
 %%
@@ -112,7 +128,7 @@ cmd
 	| tts_resume { $$ = $1; tts_resume(); }
 	| tts_allcaps_beep { $$ = $1; tts_allcaps_beep($1); }
 	| tts_capitalize { $$ = $1; tts_capitalize($1); }
-	| tts_set_character_scale { $$ = $1; tts_set_character_scale($1); }
+	| tts_set_character_scale { $$ = $1; }
 	| tts_set_punctuations { $$ = $1; tts_set_punctuations($1); }
 	| tts_set_speech_rate { $$ = $1; tts_set_speech_rate($1); }
 	| tts_split_caps { $$ = $1; tts_split_caps($1); }
@@ -120,14 +136,22 @@ cmd
 	;
 
 code
-	: C '{' TEXT '}' '\n' { $$ = $1; tts_c($3); }
-	| C TEXT '\n' { $$ = $1; tts_c($2); }
+	: C '{' TEXT '}' '\n'
+		{
+			$$ = $1;
+			tts_c($3);
+		}
+	| C TEXT '\n'
+		{
+			$$ = $1;
+			tts_c($2);
+		}
 	;
 
 speech
 	: immediate_speech { $$ = $1; }
 	| queued_speech { $$ = $1; }
-	| character { $$ = $1; tts_l($1); }
+	| character { $$ = $1; }
 	;
 
 immediate_speech
@@ -144,8 +168,16 @@ immediate_speech
 	;
 
 character
-	: L '{' CHAR '}' '\n' { $$ = $3; }
-	| L CHAR '\n' { $$ = $2; }
+	: L '{' CHAR '}' '\n'
+		{
+			$$ = $1;
+			tts_l($3);
+		}
+	| L CHAR '\n'
+		{
+			$$ = $1;
+			tts_l($2);
+		}
 	;
 
 queued_speech
@@ -219,8 +251,16 @@ tts_capitalize
 	;
 
 tts_set_character_scale
-	: TTS_SET_CHARACTER_SCALE '{' DOUBLE '}' '\n' { $$ = $3; }
-	| TTS_SET_CHARACTER_SCALE DOUBLE '\n' { $$ = $2; }
+	: TTS_SET_CHARACTER_SCALE '{' DOUBLE '}' '\n'
+		{
+			$$ = $1;
+			tts_set_character_scale($3);
+		}
+	| TTS_SET_CHARACTER_SCALE DOUBLE '\n'
+		{
+			$$ = $1;
+			tts_set_character_scale($2);
+		}
 	;
 
 tts_set_punctuations

@@ -238,15 +238,13 @@ void tts_c(char *code)
 
 void tts_a(const char *filename)
 {
-	/* not implemented yet */
-	debug_log(logfd, "Called tts_a\n");
+	debug_log(logfd, "Called tts_a: %s\n", filename);
 	return;
 } /* end tts_a */
 
 void tts_t(int pitch, int duration)
 {
-	/* not implemented yet */
-	debug_log(logfd, "Called tts_t\n");
+	debug_log(logfd, "Called tts_t, pitch: %d duration: %d\n", pitch, duration);
 	return;
 } /* end tts_t */
 
@@ -266,8 +264,7 @@ void tts_reset(void)
 
 void tts_set_punctuations(int punct_level)
 {
-	/* not implemented yet */
-	debug_log(logfd, "Called tts_set_punctuations\n");
+	debug_log(logfd, "Called tts_set_punctuations: %d\n", punct_level);
 	return;
 } /* end tts_set_punctuations */
 
