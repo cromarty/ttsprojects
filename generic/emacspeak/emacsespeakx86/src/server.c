@@ -292,19 +292,22 @@ void tts_set_character_scale(double character_scale)
 void tts_split_caps(int split_caps)
 {
 	/* speak camel-case, IOW say 'capital' for every capital letter */
-	/* still to improve paranoia checking */
 	espeak_ERROR erc;
 	debug_log(logfd, "Called tts_split_caps: %d\n", split_caps); 
 	tts_state.split_caps = split_caps;
+	if (split_caps) {
+		tts_state.capitalize = 0;
+		tts_state.allcaps_beep = 0;
+	}
 	erc = espeak_SetParameter(espeakCAPITALS, (split_caps ? 2 : 0), 0);
 	debug_log(logfd, "In tts_split_caps espeak_SetParameter returned: %d\n", erc);
+
 	return;
 } /* end tts_split_caps */
 
 void tts_capitalize(int capitalize)
 {
 	/* indicate capital by pitch */
-	/* improve paranoia checking */
 	espeak_ERROR erc;
 	debug_log(logfd, "Called tts_capitalize: %d\n", capitalize);
 	tts_state.capitalize = capitalize;
@@ -316,9 +319,8 @@ void tts_capitalize(int capitalize)
 void tts_allcaps_beep(int allcaps_beep)
 {
 	/* high pitched beep for capital letter */
-	/* still to improve paranoia checking */
 	espeak_ERROR erc;
-	tts_state.caps_beep = allcaps_beep;
+	tts_state.allcaps_beep = allcaps_beep;
 	debug_log(logfd, "Called tts_allcaps_beep: %d\n", allcaps_beep);
 	erc = espeak_SetParameter(espeakCAPITALS, allcaps_beep, 0);
 	debug_log(logfd, "In tts_allcaps_beep espeak_SetParameter returned: %d\n", erc);
@@ -328,19 +330,27 @@ void tts_allcaps_beep(int allcaps_beep)
 
 void tts_sync_state(
 	int punct_level,
-	int pitch_rise,
-	int caps_beep,
+	int capitalize,
+	int allcaps_beep,
 	int split_caps,
 	int speech_rate)
 {
-	/* not implemented yet */
 	tts_state.punct_level = punct_level;
-	tts_state.pitch_rise = pitch_rise;
-	tts_state.caps_beep = caps_beep;
+	tts_state.capitalize = capitalize;
+	tts_state.allcaps_beep = allcaps_beep;
 	tts_state.split_caps = split_caps;
 	tts_state.speech_rate = speech_rate;
 
-	debug_log(logfd, "Called tts_sync_state: %d %d %d %d %d\n", punct_level, pitch_rise, caps_beep, split_caps, speech_rate);
+	debug_log(
+		logfd, 
+		"Called tts_sync_state, punct_level: %d capitalize: %d allcaps_beep: %d split_caps: %d speech_rate: %d\n",
+		punct_level,
+		capitalize, 
+allcaps_beep, 
+split_caps,
+		speech_rate
+	);
+
 	return;
 } /* end tts_sync_state */
 

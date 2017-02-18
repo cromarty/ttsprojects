@@ -37,11 +37,11 @@
 typedef struct tts_state
 {
 	int punct_level;
-	int pitch_rise;
-	int caps_beep;
+int capitalize;
+	int allcaps_beep;
 	int split_caps;
 	int speech_rate;
-	int capitalize;
+	int pitch_rise;
 	double character_scale;
 } TTS_STATE_T;
 
