@@ -34,6 +34,8 @@
 int yylex();
 void yyerror(const char *s);
 
+extern int input_for_lexer(char*buf, int *num_bytes_read, int max_bytes_to_read);
+
 %}
 
 %union

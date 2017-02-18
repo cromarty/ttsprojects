@@ -32,6 +32,9 @@
 #include "parser.h"
 #include "server.h"
 
+#undef YY_INPUT
+#define YY_INPUT(b,r,m) \
+	input_for_lexer(b, &r, m)
 
 %}
 

@@ -52,7 +52,7 @@ typedef struct tts_queue_entry
 	void			*speech;
 } TTS_QUEUE_ENTRY_T;
 
-
+int input_for_lexer(char *buf, int *bytes_read, int max_bytes);
 void free_queue_entry(void *data);
 int queue_speech(int entry_type, char *speech);
 int send_speech(void);

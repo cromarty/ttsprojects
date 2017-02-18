@@ -50,6 +50,13 @@ int logfd;
 *
 */
 
+int input_for_lexer(char *buf, int *bytes_read, int max_bytes)
+{
+	*bytes_read = read(0, (void*)buf, max_bytes);
+	return 0;
+} /* end input_for_lexer */
+
+
 
 void free_queue_entry(void *data)
 {
