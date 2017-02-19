@@ -293,8 +293,8 @@ void tts_split_caps(int split_caps)
 	debug_log(logfd, "Called tts_split_caps: %d\n", split_caps); 
 	tts_state.split_caps = split_caps;
 	if (split_caps) {
-		tts_state.capitalize = 0;
-		tts_state.allcaps_beep = 0;
+		tts_capitalize(0);
+		tts_allcaps_beep(0);
 	}
 	erc = espeak_SetParameter(espeakCAPITALS, (split_caps ? 2 : 0), 0);
 	debug_log(logfd, "In tts_split_caps espeak_SetParameter returned: %d\n", erc);
@@ -308,6 +308,10 @@ void tts_capitalize(int capitalize)
 	espeak_ERROR erc;
 	debug_log(logfd, "Called tts_capitalize: %d\n", capitalize);
 	tts_state.capitalize = capitalize;
+	if (capitalize) {
+		tts_allcaps_beep(0);
+		tts_split_caps(0);
+	}
 	erc = espeak_SetParameter(espeakCAPITALS, 3, 0);
 	debug_log(logfd, "In tts_capitalize espeak_SetParameter returned: %d\n", erc);
 	return;
@@ -318,6 +322,10 @@ void tts_allcaps_beep(int allcaps_beep)
 	/* high pitched beep for capital letter */
 	espeak_ERROR erc;
 	tts_state.allcaps_beep = allcaps_beep;
+	if (allcaps_beep) {
+		tts_capitalize(0);
+		tts_split_caps(0);
+	}
 	debug_log(logfd, "Called tts_allcaps_beep: %d\n", allcaps_beep);
 	erc = espeak_SetParameter(espeakCAPITALS, allcaps_beep, 0);
 	debug_log(logfd, "In tts_allcaps_beep espeak_SetParameter returned: %d\n", erc);
@@ -394,6 +402,7 @@ int tts_terminate(void)
 int main(int argc, char **argv)
 {
 
+	/* give argument -d on command-line to switch on bison parser yydebug */
 	if(argc > 1 && !strcmp(argv[1], "-d")) {
 		yydebug = 1; argc--; argv++;
 	} else {
