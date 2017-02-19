@@ -92,7 +92,7 @@ am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_espeakmrx86_OBJECTS = server.$(OBJEXT) parser.$(OBJEXT) \
 	lexer.$(OBJEXT) queue.$(OBJEXT) list.$(OBJEXT) \
-	system.$(OBJEXT) debug.$(OBJEXT)
+	system.$(OBJEXT) pcregex.$(OBJEXT) debug.$(OBJEXT)
 espeakmrx86_OBJECTS = $(am_espeakmrx86_OBJECTS)
 espeakmrx86_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
@@ -258,7 +258,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 BUILT_SOURCES = parser.c parser.h lexer.c
-espeakmrx86_SOURCES = server.c parser.y lexer.l queue.c list.c system.c server.h queue.h list.h debug.c debug.h system.h
+espeakmrx86_SOURCES = server.c parser.y lexer.l queue.c list.c system.c pcregex.c server.h queue.h list.h debug.c debug.h system.h pcregex.h
 AM_CPPFLAGS = -DYYDEBUG=1
 AM_YFLAGS = -d
 all: $(BUILT_SOURCES)
@@ -356,6 +356,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lexer.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/parser.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/pcregex.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/server.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/system.Po@am__quote@

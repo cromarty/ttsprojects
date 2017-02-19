@@ -33,6 +33,7 @@
 #define PUNCT_LEVEL_SOME espeakPUNCT_SOME
 #define PUNCT_LEVEL_ALL espeakPUNCT_ALL
 
+#define SYNTH_FLAGS espeakCHARS_UTF8|espeakSSML|espeakPHONEMES
 
 typedef struct tts_state
 {

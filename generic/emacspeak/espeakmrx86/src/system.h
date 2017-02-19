@@ -2,7 +2,7 @@
 #define SYSTEM_H
 
 
-int system(const char *command);
+int system_(const char *command);
 
 #endif
 

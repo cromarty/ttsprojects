@@ -1,6 +1,7 @@
-emacsespeakx86
+espeakmrx86
 .deps/
-
+*.log
+*.txt
 
 
 parser.c

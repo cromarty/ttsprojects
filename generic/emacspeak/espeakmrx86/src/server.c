@@ -30,6 +30,7 @@
 #include "parser.h"
 #include "queue.h"
 #include "server.h"
+#include "pcregex.h"
 
 int yydebug;
 
@@ -105,7 +106,7 @@ int send_speech(void)
 	queue_pop(&tts_queue, (void*)element);
 	qe = (TTS_QUEUE_ENTRY_T*)list_data(element);
 
-	erc = espeak_Synth(qe->speech, qe->length+1, 0, POS_CHARACTER, 0, espeakPHONEMES, NULL, NULL);
+	erc = espeak_Synth(qe->speech, qe->length+1, 0, POS_CHARACTER, 0, SYNTH_FLAGS, NULL, NULL);
 
 	/* not sure yet about these free() calls here */
 	free(qe->speech);
@@ -159,14 +160,18 @@ void tts_version(void)
 
 void tts_say(char *text)
 {
-	/* still to improve paranoia checking */
 	int rc;
 	espeak_ERROR erc;
+	char *newtext = malloc(strlen(text));
+	memset(newtext,0,strlen(text));
+	clean_string(text, newtext, "\\[\\*\\]", " ");
+	debug_log(logfd, "Called tts_say: %s\n", text);
+	debug_log(logfd,"In tts_say cleaned text: %s\n", newtext);
 	pthread_mutex_lock(&queue_guard_mutex);
 	erc = espeak_Cancel();
 	debug_log(logfd, "In tts_say espeak_Cancel returned %d\n", erc);
 	rc = empty_queue();
-	erc = espeak_Synth(text, strlen(text)+1, 0, POS_CHARACTER, 0, espeakPHONEMES, NULL, NULL);
+	erc = espeak_Synth(newtext, strlen(newtext)+1, 0, POS_CHARACTER, 0, SYNTH_FLAGS, NULL, NULL);
 	debug_log(logfd,"In tts_say espeak_Synth returned %d\n", erc);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
@@ -174,7 +179,6 @@ void tts_say(char *text)
 
 void tts_l(const char ch)
 {
-	/* still to improve paranoia checking */
 	espeak_ERROR erc;
 	erc = espeak_Cancel();
 	debug_log(logfd, "In tts_l espeak_Cancel returned: %d\n", erc);
@@ -242,7 +246,7 @@ void tts_a(const char *filename)
 	debug_log(logfd, "Called tts_a: %s\n", filename);
 	sprintf(buffer, "play -q %s", filename);
 	debug_log(logfd, "In tts_a, play command: %s\n", buffer);
-	system(buffer);
+	system_(buffer);
 	return;
 } /* end tts_a */
 
@@ -253,7 +257,7 @@ void tts_t(int pitch, int duration)
 	debug_log(logfd, "Called tts_t, pitch: %d duration: %d\n", pitch, duration);
 	sprintf(buffer, "play -qn synth %f sin %d", secs, pitch);
 	debug_log(logfd, "In tts_t, play command: %s\n", buffer);
-	system(buffer);
+	system_(buffer);
 	return;
 } /* end tts_t */
 
@@ -374,11 +378,10 @@ split_caps,
 
 int tts_initialize(void)
 {
-	/* still to improve paranoia checking */
 	int rc;
 	espeak_ERROR erc;
 	pthread_t qthr;
-	logfd = create_log_file("/tmp/emacsespeakx86-", CPF_CLOEXEC);
+	logfd = create_log_file("/tmp/espeakmrx86-", CPF_CLOEXEC);
 	debug_log(logfd, "Called tts_initialize\n");
 	rc = sem_init(&dispatch_semaphore, 0, 0);
 	if (rc < 0) {

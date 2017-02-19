@@ -20,7 +20,7 @@
 #include <sys/types.h>
 #include <errno.h>
 
-int system(const char *command)
+int system_(const char *command)
 {
 	sigset_t blockMask, origMask;
 	struct sigaction saIgnore, saOrigQuit, saOrigInt, saDefault;
@@ -101,4 +101,4 @@ int system(const char *command)
 
 	return status;
 
-} /* end system */
+} /* end system_ */
