@@ -264,7 +264,10 @@ void tts_reset(void)
 
 void tts_set_punctuations(int punct_level)
 {
+	espeak_ERROR erc;
 	debug_log(logfd, "Called tts_set_punctuations: %d\n", punct_level);
+	erc = espeak_SetParameter(espeakPUNCTUATION, punct_level, 0);
+	debug_log(logfd, "In tts_set_punctuations espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_set_punctuations */
 
