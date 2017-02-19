@@ -28,7 +28,7 @@ int system_(const char *command)
 	int status, savedErrno;
 
 	if (command == NULL)                /* Is a shell available? */
-		return system(":") == 0;
+		return system_(":") == 0;
 
 	/*
 	* The parent process (the caller of system()) blocks SIGCHLD
