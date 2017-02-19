@@ -4072,8 +4072,6 @@ $as_echo "no" >&6; }
 fi
 
 
-# Force the use of `missing' to wrap Flex invocations.
-#AM_MISSING_PROG([LEX], [$FLEX])
 
 
 for ac_prog in flex lex

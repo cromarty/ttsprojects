@@ -316,7 +316,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = src
 dist_doc_DATA = README
-EXTRA_DIST = INSTALL NOTES fix-timestamps.sh
+EXTRA_DIST = INSTALL NOTES fix-timestamps.sh COPYING.agpl-v3
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

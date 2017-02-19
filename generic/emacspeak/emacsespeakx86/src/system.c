@@ -1,3 +1,19 @@
+/*************************************************************************\
+*                  Copyright (C) Michael Kerrisk, 2010.                   *
+*                                                                         *
+* This program is free software. You may use, modify, and redistribute it *
+* under the terms of the GNU Affero General Public License as published   *
+* by the Free Software Foundation, either version 3 or (at your option)   *
+* any later version. This program is distributed without any warranty.    *
+* See the file COPYING.agpl-v3 for details.                               *
+\*************************************************************************/
+
+/*
+* This code is based on code in 'The Linux Programming Interface' by Michael Kerrisk.
+* It is licensed under the Afferoo GPL as stated in Michael's original header (above).
+* All other code in this package is GPL3.
+*/
+
 #include <unistd.h>
 #include <signal.h>
 #include <sys/wait.h>

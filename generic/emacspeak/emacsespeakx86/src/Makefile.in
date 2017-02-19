@@ -76,7 +76,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = emacsespeakx86$(EXEEXT)
+bin_PROGRAMS = espeakmrx86$(EXEEXT)
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am parser.h \
 	parser.c lexer.c $(top_srcdir)/depcomp $(top_srcdir)/ylwrap
@@ -90,11 +90,11 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_emacsespeakx86_OBJECTS = server.$(OBJEXT) parser.$(OBJEXT) \
+am_espeakmrx86_OBJECTS = server.$(OBJEXT) parser.$(OBJEXT) \
 	lexer.$(OBJEXT) queue.$(OBJEXT) list.$(OBJEXT) \
 	system.$(OBJEXT) debug.$(OBJEXT)
-emacsespeakx86_OBJECTS = $(am_emacsespeakx86_OBJECTS)
-emacsespeakx86_LDADD = $(LDADD)
+espeakmrx86_OBJECTS = $(am_espeakmrx86_OBJECTS)
+espeakmrx86_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -136,8 +136,8 @@ AM_V_YACC = $(am__v_YACC_@AM_V@)
 am__v_YACC_ = $(am__v_YACC_@AM_DEFAULT_V@)
 am__v_YACC_0 = @echo "  YACC    " $@;
 am__v_YACC_1 = 
-SOURCES = $(emacsespeakx86_SOURCES)
-DIST_SOURCES = $(emacsespeakx86_SOURCES)
+SOURCES = $(espeakmrx86_SOURCES)
+DIST_SOURCES = $(espeakmrx86_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -258,7 +258,7 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 BUILT_SOURCES = parser.c parser.h lexer.c
-emacsespeakx86_SOURCES = server.c parser.y lexer.l queue.c list.c system.c server.h queue.h list.h debug.c debug.h system.h
+espeakmrx86_SOURCES = server.c parser.y lexer.l queue.c list.c system.c server.h queue.h list.h debug.c debug.h system.h
 AM_CPPFLAGS = -DYYDEBUG=1
 AM_YFLAGS = -d
 all: $(BUILT_SOURCES)
@@ -342,9 +342,9 @@ parser.h: parser.c
 	@if test ! -f $@; then rm -f parser.c; else :; fi
 	@if test ! -f $@; then $(MAKE) $(AM_MAKEFLAGS) parser.c; else :; fi
 
-emacsespeakx86$(EXEEXT): $(emacsespeakx86_OBJECTS) $(emacsespeakx86_DEPENDENCIES) $(EXTRA_emacsespeakx86_DEPENDENCIES) 
-	@rm -f emacsespeakx86$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(emacsespeakx86_OBJECTS) $(emacsespeakx86_LDADD) $(LIBS)
+espeakmrx86$(EXEEXT): $(espeakmrx86_OBJECTS) $(espeakmrx86_DEPENDENCIES) $(EXTRA_espeakmrx86_DEPENDENCIES) 
+	@rm -f espeakmrx86$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(espeakmrx86_OBJECTS) $(espeakmrx86_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

@@ -1,6 +1,3 @@
-#                                               -*- Autoconf -*-
-# Process this file with autoconf to produce a configure script.
-
 AC_PREREQ([2.69])
 AC_INIT([emacspeakx86], [1.0.0], [mike.ray@btinternet.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
@@ -13,8 +10,6 @@ AC_PROG_YACC
 AC_PROG_CC
 # Sometimes Flex is installed as Lex, e.g., NetBSD.
 AC_CHECK_PROG([FLEX], [flex lex], [flex])
-# Force the use of `missing' to wrap Flex invocations.
-#AM_MISSING_PROG([LEX], [$FLEX])
 
 AM_PROG_LEX
 
