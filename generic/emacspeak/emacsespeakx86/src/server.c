@@ -238,13 +238,22 @@ void tts_c(char *code)
 
 void tts_a(const char *filename)
 {
+	char buffer[255];
 	debug_log(logfd, "Called tts_a: %s\n", filename);
+	sprintf(buffer, "play -q %s", filename);
+	debug_log(logfd, "In tts_a, play command: %s\n", buffer);
+	system(buffer);
 	return;
 } /* end tts_a */
 
 void tts_t(int pitch, int duration)
 {
+	double secs = duration / 1000.0;
+	char buffer[64];
 	debug_log(logfd, "Called tts_t, pitch: %d duration: %d\n", pitch, duration);
+	sprintf(buffer, "play -qn synth %f sin %d", secs, pitch);
+	debug_log(logfd, "In tts_t, play command: %s\n", buffer);
+	system(buffer);
 	return;
 } /* end tts_t */
 

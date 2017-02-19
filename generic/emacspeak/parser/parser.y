@@ -211,8 +211,16 @@ silence
 	;
 
 tone
-	: T '{' INTEGER INTEGER '}' '\n' { $$ = $1; tts_t($3, $4); }
-	| T INTEGER INTEGER '\n' { $$ = $1; tts_t($2, $3); }
+	: T '{' INTEGER INTEGER '}' '\n'
+		{
+			$$ = $1;
+			tts_t($3, $4);
+		}
+	| T INTEGER INTEGER '\n'
+		{
+			$$ = $1;
+			tts_t($2, $3);
+		}
 	;
 
 sound
