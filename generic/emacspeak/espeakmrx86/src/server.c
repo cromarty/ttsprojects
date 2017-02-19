@@ -162,8 +162,7 @@ void tts_say(char *text)
 {
 	int rc;
 	espeak_ERROR erc;
-	char *newtext = malloc(strlen(text));
-	memset(newtext,0,strlen(text));
+	char *newtext = calloc(1,strlen(text));
 	clean_string(text, newtext, "\\[\\*\\]", " ");
 	debug_log(logfd, "Called tts_say: %s\n", text);
 	debug_log(logfd,"In tts_say cleaned text: %s\n", newtext);
