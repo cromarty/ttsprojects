@@ -5,7 +5,12 @@
 
 #include "pcregex.h"
 
-int clean_string(const char *buffer, char *newbuffer, const char *regex, const char *replacement)
+int clean_string(
+		const char *buffer,
+		char *newbuffer,
+		const char *regex,
+const char *replacement
+)
 {
 	int rc, offset;
 	pcre *re;
@@ -38,4 +43,5 @@ int clean_string(const char *buffer, char *newbuffer, const char *regex, const c
 	} while (rc > 0);
 
 	return 0;
+
 } /* end clean_string */
