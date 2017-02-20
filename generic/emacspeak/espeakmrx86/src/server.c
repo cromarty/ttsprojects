@@ -370,7 +370,7 @@ allcaps_beep,
 split_caps,
 		speech_rate
 	);
-	tts_set_speech_rate(speech_rate);
+
 	return;
 } /* end tts_sync_state */
 
@@ -403,8 +403,6 @@ rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 	if (erc != 22050)
 		return -1;
 
-	erc = espeak_SetParameter(espeakRATE, START_SPEECH_RATE, 0);
-	debug_log(logfd, "In tts_initialize espeak_SetParameter to set starting speech rate returned: %d\n", erc);
 	return erc;
 } /* end tts_initialize */
 
