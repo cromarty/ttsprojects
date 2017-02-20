@@ -13,12 +13,13 @@ AC_CHECK_PROG([FLEX], [flex lex], [flex])
 
 AM_PROG_LEX
 
+
 dnl Checks for libraries.
 
 AC_CHECK_LIB([espeak], [espeak_Initialize], [], [AC_MSG_ERROR([espeak_Initialize was not found in libespeak])])
 AC_CHECK_LIB([pthread], [pthread_mutex_init], [], [AC_MSG_ERROR([pthread_mutex_init was not found in libpthread])])
 AC_CHECK_LIB([pcre], [pcre_compile], [], [AC_MSG_ERROR([pcre_compile was not found in libpcre])])
-AC_CHECK_LIB([fl], [yywrap])
+#AC_CHECK_LIB([fl], [yywrap])
 
 
 dnl Checks for header files.

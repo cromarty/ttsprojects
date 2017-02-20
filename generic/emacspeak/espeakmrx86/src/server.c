@@ -288,7 +288,7 @@ void tts_set_speech_rate(int speech_rate)
 	espeak_ERROR erc;
 	debug_log(logfd, "Called tts_set_speech_rate: %d\n", speech_rate);
 	tts_state.speech_rate = speech_rate;
-	erc = espeak_SetParameter(espeakRATE, speech_rate+100, 0);
+	erc = espeak_SetParameter(espeakRATE, speech_rate, 0);
 	debug_log(logfd, "In tts_set_speech_rate espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_set_speech_rate */
@@ -370,7 +370,7 @@ allcaps_beep,
 split_caps,
 		speech_rate
 	);
-
+	tts_set_speech_rate(speech_rate);
 	return;
 } /* end tts_sync_state */
 
@@ -400,6 +400,11 @@ rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
 	erc = espeak_Initialize(AUDIO_OUTPUT_PLAYBACK, 50, NULL, 0);
 	debug_log(logfd, "In tts_initialize espeak_Initialize returned: %d\n", erc);
+	if (erc != 22050)
+		return -1;
+
+	erc = espeak_SetParameter(espeakRATE, START_SPEECH_RATE, 0);
+	debug_log(logfd, "In tts_initialize espeak_SetParameter to set starting speech rate returned: %d\n", erc);
 	return erc;
 } /* end tts_initialize */
 

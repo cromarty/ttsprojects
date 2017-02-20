@@ -35,6 +35,8 @@
 
 #define SYNTH_FLAGS espeakCHARS_UTF8|espeakSSML|espeakPHONEMES
 
+#define START_SPEECH_RATE 225
+
 typedef struct tts_state
 {
 	int punct_level;
