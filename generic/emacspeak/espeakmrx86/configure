@@ -625,6 +625,10 @@ ac_includes_default="\
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
+SOUND_APLAY_FALSE
+SOUND_APLAY_TRUE
+SOUND_PLAY_FALSE
+SOUND_PLAY_TRUE
 LIBOBJS
 ALLOCA
 EGREP
@@ -723,6 +727,7 @@ ac_user_opts='
 enable_option_checking
 enable_silent_rules
 enable_dependency_tracking
+with_sounds
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1355,6 +1360,12 @@ Optional Features:
                           do not reject slow dependency extractors
   --disable-dependency-tracking
                           speeds up one-time build
+
+Optional Packages:
+  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
+  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
+  --with-sounds           server will be compiled with ability to play sound
+                          files (default = yes)
 
 Some influential environment variables:
   YACC        The `Yet Another Compiler Compiler' implementation to use.
@@ -4238,7 +4249,6 @@ if test "$LEX" = :; then
 fi
 
 
-
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for espeak_Initialize in -lespeak" >&5
 $as_echo_n "checking for espeak_Initialize in -lespeak... " >&6; }
 if ${ac_cv_lib_espeak_espeak_Initialize+:} false; then :
@@ -4379,8 +4389,6 @@ _ACEOF
 else
   as_fn_error $? "pcre_compile was not found in libpcre" "$LINENO" 5
 fi
-
-#AC_CHECK_LIB([fl], [yywrap])
 
 
 
@@ -5078,7 +5086,7 @@ _ACEOF
   esac
 
 
-# Checks for library functions.
+
 for ac_header in stdlib.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "stdlib.h" "ac_cv_header_stdlib_h" "$ac_includes_default"
@@ -5225,6 +5233,88 @@ fi
 done
 
 
+{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for sounds" >&5
+$as_echo_n "checking for sounds... " >&6; }
+
+# Check whether --with-sounds was given.
+if test "${with_sounds+set}" = set; then :
+  withval=$with_sounds; sounds="$withval"
+else
+  sounds="yes"
+fi
+
+if test "$sounds" = "yes"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+$as_echo "yes" >&6; }
+else
+
+$as_echo "#define NSOUNDS /**/" >>confdefs.h
+
+  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+$as_echo "no" >&6; }
+fi
+
+
+#---
+#
+if test "$sounds" = "yes"; then
+  { $as_echo "$as_me:${as_lineno-$LINENO}: Bollocks" >&5
+$as_echo "$as_me: Bollocks" >&6;}
+  if which 'play' >/dev/null; then
+    { $as_echo "$as_me:${as_lineno-$LINENO}: Found play" >&5
+$as_echo "$as_me: Found play" >&6;}
+     if true; then
+  SOUND_PLAY_TRUE=
+  SOUND_PLAY_FALSE='#'
+else
+  SOUND_PLAY_TRUE='#'
+  SOUND_PLAY_FALSE=
+fi
+
+     if false; then
+  SOUND_APLAY_TRUE=
+  SOUND_APLAY_FALSE='#'
+else
+  SOUND_APLAY_TRUE='#'
+  SOUND_APLAY_FALSE=
+fi
+
+  else
+    if which 'aplay' >/dev/null; then
+      { $as_echo "$as_me:${as_lineno-$LINENO}: Found aplay" >&5
+$as_echo "$as_me: Found aplay" >&6;}
+       if true; then
+  SOUND_APLAY_TRUE=
+  SOUND_APLAY_FALSE='#'
+else
+  SOUND_APLAY_TRUE='#'
+  SOUND_APLAY_FALSE=
+fi
+
+    fi
+  fi
+fi
+
+
+
+#  AC_MSG_CHECKING(for sound player)
+#  if which 'play' >/dev/null; then
+ #
+#  else
+#    if which 'aplay' >/dev/null; then
+#          player=aplay
+#    fi
+#      fi
+ #
+#
+#  if test "$sounds_assert" = "yes"; then
+#    AC_MSG_RESULT(yes)
+#    AC_DEFINE(ALSA_sounds_ASSERT,,[Enable assert at error message handler])
+#  else
+#    AC_MSG_RESULT(no)
+#  fi
+#fi
+
 ac_config_files="$ac_config_files Makefile src/Makefile"
 
 
@@ -5359,6 +5449,18 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${SOUND_PLAY_TRUE}" && test -z "${SOUND_PLAY_FALSE}"; then
+  as_fn_error $? "conditional \"SOUND_PLAY\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${SOUND_APLAY_TRUE}" && test -z "${SOUND_APLAY_FALSE}"; then
+  as_fn_error $? "conditional \"SOUND_APLAY\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${SOUND_APLAY_TRUE}" && test -z "${SOUND_APLAY_FALSE}"; then
+  as_fn_error $? "conditional \"SOUND_APLAY\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

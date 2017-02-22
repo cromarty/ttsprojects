@@ -243,7 +243,12 @@ void tts_a(const char *filename)
 {
 	char buffer[255];
 	debug_log(logfd, "Called tts_a: %s\n", filename);
+#ifdef _PLAY_
 	sprintf(buffer, "play -q %s", filename);
+#endif
+#ifdef _APLAY_
+	sprintf(buffer, "aplay -q %s", filename);
+#endif
 	debug_log(logfd, "In tts_a, play command: %s\n", buffer);
 	system_(buffer);
 	return;

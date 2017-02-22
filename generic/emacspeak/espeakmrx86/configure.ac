@@ -13,14 +13,11 @@ AC_CHECK_PROG([FLEX], [flex lex], [flex])
 
 AM_PROG_LEX
 
-
 dnl Checks for libraries.
 
 AC_CHECK_LIB([espeak], [espeak_Initialize], [], [AC_MSG_ERROR([espeak_Initialize was not found in libespeak])])
 AC_CHECK_LIB([pthread], [pthread_mutex_init], [], [AC_MSG_ERROR([pthread_mutex_init was not found in libpthread])])
 AC_CHECK_LIB([pcre], [pcre_compile], [], [AC_MSG_ERROR([pcre_compile was not found in libpcre])])
-#AC_CHECK_LIB([fl], [yywrap])
-
 
 dnl Checks for header files.
 
@@ -37,10 +34,61 @@ AC_TYPE_UINT16_T
 AC_TYPE_UINT32_T
 AC_TYPE_UINT8_T
 
-# Checks for library functions.
+dnl Checks for library functions.
+
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memset])
+
+dnl Check for sounds...
+AC_MSG_CHECKING(for sounds)
+AC_ARG_WITH(sounds,
+  AS_HELP_STRING([--with-sounds],
+    [server will be compiled with ability to play sound files (default = yes)]),
+  sounds="$withval", sounds="yes")
+if test "$sounds" = "yes"; then
+  AC_MSG_RESULT(yes)
+else
+  AC_DEFINE(NSOUNDS,,[No sounds])
+  AC_MSG_RESULT(no)
+fi
+
+
+#---
+#
+if test "$sounds" = "yes"; then
+  AC_MSG_NOTICE([Bollocks])
+  if which 'play' >/dev/null; then
+    AC_MSG_NOTICE([Found play])
+    AM_CONDITIONAL([SOUND_PLAY], true)
+    AM_CONDITIONAL([SOUND_APLAY], false)
+  else
+    if which 'aplay' >/dev/null; then
+      AC_MSG_NOTICE([Found aplay])
+      AM_CONDITIONAL([SOUND_APLAY], true)
+    fi
+  fi
+fi
+
+
+
+#  AC_MSG_CHECKING(for sound player)
+#  if which 'play' >/dev/null; then
+ # 
+#  else
+#    if which 'aplay' >/dev/null; then
+#          player=aplay
+#    fi
+#      fi
+ #     
+#
+#  if test "$sounds_assert" = "yes"; then
+#    AC_MSG_RESULT(yes)
+#    AC_DEFINE(ALSA_sounds_ASSERT,,[Enable assert at error message handler])
+#  else
+#    AC_MSG_RESULT(no)
+#  fi
+#fi
 
 AC_CONFIG_FILES([
 	Makefile
