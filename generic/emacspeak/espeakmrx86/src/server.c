@@ -178,11 +178,15 @@ void tts_say(char *text)
 
 void tts_l(const char ch)
 {
+	/* neither espeak_Char nor espeak_Key honour the setting of split_caps (say 'capital') if it is OFF, so use synth */
+	char pair[2];
+	pair[0] =ch;
+	pair[1] = 0;
 	espeak_ERROR erc;
 	erc = espeak_Cancel();
 	debug_log(logfd, "In tts_l espeak_Cancel returned: %d\n", erc);
-	erc = espeak_Char(ch);
-	debug_log(logfd, "In tts_l espeak_Char returned: %d\n", erc);
+	erc = espeak_Synth(pair, 2, 0, POS_CHARACTER, 0, 0, NULL, NULL);
+		debug_log(logfd, "In tts_l espeak_Synth returned: %d\n", erc);
 	return;
 } /* end tts_l */
 
