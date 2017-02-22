@@ -629,6 +629,8 @@ SOUND_APLAY_FALSE
 SOUND_APLAY_TRUE
 SOUND_PLAY_FALSE
 SOUND_PLAY_TRUE
+SOUNDS_FALSE
+SOUNDS_TRUE
 LIBOBJS
 ALLOCA
 EGREP
@@ -5233,6 +5235,7 @@ fi
 done
 
 
+
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for sounds" >&5
 $as_echo_n "checking for sounds... " >&6; }
 
@@ -5243,26 +5246,34 @@ else
   sounds="yes"
 fi
 
+
 if test "$sounds" = "yes"; then
+   if true; then
+  SOUNDS_TRUE=
+  SOUNDS_FALSE='#'
+else
+  SOUNDS_TRUE='#'
+  SOUNDS_FALSE=
+fi
+
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
 $as_echo "yes" >&6; }
 else
-
-$as_echo "#define NSOUNDS /**/" >>confdefs.h
+   if false; then
+  SOUNDS_TRUE=
+  SOUNDS_FALSE='#'
+else
+  SOUNDS_TRUE='#'
+  SOUNDS_FALSE=
+fi
 
   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
 $as_echo "no" >&6; }
 fi
 
 
-#---
-#
 if test "$sounds" = "yes"; then
-  { $as_echo "$as_me:${as_lineno-$LINENO}: Bollocks" >&5
-$as_echo "$as_me: Bollocks" >&6;}
   if which 'play' >/dev/null; then
-    { $as_echo "$as_me:${as_lineno-$LINENO}: Found play" >&5
-$as_echo "$as_me: Found play" >&6;}
      if true; then
   SOUND_PLAY_TRUE=
   SOUND_PLAY_FALSE='#'
@@ -5281,8 +5292,6 @@ fi
 
   else
     if which 'aplay' >/dev/null; then
-      { $as_echo "$as_me:${as_lineno-$LINENO}: Found aplay" >&5
-$as_echo "$as_me: Found aplay" >&6;}
        if true; then
   SOUND_APLAY_TRUE=
   SOUND_APLAY_FALSE='#'
@@ -5295,25 +5304,6 @@ fi
   fi
 fi
 
-
-
-#  AC_MSG_CHECKING(for sound player)
-#  if which 'play' >/dev/null; then
- #
-#  else
-#    if which 'aplay' >/dev/null; then
-#          player=aplay
-#    fi
-#      fi
- #
-#
-#  if test "$sounds_assert" = "yes"; then
-#    AC_MSG_RESULT(yes)
-#    AC_DEFINE(ALSA_sounds_ASSERT,,[Enable assert at error message handler])
-#  else
-#    AC_MSG_RESULT(no)
-#  fi
-#fi
 
 ac_config_files="$ac_config_files Makefile src/Makefile"
 
@@ -5449,6 +5439,14 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${SOUNDS_TRUE}" && test -z "${SOUNDS_FALSE}"; then
+  as_fn_error $? "conditional \"SOUNDS\" was never defined.
+Usually this means the macro was only invoked conditionally." "$LINENO" 5
+fi
+if test -z "${SOUNDS_TRUE}" && test -z "${SOUNDS_FALSE}"; then
+  as_fn_error $? "conditional \"SOUNDS\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${SOUND_PLAY_TRUE}" && test -z "${SOUND_PLAY_FALSE}"; then

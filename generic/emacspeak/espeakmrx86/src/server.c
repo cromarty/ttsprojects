@@ -241,6 +241,7 @@ void tts_c(char *code)
 
 void tts_a(const char *filename)
 {
+#ifdef _SOUNDS_
 	char buffer[255];
 	debug_log(logfd, "Called tts_a: %s\n", filename);
 #ifdef _PLAY_
@@ -251,6 +252,7 @@ void tts_a(const char *filename)
 #endif
 	debug_log(logfd, "In tts_a, play command: %s\n", buffer);
 	system_(buffer);
+#endif
 	return;
 } /* end tts_a */
 

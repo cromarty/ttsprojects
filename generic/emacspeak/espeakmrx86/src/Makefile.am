@@ -4,14 +4,16 @@ espeakmrx86_SOURCES = server.c parser.y lexer.l queue.c list.c system.c pcregex.
 
 AM_CPPFLAGS = -DYYDEBUG=1
 
-if SOUND_PLAY
-  AM_CPPFLAGS += -D_PLAY_
-endif
+if SOUNDS
+	AM_CPPFLAGS += -D_SOUNDS_
+	if SOUND_PLAY
+		AM_CPPFLAGS += -D_PLAY_
+		endif
 
-if SOUND_APLAY
-  AM_CPPFLAGS += -D_APLAY_
+	if SOUND_APLAY
+		AM_CPPFLAGS += -D_APLAY_
+	endif
 endif
-
 
 
 

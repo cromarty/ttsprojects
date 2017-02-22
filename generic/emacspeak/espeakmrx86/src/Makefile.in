@@ -77,8 +77,6 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 bin_PROGRAMS = espeakmrx86$(EXEEXT)
-@SOUND_PLAY_TRUE@am__append_1 = -D_PLAY_
-@SOUND_APLAY_TRUE@am__append_2 = -D_APLAY_
 subdir = src
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am parser.h \
 	parser.c lexer.c $(top_srcdir)/depcomp $(top_srcdir)/ylwrap
@@ -261,7 +259,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 BUILT_SOURCES = parser.c parser.h lexer.c
 espeakmrx86_SOURCES = server.c parser.y lexer.l queue.c list.c system.c pcregex.c server.h queue.h list.h debug.c debug.h system.h pcregex.h
-AM_CPPFLAGS = -DYYDEBUG=1 $(am__append_1) $(am__append_2)
+AM_CPPFLAGS = -DYYDEBUG=1
 AM_YFLAGS = -d
 all: $(BUILT_SOURCES)
 	$(MAKE) $(AM_MAKEFLAGS) all-am
@@ -593,6 +591,15 @@ uninstall-am: uninstall-binPROGRAMS
 	ps ps-am tags tags-am uninstall uninstall-am \
 	uninstall-binPROGRAMS
 
+
+@SOUNDS_TRUE@	AM_CPPFLAGS += -D_SOUNDS_
+@SOUNDS_TRUE@	if SOUND_PLAY
+@SOUNDS_TRUE@		AM_CPPFLAGS += -D_PLAY_
+@SOUNDS_TRUE@		endif
+
+@SOUNDS_TRUE@	if SOUND_APLAY
+@SOUNDS_TRUE@		AM_CPPFLAGS += -D_APLAY_
+@SOUNDS_TRUE@	endif
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
