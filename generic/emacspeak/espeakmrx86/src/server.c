@@ -153,7 +153,7 @@ void *dispatch_thread(void *arg)
 
 void tts_version(void)
 {
-	/* not implemented yet */
+	tts_say("Version 0.1.0");
 	debug_log(logfd, "Called tts_version\n");
 	return;
 } /* end tts_version */
@@ -334,7 +334,7 @@ void tts_capitalize(int capitalize)
 		tts_allcaps_beep(0);
 		tts_split_caps(0);
 	}
-	erc = espeak_SetParameter(espeakCAPITALS, 3, 0);
+	erc = espeak_SetParameter(espeakCAPITALS, (capitalize ? 3 : 0), 0);
 	debug_log(logfd, "In tts_capitalize espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_capitalize */
@@ -349,7 +349,7 @@ void tts_allcaps_beep(int allcaps_beep)
 		tts_split_caps(0);
 	}
 	debug_log(logfd, "Called tts_allcaps_beep: %d\n", allcaps_beep);
-	erc = espeak_SetParameter(espeakCAPITALS, allcaps_beep, 0);
+	erc = espeak_SetParameter(espeakCAPITALS, (allcaps_beep ? 1 : 0), 0);
 	debug_log(logfd, "In tts_allcaps_beep espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_allcaps_beep */
@@ -362,11 +362,12 @@ void tts_sync_state(
 	int split_caps,
 	int speech_rate)
 {
-	tts_state.punct_level = punct_level;
-	tts_state.capitalize = capitalize;
-	tts_state.allcaps_beep = allcaps_beep;
-	tts_state.split_caps = split_caps;
-	tts_state.speech_rate = speech_rate;
+
+//tts_set_punctuations(punct_level);
+//tts_capitalize(capitalize);
+//tts_allcaps_beep(allcaps_beep);
+//tts_split_caps(split_caps);
+//tts_set_speech_rate(speech_rate);
 
 	debug_log(
 		logfd, 
@@ -409,6 +410,8 @@ rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 	debug_log(logfd, "In tts_initialize espeak_Initialize returned: %d\n", erc);
 	if (erc != 22050)
 		return -1;
+
+	tts_split_caps(0);
 
 	return erc;
 } /* end tts_initialize */
