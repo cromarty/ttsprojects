@@ -55,6 +55,7 @@ int logfd;
 *
 */
 
+/* called each time the lexer needs stuff to lex */
 int input_for_lexer(char *buf, int *bytes_read, int max_bytes)
 {
 	*bytes_read = read(0, (void*)buf, max_bytes);
@@ -62,7 +63,7 @@ int input_for_lexer(char *buf, int *bytes_read, int max_bytes)
 } /* end input_for_lexer */
 
 
-
+/* passed to queue_init as a function pointer and called when the queue is destroyed */
 void free_queue_entry(void *data)
 {
 	TTS_QUEUE_ENTRY_T *qe = (TTS_QUEUE_ENTRY_T*)data;
@@ -71,6 +72,10 @@ void free_queue_entry(void *data)
 	return;
 } /* free_queue_entry */
 
+/*
+* queue a chunk of speech.
+* Guarded by queue_guard_mutex in tts_q
+*/
 int queue_speech(int entry_type, char *speech)
 {
 	TTS_QUEUE_ENTRY_T *qe;
@@ -92,6 +97,10 @@ int queue_speech(int entry_type, char *speech)
 	return 0;
 } /* queue_speech */
 
+/*
+* Dispatch one chunk of speech to espeak.
+* Guarded by queue_guard_mutex in the dispatch thread
+*/
 int send_speech(void)
 {
 	espeak_ERROR erc;
@@ -109,13 +118,13 @@ int send_speech(void)
 
 	erc = espeak_Synth(qe->speech, qe->length+1, 0, POS_CHARACTER, 0, SYNTH_FLAGS, NULL, NULL);
 
-	/* not sure yet about these free() calls here */
 	free(qe->speech);
 	free(element);
 	return 0;
 } /* send_speech */
 
 
+/* Empty the queue by destroying and re-initialising it */
 int empty_queue(void)
 {
 	queue_destroy(&tts_queue);
@@ -123,13 +132,17 @@ int empty_queue(void)
 	return 0;
 } /* empty_queue */
 
-
+/*
+* This is the dispatch thread which is started at process start and keeps
+* running all the time.
+*/
 void *dispatch_thread(void *arg)
 {
 	TTS_QUEUE_ENTRY_T *qe;
 	char *speech;
 	debug_log(logfd, "Started dispatch thread\n");
 	while(1) {
+		/* wait for dispatch command from emacspeak */
 		sem_wait(&dispatch_semaphore);
 		while(queue_size(&tts_queue) > 0) {
 			pthread_mutex_lock(&queue_guard_mutex);
@@ -164,6 +177,7 @@ void tts_say(char *text)
 	int rc;
 	espeak_ERROR erc;
 	char *newtext = calloc(1,strlen(text));
+	/* remove all occurrences of [*] from the speech string */
 	clean_string(text, newtext, "\\[\\*\\]", " ");
 	debug_log(logfd, "Called tts_say: %s\n", text);
 	debug_log(logfd,"In tts_say cleaned text: %s\n", newtext);
@@ -229,7 +243,6 @@ void tts_q(char *speech)
 {
 	debug_log(logfd, "Called tts_q to queue: %s\n", speech);
 	pthread_mutex_lock(&queue_guard_mutex);
-
 	queue_speech(1, speech);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
@@ -423,7 +436,6 @@ rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
 int tts_terminate(void)
 {
-	/* still to improve paranoia checking */
 	espeak_ERROR erc;
 	erc = espeak_Terminate();
 	return 0;
