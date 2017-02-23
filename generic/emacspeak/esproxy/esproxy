@@ -1,9 +1,0 @@
-#!/bin/bash
-
-ESP_SERVER=/usr/share/emacs/site-lisp/emacspeak/servers/espeak
-LOG=/home/mike/esproxy.log
-
-tee "${LOG}" | "${ESP_SERVER}"
- 
-
-
