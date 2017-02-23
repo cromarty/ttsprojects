@@ -39,7 +39,7 @@
 %}
 
 /* start conditions, in most cases X plus the emacspeak proto function name */
-%x XA XC XD XL XPL XQ XS XSAY XSH XSYNC XT XTTS XSCALE XVERSION
+%x XA XB XC XD XL XPL XQ XS XSAY XSH XSYNC XT XTTS XSCALE XVERSION
 
 	/* code, with or without braces */
 code 	^(c[ ]+[^{\n]|c[ ]+"{")
@@ -55,6 +55,9 @@ say 	^(tts_say[ ]+[^{\n]|tts_say[ ]+"{")
 
 	/* tone, with or without braces */
 tone 	^(t[ ]+[^{\n]|t[ ]+"{")
+
+	/* beep, with or without braces */
+beep 	^(b[ ]+[^{\n]|b[ ]+"{")
 
 	/* sound file, with or without braces */
 sound 	^((a|p)[ ]+[^{\n]|(a|p)[ ]+"{")
@@ -128,6 +131,12 @@ ws [ \t\r\f\v]
 		yyless(yyleng-1);
 		BEGIN XT;
 		return T;
+	}
+
+{beep} {
+		yyless(yyleng-1);
+		BEGIN XB;
+		return B;
 	}
 
 {sound} {
@@ -220,12 +229,12 @@ ws [ \t\r\f\v]
 
 
 	/* opening brace */
-<XC,XQ,XSAY,XSYNC,XT,XA,XSH,XTTS,XSCALE>"{" {
+<XB,XC,XQ,XSAY,XSYNC,XT,XA,XSH,XTTS,XSCALE>"{" {
 		return yytext[0];
 	}
 
 	/* closing brace or newline */
-<XC,XQ,XSAY,XT,XA,XSH,XTTS,XPL,XSYNC,XSCALE>("}"|"\n") {
+<XB,XC,XQ,XSAY,XT,XA,XSH,XTTS,XPL,XSYNC,XSCALE>("}"|"\n") {
 		if (yytext[0] == '}') {
 			/* do nothing with closing brace */
 		} else {
@@ -283,8 +292,8 @@ ws [ \t\r\f\v]
 		return FLAG;
 	}
 
-	/* sh, tone, tts_* or tts_sync_state integer */
-<XSH,XT,XTTS,XSYNC>{integer}	{
+	/* sh, beep, tone, tts_* or tts_sync_state integer */
+<XSH,XB,XT,XTTS,XSYNC>{integer}	{
 		yylval.n = atoi(yytext);
 		return INTEGER;
 	}

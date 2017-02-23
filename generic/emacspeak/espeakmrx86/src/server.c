@@ -267,6 +267,15 @@ void tts_a(const char *filename)
 	return;
 } /* end tts_a */
 
+void tts_b(int pitch, int duration)
+{
+	char buffer[64];
+	sprintf(buffer, "beep -f %d -l %d", pitch, duration);
+	system_(buffer);
+	debug_log(logfd, "In tts_b, beep command: %s\n", buffer);
+	return;
+} /* end tts_b */
+
 void tts_t(int pitch, int duration)
 {
 	double secs = duration / 1000.0;

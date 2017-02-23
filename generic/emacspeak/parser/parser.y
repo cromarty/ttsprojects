@@ -61,6 +61,7 @@ void yyerror(const char *s);
 %token <n>PUNCT_SOME
 
 %token <n>Q
+%token <n>B
 %token <n>T
 
 %token <n>TTS_ALLCAPS_BEEP
@@ -84,6 +85,7 @@ void yyerror(const char *s);
 
 %type <d>tts_set_character_scale
 
+%type <n>beep
 %type <n>character
 %type <n>cmd
 %type <n>code
@@ -123,6 +125,7 @@ cmd
 	| stop { $$ = $1; tts_s(); }
 	| version { $$ = $1; tts_version(); }
 	| silence { $$ = $1; tts_sh($1); }
+	| beep { $$ = $1; }
 	| tone { $$ = $1; }
 	| sound { $$ = $1; }
 		| tts_pause { $$ = $1; tts_pause(); }
@@ -210,6 +213,19 @@ stop
 silence
 	: SH '{' INTEGER '}' '\n' { $$ = $3; }
 	| SH INTEGER '\n' { $$ = $2; }
+	;
+
+beep
+	: B '{' INTEGER INTEGER '}' '\n'
+		{
+			$$ = $1;
+			tts_b($3, $4);
+		}
+	| B INTEGER INTEGER '\n'
+		{
+			$$ = $1;
+			tts_b($2, $3);
+		}
 	;
 
 tone
