@@ -625,12 +625,6 @@ ac_includes_default="\
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
-SOUND_APLAY_FALSE
-SOUND_APLAY_TRUE
-SOUND_PLAY_FALSE
-SOUND_PLAY_TRUE
-SOUNDS_FALSE
-SOUNDS_TRUE
 LIBOBJS
 ALLOCA
 EGREP
@@ -730,7 +724,6 @@ ac_user_opts='
 enable_option_checking
 enable_silent_rules
 enable_dependency_tracking
-with_sounds
 '
       ac_precious_vars='build_alias
 host_alias
@@ -1363,12 +1356,6 @@ Optional Features:
                           do not reject slow dependency extractors
   --disable-dependency-tracking
                           speeds up one-time build
-
-Optional Packages:
-  --with-PACKAGE[=ARG]    use PACKAGE [ARG=yes]
-  --without-PACKAGE       do not use PACKAGE (same as --with-PACKAGE=no)
-  --with-sounds           server will be compiled with ability to play sound
-                          files (default = yes)
 
 Some influential environment variables:
   CC          C compiler command
@@ -5249,74 +5236,6 @@ done
 
 
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for sounds" >&5
-$as_echo_n "checking for sounds... " >&6; }
-
-# Check whether --with-sounds was given.
-if test "${with_sounds+set}" = set; then :
-  withval=$with_sounds; sounds="$withval"
-else
-  sounds="yes"
-fi
-
-
-if test "$sounds" = "yes"; then
-   if true; then
-  SOUNDS_TRUE=
-  SOUNDS_FALSE='#'
-else
-  SOUNDS_TRUE='#'
-  SOUNDS_FALSE=
-fi
-
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
-$as_echo "yes" >&6; }
-else
-   if false; then
-  SOUNDS_TRUE=
-  SOUNDS_FALSE='#'
-else
-  SOUNDS_TRUE='#'
-  SOUNDS_FALSE=
-fi
-
-  { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
-$as_echo "no" >&6; }
-fi
-
-
-if test "$sounds" = "yes"; then
-  if which 'play' >/dev/null; then
-     if true; then
-  SOUND_PLAY_TRUE=
-  SOUND_PLAY_FALSE='#'
-else
-  SOUND_PLAY_TRUE='#'
-  SOUND_PLAY_FALSE=
-fi
-
-     if false; then
-  SOUND_APLAY_TRUE=
-  SOUND_APLAY_FALSE='#'
-else
-  SOUND_APLAY_TRUE='#'
-  SOUND_APLAY_FALSE=
-fi
-
-  else
-    if which 'aplay' >/dev/null; then
-       if true; then
-  SOUND_APLAY_TRUE=
-  SOUND_APLAY_FALSE='#'
-else
-  SOUND_APLAY_TRUE='#'
-  SOUND_APLAY_FALSE=
-fi
-
-    fi
-  fi
-fi
-
 
 ac_config_files="$ac_config_files Makefile src/Makefile"
 
@@ -5452,26 +5371,6 @@ Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 if test -z "${am__fastdepCC_TRUE}" && test -z "${am__fastdepCC_FALSE}"; then
   as_fn_error $? "conditional \"am__fastdepCC\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${SOUNDS_TRUE}" && test -z "${SOUNDS_FALSE}"; then
-  as_fn_error $? "conditional \"SOUNDS\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${SOUNDS_TRUE}" && test -z "${SOUNDS_FALSE}"; then
-  as_fn_error $? "conditional \"SOUNDS\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${SOUND_PLAY_TRUE}" && test -z "${SOUND_PLAY_FALSE}"; then
-  as_fn_error $? "conditional \"SOUND_PLAY\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${SOUND_APLAY_TRUE}" && test -z "${SOUND_APLAY_FALSE}"; then
-  as_fn_error $? "conditional \"SOUND_APLAY\" was never defined.
-Usually this means the macro was only invoked conditionally." "$LINENO" 5
-fi
-if test -z "${SOUND_APLAY_TRUE}" && test -z "${SOUND_APLAY_FALSE}"; then
-  as_fn_error $? "conditional \"SOUND_APLAY\" was never defined.
 Usually this means the macro was only invoked conditionally." "$LINENO" 5
 fi
 

@@ -593,15 +593,6 @@ uninstall-am: uninstall-binPROGRAMS
 	uninstall-binPROGRAMS
 
 
-@SOUNDS_TRUE@	AM_CPPFLAGS += -D_SOUNDS_
-@SOUNDS_TRUE@	if SOUND_PLAY
-@SOUNDS_TRUE@		AM_CPPFLAGS += -D_PLAY_
-@SOUNDS_TRUE@		endif
-
-@SOUNDS_TRUE@	if SOUND_APLAY
-@SOUNDS_TRUE@		AM_CPPFLAGS += -D_APLAY_
-@SOUNDS_TRUE@	endif
-
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:

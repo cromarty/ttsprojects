@@ -42,33 +42,6 @@ AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_CHECK_FUNCS([memset])
 
-dnl Check for sounds...
-
-AC_MSG_CHECKING(for sounds)
-AC_ARG_WITH(sounds,
-  AS_HELP_STRING([--with-sounds],
-    [server will be compiled with ability to play sound files (default = yes)]),
-  sounds="$withval", sounds="yes")
-  
-if test "$sounds" = "yes"; then
-  AM_CONDITIONAL([SOUNDS], true)
-  AC_MSG_RESULT(yes)
-else
-  AM_CONDITIONAL([SOUNDS], false)
-  AC_MSG_RESULT(no)
-fi
-
-
-if test "$sounds" = "yes"; then
-  if which 'play' >/dev/null; then
-    AM_CONDITIONAL([SOUND_PLAY], true)
-    AM_CONDITIONAL([SOUND_APLAY], false)
-  else
-    if which 'aplay' >/dev/null; then
-      AM_CONDITIONAL([SOUND_APLAY], true)
-    fi
-  fi
-fi
 
 
 AC_CONFIG_FILES([
