@@ -19,6 +19,7 @@
 *
 *--code--*/
 
+#include "config.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -153,7 +154,7 @@ void *dispatch_thread(void *arg)
 
 void tts_version(void)
 {
-	tts_say("Version 0.1.0");
+	tts_say(PACKAGE_STRING);
 	debug_log(logfd, "Called tts_version\n");
 	return;
 } /* end tts_version */

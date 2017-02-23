@@ -312,7 +312,7 @@ ws [ \t\r\f\v]
 {version} {
 		BEGIN XVERSION;
 		yyless(yyleng-1);
-		return VERSION;
+		return VERSION_;
 	}
 
 	/* default pattern */

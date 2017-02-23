@@ -74,7 +74,9 @@ void yyerror(const char *s);
 %token <n>TTS_SET_SPEECH_RATE
 %token <n>TTS_SPLIT_CAPS
 %token <n>TTS_SYNC_STATE
-%token <n>VERSION
+
+/* suffixed with _ to prevent conflict in config.h */
+%token <n>VERSION_
 
 %token <c>CHAR
 %token <s>TEXT
@@ -198,7 +200,7 @@ dispatch
 	;
 
 version
-	: VERSION '\n' { $$ = $1; tts_version(); }
+	: VERSION_ '\n' { $$ = $1; tts_version(); }
 	;
 
 stop
