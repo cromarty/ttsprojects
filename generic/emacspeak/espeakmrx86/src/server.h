@@ -37,6 +37,9 @@
 
 #define START_SPEECH_RATE 225
 
+
+#define SYNTH_BUFFER_MILLISECONDS 100
+
 typedef struct tts_state
 {
 	int punct_level;

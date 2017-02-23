@@ -24,6 +24,8 @@
 
 #define CPF_CLOEXEC 1
 
+
+
 int create_log_file(const char *basename, int flags);
 void debug_log(int fd, const char *format,...);
 

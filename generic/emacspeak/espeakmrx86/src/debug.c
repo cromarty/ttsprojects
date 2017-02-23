@@ -57,10 +57,10 @@ int create_log_file(const char *basename, int flags)
 } /* end create_log_file */
 
 
-void debug_log(int fd, const char *format,...) {
+void debug_log(int fd, const char *format,...)
+{
 	va_list args;
 	char buffer[255];
-
 	memset(buffer, 0, sizeof(buffer));
 
 	va_start(args, format);
