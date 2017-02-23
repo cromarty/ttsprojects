@@ -6,11 +6,13 @@ AC_CONFIG_HEADERS([config.h])
 
 dnl Checks for programs.
 
-AC_PROG_YACC
+
 AC_PROG_CC
+AC_PROG_YACC
 # Sometimes Flex is installed as Lex, e.g., NetBSD.
 AC_CHECK_PROG([FLEX], [flex lex], [flex])
-
+AC_PROG_INSTALL
+AC_PROG_LN_S
 AM_PROG_LEX
 
 dnl Checks for libraries.
