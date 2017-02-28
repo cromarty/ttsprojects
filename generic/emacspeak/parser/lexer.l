@@ -85,7 +85,7 @@ allcapsbeep		^(tts_allcaps_beep[ ]+[^{\n]|tts_allcaps_beep[ ]+"{")
 capitalize		^(tts_capitalize[ ]+[^{\n]|tts_capitalize[ ]+"{")
 setcharacterscale		^(tts_set_character_scale[ ]+[^{\n]|tts_set_character_scale[ ]+"{")
 setpunctuations		^(tts_set_punctuations[ ]+[^{\n]|tts_set_punctuations[ ]+"{")
-setspeechrate		^(tts_set_speech_rate[ ]+[^{\n]|tts_set_speech_rate[ ]+"{")
+setspeechrate		^((tts_set_speech_rate|r)[ ]+[^{\n]|(tts_set_speech_rate|r)[ ]+"{")
 splitcaps		^(tts_split_caps[ ]+[^{\n]|tts_split_caps[ ]+"{")
 
 /* with or without braces but I've never seen braces */
