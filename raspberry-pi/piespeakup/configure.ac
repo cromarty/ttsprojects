@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([piespeakup], [1.0.0], [mike.ray@btinternet.com])
+AC_INIT([piespeakup], [1.1.0], [mike.ray@btinternet.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SRCDIR([src/piespeakup.c])

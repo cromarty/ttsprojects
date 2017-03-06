@@ -10,4 +10,4 @@ Restart=always
 
 
 [Install]
-WantedBy=sound.target
+WantedBy=default.target
