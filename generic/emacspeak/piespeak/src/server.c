@@ -457,7 +457,7 @@ int tts_initialize(void)
 rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
 	rc = ilctts_initialize();
-	rc = ilctts_create(st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0, (1024*6));
+	rc = ilctts_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0, (1024*6));
 	ilctts_set_dest(st, "local");
 	rc = ilctts_start_ringbuffer_consumer_thread(st);
 
