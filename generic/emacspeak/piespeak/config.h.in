@@ -21,6 +21,9 @@
 /* Define to 1 if you have the `espeak' library (-lespeak). */
 #undef HAVE_LIBESPEAK
 
+/* Define to 1 if you have the `ilctts' library (-lilctts). */
+#undef HAVE_LIBILCTTS
+
 /* Define to 1 if you have the <libintl.h> header file. */
 #undef HAVE_LIBINTL_H
 
