@@ -60,21 +60,6 @@ typedef enum {
 	TTS_PAUSE_MARK_REPORTED
 } TTS_PAUSE_STATE_T;
 
-//-- linked list stuff
-
-typedef struct LLIST_ENTRY_ {
-void               *data;
-struct LLIST_ENTRY_   *next;
-} LLIST_ENTRY_T;
-
-typedef struct LLIST_ {
-int                size;
-void               (*destroy)(void *data);
-LLIST_ENTRY_T           *head;
-LLIST_ENTRY_T           *tail;
-} LLIST_T;
-
-typedef LLIST_T QUEUE_T;
 
 typedef struct {
     void *buffer;

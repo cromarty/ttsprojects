@@ -1,6 +1,6 @@
-#! /bin/sh
+#! /bin/bash
 # Generated automatically by config.status (ilctts) 1.0.0
-# Libtool was configured on host alarmpi:
+# Libtool was configured on host raspberrypi:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
 # Provide generalized library-building support services.
@@ -57,7 +57,7 @@ fast_install=yes
 shared_archive_member_spec=
 
 # Shell to use when invoking shell scripts.
-SHELL="/bin/sh"
+SHELL="/bin/bash"
 
 # An echo program that protects backslashes.
 ECHO="printf %s\\n"
@@ -76,19 +76,19 @@ build=armv7l-unknown-linux-gnueabihf
 build_os=linux-gnueabihf
 
 # A sed program that does not truncate output.
-SED="/usr/bin/sed"
+SED="/bin/sed"
 
 # Sed that helps us avoid accidentally triggering echo(1) options like -n.
 Xsed="$SED -e 1s/^X//"
 
 # A grep program that handles long lines.
-GREP="/usr/bin/grep"
+GREP="/bin/grep"
 
 # An ERE matcher.
-EGREP="/usr/bin/grep -E"
+EGREP="/bin/grep -E"
 
 # A literal string matcher.
-FGREP="/usr/bin/grep -F"
+FGREP="/bin/grep -F"
 
 # A BSD- or MS-compatible name lister.
 NM="/usr/bin/nm -B"
@@ -192,7 +192,7 @@ nm_file_list_spec="@"
 lt_sysroot=
 
 # Command to truncate a binary pipe.
-lt_truncate_bin="/usr/bin/dd bs=4096 count=1"
+lt_truncate_bin="/bin/dd bs=4096 count=1"
 
 # The name of the directory that contains temporary libtool files.
 objdir=.libs
@@ -282,10 +282,10 @@ finish_eval=""
 hardcode_into_libs=yes
 
 # Compile-time system search path for libraries.
-sys_lib_search_path_spec="/usr/lib/gcc/armv7l-unknown-linux-gnueabihf/6.2.1 /usr/lib /lib "
+sys_lib_search_path_spec="/usr/lib/gcc/arm-linux-gnueabihf/4.9 /usr/lib/arm-linux-gnueabihf /usr/lib /lib/arm-linux-gnueabihf /lib "
 
 # Detected run-time system search path for libraries.
-sys_lib_dlsearch_path_spec="/lib /usr/lib /opt/vc/lib/ /usr/local/lib/ /usr/lib/libfakeroot "
+sys_lib_dlsearch_path_spec="/lib /usr/lib /opt/vc/lib /usr/local/lib/ /lib/arm-linux-gnueabihf /usr/lib/arm-linux-gnueabihf /usr/lib/arm-linux-gnueabihf/libfakeroot /usr/local/lib "
 
 # Explicit LT_SYS_LIBRARY_PATH set during ./configure time.
 configure_time_lt_sys_library_path=""
