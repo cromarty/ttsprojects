@@ -1,0 +1,38 @@
+
+Notes
+=====
+
+This is an emacspeak text-to-speech server built around my Flex and Bison based protocol parser.
+
+Files
+-----
+
+Most importantly:
+
+src/parser.y		The bison parser
+src/lexer.l		the flex lexer
+
+Those files are contained elsewhere in the repository which contains this code and are soft-linked 
+into this source tree and others.
+
+Other files
+-----------
+
+src/tts_server.c and src/tts_server.h
+
+The above files are the files which contain the function definitions and function bodies which are 
+called from the parser.
+
+src/tts_espeak.c and src/tts_espeak.h
+
+The above two files contain code specific to the use of the espeak software speech-synthesiser.
+
+
+
+src/list.(c|h) and src/queue.(c|h)
+
+Source to implement a queue of speech fragments read from the emacspeak stream.
+
+All other files are autoconf and automake related and/or are documentation.
+
+
