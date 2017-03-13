@@ -149,7 +149,7 @@ int send_speech(void)
 	queue_pop(&tts_queue, (void*)element);
 	qe = (TTS_QUEUE_ENTRY_T*)list_data(element);
 
-	erc = espeak_Synth(qe->speech, qe->length+1, 0, POS_CHARACTER, 0, SYNTH_FLAGS, NULL, NULL);
+	erc = espeak_Synth(qe->speech, qe->length+1, 0, POS_CHARACTER, 0, SYNTH_FLAGS, NULL, st);
 
 	free(qe->speech);
 	free(element);
@@ -218,7 +218,7 @@ void tts_say(char *text)
 	erc = espeak_Cancel();
 	debug_log(logfd, "In tts_say espeak_Cancel returned %d\n", erc);
 	rc = empty_queue();
-	erc = espeak_Synth(newtext, strlen(newtext)+1, 0, POS_CHARACTER, 0, SYNTH_FLAGS, NULL, NULL);
+	erc = espeak_Synth(newtext, strlen(newtext)+1, 0, POS_CHARACTER, 0, SYNTH_FLAGS, NULL, st);
 	debug_log(logfd,"In tts_say espeak_Synth returned %d\n", erc);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
@@ -233,7 +233,7 @@ void tts_l(const char ch)
 	espeak_ERROR erc;
 	erc = espeak_Cancel();
 	debug_log(logfd, "In tts_l espeak_Cancel returned: %d\n", erc);
-	erc = espeak_Synth(pair, 2, 0, POS_CHARACTER, 0, 0, NULL, NULL);
+	erc = espeak_Synth(pair, 2, 0, POS_CHARACTER, 0, 0, NULL, st);
 		debug_log(logfd, "In tts_l espeak_Synth returned: %d\n", erc);
 	return;
 } /* end tts_l */
@@ -266,6 +266,7 @@ void tts_s(void)
 	int rc;
 	debug_log(logfd, "Called tts_s\n");
 	pthread_mutex_lock(&queue_guard_mutex);
+	ilctts_stop_request(st);
 	rc = espeak_Cancel();
 	/* flush the queue */
 	empty_queue();
@@ -442,7 +443,7 @@ int tts_initialize(void)
 	int rc;
 	espeak_ERROR erc;
 	pthread_t qthr;
-	logfd = create_log_file("/tmp/espeakmrx86-", CPF_CLOEXEC);
+	logfd = create_log_file("/tmp/piespeak-", CPF_CLOEXEC);
 	debug_log(logfd, "Called tts_initialize\n");
 	rc = sem_init(&dispatch_semaphore, 0, 0);
 	if (rc < 0) {
@@ -461,9 +462,36 @@ int tts_initialize(void)
 rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
 	rc = ilctts_initialize();
+	if (rc < 0) {
+		debug_log(logfd, "ilctts_initialize returned error in tts_initialize\n");
+		return 1;
+	} else {
+		debug_log(logfd, "Successfully called ilctts_initialize\n");
+	}
+
 	rc = ilctts_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0, (1024*6));
-	ilctts_set_dest(st, "local");
+	if (rc < 0) {
+		debug_log(logfd, "ilctts_create returned error in tts_initialize\n");
+		return 1;
+	} else {
+		debug_log(logfd, "Successfully called ilctts_create\n");
+	}
+
+	rc = ilctts_set_dest(st, "local");
+	if (rc < 0) {
+		debug_log(logfd, "ilctts_set_dest returned error in tts_initialize\n");
+		return 1;
+	} else {
+	debug_log(logfd, "Successfully called ilctts_set_dest\n");
+	}
+
 	rc = ilctts_start_ringbuffer_consumer_thread(st);
+	if (rc < 0) {
+		debug_log(logfd, "ilctts_start_ringbuffer_consumer_thread returned error in tts_initialize\n");
+		return 1;
+	} else {
+		debug_log(logfd, "Successfully called ilctts_start_ringbuffer_consumer_thread\n");
+	}
 
 erc = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, BUF_SIZE_MS, NULL, 0);
 	debug_log(logfd, "In tts_initialize espeak_Initialize returned: %d\n", erc);
@@ -471,7 +499,7 @@ erc = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, BUF_SIZE_MS, NULL, 0);
 		return -1;
 
 	espeak_SetSynthCallback(synth_callback);
-
+	debug_log(logfd, "Called espeak_SetSynthCallback\n");
 	tts_split_caps(0);
 
 	return erc;
