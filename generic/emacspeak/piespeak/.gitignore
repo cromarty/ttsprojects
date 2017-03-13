@@ -9,7 +9,8 @@ config.h
 config.status
 stamp-h1
 aclocal.m4
-src/espeakmrx86
+piespeak
+src/.deps
 
 
 # script files
