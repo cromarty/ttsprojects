@@ -173,7 +173,7 @@ void *dispatch_thread(void *arg)
 {
 	TTS_QUEUE_ENTRY_T *qe;
 	char *speech;
-	debug_log(logfd, "Started dispatch thread\n");
+	//debug_log(logfd, "Started dispatch thread\n");
 	while(1) {
 		/* wait for dispatch command from emacspeak */
 		sem_wait(&dispatch_semaphore);
@@ -201,7 +201,7 @@ void *dispatch_thread(void *arg)
 void tts_version(void)
 {
 	tts_say(PACKAGE_STRING);
-	debug_log(logfd, "Called tts_version\n");
+	//debug_log(logfd, "Called tts_version\n");
 	return;
 } /* end tts_version */
 
@@ -212,14 +212,16 @@ void tts_say(char *text)
 	char *newtext = calloc(1,strlen(text));
 	/* remove all occurrences of [*] from the speech string */
 	clean_string(text, newtext, "\\[\\*\\]", " ");
-	debug_log(logfd, "Called tts_say: %s\n", text);
-	debug_log(logfd,"In tts_say cleaned text: %s\n", newtext);
+	//debug_log(logfd, "Called tts_say: %s\n", text);
+	//debug_log(logfd,"In tts_say cleaned text: %s\n", newtext);
 	pthread_mutex_lock(&queue_guard_mutex);
+	ilctts_stop_request(st);
 	erc = espeak_Cancel();
-	debug_log(logfd, "In tts_say espeak_Cancel returned %d\n", erc);
+	//debug_log(logfd, "In tts_say espeak_Cancel returned %d\n", erc);
 	rc = empty_queue();
+	stop_requested = 0;
 	erc = espeak_Synth(newtext, strlen(newtext)+1, 0, POS_CHARACTER, 0, SYNTH_FLAGS, NULL, st);
-	debug_log(logfd,"In tts_say espeak_Synth returned %d\n", erc);
+	//debug_log(logfd,"In tts_say espeak_Synth returned %d\n", erc);
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_say */
@@ -231,16 +233,19 @@ void tts_l(const char ch)
 	pair[0] =ch;
 	pair[1] = 0;
 	espeak_ERROR erc;
+	//debug_log(logfd,"Called tts_l\n");
+	ilctts_stop_request(st);
 	erc = espeak_Cancel();
-	debug_log(logfd, "In tts_l espeak_Cancel returned: %d\n", erc);
+	//debug_log(logfd, "In tts_l espeak_Cancel returned: %d\n", erc);
+	stop_requested = 0;
 	erc = espeak_Synth(pair, 2, 0, POS_CHARACTER, 0, 0, NULL, st);
-		debug_log(logfd, "In tts_l espeak_Synth returned: %d\n", erc);
+		//debug_log(logfd, "In tts_l espeak_Synth returned: %d\n", erc);
 	return;
 } /* end tts_l */
 
 void tts_d(void)
 {
-	debug_log(logfd,"Called tts_d\n");
+	//debug_log(logfd,"Called tts_d\n");
 	/* post semaphore to start queue processing */
 	sem_post(&dispatch_semaphore);
 	stop_requested = 0;
@@ -250,21 +255,21 @@ void tts_d(void)
 void tts_pause(void)
 {
 	/* not implemented yet */
-	debug_log(logfd, "Called tts_pause\n");
+	//debug_log(logfd, "Called tts_pause\n");
 	return;
 } /* end tts_pause */
 
 void tts_resume(void)
 {
 	/* not implemented yet */
-	debug_log(logfd, "Called tts_resume\n");
+	//debug_log(logfd, "Called tts_resume\n");
 	return;
 } /* end tts_resume */
 
 void tts_s(void)
 {
 	int rc;
-	debug_log(logfd, "Called tts_s\n");
+	//debug_log(logfd, "Called tts_s\n");
 	pthread_mutex_lock(&queue_guard_mutex);
 	ilctts_stop_request(st);
 	rc = espeak_Cancel();
@@ -277,7 +282,7 @@ void tts_s(void)
 
 void tts_q(char *speech)
 {
-	debug_log(logfd, "Called tts_q to queue: %s\n", speech);
+	//debug_log(logfd, "Called tts_q to queue: %s\n", speech);
 	pthread_mutex_lock(&queue_guard_mutex);
 	queue_speech(1, speech);
 	pthread_mutex_unlock(&queue_guard_mutex);
@@ -286,7 +291,7 @@ void tts_q(char *speech)
 
 void tts_c(char *code)
 {
-	debug_log(logfd, "Called tts_c: %s\n", code);
+	//debug_log(logfd, "Called tts_c: %s\n", code);
 	pthread_mutex_lock(&queue_guard_mutex);
 	queue_speech(2, code);
 	pthread_mutex_unlock(&queue_guard_mutex);
@@ -296,9 +301,9 @@ void tts_c(char *code)
 void tts_a(const char *filename)
 {
 	char buffer[255];
-	debug_log(logfd, "Called tts_a: %s\n", filename);
+	//debug_log(logfd, "Called tts_a: %s\n", filename);
 	sprintf(buffer, "play -q %s", filename);
-	debug_log(logfd, "In tts_a, play command: %s\n", buffer);
+	//debug_log(logfd, "In tts_a, play command: %s\n", buffer);
 	system_(buffer);
 	return;
 } /* end tts_a */
@@ -308,7 +313,7 @@ void tts_b(int pitch, int duration)
 	char buffer[64];
 	sprintf(buffer, "beep -f %d -l %d", pitch, duration);
 	system_(buffer);
-	debug_log(logfd, "In tts_b, beep command: %s\n", buffer);
+	//debug_log(logfd, "In tts_b, beep command: %s\n", buffer);
 	return;
 } /* end tts_b */
 
@@ -318,47 +323,47 @@ void tts_t(int pitch, int duration)
 	char buffer[64];
 	sprintf(buffer, "play -qn synth %f sin %d", secs, pitch);
 	system_(buffer);
-	debug_log(logfd, "In tts_t, play command: %s\n", buffer);
+	//debug_log(logfd, "In tts_t, play command: %s\n", buffer);
 	return;
 } /* end tts_t */
 
 void tts_sh(int duration_milliseconds)
 {
 	/* not implemented yet */
-	debug_log(logfd, "Called tts_sh\n");
+	//debug_log(logfd, "Called tts_sh\n");
 	return;
 } /* end tts_sh */
 
 void tts_reset(void)
 {
 	/* not implemented yet */
-	debug_log(logfd, "Called tts_reset\n");
+	//debug_log(logfd, "Called tts_reset\n");
 	return;
 } /* end tts_reset */
 
 void tts_set_punctuations(int punct_level)
 {
 	espeak_ERROR erc;
-	debug_log(logfd, "Called tts_set_punctuations: %d\n", punct_level);
+	//debug_log(logfd, "Called tts_set_punctuations: %d\n", punct_level);
 	erc = espeak_SetParameter(espeakPUNCTUATION, punct_level, 0);
-	debug_log(logfd, "In tts_set_punctuations espeak_SetParameter returned: %d\n", erc);
+	//debug_log(logfd, "In tts_set_punctuations espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_set_punctuations */
 
 void tts_set_speech_rate(int speech_rate)
 {
 	espeak_ERROR erc;
-	debug_log(logfd, "Called tts_set_speech_rate: %d\n", speech_rate);
+	//debug_log(logfd, "Called tts_set_speech_rate: %d\n", speech_rate);
 	tts_state.speech_rate = speech_rate;
 	erc = espeak_SetParameter(espeakRATE, speech_rate, 0);
-	debug_log(logfd, "In tts_set_speech_rate espeak_SetParameter returned: %d\n", erc);
+	//debug_log(logfd, "In tts_set_speech_rate espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_set_speech_rate */
 
 void tts_set_character_scale(double character_scale)
 {
 	/* not implemented yet */
-	debug_log(logfd, "Called tts_character_scale\n");
+	//debug_log(logfd, "Called tts_character_scale\n");
 	tts_state.character_scale = character_scale;
 	return;
 } /* end tts_set_character_scale */
@@ -367,14 +372,14 @@ void tts_split_caps(int split_caps)
 {
 	/* speak camel-case, IOW say 'capital' for every capital letter */
 	espeak_ERROR erc;
-	debug_log(logfd, "Called tts_split_caps: %d\n", split_caps); 
+	//debug_log(logfd, "Called tts_split_caps: %d\n", split_caps); 
 	tts_state.split_caps = split_caps;
 	if (split_caps) {
 		tts_capitalize(0);
 		tts_allcaps_beep(0);
 	}
 	erc = espeak_SetParameter(espeakCAPITALS, (split_caps ? 2 : 0), 0);
-	debug_log(logfd, "In tts_split_caps espeak_SetParameter returned: %d\n", erc);
+	//debug_log(logfd, "In tts_split_caps espeak_SetParameter returned: %d\n", erc);
 
 	return;
 } /* end tts_split_caps */
@@ -383,14 +388,14 @@ void tts_capitalize(int capitalize)
 {
 	/* indicate capital by pitch */
 	espeak_ERROR erc;
-	debug_log(logfd, "Called tts_capitalize: %d\n", capitalize);
+	//debug_log(logfd, "Called tts_capitalize: %d\n", capitalize);
 	tts_state.capitalize = capitalize;
 	if (capitalize) {
 		tts_allcaps_beep(0);
 		tts_split_caps(0);
 	}
 	erc = espeak_SetParameter(espeakCAPITALS, (capitalize ? 3 : 0), 0);
-	debug_log(logfd, "In tts_capitalize espeak_SetParameter returned: %d\n", erc);
+	//debug_log(logfd, "In tts_capitalize espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_capitalize */
 
@@ -403,9 +408,9 @@ void tts_allcaps_beep(int allcaps_beep)
 		tts_capitalize(0);
 		tts_split_caps(0);
 	}
-	debug_log(logfd, "Called tts_allcaps_beep: %d\n", allcaps_beep);
+	//debug_log(logfd, "Called tts_allcaps_beep: %d\n", allcaps_beep);
 	erc = espeak_SetParameter(espeakCAPITALS, (allcaps_beep ? 1 : 0), 0);
-	debug_log(logfd, "In tts_allcaps_beep espeak_SetParameter returned: %d\n", erc);
+	//debug_log(logfd, "In tts_allcaps_beep espeak_SetParameter returned: %d\n", erc);
 	return;
 } /* end tts_allcaps_beep */
 
@@ -423,7 +428,7 @@ void tts_sync_state(
 //tts_allcaps_beep(allcaps_beep);
 //tts_split_caps(split_caps);
 //tts_set_speech_rate(speech_rate);
-
+/*
 	debug_log(
 		logfd, 
 		"Called tts_sync_state, punct_level: %d capitalize: %d allcaps_beep: %d split_caps: %d speech_rate: %d\n",
@@ -433,7 +438,7 @@ allcaps_beep,
 split_caps,
 		speech_rate
 	);
-
+*/
 	return;
 } /* end tts_sync_state */
 
@@ -444,16 +449,16 @@ int tts_initialize(void)
 	espeak_ERROR erc;
 	pthread_t qthr;
 	logfd = create_log_file("/tmp/piespeak-", CPF_CLOEXEC);
-	debug_log(logfd, "Called tts_initialize\n");
+	//debug_log(logfd, "Called tts_initialize\n");
 	rc = sem_init(&dispatch_semaphore, 0, 0);
 	if (rc < 0) {
-		debug_log(logfd, "Failed to initialize dispatch_semaphore in tts_initialize\n");
+		//debug_log(logfd, "Failed to initialize dispatch_semaphore in tts_initialize\n");
 		return 1;
 	}
 
 	rc = pthread_mutex_init(&queue_guard_mutex, NULL);
 	if (rc < 0) {
-		debug_log(logfd, "Failed to initialize queue_guard_mutex in tts_initialize\n");
+		//debug_log(logfd, "Failed to initialize queue_guard_mutex in tts_initialize\n");
 		return 1;
 	}
 
@@ -463,43 +468,43 @@ rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
 	rc = ilctts_initialize();
 	if (rc < 0) {
-		debug_log(logfd, "ilctts_initialize returned error in tts_initialize\n");
+		//debug_log(logfd, "ilctts_initialize returned error in tts_initialize\n");
 		return 1;
 	} else {
-		debug_log(logfd, "Successfully called ilctts_initialize\n");
+		//debug_log(logfd, "Successfully called ilctts_initialize\n");
 	}
 
 	rc = ilctts_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0, (1024*6));
 	if (rc < 0) {
-		debug_log(logfd, "ilctts_create returned error in tts_initialize\n");
+		//debug_log(logfd, "ilctts_create returned error in tts_initialize\n");
 		return 1;
 	} else {
-		debug_log(logfd, "Successfully called ilctts_create\n");
+		//debug_log(logfd, "Successfully called ilctts_create\n");
 	}
 
 	rc = ilctts_set_dest(st, "local");
 	if (rc < 0) {
-		debug_log(logfd, "ilctts_set_dest returned error in tts_initialize\n");
+		//debug_log(logfd, "ilctts_set_dest returned error in tts_initialize\n");
 		return 1;
 	} else {
-	debug_log(logfd, "Successfully called ilctts_set_dest\n");
+	//debug_log(logfd, "Successfully called ilctts_set_dest\n");
 	}
 
 	rc = ilctts_start_ringbuffer_consumer_thread(st);
 	if (rc < 0) {
-		debug_log(logfd, "ilctts_start_ringbuffer_consumer_thread returned error in tts_initialize\n");
+		//debug_log(logfd, "ilctts_start_ringbuffer_consumer_thread returned error in tts_initialize\n");
 		return 1;
 	} else {
-		debug_log(logfd, "Successfully called ilctts_start_ringbuffer_consumer_thread\n");
+		//debug_log(logfd, "Successfully called ilctts_start_ringbuffer_consumer_thread\n");
 	}
 
 erc = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, BUF_SIZE_MS, NULL, 0);
-	debug_log(logfd, "In tts_initialize espeak_Initialize returned: %d\n", erc);
+	//debug_log(logfd, "In tts_initialize espeak_Initialize returned: %d\n", erc);
 	if (erc != 22050)
 		return -1;
 
 	espeak_SetSynthCallback(synth_callback);
-	debug_log(logfd, "Called espeak_SetSynthCallback\n");
+	//debug_log(logfd, "Called espeak_SetSynthCallback\n");
 	tts_split_caps(0);
 
 	return erc;
@@ -526,7 +531,7 @@ int main(int argc, char **argv)
 
 	int rc = tts_initialize();
 	if (rc == -1) {
-		debug_log(logfd,"Call to tts_initialize returned error code\n");
+		//debug_log(logfd,"Call to tts_initialize returned error code\n");
 		return 1;
 	}
 
