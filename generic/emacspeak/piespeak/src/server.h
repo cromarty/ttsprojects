@@ -38,7 +38,12 @@
 #define START_SPEECH_RATE 225
 
 
-#define SYNTH_BUFFER_MILLISECONDS 100
+/* buffer size in milliseconds */
+#define BUF_SIZE_MS 20
+
+/* number of IL client buffers */
+#define ILC_BUF_COUNT 5
+
 
 typedef struct tts_state
 {

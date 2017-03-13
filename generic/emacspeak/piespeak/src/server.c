@@ -54,6 +54,8 @@ int logfd;
 
 TTSRENDER_STATE_T *st;
 
+volatile int stop_requested = 0;
+
 
 /*
 *
@@ -241,6 +243,7 @@ void tts_d(void)
 	debug_log(logfd,"Called tts_d\n");
 	/* post semaphore to start queue processing */
 	sem_post(&dispatch_semaphore);
+	stop_requested = 0;
 	return;
 } /* end tts_d */
 
@@ -266,6 +269,7 @@ void tts_s(void)
 	rc = espeak_Cancel();
 	/* flush the queue */
 	empty_queue();
+	stop_requested = 1;
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_s */
@@ -461,7 +465,7 @@ rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 	ilctts_set_dest(st, "local");
 	rc = ilctts_start_ringbuffer_consumer_thread(st);
 
-erc = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, 50, NULL, 0);
+erc = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, BUF_SIZE_MS, NULL, 0);
 	debug_log(logfd, "In tts_initialize espeak_Initialize returned: %d\n", erc);
 	if (erc != 22050)
 		return -1;
