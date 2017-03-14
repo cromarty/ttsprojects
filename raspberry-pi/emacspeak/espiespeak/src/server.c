@@ -471,44 +471,32 @@ rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
 	rc = ilctts_initialize();
 	if (rc < 0) {
-		//debug_log(logfd, "ilctts_initialize returned error in tts_initialize\n");
 		return 1;
-	} else {
-		//debug_log(logfd, "Successfully called ilctts_initialize\n");
 	}
 
 	rc = ilctts_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0, (1024*6));
 	if (rc < 0) {
-		//debug_log(logfd, "ilctts_create returned error in tts_initialize\n");
 		return 1;
-	} else {
-		//debug_log(logfd, "Successfully called ilctts_create\n");
 	}
 
 	rc = ilctts_set_dest(st, "local");
 	if (rc < 0) {
-		//debug_log(logfd, "ilctts_set_dest returned error in tts_initialize\n");
 		return 1;
-	} else {
-	//debug_log(logfd, "Successfully called ilctts_set_dest\n");
 	}
 
 	rc = ilctts_start_ringbuffer_consumer_thread(st);
 	if (rc < 0) {
-		//debug_log(logfd, "ilctts_start_ringbuffer_consumer_thread returned error in tts_initialize\n");
 		return 1;
-	} else {
-		//debug_log(logfd, "Successfully called ilctts_start_ringbuffer_consumer_thread\n");
 	}
 
 erc = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, BUF_SIZE_MS, NULL, 0);
-	//debug_log(logfd, "In tts_initialize espeak_Initialize returned: %d\n", erc);
 	if (erc != 22050)
 		return -1;
 
 	espeak_SetSynthCallback(synth_callback);
-	//debug_log(logfd, "Called espeak_SetSynthCallback\n");
+
 	ilctts_post_space(st);
+
 	tts_split_caps(0);
 
 	return erc;
