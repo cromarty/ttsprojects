@@ -203,7 +203,7 @@ dispatch
 	;
 
 version
-	: VERSION_ '\n' { $$ = $1; tts_version(); }
+	: VERSION_ '\n' { $$ = $1; }
 	;
 
 stop

@@ -211,9 +211,8 @@ void tts_say(char *text)
 	espeak_ERROR erc;
 	char *newtext = calloc(1,strlen(text));
 	/* remove all occurrences of [*] from the speech string */
-	clean_string(text, newtext, "\\[\\*\\]", " ");
 	//debug_log(logfd, "Called tts_say: %s\n", text);
-	//debug_log(logfd,"In tts_say cleaned text: %s\n", newtext);
+	clean_string(text, newtext, "\\[\\*\\]", " ");
 	pthread_mutex_lock(&queue_guard_mutex);
 	ilctts_stop_request(st);
 	erc = espeak_Cancel();
@@ -452,7 +451,7 @@ int tts_initialize(void)
 	int rc;
 	espeak_ERROR erc;
 	pthread_t qthr;
-	logfd = create_log_file("/tmp/piespeak-", CPF_CLOEXEC);
+	logfd = create_log_file("/tmp/espiespeak-", CPF_CLOEXEC);
 	//debug_log(logfd, "Called tts_initialize\n");
 	rc = sem_init(&dispatch_semaphore, 0, 0);
 	if (rc < 0) {
