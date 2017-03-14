@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([piespeak], [1.0.0], [mike.ray@btinternet.com])
+AC_INIT([espiespeak], [1.0.0], [mike.ray@btinternet.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_CONFIG_SRCDIR([src/server.c])
 AC_CONFIG_HEADERS([config.h])
