@@ -68,8 +68,10 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 	TTSRENDER_STATE_T *tts = (TTSRENDER_STATE_T*)events->user_data;
 	int written;
 
-	if (stop_requested)
+	if (stop_requested) {
+		stop_requested = 0;
 		return 1;
+	}
 
 	if (numsamples) {
 		ilctts_wait_space(tts);
@@ -244,7 +246,6 @@ void tts_l(const char ch)
 
 void tts_d(void)
 {
-	//debug_log(logfd,"Called tts_d\n");
 	/* post semaphore to start queue processing */
 	sem_post(&dispatch_semaphore);
 	stop_requested = 0;
@@ -268,13 +269,12 @@ void tts_resume(void)
 void tts_s(void)
 {
 	int rc;
-	//debug_log(logfd, "Called tts_s\n");
-	pthread_mutex_lock(&queue_guard_mutex);
 	ilctts_stop_request(st);
+	stop_requested = 1;
 	rc = espeak_Cancel();
+	pthread_mutex_lock(&queue_guard_mutex);
 	/* flush the queue */
 	empty_queue();
-	stop_requested = 1;
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_s */
