@@ -382,11 +382,15 @@ void tts_sync_state(
 	int speech_rate)
 {
 
-//tts_set_punctuations(punct_level);
-//tts_capitalize(capitalize);
-//tts_allcaps_beep(allcaps_beep);
-//tts_split_caps(split_caps);
-//tts_set_speech_rate(speech_rate);
+	tts_set_punctuations(punct_level);
+	if (capitalize)
+		tts_capitalize(capitalize);
+	if (allcaps_beep)
+		tts_allcaps_beep(allcaps_beep);
+	if (split_caps)
+		tts_split_caps(split_caps);
+
+	tts_set_speech_rate(speech_rate);
 
 	debug_log(
 		logfd, 
