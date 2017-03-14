@@ -505,6 +505,7 @@ erc = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, BUF_SIZE_MS, NULL, 0);
 
 	espeak_SetSynthCallback(synth_callback);
 	//debug_log(logfd, "Called espeak_SetSynthCallback\n");
+	ilctts_post_space(st);
 	tts_split_caps(0);
 
 	return erc;
