@@ -1,0 +1,306 @@
+#
+#
+# Copyright (C) 2017 Mike Ray <mike.ray@btinternet.com>
+#
+# Parse::Yapp parser for the Emacspeak text-to-speech protocol. Requires lexer.l
+#
+# This is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This software is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this package; see the file COPYING.  If not, write to
+# the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+# Boston, MA 02110-1301, USA.
+#
+#--code--
+
+%{
+
+%}
+
+%token <d>DOUBLE
+
+%token <n>A
+%token <n>C
+%token <n>D
+%token <n>FLAG
+%token <n>INTEGER
+%token <n>L
+%token <n>S
+%token <n>SH
+
+%token <n>PUNCT_ALL
+%token <n>PUNCT_NONE
+%token <n>PUNCT_SOME
+
+%token <n>Q
+%token <n>B
+%token <n>T
+
+%token <n>TTS_ALLCAPS_BEEP
+%token <n>TTS_CAPITALIZE
+%token <n>TTS_PAUSE
+%token <n>TTS_RESET
+%token <n>TTS_RESUME
+%token <n>TTS_SAY
+%token <n>TTS_SET_CHARACTER_SCALE
+%token <n>TTS_SET_PUNCTUATIONS
+%token <n>TTS_SET_SPEECH_RATE
+%token <n>TTS_SPLIT_CAPS
+%token <n>TTS_SYNC_STATE
+
+
+%token <n>VERSION
+
+%token <c>CHAR
+%token <s>TEXT
+
+
+%type <d>tts_set_character_scale
+
+%type <n>beep
+%type <n>character
+%type <n>cmd
+%type <n>code
+%type <n>dispatch
+%type <n>immediate_speech
+%type <n>punctlevel
+%type <n>queued_speech
+%type <n>silence
+%type <n>sound
+%type <n>speech
+%type <n>stop
+%type <n>tone
+%type <n>version
+
+%type <n>tts_allcaps_beep
+%type <n>tts_capitalize
+%type <n>tts_set_punctuations
+%type <n>tts_set_speech_rate
+%type <n>tts_split_caps
+%type <n>tts_sync_state
+%type <n>tts_pause
+%type <n>tts_reset
+%type <n>tts_resume
+
+
+%%
+
+cmdlist
+	: 
+	| cmdlist cmd
+	;
+
+cmd
+	: code { $_[1]; }
+	| speech { $_[1]; }
+	| dispatch { $_[1]; &tts_d(); }
+	| stop { $_[1]; &tts_s(); }
+	| version { $_[1]; &tts_version(); }
+	| silence { $_[1]; &tts_sh($_[1]); }
+	| beep { $_[1]; }
+	| tone { $_[1]; }
+	| sound { $_[1]; }
+		| tts_pause { $_[1]; &tts_pause(); }
+	| tts_reset { $_[1]; &tts_reset(); }
+	| tts_resume { $_[1]; &tts_resume(); }
+	| tts_allcaps_beep { $_[1]; &tts_allcaps_beep($_[1]); }
+	| tts_capitalize { $_[1]; &tts_capitalize($_[1]); }
+	| tts_set_character_scale { $_[1]; }
+	| tts_set_punctuations { $_[1]; &tts_set_punctuations($_[1]); }
+	| tts_set_speech_rate { $_[1]; &tts_set_speech_rate($_[1]); }
+	| tts_split_caps { $_[1]; &tts_split_caps($_[1]); }
+	| tts_sync_state { $_[1]; }
+	;
+
+code
+	: C '{' TEXT '}' '\n'
+		{
+			$_[1];
+			&tts_c($_[3]);
+		}
+	| C TEXT '\n'
+		{
+			$_[1];
+			&tts_c($_[2]);
+		}
+	;
+
+speech
+	: immediate_speech { $_[1]; }
+	| queued_speech { $_[1]; }
+	| character { $_[1]; }
+	;
+
+immediate_speech
+	: TTS_SAY '{' TEXT '}' '\n'
+		{
+			$_[1];
+			&tts_say($_[3]);
+		}
+	| TTS_SAY TEXT '\n'
+		{
+			$_[1];
+			&tts_say($_[2]);
+		}
+	;
+
+character
+	: L '{' CHAR '}' '\n'
+		{
+			$_[1];
+			&tts_l($_[3]);
+		}
+	| L CHAR '\n'
+		{
+			$_[1];
+			&tts_l($_[2]);
+		}
+	;
+
+queued_speech
+	: Q '{' TEXT '}' '\n'
+		{
+			$_[1];
+			&tts_q($_[3]);
+		}
+	| Q TEXT '\n'
+		{
+			$_[1];
+			&tts_q($_[2]);
+		}
+	;
+
+dispatch
+	: D '\n' { $_[1]; }
+	;
+
+version
+	: VERSION '\n' { $_[1]; }
+	;
+
+stop
+	: S '\n' { $_[1]; }
+	;
+
+silence
+	: SH '{' INTEGER '}' '\n' { $_[3]; }
+	| SH INTEGER '\n' { $_[2]; }
+	;
+
+beep
+	: B '{' INTEGER INTEGER '}' '\n'
+		{
+			$_[1];
+			&tts_b($_[3], $4);
+		}
+	| B INTEGER INTEGER '\n'
+		{
+			$_[1];
+			&tts_b($_[2], $_[3]);
+		}
+	;
+
+tone
+	: T '{' INTEGER INTEGER '}' '\n'
+		{
+			$_[1];
+			t&ts_t($_[3], $4);
+		}
+	| T INTEGER INTEGER '\n'
+		{
+			$_[1];
+			&tts_t($_[2], $_[3]);
+		}
+	;
+
+sound
+	: A '{' TEXT '}' '\n'
+		{
+			$_[1];
+			&tts_a($_[3]);
+		}
+	| A TEXT '\n'
+		{
+			$_[1];
+			&tts_a($_[2]);
+		}
+	;
+
+tts_pause
+	: TTS_PAUSE '\n' { $_[1]; }
+	;
+
+tts_reset
+	: TTS_RESET '\n' { $_[1]; }
+	;
+
+tts_resume
+	: TTS_RESUME '\n' { $_[1]; }
+	;
+
+tts_allcaps_beep
+	: TTS_ALLCAPS_BEEP '{' FLAG '}' '\n' { $_[3]; }
+	| TTS_ALLCAPS_BEEP FLAG '\n' { $_[2]; }
+	;
+
+tts_capitalize
+	: TTS_CAPITALIZE '{' FLAG '}' '\n' { $_[3]; }
+	| TTS_CAPITALIZE FLAG '\n' { $_[2]; }
+	;
+
+tts_set_character_scale
+	: TTS_SET_CHARACTER_SCALE '{' DOUBLE '}' '\n'
+		{
+			$_[1];
+			&tts_set_character_scale($_[3]);
+		}
+	| TTS_SET_CHARACTER_SCALE DOUBLE '\n'
+		{
+			$_[1];
+			&tts_set_character_scale($_[2]);
+		}
+	;
+
+tts_set_punctuations
+	:	TTS_SET_PUNCTUATIONS '{' punctlevel '}' '\n' { $_[3]; }
+	| TTS_SET_PUNCTUATIONS punctlevel '\n' { $_[2]; }
+	;
+
+tts_set_speech_rate
+	: TTS_SET_SPEECH_RATE '{' INTEGER '}' '\n' { $_[3]; }
+	| TTS_SET_SPEECH_RATE INTEGER '\n' { $_[2]; }
+	;
+
+tts_split_caps
+	: TTS_SPLIT_CAPS '{' FLAG '}' '\n' { $_[3]; }
+	| TTS_SPLIT_CAPS FLAG '\n' { $_[2]; }
+	;
+
+tts_sync_state
+	: TTS_SYNC_STATE '{' punctlevel FLAG FLAG FLAG INTEGER '}' '\n'
+		{ 
+			$_[1];
+			&tts_sync_state($_[3], $4, $5, $6, $7);
+		}
+	| TTS_SYNC_STATE punctlevel FLAG FLAG FLAG INTEGER '\n'
+		{
+			$_[1];
+			&tts_sync_state($_[2],$_[3], $4, $5, $6);
+		}
+	;
+
+punctlevel
+	: PUNCT_NONE { PUNCT_LEVEL_NONE; }
+	| PUNCT_SOME { PUNCT_LEVEL_SOME; }
+	| PUNCT_ALL { PUNCT_LEVEL_ALL; }
+	;
+
+%%

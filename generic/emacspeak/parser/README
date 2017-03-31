@@ -1,26 +1,23 @@
 
-emacspeak protocol parser using Flex and Bison
-==============================================
+Emacspeak protocol Grammars and Lexers
+======================================
 
 Files:
 
 parser.y
+--------
+
+A Bison grammar for the Emacspeak protocol.
+
+parser.yp
+--------
+
+A Parse::Yapp grammar for the Emacspeak protocol.
+
 lexer.l
+-------
 
-tts_server_sample.c
-tts_server_sample.h
+Flex lexer for the Emacspeak protocol.
 
-The above two files contain the function definitions and function bodies of functions called from 
-the parser.
-
-These files can be renamed to remove the 'sample' part when they are used to implement an actual 
-server.
-
-Text-to-speech engine-specific functions called from the above should be contained in other source 
-file(s).
-
-Text-to-speech generating functions in those files can then be called from tts_server.c
-
-As an example perhaps tts_espeak.(c|h) for the espeak software synthesiser.
 
 
