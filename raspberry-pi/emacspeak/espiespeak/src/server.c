@@ -68,8 +68,10 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 	TTSRENDER_STATE_T *tts = (TTSRENDER_STATE_T*)events->user_data;
 	int written;
 
-	if (stop_requested)
+	if (stop_requested) {
+		stop_requested = 0;
 		return 1;
+	}
 
 	if (numsamples) {
 		ilctts_wait_space(tts);
@@ -244,7 +246,6 @@ void tts_l(const char ch)
 
 void tts_d(void)
 {
-	//debug_log(logfd,"Called tts_d\n");
 	/* post semaphore to start queue processing */
 	sem_post(&dispatch_semaphore);
 	stop_requested = 0;
@@ -268,13 +269,12 @@ void tts_resume(void)
 void tts_s(void)
 {
 	int rc;
-	//debug_log(logfd, "Called tts_s\n");
-	pthread_mutex_lock(&queue_guard_mutex);
 	ilctts_stop_request(st);
+	stop_requested = 1;
 	rc = espeak_Cancel();
+	pthread_mutex_lock(&queue_guard_mutex);
 	/* flush the queue */
 	empty_queue();
-	stop_requested = 1;
 	pthread_mutex_unlock(&queue_guard_mutex);
 	return;
 } /* end tts_s */
@@ -471,44 +471,32 @@ rc = pthread_create(&qthr, NULL, dispatch_thread, (void*)&tts_queue);
 
 	rc = ilctts_initialize();
 	if (rc < 0) {
-		//debug_log(logfd, "ilctts_initialize returned error in tts_initialize\n");
 		return 1;
-	} else {
-		//debug_log(logfd, "Successfully called ilctts_initialize\n");
 	}
 
 	rc = ilctts_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0, (1024*6));
 	if (rc < 0) {
-		//debug_log(logfd, "ilctts_create returned error in tts_initialize\n");
 		return 1;
-	} else {
-		//debug_log(logfd, "Successfully called ilctts_create\n");
 	}
 
 	rc = ilctts_set_dest(st, "local");
 	if (rc < 0) {
-		//debug_log(logfd, "ilctts_set_dest returned error in tts_initialize\n");
 		return 1;
-	} else {
-	//debug_log(logfd, "Successfully called ilctts_set_dest\n");
 	}
 
 	rc = ilctts_start_ringbuffer_consumer_thread(st);
 	if (rc < 0) {
-		//debug_log(logfd, "ilctts_start_ringbuffer_consumer_thread returned error in tts_initialize\n");
 		return 1;
-	} else {
-		//debug_log(logfd, "Successfully called ilctts_start_ringbuffer_consumer_thread\n");
 	}
 
 erc = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, BUF_SIZE_MS, NULL, 0);
-	//debug_log(logfd, "In tts_initialize espeak_Initialize returned: %d\n", erc);
 	if (erc != 22050)
 		return -1;
 
 	espeak_SetSynthCallback(synth_callback);
-	//debug_log(logfd, "Called espeak_SetSynthCallback\n");
+
 	ilctts_post_space(st);
+
 	tts_split_caps(0);
 
 	return erc;
