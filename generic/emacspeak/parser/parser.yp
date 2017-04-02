@@ -23,6 +23,9 @@
 
 # This is work in progress, not working yet
 
+# Package of functions to be called from semantic actions
+use Emacspeak;
+
 
 %%
 
@@ -134,7 +137,7 @@ beep
 	: 'B' '{' INTEGER INTEGER '}' '\n'
 		{
 			$_[1];
-			&tts_b($_[3], $4);
+			&tts_b($_[3], $_[4]);
 		}
 	| 'B' INTEGER INTEGER '\n'
 		{
@@ -147,7 +150,7 @@ tone
 	: 'T' '{' INTEGER INTEGER '}' '\n'
 		{
 			$_[1];
-			&ts_t($_[3], $4);
+			&tts_t($_[3], $_[4]);
 		}
 	| 'T' INTEGER INTEGER '\n'
 		{
@@ -223,19 +226,19 @@ tts_sync_state
 	: 'TTS_SYNC_STATE' '{' punctlevel FLAG FLAG FLAG INTEGER '}' '\n'
 		{ 
 			$_[1];
-			&tts_sync_state($_[3], $4, $5, $6, $7);
+			&tts_sync_state($_[3], $_[4], $_[5], $_[6], $_[7]);
 		}
 	| 'TTS_SYNC_STATE' punctlevel FLAG FLAG FLAG INTEGER '\n'
 		{
 			$_[1];
-			&tts_sync_state($_[2],$_[3], $4, $5, $6);
+			&tts_sync_state($_[2],$_[3], $_[4], $_[5], $_[6]);
 		}
 	;
 
 punctlevel
-	: 'PUNCT_NONE'
-	| 'PUNCT_SOME'
-	| 'PUNCT_ALL'
+	: 'NONE'
+	| 'SOME'
+	| 'ALL'
 	;
 
 %%
