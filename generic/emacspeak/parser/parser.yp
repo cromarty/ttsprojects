@@ -370,9 +370,3 @@ sub Run {
 	$self->YYParse( yylex => \&_Lexer, yyerror => \&_Error );
 } # end of Run
 
-my $p = new MyParser;
-$p->Run;
-
-
-
-
