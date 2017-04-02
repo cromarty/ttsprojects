@@ -23,9 +23,12 @@
 
 # This is work in progress, not working yet
 
+%{
+
 # Package of functions to be called from semantic actions
 use Emacspeak;
 
+%}
 
 %%
 
@@ -39,35 +42,35 @@ cmdlist
 cmd
 	: code { $_[1]; }
 	| speech { $_[1]; }
-	| dispatch { $_[1]; &tts_d(); }
-	| stop { $_[1]; &tts_s(); }
-	| version { $_[1]; &tts_version(); }
-	| silence { $_[1]; &tts_silence($1); }
+	| dispatch { &tts_d; $_[1]; }
+	| stop { &tts_s; $_[1]; }
+	| version { &tts_version; $_[1]; }
+	| silence { &tts_silence; $_[1]; }
 	| beep { $_[1]; }
 	| tone { $_[1]; }
 	| sound { $_[1]; }
-	| tts_pause { $_[1]; &tts_pause(); }
-	| tts_reset { $_[1]; &tts_reset(); }
-	| tts_resume { $_[1]; &tts_reset(); }
-	| tts_allcaps_beep { $_[1]; &tts_allcaps_beep($1); }
-	| tts_capitalize { $_[1]; &tts_capitalize($1)}
+	| tts_pause { &tts_pause; $_[1]; }
+	| tts_reset { &tts_reset; $_[1]; }
+	| tts_resume { &tts_resume; $_[1]; }
+	| tts_allcaps_beep { &tts_allcaps_beep($_[1]); $_[1]; }
+	| tts_capitalize { &tts_capitalize($_[1]); $_[1]; }
 	| tts_set_character_scale { $_[1]; }
-	| tts_set_punctuations { $_[1]; &tts_set_punctuations($_[1]); }
-	| tts_set_speech_rate { $_[1]; &tts_set_speech_rate($_[1]); }
-	| tts_split_caps { $_[1]; &tts_split_caps($_[1]); }
+	| tts_set_punctuations { &tts_set_punctuations($_[1]); $_[1]; }
+	| tts_set_speech_rate { &tts_set_speech_rate($_[1]); }
+	| tts_split_caps { &tts_split_caps($_[1]); $_[1]; }
 	| tts_sync_state { $_[1]; }
 	;
 
 code
 	: 'C' '{' TEXT '}' '\n'
 		{
-			$_[1];
 			&tts_c($_[3]);
+			$_[1];
 		}
 	| 'C' TEXT '\n'
 		{
-			$_[1];
 			&tts_c($_[2]);
+			$_[1];
 		}
 	;
 
@@ -80,39 +83,39 @@ speech
 immediate_speech
 	: 'TTS_SAY' '{' TEXT '}' '\n'
 		{
-			$_[1];
 			&tts_say($_[3]);
+			$_[1];
 		}
 	| 'TTS_SAY' TEXT '\n'
 		{
-			$_[1];
 			&tts_say($_[2]);
+			$_[1];
 		}
 	;
 
 character
 	: 'L' '{' CHAR '}' '\n'
 		{
-			$_[1];
 			&tts_l($_[3]);
+			$_[1];
 		}
 	| 'L' CHAR '\n'
 		{
-			$_[1];
 			&tts_l($_[2]);
+			$_[1];
 		}
 	;
 
 queued_speech
 	: 'Q' '{' TEXT '}' '\n'
 		{
-			$_[1];
 			&tts_q($_[3]);
+			$_[1];
 		}
 	| 'Q' TEXT '\n'
 		{
-			$_[1];
 			&tts_q($_[2]);
+			$_[1];
 		}
 	;
 
@@ -136,39 +139,39 @@ silence
 beep
 	: 'B' '{' INTEGER INTEGER '}' '\n'
 		{
-			$_[1];
 			&tts_b($_[3], $_[4]);
+			$_[1];
 		}
 	| 'B' INTEGER INTEGER '\n'
 		{
-			$_[1];
 			&tts_b($_[2], $_[3]);
+			$_[1];
 		}
 	;
 
 tone
 	: 'T' '{' INTEGER INTEGER '}' '\n'
 		{
-			$_[1];
 			&tts_t($_[3], $_[4]);
+			$_[1];
 		}
 	| 'T' INTEGER INTEGER '\n'
 		{
-			$_[1];
 			&tts_t($_[2], $_[3]);
+			$_[1];
 		}
 	;
 
 sound
 	: 'A' '{' TEXT '}' '\n'
 		{
-			$_[1];
 			&tts_a($_[3]);
+			$_[1];
 		}
 	| 'A' TEXT '\n'
 		{
-			$_[1];
 			&tts_a($_[2]);
+			$_[1];
 		}
 	;
 
@@ -197,13 +200,13 @@ tts_capitalize
 tts_set_character_scale
 	: 'TTS_SET_CHARACTER_SCALE' '{' DOUBLE '}' '\n'
 		{
-			$_[1];
 			&tts_set_character_scale($_[3]);
+			$_[1];
 		}
 	| 'TTS_SET_CHARACTER_SCALE' DOUBLE '\n'
 		{
-			$_[1];
 			&tts_set_character_scale($_[2]);
+			$_[1];
 		}
 	;
 
@@ -225,13 +228,13 @@ tts_split_caps
 tts_sync_state
 	: 'TTS_SYNC_STATE' '{' punctlevel FLAG FLAG FLAG INTEGER '}' '\n'
 		{ 
-			$_[1];
 			&tts_sync_state($_[3], $_[4], $_[5], $_[6], $_[7]);
+			$_[1];
 		}
 	| 'TTS_SYNC_STATE' punctlevel FLAG FLAG FLAG INTEGER '\n'
 		{
-			$_[1];
 			&tts_sync_state($_[2],$_[3], $_[4], $_[5], $_[6]);
+			$_[1];
 		}
 	;
 
