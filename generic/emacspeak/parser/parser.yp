@@ -3,7 +3,7 @@
 #
 # Parse::Yapp grammar/parser/lexer for the Emacspeak text-to-speech protocol.
 #
-# This is free software; you can redistribute it and/or modify it
+# This is free software; you can redistribute it 		and/or modify it
 # under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2, or (at your option)
 # any later version.
@@ -28,7 +28,12 @@
 # Package of functions to be called from semantic actions
 use Emacspeak;
 
+
 %}
+
+
+%token INTEGER
+
 
 %%
 
@@ -55,8 +60,16 @@ cmd
 	| tts_allcaps_beep { &tts_allcaps_beep($_[1]); $_[1]; }
 	| tts_capitalize { &tts_capitalize($_[1]); $_[1]; }
 	| tts_set_character_scale { $_[1]; }
-	| tts_set_punctuations { &tts_set_punctuations($_[1]); $_[1]; }
-	| tts_set_speech_rate { &tts_set_speech_rate($_[1]); }
+	| tts_set_punctuations
+		{
+			&tts_set_punctuations($_[1]);
+			$_[1];
+		}
+	| tts_set_speech_rate
+		{ 
+			&tts_set_speech_rate($_[1]);
+				$_[1];		
+		}
 	| tts_split_caps { &tts_split_caps($_[1]); $_[1]; }
 	| tts_sync_state { $_[1]; }
 	;
@@ -81,12 +94,12 @@ speech
 	;
 
 immediate_speech
-	: 'TTS_SAY' '{' TEXT '}' '\n'
+	: TTS_SAY '{' TEXT '}' '\n'
 		{
 			&tts_say($_[3]);
 			$_[1];
 		}
-	| 'TTS_SAY' TEXT '\n'
+	| TTS_SAY TEXT '\n'
 		{
 			&tts_say($_[2]);
 			$_[1];
@@ -120,11 +133,11 @@ queued_speech
 	;
 
 dispatch
-	: 'D' '\n' { $_[1]; }
+	: 'd' '\n' { $_[1]; }
 	;
 
 version
-	: 'VERSION' '\n' { $_[1]; }
+	: VERSION '\n' { $_[1]; }
 	;
 
 stop
@@ -132,17 +145,17 @@ stop
 	;
 
 silence
-	: 'SH' '{' INTEGER '}' '\n' { $_[3]; }
-	| 'SH' INTEGER '\n' { $_[2]; }
+	: SH '{' INTEGER '}' '\n' { $_[3]; }
+	| SH INTEGER '\n' { $_[2]; }
 	;
 
 beep
-	: 'B' '{' INTEGER INTEGER '}' '\n'
+	: 'b' '{' INTEGER INTEGER '}' '\n'
 		{
 			&tts_b($_[3], $_[4]);
 			$_[1];
 		}
-	| 'B' INTEGER INTEGER '\n'
+	| 'b' INTEGER INTEGER '\n'
 		{
 			&tts_b($_[2], $_[3]);
 			$_[1];
@@ -150,12 +163,12 @@ beep
 	;
 
 tone
-	: 'T' '{' INTEGER INTEGER '}' '\n'
+	: 't' '{' INTEGER INTEGER '}' '\n'
 		{
 			&tts_t($_[3], $_[4]);
 			$_[1];
 		}
-	| 'T' INTEGER INTEGER '\n'
+	| 't' INTEGER INTEGER '\n'
 		{
 			&tts_t($_[2], $_[3]);
 			$_[1];
@@ -163,12 +176,12 @@ tone
 	;
 
 sound
-	: 'A' '{' TEXT '}' '\n'
+	: 'a' '{' TEXT '}' '\n'
 		{
 			&tts_a($_[3]);
 			$_[1];
 		}
-	| 'A' TEXT '\n'
+	| 'a' TEXT '\n'
 		{
 			&tts_a($_[2]);
 			$_[1];
@@ -176,34 +189,34 @@ sound
 	;
 
 tts_pause
-	: 'TTS_PAUSE' '\n' { $_[1]; }
+	: TTS_PAUSE '\n' { $_[1]; }
 	;
 
 tts_reset
-	: 'TTS_RESET' '\n' { $_[1]; }
+	: TTS_RESET '\n' { $_[1]; }
 	;
 
 tts_resume
-	: 'TTS_RESUME' '\n' { $_[1]; }
+	: TTS_RESUME '\n' { $_[1]; }
 	;
 
 tts_allcaps_beep
-	: 'TTS_ALLCAPS_BEEP' '{' FLAG '}' '\n' { $_[3]; }
-	| 'TTS_ALLCAPS_BEEP' FLAG '\n' { $_[2]; }
+	: TTS_ALLCAPS_BEEP '{' FLAG '}' '\n' { $_[3]; }
+	| TTS_ALLCAPS_BEEP FLAG '\n' { $_[2]; }
 	;
 
 tts_capitalize
-	: 'TTS_CAPITALIZE' '{' FLAG '}' '\n' { $_[3]; }
-	| 'TTS_CAPITALIZE' FLAG '\n' { $_[2]; }
+	: TTS_CAPITALIZE '{' FLAG '}' '\n' { $_[3]; }
+	| TTS_CAPITALIZE FLAG '\n' { $_[2]; }
 	;
 
 tts_set_character_scale
-	: 'TTS_SET_CHARACTER_SCALE' '{' DOUBLE '}' '\n'
+	: TTS_SET_CHARACTER_SCALE '{' DOUBLE '}' '\n'
 		{
 			&tts_set_character_scale($_[3]);
 			$_[1];
 		}
-	| 'TTS_SET_CHARACTER_SCALE' DOUBLE '\n'
+	| TTS_SET_CHARACTER_SCALE DOUBLE '\n'
 		{
 			&tts_set_character_scale($_[2]);
 			$_[1];
@@ -211,27 +224,27 @@ tts_set_character_scale
 	;
 
 tts_set_punctuations
-	: 'TTS_SET_PUNCTUATIONS' '{' punctlevel '}' '\n' { $_[3]; }
-	| 'TTS_SET_PUNCTUATIONS' punctlevel '\n' { $_[2]; }
+	: TTS_SET_PUNCTUATIONS '{' punctlevel '}' '\n' { $_[3]; }
+	| TTS_SET_PUNCTUATIONS punctlevel '\n' { $_[2]; }
 	;
 
 tts_set_speech_rate
-	: 'TTS_SET_SPEECH_RATE' '{' INTEGER '}' '\n' { $_[3]; }
-	| 'TTS_SET_SPEECH_RATE' INTEGER '\n' { $_[2]; }
+	: TTS_SET_SPEECH_RATE '{' INTEGER '}' '\n' { print "In tts_set_speech_rate\n"; $_[3]; }
+	| TTS_SET_SPEECH_RATE INTEGER '\n' { $_[2]; }
 	;
 
 tts_split_caps
-	: 'TTS_SPLIT_CAPS' '{' FLAG '}' '\n' { $_[3]; }
-	| 'TTS_SPLIT_CAPS' FLAG '\n' { $_[2]; }
+	: TTS_SPLIT_CAPS '{' FLAG '}' '\n' { $_[3]; }
+	| TTS_SPLIT_CAPS FLAG '\n' { $_[2]; }
 	;
 
 tts_sync_state
-	: 'TTS_SYNC_STATE' '{' punctlevel FLAG FLAG FLAG INTEGER '}' '\n'
+	: TTS_SYNC_STATE '{' punctlevel FLAG FLAG FLAG INTEGER '}' '\n'
 		{ 
 			&tts_sync_state($_[3], $_[4], $_[5], $_[6], $_[7]);
 			$_[1];
 		}
-	| 'TTS_SYNC_STATE' punctlevel FLAG FLAG FLAG INTEGER '\n'
+	| TTS_SYNC_STATE punctlevel FLAG FLAG FLAG INTEGER '\n'
 		{
 			&tts_sync_state($_[2],$_[3], $_[4], $_[5], $_[6]);
 			$_[1];
@@ -239,9 +252,9 @@ tts_sync_state
 	;
 
 punctlevel
-	: 'NONE'
-	| 'SOME'
-	| 'ALL'
+	: NONE
+	| SOME
+	| ALL
 	;
 
 %%
@@ -266,100 +279,129 @@ sub _Lexer {
 	$parser->YYData->{INPUT}
 		or  $parser->YYData->{INPUT} = <STDIN>
 		or  return('',undef);
-
-	#$parser->YYData->{INPUT} =~ s/^[ \t]//;
+	
+    $parser->YYData->{INPUT}=~s/^[ \t]+//;
 
 	for ($parser->YYData->{INPUT}) {
+
 		# tts_say, immediate speech
-		s/^(tts_say)// and return('TTS_SAY',$1);
+		s/^(tts_say)//
+		and return('TTS_SAY',$1);
 
 		# Version, no arguments
-		s/^(version)// and return('VERSION',$1);
+		s/^(version)//
+		and return('VERSION',$1);
 
 		# punctuation levels
-		s/^((none|some|all))// and return('PUNCTLEVEL',$1);
+		s/^((none|some|all))//
+		and return('PUNCTLEVEL',$1);
 
 		# Pause, reset and resume have no arguments
 
 		# pause
-		s/^(tts_pause)// and return('TTS_PAUSE',$1);
+		s/^(tts_pause)//
+		and return('TTS_PAUSE',$1);
 
 		# reset 
-		s/^(tts_reset)// and return('TTS_RESET',$1);
+		s/^(tts_reset)//
+		and return('TTS_RESET',$1);
 
 		# resume 
-		s/^(tts_resume)// and return('TTS_RESUME',$1);
+		s/^(tts_resume)//
+		and return('TTS_RESUME',$1);
 
 		# These tts_* functions either have braces or not
 
 		# tts_allcaps_beep
-		s/^(tts_allcaps_beep)// and return('TTS_ALLCAPS_BEEP',$1);
+		s/^(tts_allcaps_beep)//
+		and return('TTS_ALLCAPS_BEEP',$1);
 
 		# tts_capitalize
-		s/^(tts_capitalize)// and return('TTS_CAPITALIZE',$1);
+		s/^(tts_capitalize)//
+		and return('TTS_CAPITALIZE',$1);
 
 		# tts_set_character_scale
-		s/^(tts_set_character_scale)// and return('TTS_SET_CHARACTER_SCALE',$1);
+		s/^(tts_set_character_scale)//
+		and return('TTS_SET_CHARACTER_SCALE',$1);
 
 		# tts_set_punctuations	
-		s/^(tts_set_punctuations)// and return('TTS_SET_PUNCTUATIONS',$1);
+		s/^(tts_set_punctuations)//
+		and return('TTS_SET_PUNCTUATIONS',$1);
 
 		# tts_set_speech_rate
-		s/^(tts_set_speech_rate)// and return('TTS_SET_SPEECH_RATE',$1);
+		s/^(tts_set_speech_rate)//
+		and return('TTS_SET_SPEECH_RATE',$1);
 
 		# tts_split_caps
-		s/^(tts_split_caps)// and return('TTS_SPLIT_CAPS',$1);
+		s/^(tts_split_caps)//
+		and return('TTS_SPLIT_CAPS',$1);
 
 		# tts_sync_state with or without braces but I've never seen braces
 
 		# tts_sync_state
-		s/^(tts_sync_state)// and return('TTS_SYNC_STATE',$1);
+		s/^(tts_sync_state)//
+		and return('TTS_SYNC_STATE',$1);
 
 	# silence 'sh'
-		s/^(sh)// and return('SH',$1);
+		s/^(sh)//
+		and return('SH',$1);
 
 		# Start of single-character patterns
 
+		# Dispatch 'd'
+		s/^(d)//
+		and return($1,$1);
+
 		# code 'c'
-		s/^(c)// and return(uc($1),$1);
+		s/^(c)//
+		and return($1,$1);
 
 		# single letter 'l'
-		s/^(l)// and return(uc($1),$1);
+		s/^(l)//
+		and return($1,$1);
 
 		# queued speech 'q'
-		s/^(q)// and return(uc($1),$1);
+		s/^(q)//
+		and return($1,$1);
 
 		# tone 't' 
-		s/^(t)// and return(uc($1),$1);
+		s/^(t)//
+		and return($1,$1);
 
 		# beep 'b'
-		s/^(b)// and return(uc($1),$1);
+		s/^(b)//
+		and return($1,$1);
 
 		# sound file 'a' or 'p'
-		s/^((a|p))// and return(uc($1),$1);
+		s/^((a|p))//
+		and return($1,$1);
 
 		# numeric patterns
 
 		# integer
-		s/^([0-9][0-9]+)// and return('INTEGER',$1);
+		s/^([0-9][0-9]+)//
+		and return('INTEGER',$1);
 
 		# double
-		s/^([-+]?([0-9]*\.?[0-9]+|[0-9]+\.))// and return('DOUBLE',$1);
+		s/^([-+]?([0-9]*\.[0-9]+|[0-9]+\.))//
+			and return('DOUBLE',$1);
 
 		# flag 0 or 1
-		s/^([01])// and return('FLAG',$1);
+		s/^([01])//
+		and return('FLAG',$1);
 
 		# Left-brace
-		s/^({)// and return($1,$1);
+		s/^({)//
+		and return($1,$1);
 
 		# Right-brace
-		s/^(})// and return($1,$1);
+		s/^(})//
+		and return($1,$1);
 
 		# newline
-		s/^(\n)// and return($1,$1);
+		s/^(\n)//s
+		and return($1,$1);
 
-		# Eat white space
-		s/^\s+//;
 
 	}
 

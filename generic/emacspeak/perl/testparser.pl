@@ -9,7 +9,8 @@ my $parser = new EmacspeakParser();
 
 my $value = $parser->YYParse(
 		yylex => \&EmacspeakParser::_Lexer,
-		yyerror => \&EmacspeakParser::_Error
+		yyerror => \&EmacspeakParser::_Error,
+		yydebug => 0x1F
 	);
 
 my $nberr = $parser->YYNberr();
