@@ -1,0 +1,30 @@
+		d
+version
+s
+version
+		sh 2000
+tts_pause
+tts_reset
+		tts_resume
+tts_allcaps_beep 1
+tts_allcaps_beep 0
+tts_capitalize 1
+tts_capitalize 0
+		tts_set_punctuations all
+tts_set_speech_rate 500
+tts_set_speech_rate { 600 }
+tts_split_caps 1
+tts_split_caps 0
+c { }
+tts_say { Some speech }
+tts_say word
+l {A}
+l Z
+		q { Some speech }
+q word
+b 200 300
+t 200 300
+a {/path/to/wav}
+a /path/to/wav
+tts_set_character_scale 2.0
+tts_sync_state all 1 1 1 400

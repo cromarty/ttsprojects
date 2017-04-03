@@ -141,7 +141,7 @@ version
 	;
 
 stop
-	: 'S' '\n' { $_[1]; }
+	: 's' '\n' { $_[1]; }
 	;
 
 silence
@@ -286,7 +286,10 @@ sub _Lexer {
 
 		# tts_say, immediate speech
 		s/^(tts_say)//
-		and return('TTS_SAY',$1);
+		and do {
+			$parser->YYData->{CONDITION} = 1;
+			return('TTS_SAY',$1);
+		};
 
 		# Version, no arguments
 		s/^(version)//
@@ -330,7 +333,10 @@ sub _Lexer {
 
 		# tts_set_speech_rate
 		s/^(tts_set_speech_rate)//
-		and return('TTS_SET_SPEECH_RATE',$1);
+		and do {
+			$parser->YYData->{CONDITION} = 1;
+			return('TTS_SET_SPEECH_RATE',$1);
+		};
 
 		# tts_split_caps
 		s/^(tts_split_caps)//
@@ -351,6 +357,10 @@ sub _Lexer {
 		# Dispatch 'd'
 		s/^(d)//
 		and return($1,$1);
+
+		# stop 's'
+		s/^(s)//
+			and return($1,$1);
 
 		# code 'c'
 		s/^(c)//
@@ -400,7 +410,10 @@ sub _Lexer {
 
 		# newline
 		s/^(\n)//s
-		and return($1,$1);
+		and do {
+			$parser->YYData->{CONDITION} = 0;
+			return($1,$1);
+		};
 
 
 	}
