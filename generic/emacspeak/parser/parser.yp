@@ -50,7 +50,7 @@ cmd
 	| dispatch { &tts_d; $_[1]; }
 	| stop { &tts_s; $_[1]; }
 	| version { &tts_version; $_[1]; }
-	| silence { &tts_silence; $_[1]; }
+	| silence { &tts_silence($1); $_[1]; }
 	| beep { $_[1]; }
 	| tone { $_[1]; }
 	| sound { $_[1]; }
