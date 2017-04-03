@@ -224,8 +224,8 @@ tts_set_character_scale
 	;
 
 tts_set_punctuations
-	: TTS_SET_PUNCTUATIONS '{' punctlevel '}' '\n' { $_[3]; }
-	| TTS_SET_PUNCTUATIONS punctlevel '\n' { $_[2]; }
+	: TTS_SET_PUNCTUATIONS '{' PUNCTLEVEL '}' '\n' { $_[3]; }
+	| TTS_SET_PUNCTUATIONS PUNCTLEVEL '\n' { $_[2]; }
 	;
 
 tts_set_speech_rate
@@ -297,7 +297,10 @@ sub _Lexer {
 
 		# punctuation levels
 		s/^((none|some|all))//
-		and return('PUNCTLEVEL',$1);
+		and do {
+			return('PUNCTLEVEL',{'none'=>0,'some'=>1,'all'=>2}->{$1});
+		};
+
 
 		# Pause, reset and resume have no arguments
 
