@@ -25,6 +25,11 @@
 
 %{
 
+# These constants are used as conditions, a-la %x in Yacc.
+use constant X_START			=> 0;
+use constant X_SPEECH			=> 1;
+use constant X_INBRACES			=> 2;
+
 # Package of functions to be called from semantic actions
 use Emacspeak;
 
