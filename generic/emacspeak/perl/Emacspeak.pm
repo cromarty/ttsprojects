@@ -52,7 +52,7 @@ sub tts_version() {
 
 sub tts_silence() {
 	my ($duration) = @_;
-	print "Called tts_silence: $duration\n";
+	print "Called tts_silence: >$duration<\n";
 }
 
 
@@ -73,75 +73,75 @@ sub tts_resume() {
 
 sub tts_allcaps_beep() {
 	my ($flag) = @_;
-	print "Called tts_allcaps_beep: $flag\n";
+	print "Called tts_allcaps_beep: >$flag<\n";
 }
 
 
 sub tts_capitalize() {
 	my ($flag) = @_;
-	print "Called tts_capitalize: $flag\n";
+	print "Called tts_capitalize: >$flag<\n";
 }
 
 sub tts_set_punctuations() {
 	my ($punctuations) = @_;
-	print "Called tts_set_punctuations: $punctuations\n";
+	print "Called tts_set_punctuations: >$punctuations<\n";
 }
 
 sub tts_set_speech_rate() {
 	my ($rate) = @_;
-	print "Called tts_set_speech_rate: $rate\n";
+	print "Called tts_set_speech_rate: >$rate<\n";
 }
 
 sub tts_split_caps() {
 	my ($flag) = @_;
-print "Called tts_split_caps: $flag\n";
+print "Called tts_split_caps: >$flag<\n";
 }
 
 
 sub tts_c() {
 	my ($code) = @_;
-	print "Called tts_c: $code\n";
+	print "Called tts_c: >$code<\n";
 }
 
 
 sub tts_say() {
 	my ($speech) = @_;
-	print "Called tts_say: $speech\n";
+	print "Called tts_say: >$speech<\n";
 }
 
 
 sub tts_l() {
 	my ($letter) = @_;
-	print "Called tts_l: $letter\n";
+	print "Called tts_l: >$letter<\n";
 }
 
 
 sub tts_q() {
 	my ($speech) = @_;
-	print "Called tts_q: $speech\n";
+	print "Called tts_q: >$speech<\n";
 }
 
 
 sub tts_b() {
 	my ($pitch, $duration) = @_;
-	print "Called tts_b: $pitch, $duration\n";
+	print "Called tts_b: >$pitch<, >$duration<\n";
 }
 
 sub tts_t() {
 	my ($pitch, $duration) = @_;
-	print "Called tts_t: $pitch, $duration\n";
+	print "Called tts_t: >$pitch<, >$duration<\n";
 }
 
 
 sub tts_a() {
 	my ($sound) = @_;
-	print "Called tts_a: $sound\n";
+	print "Called tts_a: >$sound<\n";
 }
 
 
 sub tts_set_character_scale() {
 	my ($scale) = @_;
-	print "Called tts_set_character_scale: $scale\n";
+	print "Called tts_set_character_scale: >$scale<\n";
 }
 
 sub tts_sync_state() {

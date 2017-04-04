@@ -28,7 +28,8 @@
 # These constants are used as start states, a-la %x in Yacc.
 use constant X_INITIAL			=> 0;
 use constant X_SPEECH			=> 1;
-use constant X_INBRACES			=> 2;
+use constant X_RESOURCE			=> 2;
+use constant X_INBRACES			=> 3;
 
 # Package of functions to be called from semantic actions
 use Emacspeak;
@@ -115,7 +116,7 @@ code
 			&tts_c($_[3]);
 			$_[1];
 		}
-	| 'c' WORD '\n'
+	| 'c' ATOM '\n'
 		{
 			&tts_c($_[2]);
 			$_[1];
@@ -134,7 +135,7 @@ immediate_speech
 			&tts_say($_[3]);
 			$_[1];
 		}
-	| TTS_SAY WORD '\n'
+	| TTS_SAY ATOM '\n'
 		{
 			&tts_say($_[2]);
 			$_[1];
@@ -160,7 +161,7 @@ queued_speech
 			&tts_q($_[3]);
 			$_[1];
 		}
-	| 'q' WORD '\n'
+	| 'q' ATOM '\n'
 		{
 			&tts_q($_[2]);
 			$_[1];
@@ -217,12 +218,12 @@ tone
 	;
 
 sound
-	: 'a' '{' TEXT '}' '\n'
+	: 'a' '{' ATOM '}' '\n'
 		{
 			&tts_a($_[3]);
 			$_[1];
 		}
-	| 'a' TEXT '\n'
+	| 'a' ATOM '\n'
 		{
 			&tts_a($_[2]);
 			$_[1];
@@ -329,7 +330,7 @@ sub _Lexer {
 		if ($parser->YYData->{STATE} == X_INBRACES ) {
 			#print "State is X_INBRACES\n";
 			#s/^(.*?)([}\n])/$2/
-			s/^([^}]+)//
+			s/^([^}]+)\s+//
 			and do {
 				$parser->YYData->{STATE} = X_INITIAL;
 				#print "About to return text: >$1<\n";
@@ -341,7 +342,7 @@ sub _Lexer {
 			s/^([^ {}\n]+)//
 			and do {
 				$parser->YYData->{STATE} = X_INITIAL;
-				return('WORD',$1);
+				return('ATOM',$1);
 			};
 		}
 
@@ -453,7 +454,10 @@ sub _Lexer {
 
 		# sound file 'a' or 'p'
 		s/^((a|p))//i
-		and return($1,$1);
+		and do {
+			$parser->YYData->{STATE} = X_RESOURCE;
+			return($1,$1);
+		};
 
 		# numeric patterns
 
