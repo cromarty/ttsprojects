@@ -110,12 +110,12 @@ $_[1];
 	;
 
 code
-	: 'C' '{' TEXT '}' '\n'
+	: 'c' '{' TEXT '}' '\n'
 		{
 			&tts_c($_[3]);
 			$_[1];
 		}
-	| 'C' TEXT '\n'
+	| 'c' WORD '\n'
 		{
 			&tts_c($_[2]);
 			$_[1];
@@ -134,7 +134,7 @@ immediate_speech
 			&tts_say($_[3]);
 			$_[1];
 		}
-	| TTS_SAY TEXT '\n'
+	| TTS_SAY WORD '\n'
 		{
 			&tts_say($_[2]);
 			$_[1];
@@ -160,7 +160,7 @@ queued_speech
 			&tts_q($_[3]);
 			$_[1];
 		}
-	| 'q' TEXT '\n'
+	| 'q' WORD '\n'
 		{
 			&tts_q($_[2]);
 			$_[1];
@@ -328,7 +328,8 @@ sub _Lexer {
 
 		if ($parser->YYData->{STATE} == X_INBRACES ) {
 			#print "State is X_INBRACES\n";
-			s/^(.*?)([}\n])/$2/
+			#s/^(.*?)([}\n])/$2/
+			s/^([^}]+)//
 			and do {
 				$parser->YYData->{STATE} = X_INITIAL;
 				#print "About to return text: >$1<\n";
@@ -336,6 +337,13 @@ sub _Lexer {
 			};
 		}
 
+		if ($parser->YYData->{STATE} == X_SPEECH ) {
+			s/^([^ {}\n]+)//
+			and do {
+				$parser->YYData->{STATE} = X_INITIAL;
+				return('WORD',$1);
+			};
+		}
 
 		# tts_say, immediate speech
 		s/^(tts_say)//i

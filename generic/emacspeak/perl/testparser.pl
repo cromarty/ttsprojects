@@ -5,12 +5,14 @@ use warnings;
 
 use EmacspeakParser;
 
-my $parser = new EmacspeakParser();
+my $debug = shift || 0;
 
+my $parser = new EmacspeakParser();
+$parser->YYData->{STATE} = 0;
 my $value = $parser->YYParse(
 		yylex => \&EmacspeakParser::_Lexer,
 		yyerror => \&EmacspeakParser::_Error,
-		yydebug => 0x00
+		yydebug => $debug
 	);
 
 my $nberr = $parser->YYNberr();
