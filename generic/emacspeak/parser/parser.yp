@@ -50,16 +50,39 @@ cmd
 	| dispatch { &tts_d; $_[1]; }
 	| stop { &tts_s; $_[1]; }
 	| version { &tts_version; $_[1]; }
-	| silence { &tts_silence($1); $_[1]; }
+	| silence
+		{ 
+			&tts_silence($_[1]);
+$_[1];
+		}
 	| beep { $_[1]; }
 	| tone { $_[1]; }
 	| sound { $_[1]; }
-	| tts_pause { &tts_pause; $_[1]; }
-	| tts_reset { &tts_reset; $_[1]; }
+	| tts_pause
+		{
+			&tts_pause;
+			$_[1];
+		}
+	| tts_reset
+		{
+			&tts_reset;
+			$_[1];
+		}
 	| tts_resume { &tts_resume; $_[1]; }
-	| tts_allcaps_beep { &tts_allcaps_beep($_[1]); $_[1]; }
-	| tts_capitalize { &tts_capitalize($_[1]); $_[1]; }
-	| tts_set_character_scale { $_[1]; }
+	| tts_allcaps_beep
+		{
+			&tts_allcaps_beep($_[1]);
+			$_[1];
+		}
+	| tts_capitalize
+		{
+			&tts_capitalize($_[1]);
+			$_[1];
+		}
+	| tts_set_character_scale
+		{
+			$_[1];
+		}
 	| tts_set_punctuations
 		{
 			&tts_set_punctuations($_[1]);
@@ -70,8 +93,15 @@ cmd
 			&tts_set_speech_rate($_[1]);
 				$_[1];		
 		}
-	| tts_split_caps { &tts_split_caps($_[1]); $_[1]; }
-	| tts_sync_state { $_[1]; }
+	| tts_split_caps
+		{
+			&tts_split_caps($_[1]);
+			$_[1];
+		}
+	| tts_sync_state
+		{
+			$_[1];
+		}
 	;
 
 code
@@ -145,8 +175,14 @@ stop
 	;
 
 silence
-	: SH '{' INTEGER '}' '\n' { $_[3]; }
-	| SH INTEGER '\n' { $_[2]; }
+	: SH '{' INTEGER '}' '\n'
+		{
+			$_[3];
+		}
+	| SH INTEGER '\n'
+		{
+			$_[2];
+		}
 	;
 
 beep
@@ -229,7 +265,7 @@ tts_set_punctuations
 	;
 
 tts_set_speech_rate
-	: TTS_SET_SPEECH_RATE '{' INTEGER '}' '\n' { print "In tts_set_speech_rate\n"; $_[3]; }
+	: TTS_SET_SPEECH_RATE '{' INTEGER '}' '\n' { $_[3]; }
 	| TTS_SET_SPEECH_RATE INTEGER '\n' { $_[2]; }
 	;
 
@@ -285,14 +321,14 @@ sub _Lexer {
 	for ($parser->YYData->{INPUT}) {
 
 		# tts_say, immediate speech
-		s/^(tts_say)//
+		s/^(tts_say)//i
 		and do {
 			$parser->YYData->{CONDITION} = 1;
 			return('TTS_SAY',$1);
 		};
 
 		# Version, no arguments
-		s/^(version)//
+		s/^(version)//i
 		and return('VERSION',$1);
 
 		# punctuation levels
@@ -305,88 +341,88 @@ sub _Lexer {
 		# Pause, reset and resume have no arguments
 
 		# pause
-		s/^(tts_pause)//
+		s/^(tts_pause)//i
 		and return('TTS_PAUSE',$1);
 
 		# reset 
-		s/^(tts_reset)//
+		s/^(tts_reset)//i
 		and return('TTS_RESET',$1);
 
 		# resume 
-		s/^(tts_resume)//
+		s/^(tts_resume)//i
 		and return('TTS_RESUME',$1);
 
 		# These tts_* functions either have braces or not
 
 		# tts_allcaps_beep
-		s/^(tts_allcaps_beep)//
+		s/^(tts_allcaps_beep)//i
 		and return('TTS_ALLCAPS_BEEP',$1);
 
 		# tts_capitalize
-		s/^(tts_capitalize)//
+		s/^(tts_capitalize)//i
 		and return('TTS_CAPITALIZE',$1);
 
 		# tts_set_character_scale
-		s/^(tts_set_character_scale)//
+		s/^(tts_set_character_scale)//i
 		and return('TTS_SET_CHARACTER_SCALE',$1);
 
 		# tts_set_punctuations	
-		s/^(tts_set_punctuations)//
+		s/^(tts_set_punctuations)//i
 		and return('TTS_SET_PUNCTUATIONS',$1);
 
 		# tts_set_speech_rate
-		s/^(tts_set_speech_rate)//
+		s/^(tts_set_speech_rate)//i
 		and do {
 			$parser->YYData->{CONDITION} = 1;
 			return('TTS_SET_SPEECH_RATE',$1);
 		};
 
 		# tts_split_caps
-		s/^(tts_split_caps)//
+		s/^(tts_split_caps)//i
 		and return('TTS_SPLIT_CAPS',$1);
 
 		# tts_sync_state with or without braces but I've never seen braces
 
 		# tts_sync_state
-		s/^(tts_sync_state)//
+		s/^(tts_sync_state)//i
 		and return('TTS_SYNC_STATE',$1);
 
 	# silence 'sh'
-		s/^(sh)//
+		s/^(sh)//i
 		and return('SH',$1);
 
 		# Start of single-character patterns
 
 		# Dispatch 'd'
-		s/^(d)//
+		s/^(d)//i
 		and return($1,$1);
 
 		# stop 's'
-		s/^(s)//
+		s/^(s)//i
 			and return($1,$1);
 
 		# code 'c'
-		s/^(c)//
+		s/^(c)//i
 		and return($1,$1);
 
 		# single letter 'l'
-		s/^(l)//
+		s/^(l)//i
 		and return($1,$1);
 
 		# queued speech 'q'
-		s/^(q)//
+		s/^(q)//i
 		and return($1,$1);
 
 		# tone 't' 
-		s/^(t)//
+		s/^(t)//i
 		and return($1,$1);
 
 		# beep 'b'
-		s/^(b)//
+		s/^(b)//i
 		and return($1,$1);
 
 		# sound file 'a' or 'p'
-		s/^((a|p))//
+		s/^((a|p))//i
 		and return($1,$1);
 
 		# numeric patterns
