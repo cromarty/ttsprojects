@@ -25,8 +25,8 @@
 
 %{
 
-# These constants are used as conditions, a-la %x in Yacc.
-use constant X_START			=> 0;
+# These constants are used as start states, a-la %x in Yacc.
+use constant X_INITIAL			=> 0;
 use constant X_SPEECH			=> 1;
 use constant X_INBRACES			=> 2;
 
@@ -155,12 +155,12 @@ character
 	;
 
 queued_speech
-	: 'Q' '{' TEXT '}' '\n'
+	: 'q' '{' TEXT '}' '\n'
 		{
 			&tts_q($_[3]);
 			$_[1];
 		}
-	| 'Q' TEXT '\n'
+	| 'q' TEXT '\n'
 		{
 			&tts_q($_[2]);
 			$_[1];
@@ -321,14 +321,26 @@ sub _Lexer {
 		or  $parser->YYData->{INPUT} = <STDIN>
 		or  return('',undef);
 	
-    $parser->YYData->{INPUT}=~s/^[ \t]+//;
+	# Eat white space
+    $parser->YYData->{INPUT} =~ s/^[ \t]+//;
 
 	for ($parser->YYData->{INPUT}) {
+
+		if ($parser->YYData->{STATE} == X_INBRACES ) {
+			#print "State is X_INBRACES\n";
+			s/^(.*?)([}\n])/$2/
+			and do {
+				$parser->YYData->{STATE} = X_INITIAL;
+				#print "About to return text: >$1<\n";
+				return('TEXT',$1);
+			};
+		}
+
 
 		# tts_say, immediate speech
 		s/^(tts_say)//i
 		and do {
-			$parser->YYData->{CONDITION} = 1;
+			$parser->YYData->{STATE} = X_SPEECH;
 			return('TTS_SAY',$1);
 		};
 
@@ -341,7 +353,6 @@ sub _Lexer {
 		and do {
 			return('PUNCTLEVEL',{'none'=>0,'some'=>1,'all'=>2}->{$1});
 		};
-
 
 		# Pause, reset and resume have no arguments
 
@@ -408,7 +419,10 @@ sub _Lexer {
 
 		# code 'c'
 		s/^(c)//i
-		and return($1,$1);
+		and do {
+			$parser->YYData->{STATE} = X_SPEECH;
+			return($1,$1);
+		};
 
 		# single letter 'l'
 		s/^(l)//i
@@ -416,7 +430,10 @@ sub _Lexer {
 
 		# queued speech 'q'
 		s/^(q)//i
-		and return($1,$1);
+		and do {
+			$parser->YYData->{STATE} = X_SPEECH;
+			return(lc($1),$1);
+		};
 
 		# tone 't' 
 		s/^(t)//i
@@ -446,19 +463,30 @@ sub _Lexer {
 
 		# Left-brace
 		s/^({)//
-		and return($1,$1);
+		and do {
+			#print "Found left brace\n";
+			if ( $parser->YYData->{STATE} == X_SPEECH ) {
+				#print "Found left brace while in X_SPEECH\n";
+				$parser->YYData->{STATE} = X_INBRACES;
+			}
+			return($1,$1);
+		};
 
 		# Right-brace
 		s/^(})//
-		and return($1,$1);
+		and do {
+			#print "Found right brace\n";
+			$parser->YYData->{STATE} = X_INITIAL;
+			return($1,$1);
+		};
 
 		# newline
 		s/^(\n)//s
 		and do {
-			$parser->YYData->{CONDITION} = 0;
+			$parser->YYData->{STATE} = X_INITIAL;
 			return($1,$1);
-		};
-
+	
+	};
 
 	}
 
