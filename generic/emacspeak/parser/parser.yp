@@ -35,7 +35,7 @@ use constant X_INBRACES			=> 8;
 # Package of functions to be called from semantic actions
 use Emacspeak;
 
-my $debug = 1;
+my $debug = 0;
 
 %}
 
