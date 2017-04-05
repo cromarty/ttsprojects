@@ -268,8 +268,8 @@ tts_set_character_scale
 	;
 
 tts_set_punctuations
-	: TTS_SET_PUNCTUATIONS '{' PUNCTLEVEL '}' '\n' { $_[3]; }
-	| TTS_SET_PUNCTUATIONS PUNCTLEVEL '\n' { $_[2]; }
+	: TTS_SET_PUNCTUATIONS '{' punctlevel '}' '\n' { $_[3]; }
+	| TTS_SET_PUNCTUATIONS punctlevel '\n' { $_[2]; }
 	;
 
 tts_set_speech_rate
