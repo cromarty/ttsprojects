@@ -362,7 +362,7 @@ sub _Lexer {
 		# punctuation levels
 		s/^((none|some|all))//
 		and do {
-			return('PUNCTLEVEL',{'none'=>0,'some'=>1,'all'=>2}->{$1});
+			return(uc($1),{'none'=>0,'some'=>1,'all'=>2}->{$1});
 		};
 
 		# Pause, reset and resume have no arguments

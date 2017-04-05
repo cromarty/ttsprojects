@@ -46,180 +46,187 @@ sub new {
 	},
 	{#State 1
 		ACTIONS => {
-			'TTS_CAPITALIZE' => 2,
-			"t" => 23,
-			'TTS_ALLCAPS_BEEP' => 24,
-			"L" => 25,
-			'TTS_SET_SPEECH_RATE' => 26,
-			'TTS_SPLIT_CAPS' => 6,
-			'VERSION' => 27,
-			'TTS_PAUSE' => 28,
-			"d" => 10,
-			'TTS_RESUME' => 31,
-			"s" => 33,
-			"c" => 12,
-			'SH' => 13,
-			'TTS_SET_PUNCTUATIONS' => 35,
-			"b" => 39,
-			'TTS_SYNC_STATE' => 38,
-			'TTS_SET_CHARACTER_SCALE' => 42,
-			'' => 43,
-			'TTS_SAY' => 45,
-			'TTS_RESET' => 18,
-			"a" => 46,
-			"q" => 19
+			'TTS_SET_CHARACTER_SCALE' => 37,
+			"s" => 38,
+			'TTS_SYNC_STATE' => 14,
+			'SH' => 39,
+			'TTS_SET_PUNCTUATIONS' => 15,
+			'TTS_CAPITALIZE' => 16,
+			'TTS_ALLCAPS_BEEP' => 45,
+			'TTS_SAY' => 44,
+			"c" => 10,
+			'TTS_SPLIT_CAPS' => 11,
+			"d" => 31,
+			'TTS_RESUME' => 33,
+			"b" => 12,
+			'TTS_RESET' => 35,
+			"t" => 7,
+			"q" => 28,
+			'TTS_PAUSE' => 9,
+			'TTS_SET_SPEECH_RATE' => 29,
+			"a" => 4,
+			'' => 5,
+			"L" => 24,
+			'VERSION' => 6
 		},
 		GOTOS => {
-			'tts_set_character_scale' => 16,
-			'code' => 44,
-			'tts_reset' => 17,
-			'queued_speech' => 20,
-			'silence' => 14,
-			'tts_split_caps' => 40,
-			'cmd' => 37,
-			'character' => 15,
-			'immediate_speech' => 41,
-			'stop' => 34,
-			'version' => 36,
-			'tts_resume' => 11,
-			'tts_capitalize' => 30,
+			'tts_capitalize' => 2,
+			'beep' => 19,
+			'tts_reset' => 18,
+			'silence' => 22,
+			'version' => 21,
+			'tts_pause' => 3,
+			'dispatch' => 20,
+			'character' => 23,
+			'queued_speech' => 26,
+			'sound' => 25,
+			'tts_resume' => 27,
+			'code' => 8,
+			'speech' => 30,
 			'tts_allcaps_beep' => 32,
-			'dispatch' => 9,
-			'tone' => 8,
-			'tts_set_speech_rate' => 29,
-			'tts_pause' => 7,
-			'sound' => 5,
-			'tts_sync_state' => 21,
-			'tts_set_punctuations' => 4,
-			'beep' => 3,
-			'speech' => 22
+			'cmd' => 34,
+			'tone' => 13,
+			'tts_set_punctuations' => 36,
+			'tts_sync_state' => 41,
+			'tts_split_caps' => 40,
+			'tts_set_speech_rate' => 17,
+			'stop' => 43,
+			'immediate_speech' => 42,
+			'tts_set_character_scale' => 46
 		}
 	},
 	{#State 2
-		ACTIONS => {
-			"{" => 47,
-			'FLAG' => 48
-		}
+		DEFAULT => -16
 	},
 	{#State 3
-		DEFAULT => -9
+		DEFAULT => -12
 	},
 	{#State 4
-		DEFAULT => -18
+		ACTIONS => {
+			'ATOM' => 47,
+			"{" => 48
+		}
 	},
 	{#State 5
-		DEFAULT => -11
+		DEFAULT => 0
 	},
 	{#State 6
 		ACTIONS => {
-			'FLAG' => 50,
-			"{" => 49
+			"\n" => 49
 		}
 	},
 	{#State 7
-		DEFAULT => -12
+		ACTIONS => {
+			"{" => 51,
+			'INTEGER' => 50
+		}
 	},
 	{#State 8
-		DEFAULT => -10
+		DEFAULT => -3
 	},
 	{#State 9
-		DEFAULT => -5
+		ACTIONS => {
+			"\n" => 52
+		}
 	},
 	{#State 10
 		ACTIONS => {
-			"\n" => 51
+			"{" => 53,
+			'ATOM' => 54
 		}
 	},
 	{#State 11
-		DEFAULT => -14
-	},
-	{#State 12
 		ACTIONS => {
-			"{" => 52,
-			'ATOM' => 53
-		}
-	},
-	{#State 13
-		ACTIONS => {
-			'INTEGER' => 54,
+			'FLAG' => 56,
 			"{" => 55
 		}
 	},
+	{#State 12
+		ACTIONS => {
+			"{" => 58,
+			'INTEGER' => 57
+		}
+	},
+	{#State 13
+		DEFAULT => -10
+	},
 	{#State 14
-		DEFAULT => -8
+		ACTIONS => {
+			'SOME' => 59,
+			'ALL' => 60,
+			'NONE' => 63,
+			"{" => 61
+		},
+		GOTOS => {
+			'punctlevel' => 62
+		}
 	},
 	{#State 15
-		DEFAULT => -26
+		ACTIONS => {
+			'PUNCTLEVEL' => 64,
+			"{" => 65
+		}
 	},
 	{#State 16
-		DEFAULT => -17
-	},
-	{#State 17
-		DEFAULT => -13
-	},
-	{#State 18
 		ACTIONS => {
-			"\n" => 56
-		}
-	},
-	{#State 19
-		ACTIONS => {
-			"{" => 57,
-			'ATOM' => 58
-		}
-	},
-	{#State 20
-		DEFAULT => -25
-	},
-	{#State 21
-		DEFAULT => -21
-	},
-	{#State 22
-		DEFAULT => -4
-	},
-	{#State 23
-		ACTIONS => {
-			"{" => 59,
-			'INTEGER' => 60
-		}
-	},
-	{#State 24
-		ACTIONS => {
-			"{" => 62,
-			'FLAG' => 61
-		}
-	},
-	{#State 25
-		ACTIONS => {
-			'CHAR' => 63,
-			"{" => 64
-		}
-	},
-	{#State 26
-		ACTIONS => {
-			'INTEGER' => 65,
+			'FLAG' => 67,
 			"{" => 66
 		}
 	},
-	{#State 27
+	{#State 17
+		DEFAULT => -19
+	},
+	{#State 18
+		DEFAULT => -13
+	},
+	{#State 19
+		DEFAULT => -9
+	},
+	{#State 20
+		DEFAULT => -5
+	},
+	{#State 21
+		DEFAULT => -7
+	},
+	{#State 22
+		DEFAULT => -8
+	},
+	{#State 23
+		DEFAULT => -26
+	},
+	{#State 24
 		ACTIONS => {
-			"\n" => 67
+			'CHAR' => 69,
+			"{" => 68
 		}
+	},
+	{#State 25
+		DEFAULT => -11
+	},
+	{#State 26
+		DEFAULT => -25
+	},
+	{#State 27
+		DEFAULT => -14
 	},
 	{#State 28
 		ACTIONS => {
-			"\n" => 68
+			"{" => 70,
+			'ATOM' => 71
 		}
 	},
 	{#State 29
-		DEFAULT => -19
+		ACTIONS => {
+			"{" => 73,
+			'INTEGER' => 72
+		}
 	},
 	{#State 30
-		DEFAULT => -16
+		DEFAULT => -4
 	},
 	{#State 31
 		ACTIONS => {
-			"\n" => 69
+			"\n" => 74
 		}
 	},
 	{#State 32
@@ -227,231 +234,224 @@ sub new {
 	},
 	{#State 33
 		ACTIONS => {
-			"\n" => 70
+			"\n" => 75
 		}
 	},
 	{#State 34
-		DEFAULT => -6
+		DEFAULT => -2
 	},
 	{#State 35
 		ACTIONS => {
-			"{" => 71,
-			'PUNCTLEVEL' => 72
+			"\n" => 76
 		}
 	},
 	{#State 36
-		DEFAULT => -7
+		DEFAULT => -18
 	},
 	{#State 37
-		DEFAULT => -2
+		ACTIONS => {
+			"{" => 77,
+			'DOUBLE' => 78
+		}
 	},
 	{#State 38
 		ACTIONS => {
-			'ALL' => 77,
-			"{" => 74,
-			'SOME' => 76,
-			'NONE' => 73
-		},
-		GOTOS => {
-			'punctlevel' => 75
+			"\n" => 79
 		}
 	},
 	{#State 39
 		ACTIONS => {
-			'INTEGER' => 78,
-			"{" => 79
+			"{" => 81,
+			'INTEGER' => 80
 		}
 	},
 	{#State 40
 		DEFAULT => -20
 	},
 	{#State 41
-		DEFAULT => -24
+		DEFAULT => -21
 	},
 	{#State 42
-		ACTIONS => {
-			'DOUBLE' => 81,
-			"{" => 80
-		}
+		DEFAULT => -24
 	},
 	{#State 43
-		DEFAULT => 0
+		DEFAULT => -6
 	},
 	{#State 44
-		DEFAULT => -3
-	},
-	{#State 45
 		ACTIONS => {
 			"{" => 83,
 			'ATOM' => 82
 		}
 	},
-	{#State 46
+	{#State 45
 		ACTIONS => {
-			"{" => 85,
-			'ATOM' => 84
+			'FLAG' => 85,
+			"{" => 84
 		}
+	},
+	{#State 46
+		DEFAULT => -17
 	},
 	{#State 47
 		ACTIONS => {
-			'FLAG' => 86
+			"\n" => 86
 		}
 	},
 	{#State 48
 		ACTIONS => {
-			"\n" => 87
+			'ATOM' => 87
 		}
 	},
 	{#State 49
-		ACTIONS => {
-			'FLAG' => 88
-		}
+		DEFAULT => -34
 	},
 	{#State 50
 		ACTIONS => {
-			"\n" => 89
+			'INTEGER' => 88
 		}
 	},
 	{#State 51
-		DEFAULT => -33
+		ACTIONS => {
+			'INTEGER' => 89
+		}
 	},
 	{#State 52
+		DEFAULT => -44
+	},
+	{#State 53
 		ACTIONS => {
 			'TEXT' => 90
 		}
 	},
-	{#State 53
+	{#State 54
 		ACTIONS => {
 			"\n" => 91
 		}
 	},
-	{#State 54
-		ACTIONS => {
-			"\n" => 92
-		}
-	},
 	{#State 55
 		ACTIONS => {
-			'INTEGER' => 93
+			'FLAG' => 92
 		}
 	},
 	{#State 56
-		DEFAULT => -45
+		ACTIONS => {
+			"\n" => 93
+		}
 	},
 	{#State 57
 		ACTIONS => {
-			'TEXT' => 94
+			'INTEGER' => 94
 		}
 	},
 	{#State 58
 		ACTIONS => {
-			"\n" => 95
+			'INTEGER' => 95
 		}
 	},
 	{#State 59
-		ACTIONS => {
-			'INTEGER' => 96
-		}
+		DEFAULT => -62
 	},
 	{#State 60
-		ACTIONS => {
-			'INTEGER' => 97
-		}
+		DEFAULT => -63
 	},
 	{#State 61
 		ACTIONS => {
-			"\n" => 98
+			'NONE' => 63,
+			'ALL' => 60,
+			'SOME' => 59
+		},
+		GOTOS => {
+			'punctlevel' => 96
 		}
 	},
 	{#State 62
 		ACTIONS => {
-			'FLAG' => 99
+			'FLAG' => 97
 		}
 	},
 	{#State 63
-		ACTIONS => {
-			"\n" => 100
-		}
+		DEFAULT => -61
 	},
 	{#State 64
 		ACTIONS => {
-			'CHAR' => 101
+			"\n" => 98
 		}
 	},
 	{#State 65
 		ACTIONS => {
-			"\n" => 102
+			'PUNCTLEVEL' => 99
 		}
 	},
 	{#State 66
 		ACTIONS => {
-			'INTEGER' => 103
+			'FLAG' => 100
 		}
 	},
 	{#State 67
-		DEFAULT => -34
-	},
-	{#State 68
-		DEFAULT => -44
-	},
-	{#State 69
-		DEFAULT => -46
-	},
-	{#State 70
-		DEFAULT => -35
-	},
-	{#State 71
 		ACTIONS => {
-			'PUNCTLEVEL' => 104
+			"\n" => 101
 		}
 	},
-	{#State 72
+	{#State 68
+		ACTIONS => {
+			'CHAR' => 102
+		}
+	},
+	{#State 69
+		ACTIONS => {
+			"\n" => 103
+		}
+	},
+	{#State 70
+		ACTIONS => {
+			'TEXT' => 104
+		}
+	},
+	{#State 71
 		ACTIONS => {
 			"\n" => 105
 		}
 	},
+	{#State 72
+		ACTIONS => {
+			"\n" => 106
+		}
+	},
 	{#State 73
-		DEFAULT => -61
+		ACTIONS => {
+			'INTEGER' => 107
+		}
 	},
 	{#State 74
-		ACTIONS => {
-			'ALL' => 77,
-			'SOME' => 76,
-			'NONE' => 73
-		},
-		GOTOS => {
-			'punctlevel' => 106
-		}
+		DEFAULT => -33
 	},
 	{#State 75
-		ACTIONS => {
-			'FLAG' => 107
-		}
+		DEFAULT => -46
 	},
 	{#State 76
-		DEFAULT => -62
+		DEFAULT => -45
 	},
 	{#State 77
-		DEFAULT => -63
+		ACTIONS => {
+			'DOUBLE' => 108
+		}
 	},
 	{#State 78
 		ACTIONS => {
-			'INTEGER' => 108
+			"\n" => 109
 		}
 	},
 	{#State 79
-		ACTIONS => {
-			'INTEGER' => 109
-		}
+		DEFAULT => -35
 	},
 	{#State 80
 		ACTIONS => {
-			'DOUBLE' => 110
+			"\n" => 110
 		}
 	},
 	{#State 81
 		ACTIONS => {
-			"\n" => 111
+			'INTEGER' => 111
 		}
 	},
 	{#State 82
@@ -466,123 +466,123 @@ sub new {
 	},
 	{#State 84
 		ACTIONS => {
-			"\n" => 114
+			'FLAG' => 114
 		}
 	},
 	{#State 85
 		ACTIONS => {
-			'ATOM' => 115
+			"\n" => 115
 		}
 	},
 	{#State 86
+		DEFAULT => -43
+	},
+	{#State 87
 		ACTIONS => {
 			"}" => 116
 		}
 	},
-	{#State 87
-		DEFAULT => -50
-	},
 	{#State 88
 		ACTIONS => {
-			"}" => 117
+			"\n" => 117
 		}
 	},
 	{#State 89
-		DEFAULT => -58
+		ACTIONS => {
+			'INTEGER' => 118
+		}
 	},
 	{#State 90
 		ACTIONS => {
-			"}" => 118
+			"}" => 119
 		}
 	},
 	{#State 91
 		DEFAULT => -23
 	},
 	{#State 92
-		DEFAULT => -37
-	},
-	{#State 93
-		ACTIONS => {
-			"}" => 119
-		}
-	},
-	{#State 94
 		ACTIONS => {
 			"}" => 120
 		}
 	},
+	{#State 93
+		DEFAULT => -58
+	},
+	{#State 94
+		ACTIONS => {
+			"\n" => 121
+		}
+	},
 	{#State 95
-		DEFAULT => -32
+		ACTIONS => {
+			'INTEGER' => 122
+		}
 	},
 	{#State 96
 		ACTIONS => {
-			'INTEGER' => 121
+			'FLAG' => 123
 		}
 	},
 	{#State 97
 		ACTIONS => {
-			"\n" => 122
+			'FLAG' => 124
 		}
 	},
 	{#State 98
-		DEFAULT => -48
+		DEFAULT => -54
 	},
 	{#State 99
-		ACTIONS => {
-			"}" => 123
-		}
-	},
-	{#State 100
-		DEFAULT => -30
-	},
-	{#State 101
-		ACTIONS => {
-			"}" => 124
-		}
-	},
-	{#State 102
-		DEFAULT => -56
-	},
-	{#State 103
 		ACTIONS => {
 			"}" => 125
 		}
 	},
-	{#State 104
+	{#State 100
 		ACTIONS => {
 			"}" => 126
 		}
 	},
+	{#State 101
+		DEFAULT => -50
+	},
+	{#State 102
+		ACTIONS => {
+			"}" => 127
+		}
+	},
+	{#State 103
+		DEFAULT => -30
+	},
+	{#State 104
+		ACTIONS => {
+			"}" => 128
+		}
+	},
 	{#State 105
-		DEFAULT => -54
+		DEFAULT => -32
 	},
 	{#State 106
-		ACTIONS => {
-			'FLAG' => 127
-		}
+		DEFAULT => -56
 	},
 	{#State 107
 		ACTIONS => {
-			'FLAG' => 128
+			"}" => 129
 		}
 	},
 	{#State 108
 		ACTIONS => {
-			"\n" => 129
+			"}" => 130
 		}
 	},
 	{#State 109
-		ACTIONS => {
-			'INTEGER' => 130
-		}
+		DEFAULT => -52
 	},
 	{#State 110
+		DEFAULT => -37
+	},
+	{#State 111
 		ACTIONS => {
 			"}" => 131
 		}
-	},
-	{#State 111
-		DEFAULT => -52
 	},
 	{#State 112
 		DEFAULT => -28
@@ -593,12 +593,12 @@ sub new {
 		}
 	},
 	{#State 114
-		DEFAULT => -43
-	},
-	{#State 115
 		ACTIONS => {
 			"}" => 133
 		}
+	},
+	{#State 115
+		DEFAULT => -48
 	},
 	{#State 116
 		ACTIONS => {
@@ -606,69 +606,69 @@ sub new {
 		}
 	},
 	{#State 117
-		ACTIONS => {
-			"\n" => 135
-		}
+		DEFAULT => -41
 	},
 	{#State 118
 		ACTIONS => {
-			"\n" => 136
+			"}" => 135
 		}
 	},
 	{#State 119
 		ACTIONS => {
-			"\n" => 137
+			"\n" => 136
 		}
 	},
 	{#State 120
 		ACTIONS => {
-			"\n" => 138
+			"\n" => 137
 		}
 	},
 	{#State 121
-		ACTIONS => {
-			"}" => 139
-		}
+		DEFAULT => -39
 	},
 	{#State 122
-		DEFAULT => -41
+		ACTIONS => {
+			"}" => 138
+		}
 	},
 	{#State 123
 		ACTIONS => {
-			"\n" => 140
+			'FLAG' => 139
 		}
 	},
 	{#State 124
 		ACTIONS => {
-			"\n" => 141
+			'FLAG' => 140
 		}
 	},
 	{#State 125
 		ACTIONS => {
-			"\n" => 142
+			"\n" => 141
 		}
 	},
 	{#State 126
 		ACTIONS => {
-			"\n" => 143
+			"\n" => 142
 		}
 	},
 	{#State 127
 		ACTIONS => {
-			'FLAG' => 144
+			"\n" => 143
 		}
 	},
 	{#State 128
 		ACTIONS => {
-			'FLAG' => 145
+			"\n" => 144
 		}
 	},
 	{#State 129
-		DEFAULT => -39
+		ACTIONS => {
+			"\n" => 145
+		}
 	},
 	{#State 130
 		ACTIONS => {
-			"}" => 146
+			"\n" => 146
 		}
 	},
 	{#State 131
@@ -687,76 +687,76 @@ sub new {
 		}
 	},
 	{#State 134
-		DEFAULT => -49
+		DEFAULT => -42
 	},
 	{#State 135
-		DEFAULT => -57
+		ACTIONS => {
+			"\n" => 150
+		}
 	},
 	{#State 136
 		DEFAULT => -22
 	},
 	{#State 137
-		DEFAULT => -36
+		DEFAULT => -57
 	},
 	{#State 138
-		DEFAULT => -31
+		ACTIONS => {
+			"\n" => 151
+		}
 	},
 	{#State 139
 		ACTIONS => {
-			"\n" => 150
+			'FLAG' => 152
 		}
 	},
 	{#State 140
-		DEFAULT => -47
+		ACTIONS => {
+			'INTEGER' => 153
+		}
 	},
 	{#State 141
-		DEFAULT => -29
-	},
-	{#State 142
-		DEFAULT => -55
-	},
-	{#State 143
 		DEFAULT => -53
 	},
+	{#State 142
+		DEFAULT => -49
+	},
+	{#State 143
+		DEFAULT => -29
+	},
 	{#State 144
-		ACTIONS => {
-			'FLAG' => 151
-		}
+		DEFAULT => -31
 	},
 	{#State 145
-		ACTIONS => {
-			'INTEGER' => 152
-		}
+		DEFAULT => -55
 	},
 	{#State 146
-		ACTIONS => {
-			"\n" => 153
-		}
+		DEFAULT => -51
 	},
 	{#State 147
-		DEFAULT => -51
+		DEFAULT => -36
 	},
 	{#State 148
 		DEFAULT => -27
 	},
 	{#State 149
-		DEFAULT => -42
+		DEFAULT => -47
 	},
 	{#State 150
 		DEFAULT => -40
 	},
 	{#State 151
+		DEFAULT => -38
+	},
+	{#State 152
 		ACTIONS => {
 			'INTEGER' => 154
 		}
 	},
-	{#State 152
+	{#State 153
 		ACTIONS => {
 			"\n" => 155
 		}
-	},
-	{#State 153
-		DEFAULT => -38
 	},
 	{#State 154
 		ACTIONS => {
@@ -1297,7 +1297,7 @@ sub _Lexer {
 		# punctuation levels
 		s/^((none|some|all))//
 		and do {
-			return('PUNCTLEVEL',{'none'=>0,'some'=>1,'all'=>2}->{$1});
+			return(uc($1),{'none'=>0,'some'=>1,'all'=>2}->{$1});
 		};
 
 		# Pause, reset and resume have no arguments
