@@ -29,12 +29,13 @@
 use constant X_INITIAL			=> 0;
 use constant X_SPEECH			=> 1;
 use constant X_RESOURCE			=> 2;
-use constant X_INBRACES			=> 4;
+use constant X_LETTER			=> 4;
+use constant X_INBRACES			=> 8;
 
 # Package of functions to be called from semantic actions
 use Emacspeak;
 
-my $debug = 0;
+my $debug = 1;
 
 %}
 
@@ -144,12 +145,12 @@ immediate_speech
 	;
 
 character
-	: 'L' '{' CHAR '}' '\n'
+	: 'l' '{' CHAR '}' '\n'
 		{
 			&tts_l($_[3]);
 			$_[1];
 		}
-	| 'L' CHAR '\n'
+	| 'l' CHAR '\n'
 		{
 			&tts_l($_[2]);
 			$_[1];
@@ -328,8 +329,10 @@ sub _Lexer {
 
 	for ($parser->YYData->{INPUT}) {
 
-		if ($parser->YYData->{STATE} & X_INBRACES ) {
-			print "State is X_INBRACES\n" if $debug;
+		# Parse text if we're inside braces for q and tts_say
+		if ( ($parser->YYData->{STATE} & X_SPEECH ) &&
+($parser->YYData->{STATE} & X_INBRACES ) ) {
+			print "State X_SPEECH/X_INBRACES\n" if $debug;
 			s/^\s*([^}]+)\s*//
 			and do {
 				$parser->YYData->{STATE} = X_INITIAL;
@@ -338,8 +341,8 @@ sub _Lexer {
 			};
 		}
 
+		# Parse atom (string with no spaces) for q and tts_say
 		if ($parser->YYData->{STATE} & X_SPEECH ) {
-			print "State is X_INBRACES\n" if $debug;
 			s/^([^ {}\n]+)//
 			and do {
 				print "About to return ATOM\n" if $debug;
@@ -348,12 +351,24 @@ sub _Lexer {
 			};
 		}
 
-		# tts_say, immediate speech
+		# tts_say, immediate speech. Set state to X_SPEECH and return function token
 		s/^(tts_say)//i
 		and do {
 			$parser->YYData->{STATE} |= X_SPEECH;
 			return('TTS_SAY',$1);
 		};
+
+		# Parse single character (letter) for the l function
+		if ( ($parser->YYData->{STATE} & X_LETTER ) &&
+($parser->YYData->{STATE} & X_INBRACES ) ) {
+			print "State X_LETTER/X_INBRACES\n" if $debug;
+			s/^\s*([^}])\s*//
+			and do {
+				$parser->YYData->{STATE} = X_INITIAL;
+				print "About to return letter: >$1<\n" if $debug;
+				return('CHAR',$1);
+			};
+		}
 
 		# Version, no arguments
 		s/^(version)//i
@@ -437,7 +452,12 @@ sub _Lexer {
 
 		# single letter 'l'
 		s/^(l)//i
-		and return($1,$1);
+		and do {
+			print "Found single-letter prefix\n" if $debug;
+			$parser->YYData->{STATE} |= X_LETTER;
+			return(lc($1),$1);
+		};
+
 
 		# queued speech 'q'
 		s/^(q)//i
@@ -479,8 +499,8 @@ sub _Lexer {
 		# Left-brace
 		s/^({)//
 		and do {
-			print "Found left brace\n" if $debug;
-			if ( $parser->YYData->{STATE} & X_SPEECH ) {
+			if ( ( $parser->YYData->{STATE} & X_SPEECH ) ||
+				( $parser->YYData->{STATE} & X_LETTER ) ) {
 				print "Found left brace while in X_SPEECH\n" if $debug;
 				$parser->YYData->{STATE} |= X_INBRACES;
 			}
