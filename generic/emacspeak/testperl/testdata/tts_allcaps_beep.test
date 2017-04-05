@@ -1,0 +1,6 @@
+tts_allcaps_beep 0
+tts_allcaps_beep 1
+tts_allcaps_beep {0}
+tts_allcaps_beep {1 }
+tts_allcaps_beep { 1}
+tts_allcaps_beep { 1 }

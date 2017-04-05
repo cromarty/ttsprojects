@@ -1,0 +1,5 @@
+tts_say {No space at either end}
+tts_say {Space at end }
+tts_say { Space at the beginning }
+tts_say { space at both ends }
+tts_say singleword

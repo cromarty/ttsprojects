@@ -1,0 +1,5 @@
+q {Simple sentence with no spaces at start or end}
+q {No space at start but space at end }
+q { Space at start but none at end}
+q { Spaces at both ends }
+q singleword

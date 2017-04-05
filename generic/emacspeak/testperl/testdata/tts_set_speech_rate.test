@@ -1,0 +1,5 @@
+tts_set_speech_rate 111
+tts_set_speech_rate {222}
+tts_set_speech_rate {333 }
+tts_set_speech_rate { 444}
+tts_set_speech_rate { 555 }

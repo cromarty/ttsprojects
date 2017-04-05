@@ -1,0 +1,5 @@
+tts_split_caps 0
+tts_split_caps 1
+tts_split_caps {0 }
+tts_split_caps { 1}
+tts_split_caps { 0 }

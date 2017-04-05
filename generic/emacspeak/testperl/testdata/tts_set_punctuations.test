@@ -1,0 +1,6 @@
+tts_set_punctuations none
+tts_set_punctuations some
+tts_set_punctuations all
+tts_set_punctuations {none }
+tts_set_punctuations { some}
+tts_set_punctuations { all }

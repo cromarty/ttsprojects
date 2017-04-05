@@ -1,0 +1,6 @@
+tts_sync_state none 0 0 0 111
+tts_sync_state some 0 0 0 222
+tts_sync_state all 0 0 0 333
+tts_sync_state {none 1 1 1 444}
+tts_sync_state {some 1 1 1 555 }
+tts_sync_state { all 1 1 1 666}

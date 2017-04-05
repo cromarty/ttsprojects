@@ -1,0 +1,6 @@
+tts_capitalize 0
+tts_capitalize 1
+tts_capitalize {0}
+tts_capitalize {1 }
+tts_capitalize { 1}
+tts_capitalize { 1 }
