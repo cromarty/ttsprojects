@@ -34,6 +34,7 @@ use constant X_INBRACES			=> 4;
 # Package of functions to be called from semantic actions
 use Emacspeak;
 
+my $debug = 0;
 
 %}
 
@@ -327,20 +328,22 @@ sub _Lexer {
 
 	for ($parser->YYData->{INPUT}) {
 
-		if ($parser->YYData->{STATE} == X_INBRACES ) {
-			#print "State is X_INBRACES\n";
+		if ($parser->YYData->{STATE} & X_INBRACES ) {
+			print "State is X_INBRACES\n" if $debug;
 			#s/^(.*?)([}\n])/$2/
 			s/^([^}]+)\s+//
 			and do {
 				$parser->YYData->{STATE} = X_INITIAL;
-				#print "About to return text: >$1<\n";
+				print "About to return text: >$1<\n" if $debug;
 				return('TEXT',$1);
 			};
 		}
 
-		if ($parser->YYData->{STATE} == X_SPEECH ) {
+		if ($parser->YYData->{STATE} & X_SPEECH ) {
+			print "State is X_INBRACES\n" if $debug;
 			s/^([^ {}\n]+)//
 			and do {
+				print "About to return ATOM\n" if $debug;
 				$parser->YYData->{STATE} = X_INITIAL;
 				return('ATOM',$1);
 			};
@@ -349,7 +352,7 @@ sub _Lexer {
 		# tts_say, immediate speech
 		s/^(tts_say)//i
 		and do {
-			$parser->YYData->{STATE} = X_SPEECH;
+			$parser->YYData->{STATE} |= X_SPEECH;
 			return('TTS_SAY',$1);
 		};
 
@@ -429,7 +432,7 @@ sub _Lexer {
 		# code 'c'
 		s/^(c)//i
 		and do {
-			$parser->YYData->{STATE} = X_SPEECH;
+			$parser->YYData->{STATE} |= X_SPEECH;
 			return($1,$1);
 		};
 
@@ -440,7 +443,8 @@ sub _Lexer {
 		# queued speech 'q'
 		s/^(q)//i
 		and do {
-			$parser->YYData->{STATE} = X_SPEECH;
+			print "Found q\n";
+			$parser->YYData->{STATE} |= X_SPEECH;
 			return(lc($1),$1);
 		};
 
@@ -455,7 +459,7 @@ sub _Lexer {
 		# sound file 'a' or 'p'
 		s/^((a|p))//i
 		and do {
-			$parser->YYData->{STATE} = X_RESOURCE;
+			$parser->YYData->{STATE} |= X_RESOURCE;
 			return($1,$1);
 		};
 
@@ -476,10 +480,10 @@ sub _Lexer {
 		# Left-brace
 		s/^({)//
 		and do {
-			#print "Found left brace\n";
-			if ( $parser->YYData->{STATE} == X_SPEECH ) {
-				#print "Found left brace while in X_SPEECH\n";
-				$parser->YYData->{STATE} = X_INBRACES;
+			print "Found left brace\n" if $debug;
+			if ( $parser->YYData->{STATE} & X_SPEECH ) {
+				print "Found left brace while in X_SPEECH\n" if $debug;
+				$parser->YYData->{STATE} |= X_INBRACES;
 			}
 			return($1,$1);
 		};
@@ -487,7 +491,7 @@ sub _Lexer {
 		# Right-brace
 		s/^(})//
 		and do {
-			#print "Found right brace\n";
+			print "Found right brace\n" if $debug;
 			$parser->YYData->{STATE} = X_INITIAL;
 			return($1,$1);
 		};
@@ -495,12 +499,12 @@ sub _Lexer {
 		# newline
 		s/^(\n)//s
 		and do {
+			print "Found newline\n" if $debug;
 			$parser->YYData->{STATE} = X_INITIAL;
 			return($1,$1);
-	
-	};
+		};
 
-	}
+	} # end of for()
 
 } # end of _Lexer
 
