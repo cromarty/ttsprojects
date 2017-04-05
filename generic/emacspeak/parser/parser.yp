@@ -330,8 +330,7 @@ sub _Lexer {
 
 		if ($parser->YYData->{STATE} & X_INBRACES ) {
 			print "State is X_INBRACES\n" if $debug;
-			#s/^(.*?)([}\n])/$2/
-			s/^([^}]+)\s+//
+			s/^\s*([^}]+)\s*//
 			and do {
 				$parser->YYData->{STATE} = X_INITIAL;
 				print "About to return text: >$1<\n" if $debug;
@@ -443,7 +442,7 @@ sub _Lexer {
 		# queued speech 'q'
 		s/^(q)//i
 		and do {
-			print "Found q\n";
+			print "Found q\n" if $debug;
 			$parser->YYData->{STATE} |= X_SPEECH;
 			return(lc($1),$1);
 		};
