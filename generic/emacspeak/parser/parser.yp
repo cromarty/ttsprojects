@@ -327,6 +327,7 @@ sub _Lexer {
 	# Eat white space
     $parser->YYData->{INPUT} =~ s/^[ \t]+//;
 
+	# This is not a loop. It is just here to set the $_ variable
 	for ($parser->YYData->{INPUT}) {
 
 		# Parse text if we're inside braces for q and tts_say
@@ -366,6 +367,16 @@ sub _Lexer {
 			and do {
 				$parser->YYData->{STATE} = X_INITIAL;
 				print "About to return letter: >$1<\n" if $debug;
+				return('CHAR',$1);
+			};
+		}
+
+		# Parse single letter 
+		if ($parser->YYData->{STATE} & X_LETTER ) {
+			s/^([^ {}\n])//
+			and do {
+				print "About to return CHAR\n" if $debug;
+				$parser->YYData->{STATE} = X_INITIAL;
 				return('CHAR',$1);
 			};
 		}
