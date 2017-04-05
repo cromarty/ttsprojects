@@ -30,12 +30,13 @@ use constant X_INITIAL			=> 0;
 use constant X_SPEECH			=> 1;
 use constant X_RESOURCE			=> 2;
 use constant X_LETTER			=> 4;
-use constant X_INBRACES			=> 8;
+use constant X_CODE				=> 8;
+use constant X_INBRACES			=> 16;
 
 # Package of functions to be called from semantic actions
 use Emacspeak;
 
-my $debug = 0;
+my $debug = 1;
 
 %}
 
@@ -113,7 +114,7 @@ $_[1];
 	;
 
 code
-	: 'c' '{' TEXT '}' '\n'
+	: 'c' '{' CODE '}' '\n'
 		{
 			&tts_c($_[3]);
 			$_[1];
@@ -330,6 +331,19 @@ sub _Lexer {
 	# This is not a loop. It is just here to set the $_ variable
 	for ($parser->YYData->{INPUT}) {
 
+		# Parse text if we're inside braces for c
+		if ( ($parser->YYData->{STATE} & X_CODE ) &&
+($parser->YYData->{STATE} & X_INBRACES ) ) {
+			print "State X_CODE/X_INBRACES\n" if $debug;
+			s/^([^}]+)//
+			and do {
+				$parser->YYData->{STATE} = X_INITIAL;
+				print "About to return code: >$1<\n" if $debug;
+				return('CODE',$1);
+			};
+		}
+
+
 		# Parse text if we're inside braces for q and tts_say
 		if ( ($parser->YYData->{STATE} & X_SPEECH ) &&
 ($parser->YYData->{STATE} & X_INBRACES ) ) {
@@ -457,7 +471,7 @@ sub _Lexer {
 		# code 'c'
 		s/^(c)//i
 		and do {
-			$parser->YYData->{STATE} |= X_SPEECH;
+			$parser->YYData->{STATE} |= X_CODE;
 			return($1,$1);
 		};
 
@@ -511,7 +525,8 @@ sub _Lexer {
 		s/^({)//
 		and do {
 			if ( ( $parser->YYData->{STATE} & X_SPEECH ) ||
-				( $parser->YYData->{STATE} & X_LETTER ) ) {
+				( $parser->YYData->{STATE} & X_LETTER ) ||
+				( $parser->YYData->{STATE} & X_CODE ) ) { 
 				print "Found left brace while in X_SPEECH\n" if $debug;
 				$parser->YYData->{STATE} |= X_INBRACES;
 			}

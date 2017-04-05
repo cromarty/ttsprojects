@@ -22,12 +22,13 @@ use constant X_INITIAL			=> 0;
 use constant X_SPEECH			=> 1;
 use constant X_RESOURCE			=> 2;
 use constant X_LETTER			=> 4;
-use constant X_INBRACES			=> 8;
+use constant X_CODE				=> 8;
+use constant X_INBRACES			=> 16;
 
 # Package of functions to be called from semantic actions
 use Emacspeak;
 
-my $debug = 0;
+my $debug = 1;
 
 
 
@@ -47,432 +48,432 @@ sub new {
 	},
 	{#State 1
 		ACTIONS => {
-			'TTS_RESUME' => 17,
-			"d" => 37,
-			'TTS_CAPITALIZE' => 15,
-			'TTS_SAY' => 18,
-			"a" => 39,
-			'TTS_ALLCAPS_BEEP' => 20,
-			'TTS_SET_SPEECH_RATE' => 41,
-			'' => 19,
-			"q" => 45,
-			"t" => 46,
-			'TTS_SET_CHARACTER_SCALE' => 22,
-			'VERSION' => 44,
-			'TTS_PAUSE' => 21,
-			"s" => 27,
-			'TTS_SPLIT_CAPS' => 4,
+			'TTS_SPLIT_CAPS' => 7,
+			'TTS_SET_CHARACTER_SCALE' => 39,
+			'' => 30,
+			'VERSION' => 2,
+			'TTS_SAY' => 3,
+			'SH' => 32,
+			"q" => 4,
+			'TTS_RESET' => 6,
+			'TTS_CAPITALIZE' => 36,
+			"a" => 44,
+			"l" => 45,
+			'TTS_ALLCAPS_BEEP' => 25,
 			"c" => 26,
-			"l" => 25,
-			"b" => 2,
-			'TTS_SET_PUNCTUATIONS' => 29,
-			'TTS_SYNC_STATE' => 10,
-			'SH' => 33,
-			'TTS_RESET' => 36
+			"d" => 27,
+			'TTS_PAUSE' => 29,
+			"t" => 46,
+			'TTS_SET_SPEECH_RATE' => 18,
+			'TTS_RESUME' => 41,
+			'TTS_SYNC_STATE' => 20,
+			"b" => 42,
+			"s" => 21,
+			'TTS_SET_PUNCTUATIONS' => 19
 		},
 		GOTOS => {
-			'tts_resume' => 16,
-			'cmd' => 38,
-			'tts_split_caps' => 40,
-			'speech' => 42,
-			'beep' => 43,
-			'tts_set_character_scale' => 24,
-			'sound' => 23,
-			'tts_reset' => 3,
-			'silence' => 28,
-			'tts_set_speech_rate' => 5,
-			'code' => 6,
-			'tts_allcaps_beep' => 7,
-			'dispatch' => 32,
-			'character' => 31,
-			'immediate_speech' => 30,
-			'queued_speech' => 8,
-			'tts_sync_state' => 34,
-			'version' => 9,
-			'tts_set_punctuations' => 35,
-			'tone' => 11,
-			'stop' => 13,
-			'tts_capitalize' => 12,
-			'tts_pause' => 14
+			'tts_split_caps' => 24,
+			'tts_pause' => 23,
+			'immediate_speech' => 28,
+			'tts_resume' => 40,
+			'tts_capitalize' => 17,
+			'silence' => 43,
+			'beep' => 22,
+			'code' => 8,
+			'tts_reset' => 9,
+			'tts_set_speech_rate' => 38,
+			'tts_allcaps_beep' => 37,
+			'queued_speech' => 16,
+			'character' => 14,
+			'cmd' => 15,
+			'dispatch' => 13,
+			'sound' => 12,
+			'version' => 10,
+			'stop' => 11,
+			'tts_sync_state' => 31,
+			'tts_set_character_scale' => 5,
+			'speech' => 35,
+			'tone' => 34,
+			'tts_set_punctuations' => 33
 		}
 	},
 	{#State 2
 		ACTIONS => {
-			'INTEGER' => 47,
-			"{" => 48
+			"\n" => 47
 		}
 	},
 	{#State 3
-		DEFAULT => -13
+		ACTIONS => {
+			"{" => 48,
+			'ATOM' => 49
+		}
 	},
 	{#State 4
 		ACTIONS => {
-			"{" => 49,
-			'FLAG' => 50
+			"{" => 50,
+			'ATOM' => 51
 		}
 	},
 	{#State 5
-		DEFAULT => -19
+		DEFAULT => -17
 	},
 	{#State 6
-		DEFAULT => -3
+		ACTIONS => {
+			"\n" => 52
+		}
 	},
 	{#State 7
-		DEFAULT => -15
+		ACTIONS => {
+			"{" => 53,
+			'FLAG' => 54
+		}
 	},
 	{#State 8
-		DEFAULT => -25
+		DEFAULT => -3
 	},
 	{#State 9
-		DEFAULT => -7
+		DEFAULT => -13
 	},
 	{#State 10
-		ACTIONS => {
-			'SOME' => 51,
-			'NONE' => 55,
-			'ALL' => 54,
-			"{" => 53
-		},
-		GOTOS => {
-			'punctlevel' => 52
-		}
+		DEFAULT => -7
 	},
 	{#State 11
-		DEFAULT => -10
-	},
-	{#State 12
-		DEFAULT => -16
-	},
-	{#State 13
 		DEFAULT => -6
 	},
+	{#State 12
+		DEFAULT => -11
+	},
+	{#State 13
+		DEFAULT => -5
+	},
 	{#State 14
-		DEFAULT => -12
+		DEFAULT => -26
 	},
 	{#State 15
-		ACTIONS => {
-			"{" => 57,
-			'FLAG' => 56
-		}
+		DEFAULT => -2
 	},
 	{#State 16
-		DEFAULT => -14
+		DEFAULT => -25
 	},
 	{#State 17
-		ACTIONS => {
-			"\n" => 58
-		}
+		DEFAULT => -16
 	},
 	{#State 18
 		ACTIONS => {
-			'ATOM' => 59,
-			"{" => 60
+			'INTEGER' => 55,
+			"{" => 56
 		}
 	},
 	{#State 19
-		DEFAULT => 0
+		ACTIONS => {
+			'NONE' => 59,
+			"{" => 58,
+			'SOME' => 61,
+			'ALL' => 60
+		},
+		GOTOS => {
+			'punctlevel' => 57
+		}
 	},
 	{#State 20
 		ACTIONS => {
-			'FLAG' => 61,
-			"{" => 62
+			"{" => 62,
+			'ALL' => 60,
+			'SOME' => 61,
+			'NONE' => 59
+		},
+		GOTOS => {
+			'punctlevel' => 63
 		}
 	},
 	{#State 21
 		ACTIONS => {
-			"\n" => 63
+			"\n" => 64
 		}
 	},
 	{#State 22
-		ACTIONS => {
-			"{" => 64,
-			'DOUBLE' => 65
-		}
+		DEFAULT => -9
 	},
 	{#State 23
-		DEFAULT => -11
+		DEFAULT => -12
 	},
 	{#State 24
-		DEFAULT => -17
+		DEFAULT => -20
 	},
 	{#State 25
 		ACTIONS => {
-			'CHAR' => 66,
-			"{" => 67
+			"{" => 66,
+			'FLAG' => 65
 		}
 	},
 	{#State 26
 		ACTIONS => {
-			'ATOM' => 69,
-			"{" => 68
+			'ATOM' => 68,
+			"{" => 67
 		}
 	},
 	{#State 27
 		ACTIONS => {
-			"\n" => 70
+			"\n" => 69
 		}
 	},
 	{#State 28
-		DEFAULT => -8
+		DEFAULT => -24
 	},
 	{#State 29
 		ACTIONS => {
-			'ALL' => 54,
-			'NONE' => 55,
-			'SOME' => 51,
-			"{" => 72
-		},
-		GOTOS => {
-			'punctlevel' => 71
+			"\n" => 70
 		}
 	},
 	{#State 30
-		DEFAULT => -24
+		DEFAULT => 0
 	},
 	{#State 31
-		DEFAULT => -26
-	},
-	{#State 32
-		DEFAULT => -5
-	},
-	{#State 33
-		ACTIONS => {
-			'INTEGER' => 74,
-			"{" => 73
-		}
-	},
-	{#State 34
 		DEFAULT => -21
 	},
-	{#State 35
+	{#State 32
+		ACTIONS => {
+			"{" => 71,
+			'INTEGER' => 72
+		}
+	},
+	{#State 33
 		DEFAULT => -18
+	},
+	{#State 34
+		DEFAULT => -10
+	},
+	{#State 35
+		DEFAULT => -4
 	},
 	{#State 36
 		ACTIONS => {
-			"\n" => 75
+			'FLAG' => 73,
+			"{" => 74
 		}
 	},
 	{#State 37
-		ACTIONS => {
-			"\n" => 76
-		}
+		DEFAULT => -15
 	},
 	{#State 38
-		DEFAULT => -2
+		DEFAULT => -19
 	},
 	{#State 39
 		ACTIONS => {
-			"{" => 77,
-			'ATOM' => 78
+			"{" => 76,
+			'DOUBLE' => 75
 		}
 	},
 	{#State 40
-		DEFAULT => -20
+		DEFAULT => -14
 	},
 	{#State 41
 		ACTIONS => {
-			'INTEGER' => 80,
-			"{" => 79
+			"\n" => 77
 		}
 	},
 	{#State 42
-		DEFAULT => -4
+		ACTIONS => {
+			'INTEGER' => 78,
+			"{" => 79
+		}
 	},
 	{#State 43
-		DEFAULT => -9
+		DEFAULT => -8
 	},
 	{#State 44
 		ACTIONS => {
-			"\n" => 81
+			"{" => 81,
+			'ATOM' => 80
 		}
 	},
 	{#State 45
 		ACTIONS => {
-			'ATOM' => 82,
-			"{" => 83
+			'CHAR' => 83,
+			"{" => 82
 		}
 	},
 	{#State 46
 		ACTIONS => {
-			"{" => 85,
-			'INTEGER' => 84
+			'INTEGER' => 84,
+			"{" => 85
 		}
 	},
 	{#State 47
-		ACTIONS => {
-			'INTEGER' => 86
-		}
+		DEFAULT => -34
 	},
 	{#State 48
 		ACTIONS => {
-			'INTEGER' => 87
+			'TEXT' => 86
 		}
 	},
 	{#State 49
 		ACTIONS => {
-			'FLAG' => 88
+			"\n" => 87
 		}
 	},
 	{#State 50
 		ACTIONS => {
-			"\n" => 89
+			'TEXT' => 88
 		}
 	},
 	{#State 51
-		DEFAULT => -62
+		ACTIONS => {
+			"\n" => 89
+		}
 	},
 	{#State 52
+		DEFAULT => -45
+	},
+	{#State 53
 		ACTIONS => {
 			'FLAG' => 90
 		}
 	},
-	{#State 53
+	{#State 54
 		ACTIONS => {
-			'NONE' => 55,
-			'SOME' => 51,
-			'ALL' => 54
-		},
-		GOTOS => {
-			'punctlevel' => 91
+			"\n" => 91
 		}
 	},
-	{#State 54
-		DEFAULT => -63
-	},
 	{#State 55
-		DEFAULT => -61
-	},
-	{#State 56
 		ACTIONS => {
 			"\n" => 92
 		}
 	},
-	{#State 57
+	{#State 56
 		ACTIONS => {
-			'FLAG' => 93
+			'INTEGER' => 93
 		}
 	},
-	{#State 58
-		DEFAULT => -46
-	},
-	{#State 59
+	{#State 57
 		ACTIONS => {
 			"\n" => 94
 		}
 	},
-	{#State 60
+	{#State 58
 		ACTIONS => {
-			'TEXT' => 95
+			'NONE' => 59,
+			'ALL' => 60,
+			'SOME' => 61
+		},
+		GOTOS => {
+			'punctlevel' => 95
 		}
+	},
+	{#State 59
+		DEFAULT => -61
+	},
+	{#State 60
+		DEFAULT => -63
 	},
 	{#State 61
-		ACTIONS => {
-			"\n" => 96
-		}
+		DEFAULT => -62
 	},
 	{#State 62
+		ACTIONS => {
+			'ALL' => 60,
+			'SOME' => 61,
+			'NONE' => 59
+		},
+		GOTOS => {
+			'punctlevel' => 96
+		}
+	},
+	{#State 63
 		ACTIONS => {
 			'FLAG' => 97
 		}
 	},
-	{#State 63
-		DEFAULT => -44
-	},
 	{#State 64
-		ACTIONS => {
-			'DOUBLE' => 98
-		}
+		DEFAULT => -35
 	},
 	{#State 65
 		ACTIONS => {
-			"\n" => 99
+			"\n" => 98
 		}
 	},
 	{#State 66
 		ACTIONS => {
-			"\n" => 100
+			'FLAG' => 99
 		}
 	},
 	{#State 67
 		ACTIONS => {
-			'CHAR' => 101
+			'CODE' => 100
 		}
 	},
 	{#State 68
 		ACTIONS => {
-			'TEXT' => 102
+			"\n" => 101
 		}
 	},
 	{#State 69
-		ACTIONS => {
-			"\n" => 103
-		}
+		DEFAULT => -33
 	},
 	{#State 70
-		DEFAULT => -35
+		DEFAULT => -44
 	},
 	{#State 71
 		ACTIONS => {
-			"\n" => 104
+			'INTEGER' => 102
 		}
 	},
 	{#State 72
 		ACTIONS => {
-			'NONE' => 55,
-			'SOME' => 51,
-			'ALL' => 54
-		},
-		GOTOS => {
-			'punctlevel' => 105
+			"\n" => 103
 		}
 	},
 	{#State 73
 		ACTIONS => {
-			'INTEGER' => 106
+			"\n" => 104
 		}
 	},
 	{#State 74
 		ACTIONS => {
-			"\n" => 107
+			'FLAG' => 105
 		}
 	},
 	{#State 75
-		DEFAULT => -45
+		ACTIONS => {
+			"\n" => 106
+		}
 	},
 	{#State 76
-		DEFAULT => -33
+		ACTIONS => {
+			'DOUBLE' => 107
+		}
 	},
 	{#State 77
-		ACTIONS => {
-			'ATOM' => 108
-		}
+		DEFAULT => -46
 	},
 	{#State 78
 		ACTIONS => {
-			"\n" => 109
+			'INTEGER' => 108
 		}
 	},
 	{#State 79
 		ACTIONS => {
-			'INTEGER' => 110
+			'INTEGER' => 109
 		}
 	},
 	{#State 80
 		ACTIONS => {
-			"\n" => 111
+			"\n" => 110
 		}
 	},
 	{#State 81
-		DEFAULT => -34
+		ACTIONS => {
+			'ATOM' => 111
+		}
 	},
 	{#State 82
 		ACTIONS => {
-			"\n" => 112
+			'CHAR' => 112
 		}
 	},
 	{#State 83
 		ACTIONS => {
-			'TEXT' => 113
+			"\n" => 113
 		}
 	},
 	{#State 84
@@ -487,119 +488,119 @@ sub new {
 	},
 	{#State 86
 		ACTIONS => {
-			"\n" => 116
+			"}" => 116
 		}
 	},
 	{#State 87
-		ACTIONS => {
-			'INTEGER' => 117
-		}
+		DEFAULT => -28
 	},
 	{#State 88
+		ACTIONS => {
+			"}" => 117
+		}
+	},
+	{#State 89
+		DEFAULT => -32
+	},
+	{#State 90
 		ACTIONS => {
 			"}" => 118
 		}
 	},
-	{#State 89
+	{#State 91
 		DEFAULT => -58
 	},
-	{#State 90
-		ACTIONS => {
-			'FLAG' => 119
-		}
-	},
-	{#State 91
-		ACTIONS => {
-			'FLAG' => 120
-		}
-	},
 	{#State 92
-		DEFAULT => -50
+		DEFAULT => -56
 	},
 	{#State 93
 		ACTIONS => {
-			"}" => 121
+			"}" => 119
 		}
 	},
 	{#State 94
-		DEFAULT => -28
+		DEFAULT => -54
 	},
 	{#State 95
 		ACTIONS => {
-			"}" => 122
+			"}" => 120
 		}
 	},
 	{#State 96
-		DEFAULT => -48
+		ACTIONS => {
+			'FLAG' => 121
+		}
 	},
 	{#State 97
+		ACTIONS => {
+			'FLAG' => 122
+		}
+	},
+	{#State 98
+		DEFAULT => -48
+	},
+	{#State 99
 		ACTIONS => {
 			"}" => 123
 		}
 	},
-	{#State 98
+	{#State 100
 		ACTIONS => {
 			"}" => 124
 		}
 	},
-	{#State 99
-		DEFAULT => -52
-	},
-	{#State 100
-		DEFAULT => -30
-	},
 	{#State 101
+		DEFAULT => -23
+	},
+	{#State 102
 		ACTIONS => {
 			"}" => 125
 		}
 	},
-	{#State 102
+	{#State 103
+		DEFAULT => -37
+	},
+	{#State 104
+		DEFAULT => -50
+	},
+	{#State 105
 		ACTIONS => {
 			"}" => 126
 		}
 	},
-	{#State 103
-		DEFAULT => -23
+	{#State 106
+		DEFAULT => -52
 	},
-	{#State 104
-		DEFAULT => -54
-	},
-	{#State 105
+	{#State 107
 		ACTIONS => {
 			"}" => 127
 		}
 	},
-	{#State 106
-		ACTIONS => {
-			"}" => 128
-		}
-	},
-	{#State 107
-		DEFAULT => -37
-	},
 	{#State 108
 		ACTIONS => {
-			"}" => 129
+			"\n" => 128
 		}
 	},
 	{#State 109
-		DEFAULT => -43
+		ACTIONS => {
+			'INTEGER' => 129
+		}
 	},
 	{#State 110
+		DEFAULT => -43
+	},
+	{#State 111
 		ACTIONS => {
 			"}" => 130
 		}
 	},
-	{#State 111
-		DEFAULT => -56
-	},
 	{#State 112
-		DEFAULT => -32
-	},
-	{#State 113
 		ACTIONS => {
 			"}" => 131
 		}
+	},
+	{#State 113
+		DEFAULT => -30
 	},
 	{#State 114
 		ACTIONS => {
@@ -612,71 +613,71 @@ sub new {
 		}
 	},
 	{#State 116
-		DEFAULT => -39
-	},
-	{#State 117
 		ACTIONS => {
-			"}" => 134
+			"\n" => 134
 		}
 	},
-	{#State 118
+	{#State 117
 		ACTIONS => {
 			"\n" => 135
 		}
 	},
+	{#State 118
+		ACTIONS => {
+			"\n" => 136
+		}
+	},
 	{#State 119
 		ACTIONS => {
-			'FLAG' => 136
+			"\n" => 137
 		}
 	},
 	{#State 120
 		ACTIONS => {
-			'FLAG' => 137
+			"\n" => 138
 		}
 	},
 	{#State 121
 		ACTIONS => {
-			"\n" => 138
+			'FLAG' => 139
 		}
 	},
 	{#State 122
 		ACTIONS => {
-			"\n" => 139
+			'FLAG' => 140
 		}
 	},
 	{#State 123
 		ACTIONS => {
-			"\n" => 140
+			"\n" => 141
 		}
 	},
 	{#State 124
 		ACTIONS => {
-			"\n" => 141
+			"\n" => 142
 		}
 	},
 	{#State 125
 		ACTIONS => {
-			"\n" => 142
+			"\n" => 143
 		}
 	},
 	{#State 126
 		ACTIONS => {
-			"\n" => 143
+			"\n" => 144
 		}
 	},
 	{#State 127
 		ACTIONS => {
-			"\n" => 144
-		}
-	},
-	{#State 128
-		ACTIONS => {
 			"\n" => 145
 		}
 	},
+	{#State 128
+		DEFAULT => -39
+	},
 	{#State 129
 		ACTIONS => {
-			"\n" => 146
+			"}" => 146
 		}
 	},
 	{#State 130
@@ -698,55 +699,55 @@ sub new {
 		}
 	},
 	{#State 134
-		ACTIONS => {
-			"\n" => 150
-		}
+		DEFAULT => -27
 	},
 	{#State 135
-		DEFAULT => -57
+		DEFAULT => -31
 	},
 	{#State 136
+		DEFAULT => -57
+	},
+	{#State 137
+		DEFAULT => -55
+	},
+	{#State 138
+		DEFAULT => -53
+	},
+	{#State 139
+		ACTIONS => {
+			'FLAG' => 150
+		}
+	},
+	{#State 140
 		ACTIONS => {
 			'INTEGER' => 151
 		}
 	},
-	{#State 137
-		ACTIONS => {
-			'FLAG' => 152
-		}
-	},
-	{#State 138
-		DEFAULT => -49
-	},
-	{#State 139
-		DEFAULT => -27
-	},
-	{#State 140
+	{#State 141
 		DEFAULT => -47
 	},
-	{#State 141
-		DEFAULT => -51
-	},
 	{#State 142
-		DEFAULT => -29
-	},
-	{#State 143
 		DEFAULT => -22
 	},
-	{#State 144
-		DEFAULT => -53
-	},
-	{#State 145
+	{#State 143
 		DEFAULT => -36
 	},
+	{#State 144
+		DEFAULT => -49
+	},
+	{#State 145
+		DEFAULT => -51
+	},
 	{#State 146
-		DEFAULT => -42
+		ACTIONS => {
+			"\n" => 152
+		}
 	},
 	{#State 147
-		DEFAULT => -55
+		DEFAULT => -42
 	},
 	{#State 148
-		DEFAULT => -31
+		DEFAULT => -29
 	},
 	{#State 149
 		ACTIONS => {
@@ -754,28 +755,28 @@ sub new {
 		}
 	},
 	{#State 150
-		DEFAULT => -38
+		ACTIONS => {
+			'INTEGER' => 154
+		}
 	},
 	{#State 151
 		ACTIONS => {
-			"\n" => 154
+			"\n" => 155
 		}
 	},
 	{#State 152
-		ACTIONS => {
-			'INTEGER' => 155
-		}
+		DEFAULT => -38
 	},
 	{#State 153
 		DEFAULT => -40
 	},
 	{#State 154
-		DEFAULT => -60
-	},
-	{#State 155
 		ACTIONS => {
 			"}" => 156
 		}
+	},
+	{#State 155
+		DEFAULT => -60
 	},
 	{#State 156
 		ACTIONS => {
@@ -800,37 +801,37 @@ sub new {
 	[#Rule 3
 		 'cmd', 1,
 sub
-#line 56 "../parser/parser.yp"
+#line 57 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 4
 		 'cmd', 1,
 sub
-#line 57 "../parser/parser.yp"
+#line 58 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 5
 		 'cmd', 1,
 sub
-#line 58 "../parser/parser.yp"
+#line 59 "../parser/parser.yp"
 { &tts_d; $_[1]; }
 	],
 	[#Rule 6
 		 'cmd', 1,
 sub
-#line 59 "../parser/parser.yp"
+#line 60 "../parser/parser.yp"
 { &tts_s; $_[1]; }
 	],
 	[#Rule 7
 		 'cmd', 1,
 sub
-#line 60 "../parser/parser.yp"
+#line 61 "../parser/parser.yp"
 { &tts_version; $_[1]; }
 	],
 	[#Rule 8
 		 'cmd', 1,
 sub
-#line 62 "../parser/parser.yp"
+#line 63 "../parser/parser.yp"
 { 
 			&tts_silence($_[1]);
 $_[1];
@@ -839,25 +840,25 @@ $_[1];
 	[#Rule 9
 		 'cmd', 1,
 sub
-#line 66 "../parser/parser.yp"
+#line 67 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 10
 		 'cmd', 1,
 sub
-#line 67 "../parser/parser.yp"
+#line 68 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 11
 		 'cmd', 1,
 sub
-#line 68 "../parser/parser.yp"
+#line 69 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 12
 		 'cmd', 1,
 sub
-#line 70 "../parser/parser.yp"
+#line 71 "../parser/parser.yp"
 {
 			&tts_pause;
 			$_[1];
@@ -866,7 +867,7 @@ sub
 	[#Rule 13
 		 'cmd', 1,
 sub
-#line 75 "../parser/parser.yp"
+#line 76 "../parser/parser.yp"
 {
 			&tts_reset;
 			$_[1];
@@ -875,13 +876,13 @@ sub
 	[#Rule 14
 		 'cmd', 1,
 sub
-#line 79 "../parser/parser.yp"
+#line 80 "../parser/parser.yp"
 { &tts_resume; $_[1]; }
 	],
 	[#Rule 15
 		 'cmd', 1,
 sub
-#line 81 "../parser/parser.yp"
+#line 82 "../parser/parser.yp"
 {
 			&tts_allcaps_beep($_[1]);
 			$_[1];
@@ -890,7 +891,7 @@ sub
 	[#Rule 16
 		 'cmd', 1,
 sub
-#line 86 "../parser/parser.yp"
+#line 87 "../parser/parser.yp"
 {
 			&tts_capitalize($_[1]);
 			$_[1];
@@ -899,7 +900,7 @@ sub
 	[#Rule 17
 		 'cmd', 1,
 sub
-#line 91 "../parser/parser.yp"
+#line 92 "../parser/parser.yp"
 {
 			$_[1];
 		}
@@ -907,7 +908,7 @@ sub
 	[#Rule 18
 		 'cmd', 1,
 sub
-#line 95 "../parser/parser.yp"
+#line 96 "../parser/parser.yp"
 {
 			&tts_set_punctuations($_[1]);
 			$_[1];
@@ -916,7 +917,7 @@ sub
 	[#Rule 19
 		 'cmd', 1,
 sub
-#line 100 "../parser/parser.yp"
+#line 101 "../parser/parser.yp"
 { 
 			&tts_set_speech_rate($_[1]);
 				$_[1];		
@@ -925,7 +926,7 @@ sub
 	[#Rule 20
 		 'cmd', 1,
 sub
-#line 105 "../parser/parser.yp"
+#line 106 "../parser/parser.yp"
 {
 			&tts_split_caps($_[1]);
 			$_[1];
@@ -934,7 +935,7 @@ sub
 	[#Rule 21
 		 'cmd', 1,
 sub
-#line 110 "../parser/parser.yp"
+#line 111 "../parser/parser.yp"
 {
 			$_[1];
 		}
@@ -942,7 +943,7 @@ sub
 	[#Rule 22
 		 'code', 5,
 sub
-#line 117 "../parser/parser.yp"
+#line 118 "../parser/parser.yp"
 {
 			&tts_c($_[3]);
 			$_[1];
@@ -951,7 +952,7 @@ sub
 	[#Rule 23
 		 'code', 3,
 sub
-#line 122 "../parser/parser.yp"
+#line 123 "../parser/parser.yp"
 {
 			&tts_c($_[2]);
 			$_[1];
@@ -960,25 +961,25 @@ sub
 	[#Rule 24
 		 'speech', 1,
 sub
-#line 129 "../parser/parser.yp"
+#line 130 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 25
 		 'speech', 1,
 sub
-#line 130 "../parser/parser.yp"
+#line 131 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 26
 		 'speech', 1,
 sub
-#line 131 "../parser/parser.yp"
+#line 132 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 27
 		 'immediate_speech', 5,
 sub
-#line 136 "../parser/parser.yp"
+#line 137 "../parser/parser.yp"
 {
 			&tts_say($_[3]);
 			$_[1];
@@ -987,7 +988,7 @@ sub
 	[#Rule 28
 		 'immediate_speech', 3,
 sub
-#line 141 "../parser/parser.yp"
+#line 142 "../parser/parser.yp"
 {
 			&tts_say($_[2]);
 			$_[1];
@@ -996,7 +997,7 @@ sub
 	[#Rule 29
 		 'character', 5,
 sub
-#line 149 "../parser/parser.yp"
+#line 150 "../parser/parser.yp"
 {
 			&tts_l($_[3]);
 			$_[1];
@@ -1005,7 +1006,7 @@ sub
 	[#Rule 30
 		 'character', 3,
 sub
-#line 154 "../parser/parser.yp"
+#line 155 "../parser/parser.yp"
 {
 			&tts_l($_[2]);
 			$_[1];
@@ -1014,7 +1015,7 @@ sub
 	[#Rule 31
 		 'queued_speech', 5,
 sub
-#line 162 "../parser/parser.yp"
+#line 163 "../parser/parser.yp"
 {
 			&tts_q($_[3]);
 			$_[1];
@@ -1023,7 +1024,7 @@ sub
 	[#Rule 32
 		 'queued_speech', 3,
 sub
-#line 167 "../parser/parser.yp"
+#line 168 "../parser/parser.yp"
 {
 			&tts_q($_[2]);
 			$_[1];
@@ -1032,25 +1033,25 @@ sub
 	[#Rule 33
 		 'dispatch', 2,
 sub
-#line 174 "../parser/parser.yp"
+#line 175 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 34
 		 'version', 2,
 sub
-#line 178 "../parser/parser.yp"
+#line 179 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 35
 		 'stop', 2,
 sub
-#line 182 "../parser/parser.yp"
+#line 183 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 36
 		 'silence', 5,
 sub
-#line 187 "../parser/parser.yp"
+#line 188 "../parser/parser.yp"
 {
 			$_[3];
 		}
@@ -1058,7 +1059,7 @@ sub
 	[#Rule 37
 		 'silence', 3,
 sub
-#line 191 "../parser/parser.yp"
+#line 192 "../parser/parser.yp"
 {
 			$_[2];
 		}
@@ -1066,7 +1067,7 @@ sub
 	[#Rule 38
 		 'beep', 6,
 sub
-#line 198 "../parser/parser.yp"
+#line 199 "../parser/parser.yp"
 {
 			&tts_b($_[3], $_[4]);
 			$_[1];
@@ -1075,7 +1076,7 @@ sub
 	[#Rule 39
 		 'beep', 4,
 sub
-#line 203 "../parser/parser.yp"
+#line 204 "../parser/parser.yp"
 {
 			&tts_b($_[2], $_[3]);
 			$_[1];
@@ -1084,7 +1085,7 @@ sub
 	[#Rule 40
 		 'tone', 6,
 sub
-#line 211 "../parser/parser.yp"
+#line 212 "../parser/parser.yp"
 {
 			&tts_t($_[3], $_[4]);
 			$_[1];
@@ -1093,7 +1094,7 @@ sub
 	[#Rule 41
 		 'tone', 4,
 sub
-#line 216 "../parser/parser.yp"
+#line 217 "../parser/parser.yp"
 {
 			&tts_t($_[2], $_[3]);
 			$_[1];
@@ -1102,7 +1103,7 @@ sub
 	[#Rule 42
 		 'sound', 5,
 sub
-#line 224 "../parser/parser.yp"
+#line 225 "../parser/parser.yp"
 {
 			&tts_a($_[3]);
 			$_[1];
@@ -1111,7 +1112,7 @@ sub
 	[#Rule 43
 		 'sound', 3,
 sub
-#line 229 "../parser/parser.yp"
+#line 230 "../parser/parser.yp"
 {
 			&tts_a($_[2]);
 			$_[1];
@@ -1120,49 +1121,49 @@ sub
 	[#Rule 44
 		 'tts_pause', 2,
 sub
-#line 236 "../parser/parser.yp"
+#line 237 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 45
 		 'tts_reset', 2,
 sub
-#line 240 "../parser/parser.yp"
+#line 241 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 46
 		 'tts_resume', 2,
 sub
-#line 244 "../parser/parser.yp"
+#line 245 "../parser/parser.yp"
 { $_[1]; }
 	],
 	[#Rule 47
 		 'tts_allcaps_beep', 5,
 sub
-#line 248 "../parser/parser.yp"
+#line 249 "../parser/parser.yp"
 { $_[3]; }
 	],
 	[#Rule 48
 		 'tts_allcaps_beep', 3,
 sub
-#line 249 "../parser/parser.yp"
+#line 250 "../parser/parser.yp"
 { $_[2]; }
 	],
 	[#Rule 49
 		 'tts_capitalize', 5,
 sub
-#line 253 "../parser/parser.yp"
+#line 254 "../parser/parser.yp"
 { $_[3]; }
 	],
 	[#Rule 50
 		 'tts_capitalize', 3,
 sub
-#line 254 "../parser/parser.yp"
+#line 255 "../parser/parser.yp"
 { $_[2]; }
 	],
 	[#Rule 51
 		 'tts_set_character_scale', 5,
 sub
-#line 259 "../parser/parser.yp"
+#line 260 "../parser/parser.yp"
 {
 			&tts_set_character_scale($_[3]);
 			$_[1];
@@ -1171,7 +1172,7 @@ sub
 	[#Rule 52
 		 'tts_set_character_scale', 3,
 sub
-#line 264 "../parser/parser.yp"
+#line 265 "../parser/parser.yp"
 {
 			&tts_set_character_scale($_[2]);
 			$_[1];
@@ -1180,43 +1181,43 @@ sub
 	[#Rule 53
 		 'tts_set_punctuations', 5,
 sub
-#line 271 "../parser/parser.yp"
+#line 272 "../parser/parser.yp"
 { $_[3]; }
 	],
 	[#Rule 54
 		 'tts_set_punctuations', 3,
 sub
-#line 272 "../parser/parser.yp"
+#line 273 "../parser/parser.yp"
 { $_[2]; }
 	],
 	[#Rule 55
 		 'tts_set_speech_rate', 5,
 sub
-#line 276 "../parser/parser.yp"
+#line 277 "../parser/parser.yp"
 { $_[3]; }
 	],
 	[#Rule 56
 		 'tts_set_speech_rate', 3,
 sub
-#line 277 "../parser/parser.yp"
+#line 278 "../parser/parser.yp"
 { $_[2]; }
 	],
 	[#Rule 57
 		 'tts_split_caps', 5,
 sub
-#line 281 "../parser/parser.yp"
+#line 282 "../parser/parser.yp"
 { $_[3]; }
 	],
 	[#Rule 58
 		 'tts_split_caps', 3,
 sub
-#line 282 "../parser/parser.yp"
+#line 283 "../parser/parser.yp"
 { $_[2]; }
 	],
 	[#Rule 59
 		 'tts_sync_state', 9,
 sub
-#line 287 "../parser/parser.yp"
+#line 288 "../parser/parser.yp"
 { 
 			&tts_sync_state($_[3], $_[4], $_[5], $_[6], $_[7]);
 			$_[1];
@@ -1225,7 +1226,7 @@ sub
 	[#Rule 60
 		 'tts_sync_state', 7,
 sub
-#line 292 "../parser/parser.yp"
+#line 293 "../parser/parser.yp"
 {
 			&tts_sync_state($_[2],$_[3], $_[4], $_[5], $_[6]);
 			$_[1];
@@ -1245,7 +1246,7 @@ sub
     bless($self,$class);
 }
 
-#line 304 "../parser/parser.yp"
+#line 305 "../parser/parser.yp"
 
 
 # Bottom section
@@ -1274,6 +1275,19 @@ sub _Lexer {
 
 	# This is not a loop. It is just here to set the $_ variable
 	for ($parser->YYData->{INPUT}) {
+
+		# Parse text if we're inside braces for c
+		if ( ($parser->YYData->{STATE} & X_CODE ) &&
+($parser->YYData->{STATE} & X_INBRACES ) ) {
+			print "State X_CODE/X_INBRACES\n" if $debug;
+			s/^([^}]+)//
+			and do {
+				$parser->YYData->{STATE} = X_INITIAL;
+				print "About to return code: >$1<\n" if $debug;
+				return('CODE',$1);
+			};
+		}
+
 
 		# Parse text if we're inside braces for q and tts_say
 		if ( ($parser->YYData->{STATE} & X_SPEECH ) &&
@@ -1402,7 +1416,7 @@ sub _Lexer {
 		# code 'c'
 		s/^(c)//i
 		and do {
-			$parser->YYData->{STATE} |= X_SPEECH;
+			$parser->YYData->{STATE} |= X_CODE;
 			return($1,$1);
 		};
 
@@ -1456,7 +1470,8 @@ sub _Lexer {
 		s/^({)//
 		and do {
 			if ( ( $parser->YYData->{STATE} & X_SPEECH ) ||
-				( $parser->YYData->{STATE} & X_LETTER ) ) {
+				( $parser->YYData->{STATE} & X_LETTER ) ||
+				( $parser->YYData->{STATE} & X_CODE ) ) { 
 				print "Found left brace while in X_SPEECH\n" if $debug;
 				$parser->YYData->{STATE} |= X_INBRACES;
 			}
