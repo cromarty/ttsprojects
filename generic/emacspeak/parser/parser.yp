@@ -27,11 +27,25 @@
 
 # These constants are used as start states, a-la %x in Yacc.
 use constant X_INITIAL			=> 0;
+
+# q or tts_say
 use constant X_SPEECH			=> 1;
+
+# a (play sound file)
 use constant X_RESOURCE			=> 2;
+
+# l (single letter)
 use constant X_LETTER			=> 4;
+
+# c
 use constant X_CODE				=> 8;
+
+# we're inside braces
 use constant X_INBRACES			=> 16;
+
+# All free-form payloads.
+# Payloads for these three functions don't conform to fixed format, like integer, punctuation levels, flag etc. FF = free-form
+use constant X_FF			=> (X_SPEECH|X_LETTER|X_CODE);
 
 # Package of functions to be called from semantic actions
 use Emacspeak;
@@ -524,10 +538,8 @@ sub _Lexer {
 		# Left-brace
 		s/^({)//
 		and do {
-			if ( ( $parser->YYData->{STATE} & X_SPEECH ) ||
-				( $parser->YYData->{STATE} & X_LETTER ) ||
-				( $parser->YYData->{STATE} & X_CODE ) ) { 
-				print "Found left brace while in X_SPEECH\n" if $debug;
+			if ($parser->YYData->{STATE} & X_FF) {
+				print "Found left brace while in X_FF\n" if $debug;
 				$parser->YYData->{STATE} |= X_INBRACES;
 			}
 			return($1,$1);
