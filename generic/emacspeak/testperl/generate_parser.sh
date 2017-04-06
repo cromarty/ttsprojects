@@ -1,4 +1,4 @@
 #!/bin/bash
 
-yapp -m EmacspeakParser ../parser/parser.yp
+yapp -m EmacspeakParser ../parser/perl/parser.yp
 
