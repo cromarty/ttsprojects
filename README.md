@@ -1,21 +1,21 @@
 
-## ttsprojects
+# ttsprojects
 
-### dsp/
+## dsp/
 
 sci-lab stuff with a digital signal processing theme.
 
-### generic/
+## generic/
 
-### notes/
+## notes/
 
 Notes and manuals relating to tts.
 
-### raspberry-pi/
+## raspberry-pi/
 
 Specifically RPI related stuff.
 
-### windows/
+## windows/
 
 Stuff relating to Windows. Mostly the NVDA screen-reader.
 

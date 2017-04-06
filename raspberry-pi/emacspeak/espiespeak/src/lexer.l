@@ -1,1 +1,1 @@
-/home/pi/ttsprojects/generic/emacspeak/parser/lexer.l
+../../../../generic/emacspeak/parser/c/lexer.l

@@ -1,1 +1,1 @@
-/home/pi/ttsprojects/generic/emacspeak/parser/parser.y
+../../../../generic/emacspeak/parser/c/parser.y
