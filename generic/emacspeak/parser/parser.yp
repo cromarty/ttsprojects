@@ -47,16 +47,13 @@ use constant X_INBRACES			=> 16;
 # Payloads for these three functions don't conform to fixed format, like integer, punctuation levels, flag etc. FF = free-form
 use constant X_FF			=> (X_SPEECH|X_LETTER|X_CODE);
 
-# Package of functions to be called from semantic actions
-use Emacspeak;
-
+# set to a non-zero value to see debug messages
 my $debug = 0;
 
 %}
 
 
-%token INTEGER
-
+#%token INTEGER
 
 %%
 
@@ -70,12 +67,24 @@ cmdlist
 cmd
 	: code { $_[1]; }
 	| speech { $_[1]; }
-	| dispatch { &tts_d; $_[1]; }
-	| stop { &tts_s; $_[1]; }
-	| version { &tts_version; $_[1]; }
+	| dispatch
+	  {
+			&{$_[0]->YYData->{SA}->{tts_d}};
+					$_[1];
+						}
+	| stop
+	  {
+			&{$_[0]->YYData->{SA}->{tts_s}};
+		$_[1];
+		}
+	| version
+		{
+			&{$_[0]->YYData->{SA}->{tts_version}};
+			$_[1];
+		}
 	| silence
 		{ 
-			&tts_silence($_[1]);
+			&{$_[0]->YYData->{SA}->{tts_silence}}($_[1]);
 $_[1];
 		}
 	| beep { $_[1]; }
@@ -83,23 +92,27 @@ $_[1];
 	| sound { $_[1]; }
 	| tts_pause
 		{
-			&tts_pause;
+			&{$_[0]->YYData->{SA}->{tts_pause}};
 			$_[1];
 		}
 	| tts_reset
 		{
-			&tts_reset;
+			&{$_[0]->YYData->{SA}->{tts_reset}};
 			$_[1];
 		}
-	| tts_resume { &tts_resume; $_[1]; }
+	| tts_resume
+		{
+			&{$_[0]->YYData->{SA}->{tts_resume}};
+			$_[1];
+		}
 	| tts_allcaps_beep
 		{
-			&tts_allcaps_beep($_[1]);
+			&{$_[0]->YYData->{SA}->{tts_allcaps_beep}}($_[1]);
 			$_[1];
 		}
 	| tts_capitalize
 		{
-			&tts_capitalize($_[1]);
+			&{$_[0]->YYData->{SA}->{tts_capitalize}}($_[1]);
 			$_[1];
 		}
 	| tts_set_character_scale
@@ -108,17 +121,17 @@ $_[1];
 		}
 	| tts_set_punctuations
 		{
-			&tts_set_punctuations($_[1]);
+			&{$_[0]->YYData->{SA}->{tts_set_punctuations}}($_[1]);
 			$_[1];
 		}
 	| tts_set_speech_rate
 		{ 
-			&tts_set_speech_rate($_[1]);
+			&{$_[0]->YYData->{SA}->{tts_set_speech_rate}}($_[1]);
 				$_[1];		
 		}
 	| tts_split_caps
 		{
-			&tts_split_caps($_[1]);
+			&{$_[0]->YYData->{SA}->{tts_split_caps}}($_[1]);
 			$_[1];
 		}
 	| tts_sync_state
@@ -130,12 +143,12 @@ $_[1];
 code
 	: 'c' '{' CODE '}' '\n'
 		{
-			&tts_c($_[3]);
+			&{$_[0]->YYData->{SA}->{tts_c}}($_[3]);
 			$_[1];
 		}
 	| 'c' ATOM '\n'
 		{
-			&tts_c($_[2]);
+			&{$_[0]->YYData->{SA}->{tts_c}}($_[2]);
 			$_[1];
 		}
 	;
@@ -149,12 +162,12 @@ speech
 immediate_speech
 	: TTS_SAY '{' TEXT '}' '\n'
 		{
-			&tts_say($_[3]);
+			&{$_[0]->YYData->{SA}->{tts_say}}($_[3]);
 			$_[1];
 		}
 	| TTS_SAY ATOM '\n'
 		{
-			&tts_say($_[2]);
+			&{$_[0]->YYData->{SA}->{tts_say}}($_[2]);
 			$_[1];
 		}
 	;
@@ -162,12 +175,12 @@ immediate_speech
 character
 	: 'l' '{' CHAR '}' '\n'
 		{
-			&tts_l($_[3]);
+			&{$_[0]->YYData->{SA}->{tts_l}}($_[3]);
 			$_[1];
 		}
 	| 'l' CHAR '\n'
 		{
-			&tts_l($_[2]);
+			&{$_[0]->YYData->{SA}->{tts_l}}($_[2]);
 			$_[1];
 		}
 	;
@@ -175,12 +188,12 @@ character
 queued_speech
 	: 'q' '{' TEXT '}' '\n'
 		{
-			&tts_q($_[3]);
+			&{$_[0]->YYData->{SA}->{tts_q}}($_[3]);
 			$_[1];
 		}
 	| 'q' ATOM '\n'
 		{
-			&tts_q($_[2]);
+			&{$_[0]->YYData->{SA}->{tts_q}}($_[2]);
 			$_[1];
 		}
 	;
@@ -211,12 +224,12 @@ silence
 beep
 	: 'b' '{' INTEGER INTEGER '}' '\n'
 		{
-			&tts_b($_[3], $_[4]);
+			&{$_[0]->YYData->{SA}->{tts_b}}($_[3], $_[4]);
 			$_[1];
 		}
 	| 'b' INTEGER INTEGER '\n'
 		{
-			&tts_b($_[2], $_[3]);
+			&{$_[0]->YYData->{SA}->{tts_b}}($_[2], $_[3]);
 			$_[1];
 		}
 	;
@@ -224,12 +237,12 @@ beep
 tone
 	: 't' '{' INTEGER INTEGER '}' '\n'
 		{
-			&tts_t($_[3], $_[4]);
+			&{$_[0]->YYData->{SA}->{tts_t}}($_[3], $_[4]);
 			$_[1];
 		}
 	| 't' INTEGER INTEGER '\n'
 		{
-			&tts_t($_[2], $_[3]);
+			&{$_[0]->YYData->{SA}->{tts_t}}($_[2], $_[3]);
 			$_[1];
 		}
 	;
@@ -237,12 +250,12 @@ tone
 sound
 	: 'a' '{' ATOM '}' '\n'
 		{
-			&tts_a($_[3]);
+			&{$_[0]->YYData->{SA}->{tts_a}}($_[3]);
 			$_[1];
 		}
 	| 'a' ATOM '\n'
 		{
-			&tts_a($_[2]);
+			&{$_[0]->YYData->{SA}->{tts_a}}($_[2]);
 			$_[1];
 		}
 	;
@@ -272,12 +285,12 @@ tts_capitalize
 tts_set_character_scale
 	: TTS_SET_CHARACTER_SCALE '{' DOUBLE '}' '\n'
 		{
-			&tts_set_character_scale($_[3]);
+			&{$_[0]->YYData->{SA}->{tts_set_character_scale}}($_[3]);
 			$_[1];
 		}
 	| TTS_SET_CHARACTER_SCALE DOUBLE '\n'
 		{
-			&tts_set_character_scale($_[2]);
+			&{$_[0]->YYData->{SA}->{tts_set_character_scale}}($_[2]);
 			$_[1];
 		}
 	;
@@ -300,12 +313,12 @@ tts_split_caps
 tts_sync_state
 	: TTS_SYNC_STATE '{' punctlevel FLAG FLAG FLAG INTEGER '}' '\n'
 		{ 
-			&tts_sync_state($_[3], $_[4], $_[5], $_[6], $_[7]);
+			&{$_[0]->YYData->{SA}->{tts_sync_state}}($_[3], $_[4], $_[5], $_[6], $_[7]);
 			$_[1];
 		}
 	| TTS_SYNC_STATE punctlevel FLAG FLAG FLAG INTEGER '\n'
 		{
-			&tts_sync_state($_[2],$_[3], $_[4], $_[5], $_[6]);
+			&{$_[0]->YYData->{SA}->{tts_sync_state}}($_[2],$_[3], $_[4], $_[5], $_[6]);
 			$_[1];
 		}
 	;
@@ -569,4 +582,7 @@ sub Run {
 	my($self)=shift;
 	$self->YYParse( yylex => \&_Lexer, yyerror => \&_Error );
 } # end of Run
+
+
+
 
