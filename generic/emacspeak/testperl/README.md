@@ -4,29 +4,23 @@
 This directory contains Perl scripts and modules, and other test files used for testing the 
 Emacspeak protocol parser in `../parser/parser.yp`.
 
-## EmacspeakParser.pm
-
-This is the parser module generated thusly:
-
-yapp -m EmacspeakParser ../parser/parser.yp
-
 ## generate_parser.sh
 
-This script does the generation of the `EmacspeakParser.pm` module by running:
+This script does the generation of the `Parse/Emacspeak.pm` module by running:
 
-	yapp -m EmacspeakParser ../parser/parser.yp
+	yapp -m Emacspeak parser.yp
+
+After cding to the right place (`Parse`).
 
 # testparser.pl
 
 A Perl script to test the parser and semantic action modules.
 
+## parser.yp
+
+Actually a soft-link to ../parser/perl/parser.yp
+
 ## Notes
-
-The parser module should probably be installed as to make:
-
-	use Emacspeak::Parser;
-
-Make sense.
 
 ## Semantic actions in the parser
 
