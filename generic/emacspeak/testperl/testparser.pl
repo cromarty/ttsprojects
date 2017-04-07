@@ -25,11 +25,11 @@
 use strict;
 use warnings;
 
-use EmacspeakParser;
+use Parse::Emacspeak;
 
 my $debug = shift || 0;
 
-my $parser = new EmacspeakParser();
+my $parser = new Emacspeak;
 
 # Preset state to zero
 $parser->YYData->{STATE} = 0;
@@ -59,8 +59,8 @@ $parser->YYData->{SA}->{tts_sync_state} = \&tts_sync_state;
 
 
 my $value = $parser->YYParse(
-		yylex => \&EmacspeakParser::_Lexer,
-		yyerror => \&EmacspeakParser::_Error,
+		yylex => \&Emacspeak::_Lexer,
+		yyerror => \&Emacspeak::_Error,
 		yydebug => $debug
 	);
 
