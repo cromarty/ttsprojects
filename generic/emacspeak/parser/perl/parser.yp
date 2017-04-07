@@ -248,12 +248,12 @@ tone
 	;
 
 sound
-	: 'a' '{' ATOM '}' '\n'
+	: 'a' '{' RESOURCE '}' '\n'
 		{
 			&{$_[0]->YYData->{SA}->{tts_a}}($_[3]);
 			$_[1];
 		}
-	| 'a' ATOM '\n'
+	| 'a' RESOURCE '\n'
 		{
 			&{$_[0]->YYData->{SA}->{tts_a}}($_[2]);
 			$_[1];
@@ -352,6 +352,7 @@ sub _Lexer {
 		or  $parser->YYData->{INPUT} = <STDIN>
 		or  return('',undef);
 
+		# don't want to consume whitespace if we're inside braces in the c function
 		unless ( ($parser->YYData->{STATE} & X_CODE ) &&
 ($parser->YYData->{STATE} & X_INBRACES ) ) {
 	# Eat white space
@@ -386,6 +387,7 @@ sub _Lexer {
 			};
 		}
 
+		# lipstick
 		# Parse atom (string with no spaces) for q and tts_say
 		if ($parser->YYData->{STATE} & X_SPEECH ) {
 			s/^([^ {}\n]+)//
@@ -396,6 +398,16 @@ sub _Lexer {
 			};
 		}
 
+		# Parse resource (string with no spaces) for a
+		if ($parser->YYData->{STATE} & X_RESOURCE ) {
+			s/^([^ {}\n]+)//
+			and do {
+				print "About to return RESOURCE\n" if $debug;
+				$parser->YYData->{STATE} = X_INITIAL;
+				return('RESOURCE',$1);
+			};
+		}
+		
 		# tts_say, immediate speech. Set state to X_SPEECH and return function token
 		s/^(tts_say)//i
 		and do {
