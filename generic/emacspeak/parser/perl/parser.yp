@@ -48,7 +48,7 @@ use constant X_INBRACES			=> 16;
 use constant X_FF			=> (X_SPEECH|X_LETTER|X_CODE);
 
 # set to a non-zero value to see debug messages
-my $debug = 0;
+my $debug = 1;
 
 %}
 
@@ -351,9 +351,12 @@ sub _Lexer {
 	$parser->YYData->{INPUT}
 		or  $parser->YYData->{INPUT} = <STDIN>
 		or  return('',undef);
-	
+
+		unless ( ($parser->YYData->{STATE} & X_CODE ) &&
+($parser->YYData->{STATE} & X_INBRACES ) ) {
 	# Eat white space
     $parser->YYData->{INPUT} =~ s/^[ \t]+//;
+}
 
 	# This is not a loop. It is just here to set the $_ variable
 	for ($parser->YYData->{INPUT}) {
