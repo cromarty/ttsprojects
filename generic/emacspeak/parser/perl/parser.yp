@@ -21,8 +21,6 @@
 #--code--
 
 
-# This is work in progress, not working yet
-
 %{
 
 # These constants are used as start states, a-la %x in Yacc.
@@ -46,6 +44,8 @@ use constant X_INBRACES			=> 16;
 # All free-form payloads.
 # Payloads for these three functions don't conform to fixed format, like integer, punctuation levels, flag etc. FF = free-form
 use constant X_FF			=> (X_SPEECH|X_LETTER|X_CODE);
+
+our $VERSION = '1.0.0';
 
 # set to a non-zero value to see debug messages
 my $debug = 1;
@@ -599,5 +599,11 @@ sub Run {
 } # end of Run
 
 
+__END__
+
+=pod
+
+=head1 name
+Parse::Emacspeak - Emacspeak text-to-speech protocol parser
 
 
