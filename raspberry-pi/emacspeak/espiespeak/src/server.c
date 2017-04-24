@@ -254,14 +254,14 @@ void tts_d(void)
 
 void tts_pause(void)
 {
-	/* not implemented yet */
+	ilctts_pause(st);
 	//debug_log(logfd, "Called tts_pause\n");
 	return;
 } /* end tts_pause */
 
 void tts_resume(void)
 {
-	/* not implemented yet */
+	ilctts_resume(st);
 	//debug_log(logfd, "Called tts_resume\n");
 	return;
 } /* end tts_resume */
