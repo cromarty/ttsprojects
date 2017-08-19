@@ -1,3 +1,16 @@
-Makefile
+# Usual rubbish
 res
+
+# Created files
+Makefile
+autom4te.cache/
+*.script
+src/.deps
+src/.libs
+*.lo
+*.la
+config.status
+config.h
+stamp-h1
+config/*.conf
 
