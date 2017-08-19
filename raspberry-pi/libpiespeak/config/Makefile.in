@@ -257,8 +257,8 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-nodist_piespeakupldconfig_DATA = 01-libilctts.conf
-CLEANFILES = 01-libilctts.conf
+nodist_piespeakupldconfig_DATA = 01-libpiespeak.conf
+CLEANFILES = 01-libpiespeak.conf
 all: all-am
 
 .SUFFIXES:
@@ -476,7 +476,7 @@ uninstall-am: uninstall-nodist_piespeakupldconfigDATA
 	uninstall-am uninstall-nodist_piespeakupldconfigDATA
 
 
-01-libilctts.conf : 01-libilctts.conf.in
+01-libpiespeak.conf : 01-libpiespeak.conf.in
 	$(SED) "s|prefix|$(prefix)|" $< > $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

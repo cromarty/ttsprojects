@@ -37,7 +37,7 @@
 #include "ilclient.h"
 #include "piespeak_lib.h"
 #include "core.h"
-#include "debug.h"
+//#include "debug.h"
 
 
 #define OUT_CHANNELS(num_channels) ((num_channels) > 4 ? 8: (num_channels) > 2 ? 4: (num_channels))
