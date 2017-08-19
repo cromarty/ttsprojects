@@ -1,15 +1,13 @@
 
-## testlib02 ##
+## Third Library Test ##
 
-This version of the test-harness is the first which tests the producer/consumer 
-matched pair of functions.
+This version of the test-harness calls espeak to render a single sentence of 
+text.
 
-In this code the producer is a function in testlib.c and the consumer is the 
-ringbuffer consumer thread in the library.
+As espeak returns the TTS PCM to the program it submits the data to the consumer 
+thread in the library.
 
-The producer function in testlib.c reads from a raw PCM file in chunks and 
-writes the data into the ring buffer.
+This is the first incremental test that actually calls espeak for text-to-speech 
+rendering.
 
-The consumer thread in the library reads the data from the ring buffer in chunks 
-and submits the data for rendering on the GPU via the OMX IL library code.
 

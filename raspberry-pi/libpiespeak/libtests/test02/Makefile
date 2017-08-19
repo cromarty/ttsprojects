@@ -11,10 +11,10 @@ CFLAGS = $(INCLUDES)
 LDFLAGS = -L$(SDKSTAGE)/opt/vc/lib \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/ilclient \
         -L$(SDKSTAGE)/opt/vc/src/hello_pi/libs/vgfont \
-                -L$(SRCDIR)
+                -L../src
 LDLIBS = -lilctts -lopenmaxil \
         -lbcm_host -lvcos -lvchiq_arm -lpthread \
-        -lrt
+        -lespeak -lrt
 
 testlib : testlib.o
 	$(CC) -o testlib testlib.o $(LDFLAGS) $(LDLIBS)  
