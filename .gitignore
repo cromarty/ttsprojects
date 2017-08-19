@@ -1,8 +1,8 @@
 # ignore anything ending in a tilde
 *~
 
-# ignore *.o
 *.o
+*.lo
 
 # my usual nonsense
 res
@@ -15,11 +15,8 @@ res
 *.raw
 *.wav
 
-# test binaries
 raspberry-pi/libilctts/libtests/test01/testlib
-raspberry-pi/libilctts/libtests/test02/testlib
 raspberry-pi/libilctts/libtests/test03/testlib
-raspberry-pi/libilctts/libtests/test04/testlib
 
 # dependancy files
 *.d
