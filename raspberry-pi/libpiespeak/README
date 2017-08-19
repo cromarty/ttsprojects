@@ -1,8 +1,8 @@
 
-libilctts
+libpiespeak
 =========
 
-This is the directory where the libilctts library code and additional stuff is to be found.
+This is the directory where the libpiespeak library code and additional stuff is to be found.
 
 What is it?
 ===========
@@ -33,12 +33,16 @@ Elsewhere in the same github you will find a fork of espeakup, the SpeakUp to eS
 piespeakup uses this library to read the console and pass PCM passed back from eSpeak into the GPU 
 for rendering.
 
+Library Name Change
+-------------------
 
 
+August 2017.
 
+This library was originally called `libilctts`, but that name was never very 
+descriptive.
 
-
-
-
-
+When I needed to make changes to the library in August 2017 before writing a 
+speech-dispatcher audio driver which used it, I decided to change the name to 
+`libpiespeak`.
 

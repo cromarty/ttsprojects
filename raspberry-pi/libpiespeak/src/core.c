@@ -2,7 +2,7 @@
 *
 * core.c - The main code of the library
 *
-* Main code of the library libilctts.so.
+* Main code of the library libpiespeak.so.
 * See the top-level README file for details of what the library does.
 *
 * Copyright (C) 2014, Mike Ray, <mike.ray@btinternet.com>
@@ -35,7 +35,7 @@
 
 #include "bcm_host.h"
 #include "ilclient.h"
-#include "ilctts_lib.h"
+#include "piespeak_lib.h"
 #include "core.h"
 #include "debug.h"
 
@@ -135,28 +135,27 @@ static double get_benchmark_time()
 } // end get_time
 
 
-int32_t ilctts_initialize() {
+int32_t piespeak_initialize() {
 	OMX_ERRORTYPE omx_err;
 	bcm_host_init();
 	omx_err = OMX_Init();
 	if (omx_err != OMX_ErrorNone) {
-		ERROR("OMX_Init returned error in ilctts_initialize: %d", omx_err);
+		ERROR("OMX_Init returned error in piespeak_initialize: %d", omx_err);
 	}
 	return (omx_err == OMX_ErrorNone ? 0 : -1);
-} // end ilctts_initialize
+} // end piespeak_initialize
 
-int32_t ilctts_finalize() {
+int32_t piespeak_finalize() {
 	OMX_ERRORTYPE omx_err;
 	omx_err = OMX_Deinit();
 	if (omx_err != OMX_ErrorNone) {
-		ERROR("OMX_Deinit returned error in ilctts_finalize: %d", omx_err);
 		return -1;
 	}
 
 	return 0;
-} // end ilctts_finalize
+} // end piespeak_finalize
 
-int32_t ilctts_create(
+int32_t piespeak_create(
 	TTSRENDER_STATE_T **component,
 	uint32_t sample_rate,
 	uint32_t num_channels,
@@ -290,7 +289,7 @@ int32_t ilctts_create(
 	// this function waits for the command to complete
 	ret = ilclient_change_component_state(st->audio_render, OMX_StateIdle);
 	if (ret < 0) {
-		ERROR("ilctts_change_component_state returned error in ilctts_create: %d", ret);
+		ERROR("piespeak_change_component_state returned error in piespeak_create: %d", ret);
 		return -1;
 	}
 
@@ -310,10 +309,10 @@ int32_t ilctts_create(
 
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
 
-} // end ilctts_create
+} // end piespeak_create
 
 
-int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
+int32_t piespeak_delete(TTSRENDER_STATE_T *st) {
 	int32_t ret;
 	OMX_ERRORTYPE omx_err;
 
@@ -338,10 +337,10 @@ int32_t ilctts_delete(TTSRENDER_STATE_T *st) {
 	destroy_mutexes(st);
 	free(st);
 	return 0;
-} // end ilctts_delete
+} // end piespeak_delete
 
 
-uint8_t *ilctts_get_buffer(TTSRENDER_STATE_T *st) {
+uint8_t *piespeak_get_buffer(TTSRENDER_STATE_T *st) {
 	OMX_BUFFERHEADERTYPE *hdr = NULL;
 
 	hdr = ilclient_get_input_buffer(st->audio_render, 100, 0);
@@ -354,10 +353,10 @@ uint8_t *ilctts_get_buffer(TTSRENDER_STATE_T *st) {
 	}
 
 	return hdr ? hdr->pBuffer : NULL;
-} // end ilctts_get_buffer
+} // end piespeak_get_buffer
 
 
-int32_t ilctts_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
+int32_t piespeak_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
 	OMX_BUFFERHEADERTYPE *hdr = NULL, *prev = NULL;
 	int32_t ret = -1;
 
@@ -400,10 +399,10 @@ int32_t ilctts_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t lengt
 		}
 	}
 	return ret;
-} // end ilctts_send_audio
+} // end piespeak_send_audio
 
 
-int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name) {
+int32_t piespeak_set_dest(TTSRENDER_STATE_T *st, const char *name) {
 	OMX_ERRORTYPE omx_err;
 	OMX_CONFIG_BRCMAUDIODESTINATIONTYPE dest;
 	char device[8];
@@ -422,11 +421,11 @@ int32_t ilctts_set_dest(TTSRENDER_STATE_T *st, const char *name) {
 	}
 
 	return 0;
-} // end ilctts_set_dest
+} // end piespeak_set_dest
 
 
 
-uint32_t ilctts_get_latency(TTSRENDER_STATE_T *st) {
+uint32_t piespeak_get_latency(TTSRENDER_STATE_T *st) {
 	OMX_PARAM_U32TYPE param;
 	OMX_ERRORTYPE omx_err;
 	OMX_INIT_STRUCTURE(param);
@@ -434,26 +433,26 @@ uint32_t ilctts_get_latency(TTSRENDER_STATE_T *st) {
 
 	omx_err = OMX_GetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigAudioRenderingLatency, &param);
 	if (omx_err != OMX_ErrorNone) {
-		ERROR("OMX_GetConfig returned error in ilctts_get_latency: %d", omx_err);
+		ERROR("OMX_GetConfig returned error in piespeak_get_latency: %d", omx_err);
 		return -1;
 	}
 
 	return param.nU32;
-} // end ilctts_get_latency
+} // end piespeak_get_latency
 
 
 
-int32_t ilctts_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
+int32_t piespeak_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
 	OMX_ERRORTYPE omx_err = OMX_GetState(ILC_GET_HANDLE(st->audio_render), state);
 	if (omx_err != OMX_ErrorNone) {
 		return -1;
 	}
 
 	return 0;
-} // end ilctts_get_state
+} // end piespeak_get_state
 
 
-int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
+int32_t piespeak_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
 	OMX_ERRORTYPE omx_err;
 	OMX_AUDIO_CONFIG_VOLUMETYPE volume;
 	OMX_INIT_STRUCTURE(volume);
@@ -466,39 +465,39 @@ int32_t ilctts_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
 	}
 
 	return 0;
-} // end ilctts_set_volume
+} // end piespeak_set_volume
 
-int32_t ilctts_pause(TTSRENDER_STATE_T *st) {
+int32_t piespeak_pause(TTSRENDER_STATE_T *st) {
 		return ilclient_change_component_state(st->audio_render, OMX_StatePause);
-		} //end ilctts_pause
+		} //end piespeak_pause
 
-int32_t ilctts_resume(TTSRENDER_STATE_T *st) {
+int32_t piespeak_resume(TTSRENDER_STATE_T *st) {
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
-} //end ilctts_resume
+} //end piespeak_resume
 
-void ilctts_stop_request(TTSRENDER_STATE_T *st) {
+void piespeak_stop_request(TTSRENDER_STATE_T *st) {
 	st->tts_stop = 1;
 	return;
-} // end ilctts_stop_request
+} // end piespeak_stop_request
 
 
-int32_t ilctts_flush(TTSRENDER_STATE_T *st) {
+int32_t piespeak_flush(TTSRENDER_STATE_T *st) {
 	OMX_ERRORTYPE omx_err;
 	omx_err = OMX_SendCommand(ILC_GET_HANDLE(st->audio_render), OMX_CommandFlush, -1, NULL);
 	if (omx_err != OMX_ErrorNone) {
-		ERROR("OMX_SendCommand returned error in ilctts_flush: %d", omx_err);
+		ERROR("OMX_SendCommand returned error in piespeak_flush: %d", omx_err);
 		return -1;
 	}
 	return 0;
-} // end ilctts_flush
+} // end piespeak_flush
 
-void ilctts_latency_wait(TTSRENDER_STATE_T *st) {
+void piespeak_latency_wait(TTSRENDER_STATE_T *st) {
 	uint32_t latency;
-	while( (latency = ilctts_get_latency(st)) > (st->sample_rate * (MIN_LATENCY_TIME + CTTW_SLEEP_TIME) / 1000))
+	while( (latency = piespeak_get_latency(st)) > (st->sample_rate * (MIN_LATENCY_TIME + CTTW_SLEEP_TIME) / 1000))
 		usleep(CTTW_SLEEP_TIME*1000);
 
 	return;
-} // end ilctts_latency_wait
+} // end piespeak_latency_wait
 
 
 

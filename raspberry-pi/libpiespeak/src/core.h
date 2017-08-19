@@ -29,7 +29,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "ilctts_lib.h"
+#include "piespeak_lib.h"
 
 #define PI 3.14159265
 

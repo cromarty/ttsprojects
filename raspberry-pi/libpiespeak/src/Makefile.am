@@ -1,9 +1,9 @@
 COMPATNUM=@LIBTOOL_VERSION_INFO@
-lib_LTLIBRARIES = libilctts.la
-libilctts_la_SOURCES = core.c ilclient.c ilcore.c utils.c core.h ilclient.h ilctts_lib.h utils.h
+lib_LTLIBRARIES = libpiespeak.la
+libpiespeak_la_SOURCES = core.c ilclient.c ilcore.c utils.c core.h ilclient.h piespeak_lib.h utils.h
 
-ilcttsincludedir = ${includedir}/ilctts
-ilcttsinclude_HEADERS = ilctts_lib.h utils.h
+piespeakincludedir = ${includedir}/piespeak
+piespeakinclude_HEADERS = piespeak_lib.h utils.h
 
 
 AM_CPPFLAGS = -I/opt/vc/include -I/opt/vc/include/interface/vcos/pthreads
@@ -13,4 +13,4 @@ AM_CPPFLAGS += -D_REENTRANT -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
 AM_CPPFLAGS += -DHAVE_LIBOPENMAX=2 -DOMX -DOMX_SKIP64BIT -DUSE_EXTERNAL_OMX -DHAVE_LIBBCM_HOST 
 AM_CPPFLAGS += -DUSE_EXTERNAL_LIBBCM_HOST -DUSE_VCHIQ_ARM 
 
-libilctts_la_LDFLAGS = -version-info $(COMPATNUM) -Wl,--verbose
+libpiespeak_la_LDFLAGS = -version-info $(COMPATNUM) -Wl,--verbose
