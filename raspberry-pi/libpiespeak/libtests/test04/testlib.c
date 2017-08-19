@@ -8,12 +8,16 @@
 
 #include <piespeak/piespeak_lib.h>
 #include <piespeak/utils.h>
+
 #include <bcm_host.h>
+
+
 
 #define M 10
 #define N (1<<M)
+#define BUF_LEN 100
 
-#define BUFFER_SIZE_MILLISECONDS 50
+sem_t sema;
 
 int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)events->user_data;
@@ -30,35 +34,46 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 		}// end while
 
 		memcpy(buf, wav, numsamples<<1);		
+		piespeak_latency_wait((TTSRENDER_STATE_T *)st);
 		piespeak_send_audio(st, buf, numsamples<<1);
 
 	}
+
+	while(events->type != espeakEVENT_LIST_TERMINATED) {
+		if (events->type == espeakEVENT_MSG_TERMINATED)
+			sem_post(&sema);
+
+		events++;
+	}
+
 
 	return 0;
 } // end Synth_callback
 
 
 // the real producer is the synth callback above.
-int producer(TTSRENDER_STATE_T *st) {
+int producer(TTSRENDER_STATE_T *st, int wpm) {
 	int sample_rate;
 	int flags = espeakSSML | espeakCHARS_UTF8;
-	char text[] = "Now is the time for every good man to come to the aid of the party";
-	int bytes = strlen(text)+1;
-	int res;
-	sample_rate = espeak_Initialize(
-	AUDIO_OUTPUT_RETRIEVAL,
-	BUFFER_SIZE_MILLISECONDS,
-	NULL,
-	0);
+	espeak_ERROR erc;
 
-	printf("About to set the synth callback\n");
+char buf[BUF_LEN];
+
+	sem_init(&sema, 0, 1);
+
+	sample_rate = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, 50, NULL, 0);
+	erc = espeak_SetParameter(espeakRATE, wpm, 0);
+
 	espeak_SetSynthCallback(synth_callback);
-	printf("About to call espeak_Synth\n");
 
-	res = espeak_Synth(text, bytes, 0, POS_CHARACTER, 0, flags, NULL, st);
-	printf("After call to espeak_Synth\n");
-	sleep(10);
-
+	while ( fgets (buf, BUF_LEN, stdin) != NULL) {
+if (strcmp(buf, "quit()\n") == 0)
+break;
+		erc = espeak_Synth(buf, strlen(buf)+1, 0, POS_CHARACTER, 0, flags, NULL, st);
+		sem_wait(&sema);
+	}
+sem_wait(&sema);
+	sem_destroy(&sema);
 	return 0;
 } // end producer
 
@@ -70,17 +85,31 @@ int main(int argc, char **argv) {
 	int32_t ret;
 	char debug_str[128];
 	int chunks = 0;
+int wpm;
 
+	if (argc != 2) {
+		printf("Usage: testlib <wpm>\n");
+		return 1;
+}
+
+wpm = atoi(argv[1]);
+printf("WPM: %d\n", wpm);
 
 	ret = piespeak_initialize();
 	if (ret < 0) { 
 		printf("Failed to initialise OMX\n");
 		return 1;
-	} else {
-		printf("Initialised OMX ok\n");
 	}
 
-	omx_err = piespeak_create(&st, 22050, 1, 16, 5, BUFFER_SIZE_MILLISECONDS, BS_MILLISECONDS);
+	omx_err = piespeak_create(
+		&st,			// the tts state object
+		22050,			// sampling rate
+		1,			// number of channels
+		16,			// bit depth
+		2,			// number of IL client buffers
+	50,
+BS_MILLISECONDS
+	);
 	if (omx_err != OMX_ErrorNone) {
 		printf("Failed to create component\n");
 		return 1;
@@ -95,13 +124,11 @@ int main(int argc, char **argv) {
 	ret = piespeak_get_state(st, &state);
 	if (ret < 0) {
 		printf("Failed to get state\n");
-		printf("Got state: %s\n", debug_str);
 	}
 
 
 
-ret = producer(st);
-
+ret = producer(st, wpm);
 
 	omx_err = piespeak_delete(st);
 	if (omx_err != OMX_ErrorNone) {

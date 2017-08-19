@@ -1,14 +1,13 @@
 
-## Rendering text read from Standard Input ##
+## Third Library Test ##
 
-The code in this test reads from standard input and renders the tts.
+This version of the test-harness calls espeak to render a single sentence of 
+text.
 
-Usage: testlib <wpm>
+As espeak returns the TTS PCM to the program it submits the data to the consumer 
+thread in the library.
 
-wpm is a number for the speech rate.
-
-For example to speak the boot messages:
-
-	dmesg | ./testlib 160
+This is the first incremental test that actually calls espeak for text-to-speech 
+rendering.
 
 

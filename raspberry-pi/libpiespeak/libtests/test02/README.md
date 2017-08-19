@@ -1,13 +1,18 @@
 
-## Third Library Test ##
+## Notes about this test harness ##
 
-This version of the test-harness calls espeak to render a single sentence of 
-text.
+### Incremental Development ###
 
-As espeak returns the TTS PCM to the program it submits the data to the consumer 
-thread in the library.
+This directory, testlib01, is part one of the incremental testing of the library 
+in ../src.
 
-This is the first incremental test that actually calls espeak for text-to-speech 
-rendering.
+It might become uncompilable as further steps are formed in directories 
+../testlibNN, where NN is an incremental number.
 
+### This Test ###
+
+The code in this directory reads from a raw PCM file and sends the PCM data to 
+the library functions for rendering on the GPU.
+
+No threads are involved, it's just read and send until end of file.
 

@@ -1,6 +1,8 @@
 
 include ../Makefile.include
 
+LDLIBS += -lespeak
+
 testlib : testlib.o
 	$(CC) -o testlib testlib.o $(LDFLAGS) $(LDLIBS)  
 
