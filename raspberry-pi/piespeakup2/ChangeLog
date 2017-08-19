@@ -1,0 +1,7 @@
+
+ChangeLog
+=========
+
+December 2016: Switched to autotools from static Makefile.
+November 2014: first fork of espeakup to make piespeakup.
+

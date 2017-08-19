@@ -1,0 +1,9 @@
+
+Notes
+=====
+
+The change to using autoconf and automake instead of using static Makefiles also switches all distros to using 
+systemd to start piespeakup. This is because Raspbian Jessie is now using both systemd and SysVInit, but Raspbian 
+will probably drop SysVInit some time in the future.
+
+

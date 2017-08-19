@@ -1,0 +1,12 @@
+
+Thanks
+======
+
+Thanks go to Gregory Osborne who helped by writing static install scripts which we used to install piespeakup on 
+either Raspbian or Arch, detecting which in the script.
+
+Not necessary after introduction of autotools build.
+
+And thanks to Rill from the raspberry-vi email list for helping to test the autotools build on Arch.
+
+

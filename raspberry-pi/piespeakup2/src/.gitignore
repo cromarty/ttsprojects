@@ -1,0 +1,8 @@
+# bin 
+piespeakup
+
+# miscellanous
+*.o
+*.d
+.deps
+

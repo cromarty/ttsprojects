@@ -1,0 +1,13 @@
+[Unit]
+Description=Software speech output for Speakup
+
+[Service]
+Type=forking
+PIDFile=/run/piespeakup.pid
+ExecStart=prefix/bin/piespeakup --device=local
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+
+
+[Install]
+WantedBy=default.target
