@@ -140,7 +140,6 @@ int32_t piespeak_initialize() {
 	bcm_host_init();
 	omx_err = OMX_Init();
 	if (omx_err != OMX_ErrorNone) {
-		ERROR("OMX_Init returned error in piespeak_initialize: %d", omx_err);
 	}
 	return (omx_err == OMX_ErrorNone ? 0 : -1);
 } // end piespeak_initialize
@@ -289,7 +288,6 @@ int32_t piespeak_create(
 	// this function waits for the command to complete
 	ret = ilclient_change_component_state(st->audio_render, OMX_StateIdle);
 	if (ret < 0) {
-		ERROR("piespeak_change_component_state returned error in piespeak_create: %d", ret);
 		return -1;
 	}
 
@@ -433,7 +431,6 @@ uint32_t piespeak_get_latency(TTSRENDER_STATE_T *st) {
 
 	omx_err = OMX_GetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigAudioRenderingLatency, &param);
 	if (omx_err != OMX_ErrorNone) {
-		ERROR("OMX_GetConfig returned error in piespeak_get_latency: %d", omx_err);
 		return -1;
 	}
 
@@ -485,7 +482,6 @@ int32_t piespeak_flush(TTSRENDER_STATE_T *st) {
 	OMX_ERRORTYPE omx_err;
 	omx_err = OMX_SendCommand(ILC_GET_HANDLE(st->audio_render), OMX_CommandFlush, -1, NULL);
 	if (omx_err != OMX_ErrorNone) {
-		ERROR("OMX_SendCommand returned error in piespeak_flush: %d", omx_err);
 		return -1;
 	}
 	return 0;
