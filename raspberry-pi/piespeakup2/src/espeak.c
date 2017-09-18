@@ -76,13 +76,7 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 		return 1;
 
 	if (numsamples) {
-		piespeak_wait_space(tts);
-		piespeak_lock_ringbuffer(tts);
 
-		written = piespeak_pcm_write(tts, (void*)wav, numsamples);
-
-		piespeak_unlock_ringbuffer(tts);
-		piespeak_post_data(tts);
 	}
 
 	while(events->type != espeakEVENT_LIST_TERMINATED) {
@@ -273,7 +267,7 @@ int initialize_espeak(struct synth_t *s)
 		return 2;
 
 /* create a libpiespeak status object */
-	res = piespeak_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0, (1024*6));
+	res = piespeak_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0);
 	if (res == -1) {
 		fprintf(stderr, "Unable to initialize libpiespeak.\n");
 		return -1;
@@ -281,12 +275,6 @@ int initialize_espeak(struct synth_t *s)
 
 	piespeak_set_dest(st, outputDevice);
 
-	/* start the libpiespeak consumer thread */
-	res = piespeak_start_ringbuffer_consumer_thread(st);
-	if (res == -1) {
-		fprintf(stderr, "Failed to start the libpiespeak ring buffer consumer thread.\n");
-		return -1;
-	}
 
 	/* initialize espeak */
 	rate = espeak_Initialize(AUDIO_OUTPUT_RETRIEVAL, BUF_SIZE_MS, NULL, 0);
@@ -296,9 +284,6 @@ int initialize_espeak(struct synth_t *s)
 	}
 
 	espeak_SetSynthCallback(synth_callback);
-
-	// need to post the space semaphore at start
-	piespeak_post_space(st);
 
 	/* Setup initial voice parameters */
 	if (defaultVoice) {
