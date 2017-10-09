@@ -22,8 +22,8 @@
 * 02110-1301, USA.
 *
 *--code--*/
-#ifndef ILCTTS_LIB_H
-#define ILCTTS_LIB_H
+#ifndef PIESPEAK_LIB_H
+#define PIESPEAK_LIB_H
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
