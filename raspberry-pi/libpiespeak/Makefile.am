@@ -1,8 +1,7 @@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src config
 dist_doc_DATA = README
-EXTRA_DIST=BROADCOM NOTES configure libtool m4/ fix-timestamps.sh 
-config/01-libpiespeak.conf.in
+EXTRA_DIST=BROADCOM NOTES configure libtool m4/ fix-timestamps.sh config/01-libpiespeak.conf.in
 
 AM_CPPFLAGS = -I$(top_srcdir)/include 
 AM_CPPFLAGS += -I/opt/vc/include 
