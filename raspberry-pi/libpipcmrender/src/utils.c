@@ -38,7 +38,7 @@
 #include <IL/OMX_Broadcom.h>
 #include <pthread.h>
 
-#include "piespeak_lib.h"
+#include "pipcmrender_lib.h"
 
 void omx_errortype_string(OMX_ERRORTYPE omx_err, char *error_str) {
 	switch(omx_err) {

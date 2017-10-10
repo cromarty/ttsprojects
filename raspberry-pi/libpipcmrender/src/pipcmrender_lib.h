@@ -1,6 +1,6 @@
 /*
 *
-* piespeak_lib.h - Main public header file for the core functionality of the library
+* pipcmrender_lib.h - Main public header file for the core functionality of the library
 *
 * Contains function prototypes and type definitions for the main code.
 *
@@ -22,8 +22,8 @@
 * 02110-1301, USA.
 *
 *--code--*/
-#ifndef PIESPEAK_LIB_H
-#define PIESPEAK_LIB_H
+#ifndef PIPCMRENDER_LIB_H
+#define PIPCMRENDER_LIB_H
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -83,10 +83,10 @@ typedef struct {
 	TTS_PAUSE_STATE_T tts_pause_state;
 } TTSRENDER_STATE_T;
 
-int32_t piespeak_initialize();
-int32_t piespeak_finalize();
+int32_t pipcmrender_initialize();
+int32_t pipcmrender_finalize();
 
-int32_t piespeak_create(
+int32_t pipcmrender_create(
 	TTSRENDER_STATE_T **component,
 	uint32_t sample_rate,
 	uint32_t num_channels,
@@ -96,20 +96,20 @@ int32_t piespeak_create(
 	BUFFER_SIZE_TYPE_T buffer_size_type
 	);
 
-int32_t piespeak_delete(TTSRENDER_STATE_T *st);
-uint8_t *piespeak_get_buffer(TTSRENDER_STATE_T *st);
-int32_t piespeak_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length);
-uint32_t piespeak_get_latency(TTSRENDER_STATE_T *st);
-int32_t piespeak_set_dest(TTSRENDER_STATE_T *st, const char *name);
-int32_t piespeak_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state);
-int32_t piespeak_set_volume(TTSRENDER_STATE_T *st, unsigned int vol);
-int32_t piespeak_pause(TTSRENDER_STATE_T *st);
-int32_t piespeak_resume(TTSRENDER_STATE_T *st);
-void piespeak_stop_request(TTSRENDER_STATE_T *st);
-int32_t piespeak_flush(TTSRENDER_STATE_T *st);
-int piespeak_pcm_write(TTSRENDER_STATE_T *st, void *data, int length);
-int piespeak_pcm_read(TTSRENDER_STATE_T *st, void *data, int length);
-void piespeak_latency_wait(TTSRENDER_STATE_T *st);
+int32_t pipcmrender_delete(TTSRENDER_STATE_T *st);
+uint8_t *pipcmrender_get_buffer(TTSRENDER_STATE_T *st);
+int32_t pipcmrender_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length);
+uint32_t pipcmrender_get_latency(TTSRENDER_STATE_T *st);
+int32_t pipcmrender_set_dest(TTSRENDER_STATE_T *st, const char *name);
+int32_t pipcmrender_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state);
+int32_t pipcmrender_set_volume(TTSRENDER_STATE_T *st, unsigned int vol);
+int32_t pipcmrender_pause(TTSRENDER_STATE_T *st);
+int32_t pipcmrender_resume(TTSRENDER_STATE_T *st);
+void pipcmrender_stop_request(TTSRENDER_STATE_T *st);
+int32_t pipcmrender_flush(TTSRENDER_STATE_T *st);
+int pipcmrender_pcm_write(TTSRENDER_STATE_T *st, void *data, int length);
+int pipcmrender_pcm_read(TTSRENDER_STATE_T *st, void *data, int length);
+void pipcmrender_latency_wait(TTSRENDER_STATE_T *st);
 
 #endif
 

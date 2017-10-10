@@ -1,5 +1,5 @@
 AC_PREREQ([2.69])
-AC_INIT([piespeak],[2.0.0],[mike.ray@btinternet.com])
+AC_INIT([pipcmrender],[2.0.0],[mike.ray@btinternet.com])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
 AC_PREFIX_DEFAULT(/usr/local)
 AC_CONFIG_SRCDIR([src/core.c])
@@ -65,8 +65,8 @@ EOF
   exit 1
 fi
 
-piespeakupldconfigdir='/etc/ld.so.conf.d'
-AC_SUBST([piespeakupldconfigdir])
+pipcmrenderupldconfigdir='/etc/ld.so.conf.d'
+AC_SUBST([pipcmrenderupldconfigdir])
 
 
 AC_CONFIG_FILES([

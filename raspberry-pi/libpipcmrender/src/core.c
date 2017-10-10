@@ -2,7 +2,7 @@
 *
 * core.c - The main code of the library
 *
-* Main code of the library libpiespeak.so.
+* Main code of the library libpipcmrender.so.
 * See the top-level README file for details of what the library does.
 *
 * Copyright (C) 2014, Mike Ray, <mike.ray@btinternet.com>
@@ -35,7 +35,7 @@
 
 #include "bcm_host.h"
 #include "ilclient.h"
-#include "piespeak_lib.h"
+#include "pipcmrender_lib.h"
 #include "core.h"
 //#include "debug.h"
 
@@ -135,16 +135,16 @@ static double get_benchmark_time()
 } // end get_time
 
 
-int32_t piespeak_initialize() {
+int32_t pipcmrender_initialize() {
 	OMX_ERRORTYPE omx_err;
 	bcm_host_init();
 	omx_err = OMX_Init();
 	if (omx_err != OMX_ErrorNone) {
 	}
 	return (omx_err == OMX_ErrorNone ? 0 : -1);
-} // end piespeak_initialize
+} // end pipcmrender_initialize
 
-int32_t piespeak_finalize() {
+int32_t pipcmrender_finalize() {
 	OMX_ERRORTYPE omx_err;
 	omx_err = OMX_Deinit();
 	if (omx_err != OMX_ErrorNone) {
@@ -152,9 +152,9 @@ int32_t piespeak_finalize() {
 	}
 
 	return 0;
-} // end piespeak_finalize
+} // end pipcmrender_finalize
 
-int32_t piespeak_create(
+int32_t pipcmrender_create(
 	TTSRENDER_STATE_T **component,
 	uint32_t sample_rate,
 	uint32_t num_channels,
@@ -307,10 +307,10 @@ int32_t piespeak_create(
 
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
 
-} // end piespeak_create
+} // end pipcmrender_create
 
 
-int32_t piespeak_delete(TTSRENDER_STATE_T *st) {
+int32_t pipcmrender_delete(TTSRENDER_STATE_T *st) {
 	int32_t ret;
 	OMX_ERRORTYPE omx_err;
 
@@ -335,10 +335,10 @@ int32_t piespeak_delete(TTSRENDER_STATE_T *st) {
 	destroy_mutexes(st);
 	free(st);
 	return 0;
-} // end piespeak_delete
+} // end pipcmrender_delete
 
 
-uint8_t *piespeak_get_buffer(TTSRENDER_STATE_T *st) {
+uint8_t *pipcmrender_get_buffer(TTSRENDER_STATE_T *st) {
 	OMX_BUFFERHEADERTYPE *hdr = NULL;
 
 	hdr = ilclient_get_input_buffer(st->audio_render, 100, 0);
@@ -351,10 +351,10 @@ uint8_t *piespeak_get_buffer(TTSRENDER_STATE_T *st) {
 	}
 
 	return hdr ? hdr->pBuffer : NULL;
-} // end piespeak_get_buffer
+} // end pipcmrender_get_buffer
 
 
-int32_t piespeak_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
+int32_t pipcmrender_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
 	OMX_BUFFERHEADERTYPE *hdr = NULL, *prev = NULL;
 	int32_t ret = -1;
 
@@ -397,10 +397,10 @@ int32_t piespeak_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t len
 		}
 	}
 	return ret;
-} // end piespeak_send_audio
+} // end pipcmrender_send_audio
 
 
-int32_t piespeak_set_dest(TTSRENDER_STATE_T *st, const char *name) {
+int32_t pipcmrender_set_dest(TTSRENDER_STATE_T *st, const char *name) {
 	OMX_ERRORTYPE omx_err;
 	OMX_CONFIG_BRCMAUDIODESTINATIONTYPE dest;
 	char device[8];
@@ -419,11 +419,11 @@ int32_t piespeak_set_dest(TTSRENDER_STATE_T *st, const char *name) {
 	}
 
 	return 0;
-} // end piespeak_set_dest
+} // end pipcmrender_set_dest
 
 
 
-uint32_t piespeak_get_latency(TTSRENDER_STATE_T *st) {
+uint32_t pipcmrender_get_latency(TTSRENDER_STATE_T *st) {
 	OMX_PARAM_U32TYPE param;
 	OMX_ERRORTYPE omx_err;
 	OMX_INIT_STRUCTURE(param);
@@ -435,21 +435,21 @@ uint32_t piespeak_get_latency(TTSRENDER_STATE_T *st) {
 	}
 
 	return param.nU32;
-} // end piespeak_get_latency
+} // end pipcmrender_get_latency
 
 
 
-int32_t piespeak_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
+int32_t pipcmrender_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
 	OMX_ERRORTYPE omx_err = OMX_GetState(ILC_GET_HANDLE(st->audio_render), state);
 	if (omx_err != OMX_ErrorNone) {
 		return -1;
 	}
 
 	return 0;
-} // end piespeak_get_state
+} // end pipcmrender_get_state
 
 
-int32_t piespeak_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
+int32_t pipcmrender_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
 	OMX_ERRORTYPE omx_err;
 	OMX_AUDIO_CONFIG_VOLUMETYPE volume;
 	OMX_INIT_STRUCTURE(volume);
@@ -462,38 +462,38 @@ int32_t piespeak_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
 	}
 
 	return 0;
-} // end piespeak_set_volume
+} // end pipcmrender_set_volume
 
-int32_t piespeak_pause(TTSRENDER_STATE_T *st) {
+int32_t pipcmrender_pause(TTSRENDER_STATE_T *st) {
 		return ilclient_change_component_state(st->audio_render, OMX_StatePause);
-		} //end piespeak_pause
+		} //end pipcmrender_pause
 
-int32_t piespeak_resume(TTSRENDER_STATE_T *st) {
+int32_t pipcmrender_resume(TTSRENDER_STATE_T *st) {
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
-} //end piespeak_resume
+} //end pipcmrender_resume
 
-void piespeak_stop_request(TTSRENDER_STATE_T *st) {
+void pipcmrender_stop_request(TTSRENDER_STATE_T *st) {
 	st->tts_stop = 1;
 	return;
-} // end piespeak_stop_request
+} // end pipcmrender_stop_request
 
 
-int32_t piespeak_flush(TTSRENDER_STATE_T *st) {
+int32_t pipcmrender_flush(TTSRENDER_STATE_T *st) {
 	OMX_ERRORTYPE omx_err;
 	omx_err = OMX_SendCommand(ILC_GET_HANDLE(st->audio_render), OMX_CommandFlush, -1, NULL);
 	if (omx_err != OMX_ErrorNone) {
 		return -1;
 	}
 	return 0;
-} // end piespeak_flush
+} // end pipcmrender_flush
 
-void piespeak_latency_wait(TTSRENDER_STATE_T *st) {
+void pipcmrender_latency_wait(TTSRENDER_STATE_T *st) {
 	uint32_t latency;
-	while( (latency = piespeak_get_latency(st)) > (st->sample_rate * (MIN_LATENCY_TIME + CTTW_SLEEP_TIME) / 1000))
+	while( (latency = pipcmrender_get_latency(st)) > (st->sample_rate * (MIN_LATENCY_TIME + CTTW_SLEEP_TIME) / 1000))
 		usleep(CTTW_SLEEP_TIME*1000);
 
 	return;
-} // end piespeak_latency_wait
+} // end pipcmrender_latency_wait
 
 
 
