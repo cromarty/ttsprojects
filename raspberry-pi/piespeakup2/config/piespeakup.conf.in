@@ -1,4 +1,0 @@
-[Service]
-ExecStart=
-ExecStart=prefix/bin/piespeakup --device=local
-

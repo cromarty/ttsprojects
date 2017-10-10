@@ -1,0 +1,4 @@
+[Service]
+ExecStart=
+ExecStart=prefix/bin/piespeakup2 --device=local
+

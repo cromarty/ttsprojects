@@ -245,9 +245,9 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 dist_modulesload_DATA = speakup_soft.conf
-nodist_systemdunit_DATA = piespeakup.service
-nodist_piespeakupunitconf_DATA = piespeakup.conf
-CLEANFILES = piespeakup.service piespeakup.conf
+nodist_systemdunit_DATA = piespeakup2.service
+nodist_piespeakupunitconf_DATA = piespeakup2.conf
+CLEANFILES = piespeakup2.service piespeakup2.conf
 all: all-am
 
 .SUFFIXES:
@@ -509,10 +509,10 @@ uninstall-am: uninstall-dist_modulesloadDATA \
 .PRECIOUS: Makefile
 
 
-piespeakup.service : piespeakup.service.in
+piespeakup2.service : piespeakup2.service.in
 	$(SED) -e "s|prefix|$(prefix)|" $< > $@
 
-piespeakup.conf : piespeakup.conf.in
+piespeakup2.conf : piespeakup2.conf.in
 	$(SED) "s|prefix|$(prefix)|" $< > $@
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

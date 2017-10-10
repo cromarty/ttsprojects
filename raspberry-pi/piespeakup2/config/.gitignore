@@ -1,0 +1,6 @@
+
+*.conf
+!speakup_soft.conf
+
+*.service
+

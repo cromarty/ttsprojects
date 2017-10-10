@@ -51,37 +51,32 @@ volatile int stop_requested = 0;
 /* piespeak render object */
 extern TTSRENDER_STATE_T *st;
 
-/*
-static int acsint_callback(short *wav, int numsamples, espeak_EVENT * events)
-{
-	int i;
-	for (i = 0; events[i].type !=  espeakEVENT_LIST_TERMINATED; i++) {
-		if (events[i].type == espeakEVENT_MARK) {
-			int mark = atoi(events[i].id.name);
-			if ((mark < 0) || (mark > 255))
-				continue;
-			putchar(mark);
-			fflush(stdout);
-		}
-	}
-	return 0;
-}
-*/
+/* new callback */
 
 int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
-	TTSRENDER_STATE_T *tts = (TTSRENDER_STATE_T*)events->user_data;
-	int written;
-
-	if (stop_requested)
-		return 1;
+	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)events->user_data;
+	uint8_t *buf;
 
 	if (numsamples) {
+		buf = pipcmrender_get_buffer(st);
+		while(buf == NULL) {
+			pthread_mutex_lock(&st->free_buffer_mutex);
+			pthread_cond_wait(&st->free_buffer_cv, &st->free_buffer_mutex);
+			buf = pipcmrender_get_buffer(st);
+			pthread_mutex_unlock(&st->free_buffer_mutex);
+		}// end while
+
+		memcpy(buf, wav, numsamples<<1);		
+		pipcmrender_latency_wait((TTSRENDER_STATE_T *)st);
+		pipcmrender_send_audio(st, buf, numsamples<<1);
 
 	}
 
 	while(events->type != espeakEVENT_LIST_TERMINATED) {
+		if (events->type == espeakEVENT_MSG_TERMINATED)
 		events++;
 	}
+
 
 	return 0;
 } // end Synth_callback

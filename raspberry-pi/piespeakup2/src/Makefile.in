@@ -86,7 +86,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = piespeakup$(EXEEXT)
+bin_PROGRAMS = piespeakup2$(EXEEXT)
 subdir = src
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.ac
@@ -99,11 +99,11 @@ CONFIG_CLEAN_FILES =
 CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
-am_piespeakup_OBJECTS = cli.$(OBJEXT) espeak.$(OBJEXT) \
+am_piespeakup2_OBJECTS = cli.$(OBJEXT) espeak.$(OBJEXT) \
 	piespeakup.$(OBJEXT) queue.$(OBJEXT) signal.$(OBJEXT) \
 	softsynth.$(OBJEXT) stringhandling.$(OBJEXT)
-piespeakup_OBJECTS = $(am_piespeakup_OBJECTS)
-piespeakup_LDADD = $(LDADD)
+piespeakup2_OBJECTS = $(am_piespeakup2_OBJECTS)
+piespeakup2_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_@AM_V@)
 am__v_P_ = $(am__v_P_@AM_DEFAULT_V@)
 am__v_P_0 = false
@@ -132,8 +132,8 @@ AM_V_CCLD = $(am__v_CCLD_@AM_V@)
 am__v_CCLD_ = $(am__v_CCLD_@AM_DEFAULT_V@)
 am__v_CCLD_0 = @echo "  CCLD    " $@;
 am__v_CCLD_1 = 
-SOURCES = $(piespeakup_SOURCES)
-DIST_SOURCES = $(piespeakup_SOURCES)
+SOURCES = $(piespeakup2_SOURCES)
+DIST_SOURCES = $(piespeakup2_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -253,7 +253,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-piespeakup_SOURCES = cli.c espeak.c piespeakup.c queue.c signal.c softsynth.c stringhandling.c espeakup.h ilclient.h queue.h stringhandling.h
+piespeakup2_SOURCES = cli.c espeak.c piespeakup.c queue.c signal.c softsynth.c stringhandling.c espeakup.h ilclient.h queue.h stringhandling.h
 AM_CPPFLAGS = -I/opt/vc/include
 all: all-am
 
@@ -331,9 +331,9 @@ uninstall-binPROGRAMS:
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
-piespeakup$(EXEEXT): $(piespeakup_OBJECTS) $(piespeakup_DEPENDENCIES) $(EXTRA_piespeakup_DEPENDENCIES) 
-	@rm -f piespeakup$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(piespeakup_OBJECTS) $(piespeakup_LDADD) $(LIBS)
+piespeakup2$(EXEEXT): $(piespeakup2_OBJECTS) $(piespeakup2_DEPENDENCIES) $(EXTRA_piespeakup2_DEPENDENCIES) 
+	@rm -f piespeakup2$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(piespeakup2_OBJECTS) $(piespeakup2_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)

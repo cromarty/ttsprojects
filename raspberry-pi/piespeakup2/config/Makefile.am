@@ -1,16 +1,16 @@
 
 dist_modulesload_DATA = speakup_soft.conf
-nodist_systemdunit_DATA = piespeakup.service
-nodist_piespeakupunitconf_DATA = piespeakup.conf
+nodist_systemdunit_DATA = piespeakup2.service
+nodist_piespeakupunitconf_DATA = piespeakup2.conf
 
-piespeakup.service : piespeakup.service.in
+piespeakup2.service : piespeakup2.service.in
 	$(SED) -e "s|prefix|$(prefix)|" $< > $@
 
-piespeakup.conf : piespeakup.conf.in
+piespeakup2.conf : piespeakup2.conf.in
 	$(SED) "s|prefix|$(prefix)|" $< > $@
 
 
 
-CLEANFILES = piespeakup.service piespeakup.conf
+CLEANFILES = piespeakup2.service piespeakup2.conf
 
 
