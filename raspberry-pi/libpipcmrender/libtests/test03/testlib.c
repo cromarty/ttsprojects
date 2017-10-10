@@ -6,8 +6,8 @@
 #include <math.h>
 #include <espeak/speak_lib.h>
 
-#include <piespeak/piespeak_lib.h>
-#include <piespeak/utils.h>
+#include <pipcmrender/pipcmrender_lib.h>
+#include <pipcmrender/utils.h>
 #include <bcm_host.h>
 
 #define M 10
@@ -21,16 +21,16 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 
 	if (numsamples) {
         
-		buf = piespeak_get_buffer(st);
+		buf = pipcmrender_get_buffer(st);
 		while(buf == NULL) {
 			pthread_mutex_lock(&st->free_buffer_mutex);
 			pthread_cond_wait(&st->free_buffer_cv, &st->free_buffer_mutex);
-			buf = piespeak_get_buffer(st);
+			buf = pipcmrender_get_buffer(st);
 			pthread_mutex_unlock(&st->free_buffer_mutex);
 		}// end while
 
 		memcpy(buf, wav, numsamples<<1);		
-		piespeak_send_audio(st, buf, numsamples<<1);
+		pipcmrender_send_audio(st, buf, numsamples<<1);
 
 	}
 
@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 	int chunks = 0;
 
 
-	ret = piespeak_initialize();
+	ret = pipcmrender_initialize();
 	if (ret < 0) { 
 		printf("Failed to initialise OMX\n");
 		return 1;
@@ -80,19 +80,19 @@ int main(int argc, char **argv) {
 		printf("Initialised OMX ok\n");
 	}
 
-	omx_err = piespeak_create(&st, 22050, 1, 16, 5, BUFFER_SIZE_MILLISECONDS, BS_MILLISECONDS);
+	omx_err = pipcmrender_create(&st, 22050, 1, 16, 5, BUFFER_SIZE_MILLISECONDS, BS_MILLISECONDS);
 	if (omx_err != OMX_ErrorNone) {
 		printf("Failed to create component\n");
 		return 1;
 	}
 
-	ret = piespeak_set_dest(st, "local");
+	ret = pipcmrender_set_dest(st, "local");
 	if (ret < 0) {
 		printf("Failed to set audio destination\n");
 		return 1;
 	}
 
-	ret = piespeak_get_state(st, &state);
+	ret = pipcmrender_get_state(st, &state);
 	if (ret < 0) {
 		printf("Failed to get state\n");
 		printf("Got state: %s\n", debug_str);
@@ -103,13 +103,13 @@ int main(int argc, char **argv) {
 ret = producer(st);
 
 
-	omx_err = piespeak_delete(st);
+	omx_err = pipcmrender_delete(st);
 	if (omx_err != OMX_ErrorNone) {
 		printf("Failed to delete component\n");
 		return 1;
 	}
 
-	piespeak_finalize();
+	pipcmrender_finalize();
 
 	return 0;
 

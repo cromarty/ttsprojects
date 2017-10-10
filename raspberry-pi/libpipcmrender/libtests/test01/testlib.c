@@ -4,8 +4,8 @@
 #include <unistd.h>
 #include <semaphore.h>
 #include <math.h>
-#include <piespeak/piespeak_lib.h>
-#include <piespeak/utils.h>
+#include <pipcmrender/pipcmrender_lib.h>
+#include <pipcmrender/utils.h>
 
 #include "bcm_host.h"
 
