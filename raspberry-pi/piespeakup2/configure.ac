@@ -26,7 +26,7 @@ dnl Checks for libraries.
 
 # FIXME: Replace `main' with a function in `-lespeak':
 AC_CHECK_LIB([espeak], [espeak_Initialize], [], [AC_MSG_ERROR([espeak_Initialize was not found in libespeak])])
-AC_CHECK_LIB([piespeak], [piespeak_initialize], [], [AC_MSG_ERROR([piespeak_initialize was not found in libpiespeak])])
+AC_CHECK_LIB([pipcmrender], [pipcmrender_initialize], [], [AC_MSG_ERROR([pipcmrender_initialize was not found in libpipcmrender])])
 AC_CHECK_LIB([pthread], [pthread_mutex_init], [], [AC_MSG_ERROR([pthread_mutex_init was not found in libpthread])])
 
 dnl Checks for header files.

@@ -26,7 +26,7 @@
 
 #include <espeak/speak_lib.h>
 
-#include <piespeak/piespeak_lib.h>
+#include <pipcmrender/pipcmrender_lib.h>
 
 #include "queue.h"
 

@@ -21,7 +21,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <piespeak/piespeak_lib.h>
+#include <pipcmrender/pipcmrender_lib.h>
 
 #include "espeakup.h"
 
@@ -178,7 +178,7 @@ static espeak_ERROR stop_speech(void)
 {
 	espeak_ERROR rc;
 
-	piespeak_stop_request(st);
+	pipcmrender_stop_request(st);
 	rc = espeak_Cancel();
 	return rc;
 }
@@ -263,17 +263,17 @@ int initialize_espeak(struct synth_t *s)
 	int rate, res;
 
 	/* initialize libpiespeak */
-	if (piespeak_initialize() < 0)
+	if (pipcmrender_initialize() < 0)
 		return 2;
 
 /* create a libpiespeak status object */
-	res = piespeak_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0);
+	res = pipcmrender_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0);
 	if (res == -1) {
 		fprintf(stderr, "Unable to initialize libpiespeak.\n");
 		return -1;
 	}
 
-	piespeak_set_dest(st, outputDevice);
+	pipcmrender_set_dest(st, outputDevice);
 
 
 	/* initialize espeak */

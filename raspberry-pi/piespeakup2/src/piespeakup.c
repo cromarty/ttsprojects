@@ -23,7 +23,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <piespeak/piespeak_lib.h>
+#include <pipcmrender/pipcmrender_lib.h>
 #include "bcm_host.h"
 #include "espeakup.h"
 

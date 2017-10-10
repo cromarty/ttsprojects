@@ -9,8 +9,8 @@
 /* Define to 1 if you have the `espeak' library (-lespeak). */
 #undef HAVE_LIBESPEAK
 
-/* Define to 1 if you have the `piespeak' library (-lpiespeak). */
-#undef HAVE_LIBPIESPEAK
+/* Define to 1 if you have the `pipcmrender' library (-lpipcmrender). */
+#undef HAVE_LIBPIPCMRENDER
 
 /* Define to 1 if you have the `pthread' library (-lpthread). */
 #undef HAVE_LIBPTHREAD
