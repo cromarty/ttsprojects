@@ -30,7 +30,7 @@
 TTSRENDER_STATE_T *st;
 
 /* path to our pid file */
-char *pidPath = "/var/run/piespeakup.pid";
+char *pidPath = "/var/run/piespeakup2.pid";
 
 int debug = 0;
 enum espeakup_mode_t espeakup_mode = ESPEAKUP_MODE_SPEAKUP;
