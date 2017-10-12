@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 	if (espeakup_mode == ESPEAKUP_MODE_SPEAKUP) {
 		/* Is the espeakup daemon running? */
 		if (espeakup_is_running()) {
-			printf("Espeakup is already running!\n");
+			printf("piespeakup2 is already running!\n");
 			return 1;
 		}
 

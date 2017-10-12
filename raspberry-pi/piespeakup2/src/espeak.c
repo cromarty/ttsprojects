@@ -36,8 +36,9 @@ const int defaultFrequency = 5;
 const int defaultPitch = 5;
 const int defaultRate = 2;
 const int defaultVolume = 5;
-char *outputDevice = NULL;
+char *outputDevice = "local";
 char *defaultVoice = NULL;
+
 
 /* multipliers and offsets */
 const int frequencyMultiplier = 11;

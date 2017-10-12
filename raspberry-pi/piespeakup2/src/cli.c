@@ -106,4 +106,5 @@ void process_cli(int argc, char **argv)
 			break;
 		}
 	} while (opt != -1);
+
 }
