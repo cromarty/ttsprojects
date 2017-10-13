@@ -58,6 +58,9 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)events->user_data;
 	uint8_t *buf;
 
+	if (stop_requested)
+		return 1;
+
 	if (numsamples) {
 		buf = pipcmrender_get_buffer(st);
 		while(buf == NULL) {
@@ -68,13 +71,13 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 		}// end while
 
 		memcpy(buf, wav, numsamples<<1);		
+
 		pipcmrender_latency_wait((TTSRENDER_STATE_T *)st);
 		pipcmrender_send_audio(st, buf, numsamples<<1);
 
 	}
 
 	while(events->type != espeakEVENT_LIST_TERMINATED) {
-		if (events->type == espeakEVENT_MSG_TERMINATED)
 		events++;
 	}
 
