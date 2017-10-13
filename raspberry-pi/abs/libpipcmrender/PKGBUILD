@@ -1,0 +1,29 @@
+# Author and maintainer: Mike Ray <mike.ray@btinternet.com>
+pkgname=libpipcmrender
+pkgver=1.0.0
+pkgrel=1
+pkgdesc='Library to render PCM directly on the GPU of the RaspberryPi via OMX'
+arch=('armv6h' 'armv7h' 'armv8h')
+url="http://github.com/cromarty/ttsprojects.git"
+license=('GPL3')
+depends=('linux-raspberrypi')
+makedepends=('git')
+source=(${pkgname}::'git://github.com/cromarty/ttsprojects.git')
+md5sums=('SKIP')
+
+
+
+build() {
+  cd  "${srcdir}/${pkgname}/raspberry-pi/libpipcmrender"
+  ./configure
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}/raspberry-pi/libpipcmrender"
+  make \
+       DESTDIR="${pkgdir}" \
+       exec_prefix="/usr/local" \
+       LIB="/usr/local/lib" \
+       install
+}
