@@ -1,6 +1,6 @@
 #! /bin/sh
 # Generated automatically by config.status (pipcmrender) 2.0.0
-# Libtool was configured on host f123pi:
+# Libtool was configured on host alarmpi:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
 # Provide generalized library-building support services.
@@ -288,7 +288,7 @@ hardcode_into_libs=yes
 sys_lib_search_path_spec="/usr/lib/gcc/armv7l-unknown-linux-gnueabihf/7.2.0 /usr/lib /lib "
 
 # Detected run-time system search path for libraries.
-sys_lib_dlsearch_path_spec="/lib /usr/lib /usr/local/lib/ /usr/local/lib/ /usr/lib/libfakeroot /opt/vc/lib "
+sys_lib_dlsearch_path_spec="/lib /usr/lib /opt/vc/lib /usr/local/lib/ /usr/lib/libfakeroot "
 
 # Explicit LT_SYS_LIBRARY_PATH set during ./configure time.
 configure_time_lt_sys_library_path=""
