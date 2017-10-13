@@ -1,0 +1,29 @@
+# Author and maintainer: Mike Ray <mike.ray@btinternet.com>
+pkgname=piespeakup2
+pkgver=1.0.0
+pkgrel=1
+pkgdesc='Version of espeakup to use libpipcmrender'
+arch=('armv6h' 'armv7h' 'armv8h')
+url="http://github.com/cromarty/ttsprojects.git"
+license=('GPL3')
+depends=('linux-raspberrypi')
+makedepends=('git')
+source=(${pkgname}::'git://github.com/cromarty/ttsprojects.git')
+md5sums=('SKIP')
+
+
+
+build() {
+  cd  "${srcdir}/${pkgname}/raspberry-pi/piespeakup2"
+  ./configure
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}/raspberry-pi/piespeakup2"
+  make \
+       DESTDIR="${pkgdir}" \
+       exec_prefix="/usr/local" \
+       LIB="/usr/local/lib" \
+       install
+}
