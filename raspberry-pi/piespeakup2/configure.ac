@@ -47,7 +47,7 @@ AC_CHECK_FUNCS([memmove memset select strdup strrchr])
 modulesloaddir='/etc/modules-load.d'
 AC_SUBST([modulesloaddir])
 
-systemdunitdir='/lib/systemd/system'
+systemdunitdir='/usr/lib/systemd/system'
 AC_SUBST([systemdunitdir])
 
 piespeakup2unitconfdir='/etc/systemd/system'

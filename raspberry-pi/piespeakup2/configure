@@ -4711,7 +4711,7 @@ done
 modulesloaddir='/etc/modules-load.d'
 
 
-systemdunitdir='/lib/systemd/system'
+systemdunitdir='/usr/lib/systemd/system'
 
 
 piespeakup2unitconfdir='/etc/systemd/system'
