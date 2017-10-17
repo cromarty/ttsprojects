@@ -1,5 +1,5 @@
 
-dist_man_MANS = piespeakup.8
+dist_man_MANS = piespeakup2.8
 
 
 
