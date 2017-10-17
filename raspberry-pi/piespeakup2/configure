@@ -4720,6 +4720,9 @@ piespeakup2unitconfdir='/etc/systemd/system'
 piespeakup2ldconfigdir='/etc/ld.so.conf.d'
 
 
+mandir='/usr/share/man'
+
+
 ac_config_files="$ac_config_files Makefile src/Makefile config/Makefile doc/Makefile"
 
 cat >confcache <<\_ACEOF

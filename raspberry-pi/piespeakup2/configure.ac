@@ -56,6 +56,9 @@ AC_SUBST([piespeakup2unitconfdir])
 piespeakup2ldconfigdir='/etc/ld.so.conf.d'
 AC_SUBST([piespeakup2ldconfigdir])
 
+mandir='/usr/share/man'
+AC_SUBST([mandir])
+
 AC_CONFIG_FILES([
  Makefile
  src/Makefile
