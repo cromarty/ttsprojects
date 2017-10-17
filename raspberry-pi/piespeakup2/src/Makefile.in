@@ -100,7 +100,7 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am_piespeakup2_OBJECTS = cli.$(OBJEXT) espeak.$(OBJEXT) \
-	piespeakup.$(OBJEXT) queue.$(OBJEXT) signal.$(OBJEXT) \
+	piespeakup2.$(OBJEXT) queue.$(OBJEXT) signal.$(OBJEXT) \
 	softsynth.$(OBJEXT) stringhandling.$(OBJEXT)
 piespeakup2_OBJECTS = $(am_piespeakup2_OBJECTS)
 piespeakup2_LDADD = $(LDADD)
@@ -239,8 +239,8 @@ mkdir_p = @mkdir_p@
 modulesloaddir = @modulesloaddir@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
-piespeakupldconfigdir = @piespeakupldconfigdir@
-piespeakupunitconfdir = @piespeakupunitconfdir@
+piespeakup2ldconfigdir = @piespeakup2ldconfigdir@
+piespeakup2unitconfdir = @piespeakup2unitconfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
@@ -253,7 +253,7 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-piespeakup2_SOURCES = cli.c espeak.c piespeakup.c queue.c signal.c softsynth.c stringhandling.c espeakup.h ilclient.h queue.h stringhandling.h
+piespeakup2_SOURCES = cli.c espeak.c piespeakup2.c queue.c signal.c softsynth.c stringhandling.c espeakup.h ilclient.h queue.h stringhandling.h
 AM_CPPFLAGS = -I/opt/vc/include
 all: all-am
 
@@ -343,7 +343,7 @@ distclean-compile:
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cli.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/espeak.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/piespeakup.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/piespeakup2.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/queue.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/signal.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/softsynth.Po@am__quote@

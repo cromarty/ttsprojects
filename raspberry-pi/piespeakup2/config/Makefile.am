@@ -1,7 +1,7 @@
 
 dist_modulesload_DATA = speakup_soft.conf
 nodist_systemdunit_DATA = piespeakup2.service
-nodist_piespeakupunitconf_DATA = piespeakup2.conf
+nodist_piespeakup2unitconf_DATA = piespeakup2.conf
 
 piespeakup2.service : piespeakup2.service.in
 	$(SED) -e "s|prefix|$(prefix)|" $< > $@

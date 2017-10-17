@@ -309,8 +309,8 @@ mkdir_p = @mkdir_p@
 modulesloaddir = @modulesloaddir@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
-piespeakupldconfigdir = @piespeakupldconfigdir@
-piespeakupunitconfdir = @piespeakupunitconfdir@
+piespeakup2ldconfigdir = @piespeakup2ldconfigdir@
+piespeakup2unitconfdir = @piespeakup2unitconfdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
@@ -325,7 +325,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = src config doc
 dist_doc_DATA = README
-EXTRA_DIST = BROADCOM INSTALL NOTES fix-timestamps.sh config/piespeakup.conf.in config/piespeakup.service.in config/speakup_soft.conf doc/piespeakup.8
+EXTRA_DIST = BROADCOM INSTALL NOTES fix-timestamps.sh config/piespeakup2.conf.in config/piespeakup2.service.in config/speakup_soft.conf doc/piespeakup2.8
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

@@ -586,7 +586,7 @@ PACKAGE_BUGREPORT='mike.ray@btinternet.com'
 PACKAGE_URL=''
 
 ac_default_prefix=/usr/local
-ac_unique_file="src/piespeakup.c"
+ac_unique_file="src/piespeakup2.c"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
@@ -626,8 +626,8 @@ ac_includes_default="\
 ac_subst_vars='am__EXEEXT_FALSE
 am__EXEEXT_TRUE
 LTLIBOBJS
-piespeakupldconfigdir
-piespeakupunitconfdir
+piespeakup2ldconfigdir
+piespeakup2unitconfdir
 systemdunitdir
 modulesloaddir
 LIBOBJS
@@ -4714,10 +4714,10 @@ modulesloaddir='/etc/modules-load.d'
 systemdunitdir='/lib/systemd/system'
 
 
-piespeakupunitconfdir='/etc/systemd/system'
+piespeakup2unitconfdir='/etc/systemd/system'
 
 
-piespeakupldconfigdir='/etc/ld.so.conf.d'
+piespeakup2ldconfigdir='/etc/ld.so.conf.d'
 
 
 ac_config_files="$ac_config_files Makefile src/Makefile config/Makefile doc/Makefile"

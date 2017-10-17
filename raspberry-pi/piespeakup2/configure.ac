@@ -2,7 +2,7 @@ AC_PREREQ([2.69])
 AC_INIT([piespeakup2], [1.0.0], [mike.ray@btinternet.com])
 AM_INIT_AUTOMAKE
 AC_PREFIX_DEFAULT(/usr/local)
-AC_CONFIG_SRCDIR([src/piespeakup.c])
+AC_CONFIG_SRCDIR([src/piespeakup2.c])
 AC_CONFIG_HEADERS([config.h])
 
 dnl *************************************************
@@ -50,11 +50,11 @@ AC_SUBST([modulesloaddir])
 systemdunitdir='/lib/systemd/system'
 AC_SUBST([systemdunitdir])
 
-piespeakupunitconfdir='/etc/systemd/system'
-AC_SUBST([piespeakupunitconfdir])
+piespeakup2unitconfdir='/etc/systemd/system'
+AC_SUBST([piespeakup2unitconfdir])
 
-piespeakupldconfigdir='/etc/ld.so.conf.d'
-AC_SUBST([piespeakupldconfigdir])
+piespeakup2ldconfigdir='/etc/ld.so.conf.d'
+AC_SUBST([piespeakup2ldconfigdir])
 
 AC_CONFIG_FILES([
  Makefile
