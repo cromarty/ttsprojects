@@ -586,7 +586,7 @@ PACKAGE_BUGREPORT='mike.ray@btinternet.com'
 PACKAGE_URL=''
 
 ac_default_prefix=/usr/local
-ac_unique_file="src/piespeakup2.c"
+ac_unique_file="src/piespeakup.c"
 # Factoring default headers for most tests.
 ac_includes_default="\
 #include <stdio.h>
