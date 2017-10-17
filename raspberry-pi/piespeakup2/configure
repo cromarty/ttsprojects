@@ -2815,8 +2815,6 @@ ac_config_headers="$ac_config_headers config.h"
 
 
 
-
-
 ac_ext=c
 ac_cpp='$CPP $CPPFLAGS'
 ac_compile='$CC -c $CFLAGS $CPPFLAGS conftest.$ac_ext >&5'
@@ -3970,7 +3968,6 @@ fi
 
 
 
-# FIXME: Replace `main' with a function in `-lespeak':
 
 { $as_echo "$as_me:${as_lineno-$LINENO}: checking for espeak_Initialize in -lespeak" >&5
 $as_echo_n "checking for espeak_Initialize in -lespeak... " >&6; }
@@ -4561,6 +4558,7 @@ _ACEOF
 fi
 
 
+
 for ac_header in stdlib.h
 do :
   ac_fn_c_check_header_mongrel "$LINENO" "stdlib.h" "ac_cv_header_stdlib_h" "$ac_includes_default"
@@ -4706,6 +4704,7 @@ _ACEOF
 
 fi
 done
+
 
 
 modulesloaddir='/etc/modules-load.d'
