@@ -164,6 +164,10 @@ int main(int argc, char **argv)
 
 	espeak_Terminate();
 	close_softsynth();
+
+	pipcmrender_delete(st);
+	pipcmrender_finalize();
+
 	if (!debug && espeakup_mode == ESPEAKUP_MODE_SPEAKUP)
 		unlink(pidPath);
 	return 0;
