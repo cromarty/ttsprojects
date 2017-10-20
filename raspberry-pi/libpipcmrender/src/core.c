@@ -64,7 +64,7 @@ static int min(int val1, int val2) {
 } // end min
 
 static void input_buffer_callback(void *data, COMPONENT_T *comp) {
-	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)data;
+	PCMRENDER_STATE_T *st = (PCMRENDER_STATE_T*)data;
 	ILC_GET_HANDLE(comp); // just to suppress warnings about unused parameter
 	pthread_mutex_lock(&st->free_buffer_mutex);
 	pthread_cond_signal(&st->free_buffer_cv);
@@ -84,12 +84,12 @@ static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 */
 
 
-static void destroy_semaphores(TTSRENDER_STATE_T *st) {
+static void destroy_semaphores(PCMRENDER_STATE_T *st) {
 	sem_destroy(&st->buffer_list_sema);
 	return;
 } // end destroy_semaphores
 
-static void destroy_mutexes(TTSRENDER_STATE_T *st) {
+static void destroy_mutexes(PCMRENDER_STATE_T *st) {
 	pthread_mutex_destroy(&st->free_buffer_mutex);
 	return;
 } // end destroy_mutexes
@@ -155,7 +155,7 @@ int32_t pipcmrender_finalize() {
 } // end pipcmrender_finalize
 
 int32_t pipcmrender_create(
-	TTSRENDER_STATE_T **component,
+	PCMRENDER_STATE_T **component,
 	uint32_t sample_rate,
 	uint32_t num_channels,
 	uint32_t bit_depth,
@@ -169,11 +169,11 @@ int32_t pipcmrender_create(
 	uint32_t buffer_size;
 
 		OMX_ERRORTYPE omx_err;
-	TTSRENDER_STATE_T *st;
+	PCMRENDER_STATE_T *st;
 
 	*component = NULL;
 
-	st = calloc(1, sizeof(TTSRENDER_STATE_T));
+	st = calloc(1, sizeof(PCMRENDER_STATE_T));
 	OMX_PARAM_PORTDEFINITIONTYPE param;
 	OMX_AUDIO_PARAM_PCMMODETYPE pcm;
 	int32_t s;
@@ -310,7 +310,7 @@ int32_t pipcmrender_create(
 } // end pipcmrender_create
 
 
-int32_t pipcmrender_delete(TTSRENDER_STATE_T *st) {
+int32_t pipcmrender_delete(PCMRENDER_STATE_T *st) {
 	int32_t ret;
 	OMX_ERRORTYPE omx_err;
 
@@ -338,7 +338,7 @@ int32_t pipcmrender_delete(TTSRENDER_STATE_T *st) {
 } // end pipcmrender_delete
 
 
-uint8_t *pipcmrender_get_buffer(TTSRENDER_STATE_T *st) {
+uint8_t *pipcmrender_get_buffer(PCMRENDER_STATE_T *st) {
 	OMX_BUFFERHEADERTYPE *hdr = NULL;
 
 	hdr = ilclient_get_input_buffer(st->audio_render, 100, 0);
@@ -354,7 +354,7 @@ uint8_t *pipcmrender_get_buffer(TTSRENDER_STATE_T *st) {
 } // end pipcmrender_get_buffer
 
 
-int32_t pipcmrender_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
+int32_t pipcmrender_send_audio(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
 	OMX_BUFFERHEADERTYPE *hdr = NULL, *prev = NULL;
 	int32_t ret = -1;
 
@@ -400,7 +400,7 @@ int32_t pipcmrender_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t 
 } // end pipcmrender_send_audio
 
 
-int32_t pipcmrender_set_dest(TTSRENDER_STATE_T *st, const char *name) {
+int32_t pipcmrender_set_dest(PCMRENDER_STATE_T *st, const char *name) {
 	OMX_ERRORTYPE omx_err;
 	OMX_CONFIG_BRCMAUDIODESTINATIONTYPE dest;
 	char device[8];
@@ -423,7 +423,7 @@ int32_t pipcmrender_set_dest(TTSRENDER_STATE_T *st, const char *name) {
 
 
 
-uint32_t pipcmrender_get_latency(TTSRENDER_STATE_T *st) {
+uint32_t pipcmrender_get_latency(PCMRENDER_STATE_T *st) {
 	OMX_PARAM_U32TYPE param;
 	OMX_ERRORTYPE omx_err;
 	OMX_INIT_STRUCTURE(param);
@@ -439,7 +439,7 @@ uint32_t pipcmrender_get_latency(TTSRENDER_STATE_T *st) {
 
 
 
-int32_t pipcmrender_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
+int32_t pipcmrender_get_state(PCMRENDER_STATE_T *st, OMX_STATETYPE *state) {
 	OMX_ERRORTYPE omx_err = OMX_GetState(ILC_GET_HANDLE(st->audio_render), state);
 	if (omx_err != OMX_ErrorNone) {
 		return -1;
@@ -449,7 +449,7 @@ int32_t pipcmrender_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state) {
 } // end pipcmrender_get_state
 
 
-int32_t pipcmrender_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
+int32_t pipcmrender_set_volume(PCMRENDER_STATE_T *st, unsigned int vol) {
 	OMX_ERRORTYPE omx_err;
 	OMX_AUDIO_CONFIG_VOLUMETYPE volume;
 	OMX_INIT_STRUCTURE(volume);
@@ -464,21 +464,21 @@ int32_t pipcmrender_set_volume(TTSRENDER_STATE_T *st, unsigned int vol) {
 	return 0;
 } // end pipcmrender_set_volume
 
-int32_t pipcmrender_pause(TTSRENDER_STATE_T *st) {
+int32_t pipcmrender_pause(PCMRENDER_STATE_T *st) {
 		return ilclient_change_component_state(st->audio_render, OMX_StatePause);
 		} //end pipcmrender_pause
 
-int32_t pipcmrender_resume(TTSRENDER_STATE_T *st) {
+int32_t pipcmrender_resume(PCMRENDER_STATE_T *st) {
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
 } //end pipcmrender_resume
 
-void pipcmrender_stop_request(TTSRENDER_STATE_T *st) {
+void pipcmrender_stop_request(PCMRENDER_STATE_T *st) {
 	st->tts_stop = 1;
 	return;
 } // end pipcmrender_stop_request
 
 
-int32_t pipcmrender_flush(TTSRENDER_STATE_T *st) {
+int32_t pipcmrender_flush(PCMRENDER_STATE_T *st) {
 	OMX_ERRORTYPE omx_err;
 	omx_err = OMX_SendCommand(ILC_GET_HANDLE(st->audio_render), OMX_CommandFlush, -1, NULL);
 	if (omx_err != OMX_ErrorNone) {
@@ -487,7 +487,7 @@ int32_t pipcmrender_flush(TTSRENDER_STATE_T *st) {
 	return 0;
 } // end pipcmrender_flush
 
-void pipcmrender_latency_wait(TTSRENDER_STATE_T *st) {
+void pipcmrender_latency_wait(PCMRENDER_STATE_T *st) {
 	uint32_t latency;
 	while( (latency = pipcmrender_get_latency(st)) > (st->sample_rate * (MIN_LATENCY_TIME + CTTW_SLEEP_TIME) / 1000))
 		usleep(CTTW_SLEEP_TIME*1000);

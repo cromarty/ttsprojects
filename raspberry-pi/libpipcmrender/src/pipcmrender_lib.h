@@ -60,7 +60,7 @@ typedef enum {
 	TTS_PAUSE_MARK_REPORTED
 } TTS_PAUSE_STATE_T;
 
-// TTSRENDER_STATE_T
+// PCMRENDER_STATE_T
 typedef struct {
 	ILCLIENT_T *client;
 	COMPONENT_T *audio_render;
@@ -81,13 +81,13 @@ typedef struct {
 // state variables
 	uint32_t tts_stop;
 	TTS_PAUSE_STATE_T tts_pause_state;
-} TTSRENDER_STATE_T;
+} PCMRENDER_STATE_T;
 
 int32_t pipcmrender_initialize();
 int32_t pipcmrender_finalize();
 
 int32_t pipcmrender_create(
-	TTSRENDER_STATE_T **component,
+	PCMRENDER_STATE_T **component,
 	uint32_t sample_rate,
 	uint32_t num_channels,
 	uint32_t bit_depth,
@@ -96,20 +96,20 @@ int32_t pipcmrender_create(
 	BUFFER_SIZE_TYPE_T buffer_size_type
 	);
 
-int32_t pipcmrender_delete(TTSRENDER_STATE_T *st);
-uint8_t *pipcmrender_get_buffer(TTSRENDER_STATE_T *st);
-int32_t pipcmrender_send_audio(TTSRENDER_STATE_T *st, uint8_t *buffer, uint32_t length);
-uint32_t pipcmrender_get_latency(TTSRENDER_STATE_T *st);
-int32_t pipcmrender_set_dest(TTSRENDER_STATE_T *st, const char *name);
-int32_t pipcmrender_get_state(TTSRENDER_STATE_T *st, OMX_STATETYPE *state);
-int32_t pipcmrender_set_volume(TTSRENDER_STATE_T *st, unsigned int vol);
-int32_t pipcmrender_pause(TTSRENDER_STATE_T *st);
-int32_t pipcmrender_resume(TTSRENDER_STATE_T *st);
-void pipcmrender_stop_request(TTSRENDER_STATE_T *st);
-int32_t pipcmrender_flush(TTSRENDER_STATE_T *st);
-int pipcmrender_pcm_write(TTSRENDER_STATE_T *st, void *data, int length);
-int pipcmrender_pcm_read(TTSRENDER_STATE_T *st, void *data, int length);
-void pipcmrender_latency_wait(TTSRENDER_STATE_T *st);
+int32_t pipcmrender_delete(PCMRENDER_STATE_T *st);
+uint8_t *pipcmrender_get_buffer(PCMRENDER_STATE_T *st);
+int32_t pipcmrender_send_audio(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t length);
+uint32_t pipcmrender_get_latency(PCMRENDER_STATE_T *st);
+int32_t pipcmrender_set_dest(PCMRENDER_STATE_T *st, const char *name);
+int32_t pipcmrender_get_state(PCMRENDER_STATE_T *st, OMX_STATETYPE *state);
+int32_t pipcmrender_set_volume(PCMRENDER_STATE_T *st, unsigned int vol);
+int32_t pipcmrender_pause(PCMRENDER_STATE_T *st);
+int32_t pipcmrender_resume(PCMRENDER_STATE_T *st);
+void pipcmrender_stop_request(PCMRENDER_STATE_T *st);
+int32_t pipcmrender_flush(PCMRENDER_STATE_T *st);
+int pipcmrender_pcm_write(PCMRENDER_STATE_T *st, void *data, int length);
+int pipcmrender_pcm_read(PCMRENDER_STATE_T *st, void *data, int length);
+void pipcmrender_latency_wait(PCMRENDER_STATE_T *st);
 
 #endif
 

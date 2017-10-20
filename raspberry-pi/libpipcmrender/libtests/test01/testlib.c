@@ -11,6 +11,6 @@
 
 
 int main(int argc, char **argv) {
-	printf("Size of a TTSRENDER_STATE_T object: %d bytes\n", sizeof(TTSRENDER_STATE_T));
+	printf("Size of a PCMRENDER_STATE_T object: %d bytes\n", sizeof(PCMRENDER_STATE_T));
 	return 0;
 }

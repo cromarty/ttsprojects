@@ -14,7 +14,7 @@
 #define N (1<<M)
        
 
-int32_t consume_file(TTSRENDER_STATE_T *st, const char *filename, int *chunks) {
+int32_t consume_file(PCMRENDER_STATE_T *st, const char *filename, int *chunks) {
 	FILE *fp;
 	short fbuf[N>>1];
 
@@ -66,7 +66,7 @@ if ( ! bytesread) {
 int main(int argc, char **argv) {
 	OMX_ERRORTYPE omx_err;
 	OMX_STATETYPE state;
-	TTSRENDER_STATE_T *st;
+	PCMRENDER_STATE_T *st;
 	int32_t ret;
 	char debug_str[128];
 	int chunks = 0;

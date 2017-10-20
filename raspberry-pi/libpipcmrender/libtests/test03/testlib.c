@@ -16,7 +16,7 @@
 #define BUFFER_SIZE_MILLISECONDS 50
 
 int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
-	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)events->user_data;
+	PCMRENDER_STATE_T *st = (PCMRENDER_STATE_T*)events->user_data;
 	uint8_t *buf;
 
 	if (numsamples) {
@@ -39,7 +39,7 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 
 
 // the real producer is the synth callback above.
-int producer(TTSRENDER_STATE_T *st) {
+int producer(PCMRENDER_STATE_T *st) {
 	int sample_rate;
 	int flags = espeakSSML | espeakCHARS_UTF8;
 	char text[] = "Now is the time for every good man to come to the aid of the party";
@@ -66,7 +66,7 @@ int producer(TTSRENDER_STATE_T *st) {
 int main(int argc, char **argv) {
 	OMX_ERRORTYPE omx_err;
 	OMX_STATETYPE state;
-	TTSRENDER_STATE_T *st;
+	PCMRENDER_STATE_T *st;
 	int32_t ret;
 	char debug_str[128];
 	int chunks = 0;

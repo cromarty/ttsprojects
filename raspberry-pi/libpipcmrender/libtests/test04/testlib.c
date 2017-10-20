@@ -20,7 +20,7 @@
 sem_t sema;
 
 int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
-	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)events->user_data;
+	PCMRENDER_STATE_T *st = (PCMRENDER_STATE_T*)events->user_data;
 	uint8_t *buf;
 
 	if (numsamples) {
@@ -34,7 +34,7 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 		}// end while
 
 		memcpy(buf, wav, numsamples<<1);		
-		pipcmrender_latency_wait((TTSRENDER_STATE_T *)st);
+		pipcmrender_latency_wait((PCMRENDER_STATE_T *)st);
 		pipcmrender_send_audio(st, buf, numsamples<<1);
 
 	}
@@ -52,7 +52,7 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 
 
 // the real producer is the synth callback above.
-int producer(TTSRENDER_STATE_T *st, int wpm) {
+int producer(PCMRENDER_STATE_T *st, int wpm) {
 	int sample_rate;
 	int flags = espeakSSML | espeakCHARS_UTF8;
 	espeak_ERROR erc;
@@ -81,7 +81,7 @@ sem_wait(&sema);
 int main(int argc, char **argv) {
 	OMX_ERRORTYPE omx_err;
 	OMX_STATETYPE state;
-	TTSRENDER_STATE_T *st;
+	PCMRENDER_STATE_T *st;
 	int32_t ret;
 	char debug_str[128];
 	int chunks = 0;
