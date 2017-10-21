@@ -32,12 +32,13 @@
 #include <semaphore.h>
 #include <sys/time.h>
 #include <sys/resource.h>
+#include <sys/types.h>
 
 #include "bcm_host.h"
 #include "ilclient.h"
 #include "pipcmrender_lib.h"
 #include "core.h"
-//#include "debug.h"
+
 
 
 #define OUT_CHANNELS(num_channels) ((num_channels) > 4 ? 8: (num_channels) > 2 ? 4: (num_channels))
@@ -55,6 +56,47 @@
 
 
 
+
+static void open_log(PCMRENDER_STATE_T *st) {
+	char logname[64];
+	if (geteuid() != 0) {
+		st->logging.level = 0;
+		return;
+	}
+
+	sprintf(logname, "%s.%d.%s", "/var/log/pipcmrender",getpid(), "log");
+	st->logging.logfp = fopen(logname, "w");
+	if (st->logging.logfp == NULL) {
+		st->logging.level = 0;
+	}
+
+	return;
+} // end open_log
+
+
+static int log_message(int level, const char *message, PCMRENDER_STATE_T *st) {
+	time_t t = time(NULL);
+	struct tm tm = *localtime(&t);
+	if ((st->logging.level == 0) || (st->logging.logfp == NULL))
+		return 0;
+
+	if (st->logging.level >= level) {
+ 	fprintf(st->logging.logfp,
+			"[%d-%d-%d %d:%d:%d][%d] %s\n",
+			tm.tm_year + 1900,
+			tm.tm_mon + 1,
+			tm.tm_mday,
+			tm.tm_hour,
+			tm.tm_min,
+			tm.tm_sec,
+			getpid(),
+			message
+		);
+	}
+
+	return 0;
+} // end log_message
+
 static int max(int val1, int val2) {
 	return (val1 > val2 ? val1 : val2);
 } // end max
@@ -66,10 +108,11 @@ static int min(int val1, int val2) {
 static void input_buffer_callback(void *data, COMPONENT_T *comp) {
 	PCMRENDER_STATE_T *st = (PCMRENDER_STATE_T*)data;
 	ILC_GET_HANDLE(comp); // just to suppress warnings about unused parameter
+	log_message(1, "Buffer callback - before free_buffer_mutex lock", st);
 	pthread_mutex_lock(&st->free_buffer_mutex);
 	pthread_cond_signal(&st->free_buffer_cv);
 	pthread_mutex_unlock(&st->free_buffer_mutex);
-
+	log_message(1, "Buffer callback - After free_buffer_mutex unlock", st);
 } // end input_buffer_callback
 
 /*
@@ -135,6 +178,9 @@ static double get_benchmark_time()
 } // end get_time
 
 
+
+
+
 int32_t pipcmrender_initialize() {
 	OMX_ERRORTYPE omx_err;
 	bcm_host_init();
@@ -161,7 +207,8 @@ int32_t pipcmrender_create(
 	uint32_t bit_depth,
 	uint32_t num_buffers,
 	uint32_t buffer_size_ms,
-	BUFFER_SIZE_TYPE_T buffer_size_type
+	BUFFER_SIZE_TYPE_T buffer_size_type,
+	uint32_t log_level
 )
 {
 
@@ -174,6 +221,16 @@ int32_t pipcmrender_create(
 	*component = NULL;
 
 	st = calloc(1, sizeof(PCMRENDER_STATE_T));
+
+	st->logging.level = log_level;
+	if (log_level) {
+		open_log(st);
+		log_message(1, "Call to pipcmrender_create", st);
+	} else {
+		st->logging.logfp = NULL;
+	}
+
+
 	OMX_PARAM_PORTDEFINITIONTYPE param;
 	OMX_AUDIO_PARAM_PCMMODETYPE pcm;
 	int32_t s;
@@ -209,8 +266,8 @@ int32_t pipcmrender_create(
 
 	st->num_buffers = num_buffers;
 	st->client = ilclient_init();
-	st->tts_stop = 0;
-	st->tts_pause_state = TTS_PAUSE_OFF;
+	st->pcm_stop = 0;
+	st->pcm_pause_state = PCM_PAUSE_OFF;
 
 
 	// set up callbacks
@@ -305,6 +362,9 @@ int32_t pipcmrender_create(
 		return -1;
 	}
 
+
+
+
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
 
 } // end pipcmrender_create
@@ -313,6 +373,14 @@ int32_t pipcmrender_create(
 int32_t pipcmrender_delete(PCMRENDER_STATE_T *st) {
 	int32_t ret;
 	OMX_ERRORTYPE omx_err;
+
+	if (st->logging.level) {
+		log_message(1, "Call to pipcmrender_delete", st);
+
+fflush(st->logging.logfp);
+
+		fclose(st->logging.logfp);
+	}
 
 	ret = ilclient_change_component_state(st->audio_render, OMX_StateIdle);
 	if (ret < 0) {
@@ -473,7 +541,7 @@ int32_t pipcmrender_resume(PCMRENDER_STATE_T *st) {
 } //end pipcmrender_resume
 
 void pipcmrender_stop_request(PCMRENDER_STATE_T *st) {
-	st->tts_stop = 1;
+	st->pcm_stop = 1;
 	return;
 } // end pipcmrender_stop_request
 

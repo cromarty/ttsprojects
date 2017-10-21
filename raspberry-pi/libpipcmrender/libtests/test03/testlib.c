@@ -80,7 +80,7 @@ int main(int argc, char **argv) {
 		printf("Initialised OMX ok\n");
 	}
 
-	omx_err = pipcmrender_create(&st, 22050, 1, 16, 5, BUFFER_SIZE_MILLISECONDS, BS_MILLISECONDS);
+	omx_err = pipcmrender_create(&st, 22050, 1, 16, 5, BUFFER_SIZE_MILLISECONDS, BS_MILLISECONDS, 0);
 	if (omx_err != OMX_ErrorNone) {
 		printf("Failed to create component\n");
 		return 1;

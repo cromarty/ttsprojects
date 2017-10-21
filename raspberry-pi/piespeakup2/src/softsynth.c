@@ -28,7 +28,7 @@
 #include "espeakup.h"
 #include "stringhandling.h"
 
-extern TTSRENDER_STATE_T *st;
+extern PCMRENDER_STATE_T *st;
 
 /* max buffer size */
 static const size_t maxBufferSize = 16 * 1024 + 1;
@@ -219,7 +219,7 @@ static void process_buffer_acsint(struct synth_t *s, char *buf,
 static void request_espeak_stop(void)
 {
 	pthread_mutex_lock(&queue_guard);
-//st->tts_stop = 1;
+//st->pcm_stop = 1;
 	stop_requested = 1;
 	pthread_cond_signal(&runner_awake);	/* Wake runner, if necessary. */
 	while (should_run && stop_requested)

@@ -108,7 +108,8 @@ printf("WPM: %d\n", wpm);
 		16,			// bit depth
 		2,			// number of IL client buffers
 	50,
-BS_MILLISECONDS
+	BS_MILLISECONDS,
+	5
 	);
 	if (omx_err != OMX_ErrorNone) {
 		printf("Failed to create component\n");

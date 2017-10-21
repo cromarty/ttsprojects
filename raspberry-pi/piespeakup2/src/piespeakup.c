@@ -27,7 +27,7 @@
 #include "bcm_host.h"
 #include "espeakup.h"
 
-TTSRENDER_STATE_T *st;
+PCMRENDER_STATE_T *st;
 
 /* path to our pid file */
 char *pidPath = "/var/run/piespeakup2.pid";

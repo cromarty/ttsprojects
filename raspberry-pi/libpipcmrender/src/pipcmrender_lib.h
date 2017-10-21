@@ -36,29 +36,23 @@
 
 typedef int int32_t;
 
-
-
 typedef enum {
 	BS_MILLISECONDS,
 	BS_BYTES
 } BUFFER_SIZE_TYPE_T;
 
-/*
 typedef enum {
-	TTS_INIT,
-	TTS_IDLE,
-	TTS_BEFORE_SYNTH,
-	TTS_BEFORE_PLAY,
-	TTS_SPEAKING,
-	TTS_STOP
-} TTS_STATE_T;
-*/
+	PCM_PAUSE_OFF,
+	PCM_PAUSE_REQUESTED,
+	PCM_PAUSE_MARK_REPORTED
+} PCM_PAUSE_STATE_T;
 
-typedef enum {
-	TTS_PAUSE_OFF,
-	TTS_PAUSE_REQUESTED,
-	TTS_PAUSE_MARK_REPORTED
-} TTS_PAUSE_STATE_T;
+typedef struct {
+	uint32_t level;
+	FILE *logfp;
+} PCMRENDER_LOGGING_T;
+
+
 
 // PCMRENDER_STATE_T
 typedef struct {
@@ -79,8 +73,10 @@ typedef struct {
 	pthread_cond_t free_buffer_cv;
 	sem_t buffer_list_sema;					// used during buffer setup
 // state variables
-	uint32_t tts_stop;
-	TTS_PAUSE_STATE_T tts_pause_state;
+	uint32_t pcm_stop;
+	PCM_PAUSE_STATE_T pcm_pause_state;
+// Logging data
+	PCMRENDER_LOGGING_T logging;
 } PCMRENDER_STATE_T;
 
 int32_t pipcmrender_initialize();
@@ -93,7 +89,8 @@ int32_t pipcmrender_create(
 	uint32_t bit_depth,
 	uint32_t num_buffers,
 	uint32_t buffer_size_ms,
-	BUFFER_SIZE_TYPE_T buffer_size_type
+	BUFFER_SIZE_TYPE_T buffer_size_type,
+	uint32_t log_level	
 	);
 
 int32_t pipcmrender_delete(PCMRENDER_STATE_T *st);

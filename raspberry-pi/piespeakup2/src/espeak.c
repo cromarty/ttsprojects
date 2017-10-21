@@ -50,12 +50,12 @@ const int volumeMultiplier = 22;
 volatile int stop_requested = 0;
 
 /* piespeak render object */
-extern TTSRENDER_STATE_T *st;
+extern PCMRENDER_STATE_T *st;
 
 /* new callback */
 
 int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
-	TTSRENDER_STATE_T *st = (TTSRENDER_STATE_T*)events->user_data;
+	PCMRENDER_STATE_T *st = (PCMRENDER_STATE_T*)events->user_data;
 	uint8_t *buf;
 
 	if (stop_requested)
@@ -72,7 +72,7 @@ int synth_callback(short *wav, int numsamples, espeak_EVENT *events) {
 
 		memcpy(buf, wav, numsamples<<1);		
 
-		pipcmrender_latency_wait((TTSRENDER_STATE_T *)st);
+		pipcmrender_latency_wait((PCMRENDER_STATE_T *)st);
 		pipcmrender_send_audio(st, buf, numsamples<<1);
 
 	}
@@ -266,7 +266,16 @@ int initialize_espeak(struct synth_t *s)
 		return 2;
 
 /* create a libpiespeak status object */
-	res = pipcmrender_create(&st, 22050, 1, 16, ILC_BUF_COUNT, BUF_SIZE_MS, 0);
+	res = pipcmrender_create(
+		&st,
+		22050,			// sample rate
+		1,			// channels
+		16,			// bit depth
+		ILC_BUF_COUNT,		// number of ilc buffers
+		BUF_SIZE_MS,		// size of each buffer
+		0,			// buffer size type
+		0			// logging level
+	);
 	if (res == -1) {
 		fprintf(stderr, "Unable to initialize libpiespeak.\n");
 		return -1;

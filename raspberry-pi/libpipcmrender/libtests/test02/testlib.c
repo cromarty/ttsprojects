@@ -9,7 +9,7 @@
 
 #include "bcm_host.h"
 
-#define M 6
+#define M 7
 
 #define N (1<<M)
        
@@ -84,7 +84,17 @@ int main(int argc, char **argv) {
 		printf("Initialised OMX ok\n");
 	}
 
-	omx_err = pipcmrender_create(&st, 22050, 1, 16, 2, 50, 0);
+	omx_err = pipcmrender_create(
+		&st,
+		22050,			// sample rate
+		1,			// channels
+		16,			// bit depth
+		2,			// number of ilc buffers
+		50,			// buffer size
+		0,			// buffer size type
+		5			// logging level
+	);
+
 	if (omx_err != OMX_ErrorNone) {
 		printf("Failed to create component\n");
 		return 1;
