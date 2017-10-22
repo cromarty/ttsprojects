@@ -54,49 +54,6 @@
 #define CTTW_SLEEP_TIME 10
 #define MIN_LATENCY_TIME 20
 
-
-
-
-static void open_log(PCMRENDER_STATE_T *st) {
-	char logname[64];
-	if (geteuid() != 0) {
-		st->logging.level = 0;
-		return;
-	}
-
-	sprintf(logname, "%s.%d.%s", "/var/log/pipcmrender",getpid(), "log");
-	st->logging.logfp = fopen(logname, "w");
-	if (st->logging.logfp == NULL) {
-		st->logging.level = 0;
-	}
-
-	return;
-} // end open_log
-
-
-static int log_message(int level, const char *message, PCMRENDER_STATE_T *st) {
-	time_t t = time(NULL);
-	struct tm tm = *localtime(&t);
-	if ((st->logging.level == 0) || (st->logging.logfp == NULL))
-		return 0;
-
-	if (st->logging.level >= level) {
- 	fprintf(st->logging.logfp,
-			"[%d-%d-%d %d:%d:%d][%d] %s\n",
-			tm.tm_year + 1900,
-			tm.tm_mon + 1,
-			tm.tm_mday,
-			tm.tm_hour,
-			tm.tm_min,
-			tm.tm_sec,
-			getpid(),
-			message
-		);
-	}
-
-	return 0;
-} // end log_message
-
 static int max(int val1, int val2) {
 	return (val1 > val2 ? val1 : val2);
 } // end max
@@ -108,11 +65,11 @@ static int min(int val1, int val2) {
 static void input_buffer_callback(void *data, COMPONENT_T *comp) {
 	PCMRENDER_STATE_T *st = (PCMRENDER_STATE_T*)data;
 	ILC_GET_HANDLE(comp); // just to suppress warnings about unused parameter
-	log_message(1, "Buffer callback - before free_buffer_mutex lock", st);
+	LOGMESSAGE(5, "Buffer callback - before free_buffer_mutex lock", st);
 	pthread_mutex_lock(&st->free_buffer_mutex);
 	pthread_cond_signal(&st->free_buffer_cv);
 	pthread_mutex_unlock(&st->free_buffer_mutex);
-	log_message(1, "Buffer callback - After free_buffer_mutex unlock", st);
+	LOGMESSAGE(5, "Buffer callback - After free_buffer_mutex unlock", st);
 } // end input_buffer_callback
 
 /*
@@ -225,7 +182,7 @@ int32_t pipcmrender_create(
 	st->logging.level = log_level;
 	if (log_level) {
 		open_log(st);
-		log_message(1, "Call to pipcmrender_create", st);
+		LOGMESSAGE(1, "Call to pipcmrender_create", st);
 	} else {
 		st->logging.logfp = NULL;
 	}
@@ -375,7 +332,7 @@ int32_t pipcmrender_delete(PCMRENDER_STATE_T *st) {
 	OMX_ERRORTYPE omx_err;
 
 	if (st->logging.level) {
-		log_message(1, "Call to pipcmrender_delete", st);
+		LOGMESSAGE(1, "Call to pipcmrender_delete", st);
 
 fflush(st->logging.logfp);
 
