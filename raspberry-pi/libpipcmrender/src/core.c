@@ -177,13 +177,15 @@ int32_t pipcmrender_create(
 
 	st = calloc(1, sizeof(PCMRENDER_STATE_T));
 
+#ifdef LOGGING
 	st->logging.level = log_level;
 	if (log_level) {
 		open_log(st);
-		LOGMESSAGE(1, "ENTRY: pipcmrender_create", st);
+		log_message(1, "ENTRY: pipcmrender_create", st);
 	} else {
 		st->logging.logfp = NULL;
 	}
+#endif
 
 
 	OMX_PARAM_PORTDEFINITIONTYPE param;
@@ -355,10 +357,10 @@ int32_t pipcmrender_delete(PCMRENDER_STATE_T *st) {
 	destroy_semaphores(st);
 	destroy_mutexes(st);
 
-	if (st->logging.level) {
-fflush(st->logging.logfp);
-		fclose(st->logging.logfp);
-	}
+#ifdef LOGGING
+	if (st->logging.level)
+		close_log(st);
+#endif
 
 	free(st);
 	return 0;

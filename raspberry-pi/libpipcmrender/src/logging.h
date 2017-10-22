@@ -35,7 +35,6 @@
 #define LOGGING
 
 #ifdef LOGGING
-
 #define LOGMESSAGE(a,b,c) log_message(a,b,c)
 #else
 #define LOGMESSAGE
@@ -44,6 +43,8 @@
 
 void open_log(PCMRENDER_STATE_T *st);
 int log_message(int level, const char *message, PCMRENDER_STATE_T *st);
-	
+	void close_log(PCMRENDER_STATE_T *st);
+
 #endif
+
 

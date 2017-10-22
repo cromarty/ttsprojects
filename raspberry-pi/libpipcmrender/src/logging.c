@@ -73,3 +73,14 @@ int log_message(int level, const char *message, PCMRENDER_STATE_T *st) {
 
 	return 0;
 } // end log_message
+
+void close_log(PCMRENDER_STATE_T *st) {
+	if ( (st->logging.level == 0) || (st->logging.logfp == NULL) )
+		return;
+
+	fflush(st->logging.logfp);
+	fclose(st->logging.logfp);
+	st->logging.level = 0;
+	st->logging.logfp = NULL;
+	return;
+}
