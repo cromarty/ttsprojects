@@ -65,11 +65,11 @@ static int min(int val1, int val2) {
 static void input_buffer_callback(void *data, COMPONENT_T *comp) {
 	PCMRENDER_STATE_T *st = (PCMRENDER_STATE_T*)data;
 	ILC_GET_HANDLE(comp); // just to suppress warnings about unused parameter
-	LOGMESSAGE(5, "Buffer callback - before free_buffer_mutex lock", st);
+	LOGMESSAGE(5, "input_buffer_callback - before free_buffer_mutex lock", st);
 	pthread_mutex_lock(&st->free_buffer_mutex);
 	pthread_cond_signal(&st->free_buffer_cv);
 	pthread_mutex_unlock(&st->free_buffer_mutex);
-	LOGMESSAGE(5, "Buffer callback - After free_buffer_mutex unlock", st);
+	LOGMESSAGE(5, "input_buffer_callback - After free_buffer_mutex unlock", st);
 } // end input_buffer_callback
 
 /*
@@ -98,18 +98,18 @@ static void destroy_mutexes(PCMRENDER_STATE_T *st) {
 
 
 static int calc_buffer_size_from_ms(
-	int sample_rate,
-	int bit_depth,
-	int channels,
-	int ms,
-	int align
+	uint32_t sample_rate,
+	uint32_t bit_depth,
+	uint32_t channels,
+	uint32_t ms,
+	uint32_t align
 )
 {
 	int buffer_size;
-	if (sample_rate <= 0)
+	if (sample_rate == 0)
 		return -1;
 
-	if (bit_depth <= 0)
+	if (bit_depth == 0)
 		return -1;
 
 	if (bit_depth & 8)
@@ -134,9 +134,6 @@ static double get_benchmark_time()
     gettimeofday(&t, &tzp);
     return t.tv_sec + t.tv_usec*1e-6;
 } // end get_time
-
-
-
 
 
 int32_t pipcmrender_initialize() {
@@ -200,6 +197,7 @@ int32_t pipcmrender_create(
 	// initialise buffer list semaphore
 	s = sem_init(&st->buffer_list_sema, 0, 1);
 	if (s < 0) {
+		LOGMESSAGE(1, "FAILED: sem_init of buffer_list_semaphor in pipcmrender_create", st);
 		return -1;
 	}
 
@@ -235,6 +233,7 @@ int32_t pipcmrender_create(
 
 	ret = ilclient_create_component(st->client, &st->audio_render, "audio_render", ILCLIENT_ENABLE_INPUT_BUFFERS | ILCLIENT_DISABLE_ALL_PORTS);
 	if (ret == -1) {
+		LOGMESSAGE(1, "FAILED: ilclient_create_component in pipcmrender_create", st);
 		return ret;
 	}
 
@@ -245,6 +244,7 @@ int32_t pipcmrender_create(
 	param.nPortIndex = 100;
 	omx_err = OMX_GetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &param);
 	if (omx_err != OMX_ErrorNone) {
+		LOGMESSAGE(1, "FAILED: OMXGetPaameter in pipcmrender_create", st);
 		return -1;
 	}
 
@@ -255,6 +255,7 @@ int32_t pipcmrender_create(
 
 	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamPortDefinition, &param);
 	if (omx_err != OMX_ErrorNone) {
+		LOGMESSAGE(1, "FAILED: OMXGetParameter in pipcmrender_create", st);
 		return -1;
 	}
 
@@ -297,17 +298,20 @@ int32_t pipcmrender_create(
 
 	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexParamAudioPcm, &pcm);
 	if (omx_err != OMX_ErrorNone) {
+		LOGMESSAGE(1, "FAILED: OMXSetParameter - pcm - in pipcmrender_create", st);
 		return -1;
 	}
 
 	// this function waits for the command to complete
 	ret = ilclient_change_component_state(st->audio_render, OMX_StateIdle);
 	if (ret < 0) {
+		LOGMESSAGE(1, "FAILED: ilclient_change_component_state in pipcmrender_create", st);
 		return -1;
 	}
 
 	ret = ilclient_enable_port_buffers(st->audio_render, 100, NULL, NULL, NULL);
 	if (ret < 0) {
+		LOGMESSAGE(1, "FAILED: ilclient_enable_port_buffers in pipcmrender_create", st);
 		ilclient_change_component_state(st->audio_render, OMX_StateLoaded);
 		ilclient_cleanup_components(st->list);
 		omx_err = OMX_Deinit();
@@ -319,9 +323,6 @@ int32_t pipcmrender_create(
 		*component = NULL;
 		return -1;
 	}
-
-
-
 
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
 
@@ -370,9 +371,11 @@ uint8_t *pipcmrender_get_buffer(PCMRENDER_STATE_T *st) {
 	hdr = ilclient_get_input_buffer(st->audio_render, 100, 0);
 	if(hdr) {
 		// put on the user list
+		LOGMESSAGE(5, "Waiting for buffer_list_semaphore in pipcmrender_get_buffer", st);
 		sem_wait(&st->buffer_list_sema);
 		hdr->pAppPrivate = st->user_buffer_list;
 		st->user_buffer_list = hdr;
+		LOGMESSAGE(5, "Posting buffer_list_semaphore in pipcmrender_get_buffer", st);
 		sem_post(&st->buffer_list_sema);
 	}
 
@@ -385,13 +388,16 @@ int32_t pipcmrender_send_audio(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t 
 	int32_t ret = -1;
 	LOGMESSAGE(4, "ENTRY: pipcmrender_send_audio", st);
 	if(length % st->bytes_per_sample) {
+		LOGMESSAGE(1, "FAILED: Length % bytes_per_sample != 0 in pipcmrender_send_audio", st);
 		return -1;
 	}
 
 	if (length > st->buffer_size) {
+		LOGMESSAGE(1, "FAILED: length > buffer_size in pipcmrender_send_audio", st);
 		return -1;
 	}
 
+	LOGMESSAGE(5, "Waiting for buffer_list_semaphore in pipcmrender_send_audio", st);
 	sem_wait(&st->buffer_list_sema);
 
 	// search through user list for the right buffer header
@@ -410,6 +416,7 @@ int32_t pipcmrender_send_audio(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t 
 			st->user_buffer_list = hdr->pAppPrivate;
 	}
 
+	LOGMESSAGE(5, "Posting buffer_list_semaphore in pipcmrender_send_audio", st);
 	sem_post(&st->buffer_list_sema);
 
 	if(hdr) {
@@ -419,6 +426,7 @@ int32_t pipcmrender_send_audio(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t 
 		hdr->nFilledLen = length;
 		omx_err = OMX_EmptyThisBuffer(ILC_GET_HANDLE(st->audio_render), hdr);
 		if (omx_err != OMX_ErrorNone) {
+			LOGMESSAGE(1, "FAILED: OMX_EmptyThisBuffer in pipcmrender_send_audio", st);
 			return -1;
 		}
 	}
@@ -441,6 +449,7 @@ int32_t pipcmrender_set_dest(PCMRENDER_STATE_T *st, const char *name) {
 
 	 omx_err = OMX_SetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigBrcmAudioDestination, &dest);
  	if (omx_err != OMX_ErrorNone) {
+		LOGMESSAGE(1, "FAILED: OMX_SetConfig in pipcmrender_set_dest", st);
 		return -1;
 	}
 
@@ -453,11 +462,16 @@ uint32_t pipcmrender_get_latency(PCMRENDER_STATE_T *st) {
 	OMX_PARAM_U32TYPE param;
 	OMX_ERRORTYPE omx_err;
 	OMX_INIT_STRUCTURE(param);
-	LOGMESSAGE(5, "ENTRY: pipcmrender_get_latency", st);
+	/*
+	* No logging apart from failures in here because this function is called by
+	* pipcmrender_latency_wait, the timing of which is
+	* probably very critical
+	*/
 	param.nPortIndex = 100;
 
 	omx_err = OMX_GetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigAudioRenderingLatency, &param);
 	if (omx_err != OMX_ErrorNone) {
+		LOGMESSAGE(1, "FAILED: OMX_GetConfig in pipcmrender_get_latency", st);
 		return -1;
 	}
 
@@ -467,9 +481,10 @@ uint32_t pipcmrender_get_latency(PCMRENDER_STATE_T *st) {
 
 
 int32_t pipcmrender_get_state(PCMRENDER_STATE_T *st, OMX_STATETYPE *state) {
-	OMX_ERRORTYPE omx_err = OMX_GetState(ILC_GET_HANDLE(st->audio_render), state);
 	LOGMESSAGE(5, "ENTRY: pipcmrender_get_state", st);
+	OMX_ERRORTYPE omx_err = OMX_GetState(ILC_GET_HANDLE(st->audio_render), state);
 	if (omx_err != OMX_ErrorNone) {
+		LOGMESSAGE(1, "FAILED: OMX_GetState in pipcmrender_get_state", st);
 		return -1;
 	}
 
@@ -487,6 +502,7 @@ int32_t pipcmrender_set_volume(PCMRENDER_STATE_T *st, unsigned int vol) {
 	volume.sVolume.nValue = vol;
 	omx_err = OMX_SetParameter(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigAudioVolume, &volume);
 	if (omx_err != OMX_ErrorNone) {
+		LOGMESSAGE(1, "FAILED: OMX_SetParameter in pipcmrender_set_volume", st);
 		return -1;
 	}
 
@@ -515,12 +531,17 @@ int32_t pipcmrender_flush(PCMRENDER_STATE_T *st) {
 	LOGMESSAGE(5, "ENTRY: pipcmrender_flush", st);
 	omx_err = OMX_SendCommand(ILC_GET_HANDLE(st->audio_render), OMX_CommandFlush, -1, NULL);
 	if (omx_err != OMX_ErrorNone) {
+		LOGMESSAGE(1, "FAILED: OMX_SendCommand in pipcmrender_flush", st);
 		return -1;
 	}
 	return 0;
 } // end pipcmrender_flush
 
 void pipcmrender_latency_wait(PCMRENDER_STATE_T *st) {
+	/*
+	* No logging in here because I think the timing of the execution of this function is probably
+	* very critical
+	*/
 	uint32_t latency;
 	while( (latency = pipcmrender_get_latency(st)) > (st->sample_rate * (MIN_LATENCY_TIME + CTTW_SLEEP_TIME) / 1000))
 		usleep(CTTW_SLEEP_TIME*1000);
