@@ -134,7 +134,8 @@ am__installdirs = "$(DESTDIR)$(libdir)" \
 	"$(DESTDIR)$(pipcmrenderincludedir)"
 LTLIBRARIES = $(lib_LTLIBRARIES)
 libpipcmrender_la_LIBADD =
-am_libpipcmrender_la_OBJECTS = core.lo ilclient.lo ilcore.lo utils.lo
+am_libpipcmrender_la_OBJECTS = core.lo ilclient.lo ilcore.lo utils.lo \
+	logging.lo
 libpipcmrender_la_OBJECTS = $(am_libpipcmrender_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -326,7 +327,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 COMPATNUM = @LIBTOOL_VERSION_INFO@
 lib_LTLIBRARIES = libpipcmrender.la
-libpipcmrender_la_SOURCES = core.c ilclient.c ilcore.c utils.c core.h ilclient.h pipcmrender_lib.h utils.h
+libpipcmrender_la_SOURCES = core.c ilclient.c ilcore.c utils.c logging.c core.h ilclient.h pipcmrender_lib.h utils.h logging.h
 pipcmrenderincludedir = ${includedir}/pipcmrender
 pipcmrenderinclude_HEADERS = pipcmrender_lib.h utils.h
 AM_CPPFLAGS = -I/opt/vc/include \
@@ -419,6 +420,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/core.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ilclient.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ilcore.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/logging.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/utils.Plo@am__quote@
 
 .c.o:

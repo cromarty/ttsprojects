@@ -38,7 +38,7 @@
 #include "ilclient.h"
 #include "pipcmrender_lib.h"
 #include "core.h"
-
+#include "logging.h"
 
 
 #define OUT_CHANNELS(num_channels) ((num_channels) > 4 ? 8: (num_channels) > 2 ? 4: (num_channels))
@@ -85,11 +85,13 @@ static void port_settings_changed_callback(void *data, COMPONENT_T *comp) {
 
 
 static void destroy_semaphores(PCMRENDER_STATE_T *st) {
+	LOGMESSAGE(1,"ENTRY: destroy_semaphores", st);
 	sem_destroy(&st->buffer_list_sema);
 	return;
 } // end destroy_semaphores
 
 static void destroy_mutexes(PCMRENDER_STATE_T *st) {
+	LOGMESSAGE(1, "ENTRY: destroy_mutexes", st);
 	pthread_mutex_destroy(&st->free_buffer_mutex);
 	return;
 } // end destroy_mutexes
@@ -104,7 +106,6 @@ static int calc_buffer_size_from_ms(
 )
 {
 	int buffer_size;
-
 	if (sample_rate <= 0)
 		return -1;
 
@@ -182,7 +183,7 @@ int32_t pipcmrender_create(
 	st->logging.level = log_level;
 	if (log_level) {
 		open_log(st);
-		LOGMESSAGE(1, "Call to pipcmrender_create", st);
+		LOGMESSAGE(1, "ENTRY: pipcmrender_create", st);
 	} else {
 		st->logging.logfp = NULL;
 	}
@@ -330,22 +331,17 @@ int32_t pipcmrender_create(
 int32_t pipcmrender_delete(PCMRENDER_STATE_T *st) {
 	int32_t ret;
 	OMX_ERRORTYPE omx_err;
-
-	if (st->logging.level) {
-		LOGMESSAGE(1, "Call to pipcmrender_delete", st);
-
-fflush(st->logging.logfp);
-
-		fclose(st->logging.logfp);
-	}
+	LOGMESSAGE(1, "ENTRY: pipcmrender_delete", st);
 
 	ret = ilclient_change_component_state(st->audio_render, OMX_StateIdle);
 	if (ret < 0) {
+		LOGMESSAGE(3, "FAILED: ilclient_change_component_state in pipcmrender_delete", st);
 		return -1;
 	}
 
 	omx_err = OMX_SendCommand(ILC_GET_HANDLE(st->audio_render), OMX_CommandStateSet, OMX_StateLoaded, NULL);
 	if (omx_err != OMX_ErrorNone) {
+		LOGMESSAGE(3, "FAILED: OMXSendCommand in pipcmrender_delete", st);
 		return -1;
 	}
 
@@ -355,9 +351,14 @@ fflush(st->logging.logfp);
 	ilclient_cleanup_components(st->list);
 
 	ilclient_destroy(st->client);
-	//sem_destroy(&st->buffer_list_sema);
 	destroy_semaphores(st);
 	destroy_mutexes(st);
+
+	if (st->logging.level) {
+fflush(st->logging.logfp);
+		fclose(st->logging.logfp);
+	}
+
 	free(st);
 	return 0;
 } // end pipcmrender_delete
@@ -365,7 +366,7 @@ fflush(st->logging.logfp);
 
 uint8_t *pipcmrender_get_buffer(PCMRENDER_STATE_T *st) {
 	OMX_BUFFERHEADERTYPE *hdr = NULL;
-
+	LOGMESSAGE(5, "ENTRY: pipcmrender_get_buffer", st);
 	hdr = ilclient_get_input_buffer(st->audio_render, 100, 0);
 	if(hdr) {
 		// put on the user list
@@ -382,7 +383,7 @@ uint8_t *pipcmrender_get_buffer(PCMRENDER_STATE_T *st) {
 int32_t pipcmrender_send_audio(PCMRENDER_STATE_T *st, uint8_t *buffer, uint32_t length) {
 	OMX_BUFFERHEADERTYPE *hdr = NULL, *prev = NULL;
 	int32_t ret = -1;
-
+	LOGMESSAGE(4, "ENTRY: pipcmrender_send_audio", st);
 	if(length % st->bytes_per_sample) {
 		return -1;
 	}
@@ -429,7 +430,7 @@ int32_t pipcmrender_set_dest(PCMRENDER_STATE_T *st, const char *name) {
 	OMX_ERRORTYPE omx_err;
 	OMX_CONFIG_BRCMAUDIODESTINATIONTYPE dest;
 	char device[8];
-
+	LOGMESSAGE(1, "ENTRY: pipcmrender_set_dest", st);
 	if ( (strcmp(name, "local") != 0) && (strcmp(name, "hdmi") != 0) )
 		strcpy(device, "local");
 	else
@@ -452,6 +453,7 @@ uint32_t pipcmrender_get_latency(PCMRENDER_STATE_T *st) {
 	OMX_PARAM_U32TYPE param;
 	OMX_ERRORTYPE omx_err;
 	OMX_INIT_STRUCTURE(param);
+	LOGMESSAGE(5, "ENTRY: pipcmrender_get_latency", st);
 	param.nPortIndex = 100;
 
 	omx_err = OMX_GetConfig(ILC_GET_HANDLE(st->audio_render), OMX_IndexConfigAudioRenderingLatency, &param);
@@ -466,6 +468,7 @@ uint32_t pipcmrender_get_latency(PCMRENDER_STATE_T *st) {
 
 int32_t pipcmrender_get_state(PCMRENDER_STATE_T *st, OMX_STATETYPE *state) {
 	OMX_ERRORTYPE omx_err = OMX_GetState(ILC_GET_HANDLE(st->audio_render), state);
+	LOGMESSAGE(5, "ENTRY: pipcmrender_get_state", st);
 	if (omx_err != OMX_ErrorNone) {
 		return -1;
 	}
@@ -478,6 +481,7 @@ int32_t pipcmrender_set_volume(PCMRENDER_STATE_T *st, unsigned int vol) {
 	OMX_ERRORTYPE omx_err;
 	OMX_AUDIO_CONFIG_VOLUMETYPE volume;
 	OMX_INIT_STRUCTURE(volume);
+	LOGMESSAGE(1, "ENTRY: pipcmrender_set_volume", st);
 	vol = min(100, vol);
 	volume.nPortIndex = 100;
 	volume.sVolume.nValue = vol;
@@ -490,14 +494,17 @@ int32_t pipcmrender_set_volume(PCMRENDER_STATE_T *st, unsigned int vol) {
 } // end pipcmrender_set_volume
 
 int32_t pipcmrender_pause(PCMRENDER_STATE_T *st) {
+	LOGMESSAGE(5, "ENTRY: pipcmrender_pause", st);
 		return ilclient_change_component_state(st->audio_render, OMX_StatePause);
 		} //end pipcmrender_pause
 
 int32_t pipcmrender_resume(PCMRENDER_STATE_T *st) {
+	LOGMESSAGE(5, "ENTRY: pipcmrender_resume", st);
 	return ilclient_change_component_state(st->audio_render, OMX_StateExecuting);
 } //end pipcmrender_resume
 
 void pipcmrender_stop_request(PCMRENDER_STATE_T *st) {
+	LOGMESSAGE(5, "ENTRY: pipcmrender_stop_request", st);
 	st->pcm_stop = 1;
 	return;
 } // end pipcmrender_stop_request
@@ -505,6 +512,7 @@ void pipcmrender_stop_request(PCMRENDER_STATE_T *st) {
 
 int32_t pipcmrender_flush(PCMRENDER_STATE_T *st) {
 	OMX_ERRORTYPE omx_err;
+	LOGMESSAGE(5, "ENTRY: pipcmrender_flush", st);
 	omx_err = OMX_SendCommand(ILC_GET_HANDLE(st->audio_render), OMX_CommandFlush, -1, NULL);
 	if (omx_err != OMX_ErrorNone) {
 		return -1;

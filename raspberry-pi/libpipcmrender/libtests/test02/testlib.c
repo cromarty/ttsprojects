@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
 		2,			// number of ilc buffers
 		50,			// buffer size
 		0,			// buffer size type
-		5			// logging level
+		3			// logging level
 	);
 
 	if (omx_err != OMX_ErrorNone) {

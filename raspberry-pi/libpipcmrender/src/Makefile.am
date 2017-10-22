@@ -1,6 +1,6 @@
 COMPATNUM=@LIBTOOL_VERSION_INFO@
 lib_LTLIBRARIES = libpipcmrender.la
-libpipcmrender_la_SOURCES = core.c ilclient.c ilcore.c utils.c core.h ilclient.h pipcmrender_lib.h utils.h
+libpipcmrender_la_SOURCES = core.c ilclient.c ilcore.c utils.c logging.c core.h ilclient.h pipcmrender_lib.h utils.h logging.h
 
 pipcmrenderincludedir = ${includedir}/pipcmrender
 pipcmrenderinclude_HEADERS = pipcmrender_lib.h utils.h
