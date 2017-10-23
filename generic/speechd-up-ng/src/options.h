@@ -20,7 +20,8 @@
  *
  * $Id: options.h,v 1.7 2006/04/23 20:44:07 hanke Exp $
  */
-
+#ifndef OPTIONS_H
+#define OPTIONS_H
 #include <getopt.h>
 #include <stdio.h>
 #include <string.h>
@@ -58,3 +59,10 @@ static struct option spd_long_options[] = {
 };
 
 static char* spd_short_options = "dsvhptl:L:D:S:c:";
+
+
+void options_set_default(void);
+void options_parse(int argc, char *argv[]);
+
+#endif
+

@@ -32,6 +32,7 @@
 #include <stdarg.h>
 #include <signal.h>
 #include <iconv.h>
+#include <ctype.h>
 
 #include <speech-dispatcher/libspeechd.h>
 
@@ -185,7 +186,9 @@ process_command(char command, unsigned int param, int pm)
 	case 0:
 	    DBG(5, "[punctuation all]", val);
 	    ret = spd_set_punctuation(conn, SPD_PUNCT_ALL);
-	    ret = spd_set_capital_letters(conn, SPD_CAP_SPELL);
+     /* commented out to stop espeak saying 'capitals all the time
+	    *ret = spd_set_capital_letters(conn, SPD_CAP_SPELL);
+     */
 	    break;
 	case 1:
 	case 2:
