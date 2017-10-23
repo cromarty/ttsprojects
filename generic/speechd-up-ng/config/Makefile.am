@@ -1,15 +1,15 @@
 
-nodist_systemdunit_DATA = speechd-upd.service
-nodist_speechd-upunitconf_DATA = speechd-upd.conf
+nodist_systemdunit_DATA = speechd-up.service
+nodist_speechdupunitconf_DATA = speechd-up.conf
 
-speechd-upd.service : speechd-up.service.in
+speechd-up.service : speechd-up.service.in
 	$(SED) -e "s|prefix|$(prefix)|" $< > $@
 
-speechd-upd.conf : speechd-upd.conf.in
+speechd-up.conf : speechd-up.conf.in
 	$(SED) "s|prefix|$(prefix)|" $< > $@
 
 
 
-CLEANFILES = speechd-upd.service speechd-upd.conf
+CLEANFILES = speechd-up.service speechd-up.conf
 
 

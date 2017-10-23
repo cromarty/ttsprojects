@@ -3,7 +3,7 @@ Description=speechd-up, a server to connect SpeakUp to speech-dispatcher
 
 [Service]
 Type=forking
-PIDFile=/run/speechd-upd.pid
+PIDFile=/run/speechd-up.pid
 ExecStart=/usr/local/bin/speechd-up
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=always

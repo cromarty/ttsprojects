@@ -24,6 +24,19 @@ dnl Checks for library functions.
 AC_FUNC_MALLOC
 AC_CHECK_FUNCS([select strdup strerror strtol])
 
+dnl Paths
+
+systemdunitdir='/usr/lib/systemd/system'
+AC_SUBST([systemdunitdir])
+
+speechdupunitconfdir='/etc/systemd/system'
+AC_SUBST([speechdupunitconfdir])
+
+mandir='/usr/share/man'
+AC_SUBST([mandir])
+
+
+
 AC_CONFIG_FILES([
 		Makefile
 	config/Makefile
