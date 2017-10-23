@@ -1,0 +1,143 @@
+2006-10-21  Hynek Hanke  <hanke@brailcom.org>
+
+	* AUTHORS: New section CONTRIBUTORS. Added Micheal McDonalds and Gilles Casse.
+
+	* version.sh: 0.4
+
+	* INSTALL: 0.4
+
+	* ANNOUNCE: Internationalization and key events.
+
+2006-04-28  Hynek Hanke  <hanke@chopin>
+
+	* speechd-up.c (say_single_character): Free cuu.
+
+2006-04-23  Hynek Hanke  <hanke@chopin>
+
+	* speechd-up.c (init_speakup_tables): New function. Thanks to Gilles Casse.
+	(say_single_character): New function.
+	(parse_buf): Use say_single_character when the message only contains one
+	character.
+	(main): perform init_speakup_tables() if speechd-up is issued without -t option.
+
+	* speechd-up.texi: Updated. Internationalization issues fixed. New -t command.
+	Single characters/keys reading partially fixed.
+
+	* options.c: Added new option -t.
+
+2006-01-25  Hynek Hanke  <hanke@chopin>
+
+	* version.sh (VERSION): 0.3 release.
+
+	* speechd-up.texi: Double-license: GFDL and GPL.
+	
+	* speechd-up.c: Incorporated Michael McDonalds patch for index
+	marking support (not included before into CVS because it would
+	cause dependency on non-released-yet version of Dispatcher)
+
+	* speechd-up.c: Handle both the old and the new device type for
+	/dev/softsynth (O_RDWR and O_RDONLY). (not included before into
+	CVS because it would cause dependency on non-released-yet version
+	of Dispatcher)
+	
+2005-10-10  Hynek Hanke  <hanke@chopin>
+
+	* speechd-up.c (main): Correct types of in_bytes and bytes_left
+	for iconv (size_t).
+
+2005-09-24  Hynek Hanke  <hanke@chopin>
+
+	* speechd-up.c: Use new libspeechd interface to spd_open().
+
+2005-08-03  Hynek Hanke  <hanke@chopin>
+
+	* options.h: Include the necessary headers so that gcc doesn't complain.
+	* speechd-up.texi: Mailing list correctsions.
+
+	* options.c (options_print_help): Minor corrections.
+
+2005-07-04  Hynek Hanke  <hanke@chopin>
+
+	* TODO: Updated.
+
+	* INSTALL: Updated.
+
+	* Makefile.am: Create info documentation.
+
+	* speechd-up.texi: New file
+
+	* options.h: New option -p, --probe.
+
+	* options.c (options_set_default): Set PROBE_MODE to false.
+	(options_parse): New option: --probe.
+
+	* speechd-up.c (main): Say something in probe mode.
+	(main): Don't open Speakup device in probe mode.
+
+2005-05-06  Hynek Hanke  <hanke@brailcom.org>
+
+	* INSTALL: Updated.
+
+	* BUGS: Document the many known bugs.
+
+2005-05-06  Hynek Hanke  <hanke@brailcom.org>
+
+	* Makefile: Added Luke Yelavich's patch that fixes the PIDPATH problem
+	that appears with some versions of automake.
+
+2004-04-16 Kirk Reiser <kirk@braille.uwo.ca>
+
+	*  Modified Makefile.am to remove the dependency on libglib which isn't
+	needed and was causing major problems trying to find the correct
+	version of the library.  
+
+	* Modified configure.in to add a test for libspeechd.h which does
+	not get installed by make install of speech dispatcher.  
+
+	
+	* Also modified the INSTALL file to clean up English slightly.
+	
+2004-04-14 Kirk Reiser <kirk@braille.uwo.ca>
+
+        * The changes include modifying two counters which were causing
+	single characters from being processed.  
+
+	* Changed the call to spd_say from priority SPD_TEXT to
+	SPD_MESSAGE because the text priority were cancelling the previous
+	call rather than queueing the messages.  
+
+	* Changed the spd_stop call to spd_cancell() which flushes all
+	pending messages rather than just the one being spoken. 
+
+	* Changed the handling of relative values in command set to work
+	more like they are intended to operate.  
+
+	* Moved the reset test to process_command because resets are
+	supposed to be regular commands.  It still doesn't work quite
+	right but at least it's in the correct place now.  Changed the
+	handling of values in the parse_buf() because it was cutting off
+	the last character in buffer.
+	
+	
+2004-01-29  Hynek Hanke  <hanke@freebsoft.org>
+
+	* options.h: -c and --coding added.
+
+	* options.c (options_print_help): New parameter -c.
+	(options_set_default): Fill SPEAKUP_CODING by iso-8859-1.
+
+	* speechd-up.c (parse_buf): Recoding using iconv().
+	(parse_buf): Close iconv properly.
+
+	* configure.in (pidpath): New variable.
+
+	* Makefile.am (speechd_up_CFLAGS): Pass pidpath to compiler.
+
+	* speechd-up.c (create_pid_file): New function.
+	(destroy_pid_file): New function.
+	(main): Use pid files.
+
+2004-01-23  Hynek Hanke  <hanke@freebsoft.org>
+
+	* speechd-up.c: Initial version.
+

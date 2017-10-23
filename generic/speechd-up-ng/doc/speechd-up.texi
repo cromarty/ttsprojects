@@ -1,0 +1,523 @@
+\input texinfo   @c -*-texinfo-*-
+@c %**start of header
+@setfilename speechd-up.info
+@settitle Speakup--Speech Dispatcher interface
+@finalout
+@c @setchapternewpage odd
+@c %**end of header
+
+@dircategory Sound
+
+@direntry
+* Speakup--Speech Dispatcher interface: (speechd-up).       SpeechD-Up.
+@end direntry
+
+@titlepage
+@title SpeechD-Up
+@author Hynek Hanke <@email{hanke@@brailcom.org}>
+
+@page
+@vskip 0pt plus 1filll
+
+This manual documents SpeechD-Up, version 0.4.
+
+Copyright @copyright{} 2005,2006 Brailcom, o.p.s.
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts and no Back-Cover Texts.
+A copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end quotation
+
+You can also (at your option) distribute this manual under the GNU
+General Public License:
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version. A copy of the license is included in the
+section entitled ``GNU General Public License''.
+@end quotation
+
+@end titlepage
+
+@ifnottex
+@node Top, Installing, (dir), (dir)
+
+This manual documents SpeechD-Up, version 0.4.
+
+Copyright @copyright{} 2005, 2006 Brailcom, o.p.s.
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.2 or
+any later version published by the Free Software Foundation; with no
+Invariant Sections, with no Front-Cover Texts and no Back-Cover Texts.
+A copy of the license is included in the section entitled ``GNU Free
+Documentation License.''
+@end quotation
+
+You can also (at your option) distribute this manual under the GNU
+General Public License:
+
+@quotation
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU General Public License as published by the
+Free Software Foundation; either version 2 of the License, or (at your
+option) any later version. A copy of the license is included in the
+section entitled ``GNU General Public License''
+@end quotation
+@end ifnottex
+
+@ifhtml
+@heading SpeechD-Up
+@end ifhtml
+
+@code{spechd-up} is a very simple simple interface from Speakup to
+Speech Dispatcher making it possible to use Speakup with software
+synthesis. Speakup is a kernel-based screen reader allowing blind and
+visually impaired people to use the computer.
+
+@menu
+* Installing::                  SpeakUp and software synthesis
+* Invoking::                    How to start SpeechD-Up
+* Problems::                    It has many problems
+* Contact and Reporting Bugs::  If you want to contact us
+* How You Can Help::            We rely on your support
+* GNU General Public License::  Conditions of copying SpeechD-Up
+* GNU Free Documentation License::  Conditions of copying this manual
+@end menu
+
+@node Installing, Invoking, Top, Top
+@chapter Installation
+
+(This is not a description on how-to install SpeechD-Up itself, this is
+a description of all the necessary steps to make SpeakUp work with
+software synthesis using Speechd-Up. For how to install SpeechD-Up
+itself, please see the file @file{INSTALL} in the distribution tarball.)
+
+SpeakUp can't use software synthesis directly because SpeakUp lives in
+the so called ``kernel space'' and software synthesizers live in the so
+called ``user space''. These are two different parts of your system and
+the communication between them is quite difficult. The approach to make
+SpeakUp work with software synthesis is the following one: Speakup
+provides a device, usually called @code{/dev/softhsynth}, where it sends
+all the commands to the synthesizers. Then there is a very simple
+application (or rather a daemon) called Speechd-Up listening on this
+device and passing all the requests for synthesis to Speech Dispatcher,
+which then in turn talks to your chosen synthesizer (be it Festival,
+Flite or something else).
+
+If you want to use SpeakUp with software synthesis, you need to setup
+all this chain. It might not be easy, but you might later use Speech
+Dispatcher also for other accessibility applications. Or otherwise:
+chances are that you already have a great part of this up and
+running. Let's suppose you are starting from the scratch (if you have
+something already running, just make sure this is true and skip the
+step).
+
+@enumerate
+
+@item Install your favorite speech synthesizer
+
+To be able to use software synthesis, you first need to install some
+software synthesizer. We strongly recommend a Free Software package
+``Festival'' for it's many capabilities, support of multiple languages,
+quite good quality of some voices and quick responses. However, you
+might chose any of the synthesizers supported by Speech Dispatcher
+(please see
+@url{http://www.freebsoft.org/doc/speechd/speech-dispatcher_10.html#SEC10})
+
+Read the installation instructions for your chosen synthesizer and
+install it. There are Debian packages for both Festival and Flite.
+
+@item Make sure the synthesizer works
+
+There is usually some simple way how to check if the synthesizer works.
+For festival, run @code{festival} and type in:
+
+@code{(SayText "Hello world")}
+
+Don't continue unless you know the synthesizer works.
+
+@item Install Speech Dispatcher
+
+You can get more information about Speech Dispatcher from
+@url{http://www.freebsoft.org/speechd}. You can either use a
+pre-compiled package (see your distribution repositories) or download
+the tarball from the above internet address and follow the instructions
+in the file @file{INSTALL}.
+
+If you are running Debian, you can install the following packages:
+@code{speech-dispatcher}, @code{libspeechd1} and
+@code{libspeechd1-dev}. The latest one is important too since you will
+have to compile SpeechD-Up yourself.
+
+@item Make sure Speech Dispatcher works correctly
+
+You can test whether Speech Dispatcher works with a simple client called
+@code{spd-say} distributed along with Speech Dispatcher. (You might
+later find this package useful for many practical purposes.) It has many
+parameters, so you can even test if the rate and pitch settings work
+correctly etc.
+
+@example
+spd-say "Hello world!"
+spd-say -r 90 -p -70 "This is quick and deep"
+@end example
+
+If this doesn't work, please examine Speech Dispatcher documentation
+for possible problems (@code{info speech-dispatcher}). You might want to
+see the logfiles of Speech Dispatcher itself and of its output module
+you are using.
+
+@item Install Speechd-Up
+
+You can download Speechd-Up source code from
+@url{http://www.freebsoft.org/speechd-up}. Unpack it with @code{tar
+-xvzf speechd-up-0.1.tar.gz} and follow the instructions in the file
+@file{INSTALL} in the source tree.
+
+@item Make sure SpeechD-Up can communicate with Speech Dispatcher
+
+You can test if SpeechD-Up can communicate with Speech Dispatcher
+by executing (as root) 
+
+@example
+speechd-up --run-single --probe
+@end example
+
+If you hear something, everything in SpeechD-Up works except connecting
+to the SpeakUp's device (which was not attempted in this test).
+
+@item Install SpeakUp
+
+You have probably done that already, but you must make sure you compiled
+SpeakUp with support of software synthesis. You must have SpeakUp compiled
+with the @code{softsynth} module and you must create the appropriate device
+with
+
+@example
+cd /dev
+mknod softsynth c 10 26
+@end example
+
+Please see @url{http://www.linux-speakup.org/} for how to obtain and
+install SpeakUp. You might also want to look at the Speakup's User Guide
+here: @url{http://www.linux-speakup.org/spkguide.txt}
+
+After having installed Speakup, if @code{softsynth} is your default
+synthesis device, you must switch to it:
+
+@example
+echo sftsyn >/proc/speakup/synth_name
+@end example
+
+This should load the appropriate kernel module (if compiled as a module)
+automatically.
+
+If you run into problems here, please examine @code{modprobe -l}) for
+the @code{speakup_sftsyn} module and/or try to load it manually with
+@code{modprobe}. If this doesn't work, there is some problem with your
+instalation of Speakup.
+
+@item Make sure SpeechD-Up works
+
+Now you are at the point when you can invoke SpeechD-Up as an
+application in the foreground and see if everything works ok.
+
+@example
+speechd-up -s
+@end example
+
+The application should keep running and you should hear something.  When
+you switch to another console, you should be able to use SpeakUp
+normally with your software synthesis.
+
+If this doesn't work, please look at SpeechD-Ups logfile in
+@file{/var/log/speechd-up.log}. You can also increase the loging
+level of SpeechD-Up as shown bellow
+
+@example
+speechd-up -s -l 5
+@end example
+
+and examine the logs again.
+
+@item Make Speech Dispatcher and SpeechD-Up start automatically
+
+This part is distribution specific. It can be left out provided you will
+manually 1) start your synthesizer 2) start Speech-Dispatcher 3) switch
+Speakup to the sftsyn device 4) start SpeechD-Up each time you want to
+use software synthesis with Speakup (in this order).
+
+Under Debian, Speech Dispatcher already starts automatically from
+@file{/etc/init.d/speech-dispatcher} and it should not be difficult to
+create @file{/etc/init.d/speechd-up} by modifying the script for Speech
+Dispatcher and then adding a link to it to
+@file{/etc/rc2.d/S21speechd-up}. You must only make sure it starts
+ *after* Speech Dispatcher.
+
+If this doesn't work, please test again if all the components work well
+as described above.
+
+@item It's somehow slow etc...
+
+You might find the new software synthesis is rather slow with SpeakUp
+compared to the hardware synthesizers, and they have some other
+deficiencies. On today's hardware, this is not a fault of Speech Dispatcher
+or software synthesis in general. Speakup was not formerly designed
+with software synthesis in mind and neither now this is its main focus.
+Please don't think software synthesis is generally inferior to hardware
+synthesis because of this. We actually believe quite the opposite
+is true: The hardware synthesizer, unless they are programable, will
+never achieve the huge possibilities of extensible software synthesizers.
+See @ref{Problems}
+
+@end enumerate
+
+@node Invoking, Problems, Installing, Top
+@chapter Invoking
+@comment  node-name,  next,  previous,  up
+
+Usage: @code{speechd-up [options]}
+
+@table @code
+@item -d or --run-deamon
+Run as a deamon in the background.
+@item -s or --run-single
+Run as an application on the foreground.
+@item -l or --log-level
+Sets the logging level. Accepted values are numbers 1 to 5. Five means the most verbose logging.
+@item -L or --log-file
+Specifies the path to the file where logs are stored.
+@item -D or --device
+Selects the device where Speakup sends it's output.
+@item -c or --coding
+Indicates which character coding your console uses. For possible
+values, please see `iconv --list'. This option is important if your
+console is not in iso-8859-1! (It doesn't work with ``utf-8'' and
+other multibyte encoding because of kernel related issues with this
+encoding. You must run your console in a unibyte encoding like for
+example one of the ``iso-8859-*'' set, sorry.)
+@item -t or --dont-init-tables
+SpeechD-Up tries to init some Speakups /proc tables on its start. Most important, it
+changes /proc/characters and /proc/chartab so that punctuation, capital letters recognition
+and various other language dependent things are handled inside Speech Dispatcher and
+in the synthesizer. This is crucial for internationalization. You can however disable
+this if you want to modify the tables manually for some reason and don't like
+speechd-up overwriting them. (Do not expect Speakup to work for other languages than
+English in that case, unless you know what you are doing and can do the necessary
+changes manually.)
+@item -p or --probe
+Runs SpeechD-Up in the probe mode. This means that SpeechD-Up will do
+everything as as ordinary, but won't try to open the SpeakUp device. It
+just speaks a message and terminates (indicating so in the
+logfiles). This is meant for testing.
+@item -v or --version
+Print version and copyright info.
+@item -h or --help
+Print a short help.
+@end table
+
+Examples:
+
+If the device where Speakup talks to userspace is @code{/dev/sftsyn2}
+and your console is in @code{iso-8859-2}, then you can use:
+
+@example
+speechd-up --device="/dev/sftsyn2/" --coding "iso-8859-2"
+@end example
+
+Please use this for debugging or sending bug-reports
+@example
+speechd-up -s -l 5 -L "/tmp/speechd-up.log"
+@end example
+
+@node Problems, Contact and Reporting Bugs, Invoking, Top
+@chapter Problems
+
+There are many known problems with Speakup/SpeechD-Up. You might want
+to consider using some user-space assistive technologies if you want
+to use software synthesis on the console. Such technologies are
+speechd-el, Emacspeak, SuSE Blinux and Yasr. We however believe the
+Speakup/SpeechD-Up combination is useful even though it has the
+described deficiencies.
+
+@itemize
+
+@item (Fixed: Speaking characters and keys is slow)
+
+The original issue was fixed (but see bellow). If you are still
+not happy with the performance while reading characters and typing
+in, then you are using a synthesizer which is both slow
+and lacking support for caching (use Festival, it does caching
+with Speech Dispatcher and keys reading is instant).
+
+@item Characters behave like KEYS for synthesizer configuration
+
+The way Speakup passes individual characters makes it impossible
+to tell whether this character originated as a key or while
+the user was moving the cursor on the screen and the already
+present letters are being read. We believe it is important
+to carry the proper information when pressing keys (like
+capitalization), so SpeechD-Up handles these messages
+as keys.
+
+Also space, tab and various other whitespace characters are
+not reported as a characters/keys as this is impossible to achieve
+with current Speakups implementation. It is impossible if the
+word ``space'' in input originated by the user pressing the SPACE
+key or by encountering this word inside a document being read on
+the screen.
+
+@item (Fixed: It doesn't speak my language / it uses some weird character set)
+
+If you still experience this issue, you are probably doing one of this
+
+@itemize
+@item
+Using a wide character encoding like UTF-8. This is not supported
+for inherent issues with wide characters inside the kernel.
+
+@item
+Not running @code{speechd-up} with the @code{-c} parameter and specifying
+the proper character set your console uses.
+
+@item
+Running @code{speechd-up} with the @code{-t} or @code{--dont-init-tables}.
+This option is incompatible with internationalization.
+@end itemize
+
+If this is not true, please contact us on @email{speechd@@bugs.freebsoft.org}.
+
+@item The spelling/punctuation modes of my favorite synthesizer don't work.
+
+Speakup uses it's own very simple spelling and punctuation substitution and
+doesn't allow the TTS to use it's own user-specified rules.
+
+@item It doesn't work in UTF-8
+
+UTF-8 should work as long as you only use characters encountered in the
+basic ASCII. So English should work. But Speakup doesn't really support
+UTF-8 in any way (nor it can, there is no UTF-8 support inside the
+kernel -- just workarounds targeted at visual interpretation; the
+kernel virtual terminal drivers contain many barriers for accessibility).
+
+@item Punctuation and capital letters recognition doesn't properly work
+
+This is an issue again related to Speakups design. It is currently
+being worked on.
+
+@item I can't switch languages or synthesizers on fly
+
+The way the interface Speakup -- Speech Dispatcher is designed, this is not
+possible.  You can switch them statically in Speech Dispatcher's configuration
+though. If you use SpeakUp's identification "*:speechd-up:*" you can even
+choose a synthesizer specifically for Speakup.
+
+@item Any other more advanced thing doesn't work or something is too slow or ...
+There are many problems for software speech with how this interface is
+done and with how Speakup is designed. It's probably still better to
+use Speakup with a hardware synthesizer, if you have the
+possibility. Speakup was not designed with user space software
+synthesis in mind and the necessary changes would probably be too
+difficult now. There were many important design decisions made which
+are very reasonable for hardware synthesizers, but they just don't mix
+well with software synthesis.
+
+On the other hand, experience shows people still find this interface
+to software speech synthesis useful, mostly because of lack of
+anything else. Also, it seems the future of accessibility technologies
+lies in the software synthesis (extensible, etc.) as machines get
+faster. That's the reason why we provide this application and we will
+try to help you if you have problems or questions.
+@end itemize
+
+
+@node Contact and Reporting Bugs, How You Can Help, Problems, Top
+@chapter Contacts and Reporting Bugs
+
+If you are seeking for support or you want to make some suggestion,
+please contact us at @email{users@@lists.freebsoft.org}.
+
+If you believe you found a bug in SpeechD-Up, we will be very grateful
+if you let us know about it. Please do it by email on the address
+@email{speechd@@bugs.freebsoft.org}, but please don't send us messages
+larger than half a megabyte unless we ask you.
+
+@node How You Can Help, GNU General Public License, Contact and Reporting Bugs, Top
+@chapter How You Can Help
+
+If you want to contribute to the development of Speech Dispatcher,
+we will be very happy if you do so. Please contact us on 
+@email{speechd@@lists.freebsoft.org}.
+
+There is a short, definitively not exhaustive, list of how you can
+help us and other users.
+
+@itemize
+@item
+@emph{Donate money:} We are a non-profit organization and we can't work
+without funding. Brailcom, o.p.s. created Speech Dispatcher and
+speechd-up and also works on other projects to help blind and visually
+impaired users of computers (like speechd-el). We build on Free Software
+and GNU/Linux, because we believe this is the right way. But it won't be
+possible when we have no money. Currently, funding is the main limiting
+factor for us in developing more and better accessibility
+solutions. @uref{http://www.freebsoft.org/}
+
+@item
+@emph{Report bugs:} Every user, even if he can't give us money and he is
+not a programmer, can help us very much by just using our software and
+telling us about the bugs and inconveniences he encounters. A good user
+community that reports bugs is a crucial part of development of a good
+Free Software package.  We can't test our software under all
+circumstances and on all platforms, so each constructive bug report is
+highly appreciated. You can report bugs in SpeechD-Up on
+@email{speechd@@bugs.freebsoft.org}.
+
+@item
+@emph{Help us with project:} Please look at
+@uref{http://www.freebsoft.org/} to find information about our
+projects. There is a plenty of work still to be done for the blind and
+visually impaired people to make their work with computers easier.
+
+@item
+@emph{Spread a word about Speech Dispatcher and Free Software:} You can
+help us, and the whole community around Free Software, just by telling
+your friends about the amazing world of Free Software. It doesn't
+have to be just about Speech Dispatcher, you can tell them about
+other project or about Free Software in general. Remember that
+Speech Dispatcher could only arise out of understanding of some people
+of the principles and ideas behind Free Software. And this is mostly
+the same for the rest of the Free Software world.
+See @uref{http://www.gnu.org/} for more information about GNU/Linux
+and Free Software.
+
+@end itemize
+
+
+@node GNU General Public License, GNU Free Documentation License, How You Can Help, Top
+@appendix GNU General Public License
+@center Version 2, June 1991
+@cindex GPL, GNU General Public License
+
+@include gpl.texi
+
+
+@node GNU Free Documentation License,  , GNU General Public License, Top
+@appendix GNU Free Documentation License
+@center Version 1.2, November 2002
+@cindex FDL, GNU Free Documentation License
+
+@include fdl.texi
+
+@bye
+
+@c speechd.texi ends here
+

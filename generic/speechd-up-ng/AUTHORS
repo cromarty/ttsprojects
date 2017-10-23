@@ -1,0 +1,28 @@
+
+AUTHORS
+=======
+
+* Hynek Hanke <hanke@freebsoft.org>
+	Developement
+
+* Kirk Reiser <kirk@braille.uwo.ca>
+	Developement
+
+* Jan Buchal <buchal@freebsoft.org>
+	Ideas
+
+CONTRIBUTORS
+============
+
+* Michael McDonalds
+	Index marking and the Read All command support.
+
+* Gilles Casse
+	Internationalization.
+
+THANKS
+======
+
+Many thanks to Kirk Reiser (kirk@braille.uwo.ca) for Speakup!
+
+

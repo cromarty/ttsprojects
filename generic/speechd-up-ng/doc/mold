@@ -1,0 +1,15 @@
+
+info_INFOS = speechd-up.info
+info_TEXINFOS = speechd-up.texi
+
+SUFFIXES = .html
+html_docs = speechd-up.html
+HTMLDIR = htmldoc
+
+
+
+.texi.html:
+	$(MAKEINFO) --html -o $(HTMLDIR) $(info_TEXINFOS) $<
+
+.PHONY: html
+html: $(html_docs)

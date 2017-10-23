@@ -1,0 +1,4 @@
+[Service]
+ExecStart=
+ExecStart=prefix/bin/speechd-up -d
+

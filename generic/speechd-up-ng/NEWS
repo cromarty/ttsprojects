@@ -1,0 +1,36 @@
+
+
+Version 0.4
+
+ * Internationalization for all unibyte encodings! It is now possible to use
+   Speakup with different languages, as long as the written form is representable
+   in a unibyte (e.g. iso-8859-) encoding and the language is supported by your
+   synthesizer. Please see the documentation.
+	(thanks to Gilles Casse)
+
+ * Keys and characters typed by the user are now a separate event for Speech
+   Dispatcher. This allows the various synthesizers to do caching, their own
+   language appropriate punctuation and capital letters handling. Also sound
+   icons for letters and symbols are now supported. 
+
+Version 0.3
+
+  * Now supports the `Read all' capability of Speakup through
+    index marking, thanks to Michael McDonald.
+
+  * Bugfixes.
+
+  * Documentation improvements.
+
+Version 0.2
+
+  * Minor improvements
+
+  * Bugfixes
+
+Version 0.1
+        
+  * Initial version
+  * Provides basic software synthesis (through speechd) to SpeakUp.
+  * Basic parameter setting DTLK commands from Speakup supported
+  
