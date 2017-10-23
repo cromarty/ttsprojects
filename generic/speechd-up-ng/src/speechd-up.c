@@ -33,7 +33,7 @@
 #include <signal.h>
 #include <iconv.h>
 
-#include <libspeechd.h>
+#include <speech-dispatcher/libspeechd.h>
 
 
 #include "options.h"
