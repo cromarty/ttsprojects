@@ -1,13 +1,14 @@
 [Unit]
 Description=speechd-up, a server to connect SpeakUp to speech-dispatcher
+After=syslog.target
 
 [Service]
 Type=forking
 PIDFile=/run/speechd-up.pid
-ExecStart=/usr/local/bin/speechd-up
+ExecStart=prefix/bin/speechd-up -d
 ExecReload=/bin/kill -HUP $MAINPID
 Restart=always
 
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
