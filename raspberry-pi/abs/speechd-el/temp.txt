@@ -1,0 +1,4 @@
+
+Where to get it
+
+https://devel.freebsoft.org/pub/projects/speechd-el/speechd-el-2.8.tar.gz
