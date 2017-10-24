@@ -1,0 +1,48 @@
+# Maintainer:
+# Contributor:
+
+pkgname=speech-dispatcher
+pkgver=0.8.7
+pkgrel=1
+arch=('armv7h')
+pkgdesc="High-level device independent layer for speech synthesis interface without python"
+url="http://www.freebsoft.org/speechd"
+license=('GPL2' 'FDL')
+depends=('glib2' 'libltdl' 'dotconf')
+makedepends=('intltool')
+provides=("speechd=${pkgver}" "$pkgname")
+conflicts=("${pkgname}")
+options=('!libtool') 
+install="${pkgname}.install"
+source=("http://www.freebsoft.org/pub/projects/speechd/$pkgname-$pkgver.tar.gz")
+md5sums=('6ffe4aff58154a06c14da66cd045fa8c')
+
+
+build() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  
+  ./configure --prefix=/usr \
+		--includedir=/usr/include \
+		--sysconfdir=/etc \
+		--disable-static \
+		--with-espeak \
+		--without-espeak-ng \
+		--without-flite \
+		--without-ibmtts \
+		--without-ivona \
+		--without-pico \
+		--without-pulse \
+		--without-libao \
+		--without-oss \
+		--without-nas     
+
+  make
+}
+
+package() {
+  cd "${srcdir}/${pkgname}-${pkgver}"
+  make DESTDIR="${pkgdir}" install
+
+  install -d "${pkgdir}/var/log/speech-dispatcher"
+}
+

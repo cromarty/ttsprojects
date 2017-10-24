@@ -1,0 +1,28 @@
+# Maintainer:
+pkgname=speechd-up
+pkgver=0.4
+pkgrel=1
+arch=('armv6h' 'armv7h' 'armv8h')
+pkgdesc="Connection between SpeakUp and speech-dispatcher"
+url="http://www.freebsoft.org/speechd"
+license=('GPL2' 'FDL')
+provides=("speechd=${pkgver}")
+install="${pkgname}.install"
+depends=('speech-dispatcher')
+makedepends=('git')
+conflicts=("${pkgname}")
+source=(${pkgname}::'git://github.com/cromarty/ttsprojects.git')
+md5sums=('skip')
+
+         build() {
+  cd "${srcdir}/${pkgname}/raspberry-pi/generic/speechd-up-ng"
+  ./configure --prefix=/usr/local
+		./fix-timestamps.sh
+  make all
+}
+
+package() {
+  cd "${srcdir}/${pkgname}/raspberry-pi/generic/speechd-up-ng"
+  make DESTDIR="${pkgdir}" install
+}
+
