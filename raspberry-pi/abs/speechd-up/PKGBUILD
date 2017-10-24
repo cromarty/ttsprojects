@@ -7,8 +7,7 @@ pkgdesc="Connection between SpeakUp and speech-dispatcher"
 url="http://www.freebsoft.org/speechd"
 license=('GPL2' 'FDL')
 provides=("speechd=${pkgver}")
-install="${pkgname}.install"
-depends=('speech-dispatcher')
+depends=('libspeechd' 'speech-dispatcher')
 makedepends=('git')
 conflicts=("${pkgname}")
 source=(${pkgname}::'git://github.com/cromarty/ttsprojects.git')
@@ -16,7 +15,7 @@ md5sums=('SKIP')
 
          build() {
   cd "${srcdir}/${pkgname}/generic/speechd-up-ng"
-  ./configure --prefix=/usr/local
+  ./configure --prefix=/usr
 		./fix-timestamps.sh
   make all
 }
