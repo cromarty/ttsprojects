@@ -12,17 +12,17 @@ depends=('speech-dispatcher')
 makedepends=('git')
 conflicts=("${pkgname}")
 source=(${pkgname}::'git://github.com/cromarty/ttsprojects.git')
-md5sums=('skip')
+md5sums=('SKIP')
 
          build() {
-  cd "${srcdir}/${pkgname}/raspberry-pi/generic/speechd-up-ng"
+  cd "${srcdir}/${pkgname}/generic/speechd-up-ng"
   ./configure --prefix=/usr/local
 		./fix-timestamps.sh
   make all
 }
 
 package() {
-  cd "${srcdir}/${pkgname}/raspberry-pi/generic/speechd-up-ng"
+  cd "${srcdir}/${pkgname}/generic/speechd-up-ng"
   make DESTDIR="${pkgdir}" install
 }
 
