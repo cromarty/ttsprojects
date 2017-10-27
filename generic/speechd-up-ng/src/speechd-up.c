@@ -168,6 +168,7 @@ process_command(char command, unsigned int param, int pm)
 {
     int val, ret;
     static int currate = 5,
+    curvol = 5,
 	curpitch = 5;
     
     DBG(5, "cmd: %c, param: %d, rel: %d", command, param, pm);
@@ -272,7 +273,15 @@ process_command(char command, unsigned int param, int pm)
 	break;
 	
     case 'v': 
-	DBG(3, "[volume setting not supported yet]");
+		if (pm)
+			curvol += pm;
+		else
+			curvol = param;
+		val = (curvol * 22) - 100;
+		assert((val >= -100) && (val <= +100));
+	DBG(5, "[volume %d, param: %d]", val, param);
+ret = spd_set_volume(conn, val);
+if (ret == -1) DBG(1, "ERROR: Invalid volume!");
 	break;
 	
     case 'x': 
