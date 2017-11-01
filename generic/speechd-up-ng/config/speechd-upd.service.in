@@ -3,7 +3,8 @@ Description=speechd-up, a server to connect SpeakUp to speech-dispatcher
 After=syslog.target
 
 [Service]
-Type=forking
+Type=notify
+WatchdogSec=3600
 PIDFile=/run/speechd-up.pid
 ExecStart=prefix/bin/speechd-up -d
 ExecReload=/bin/kill -HUP $MAINPID
