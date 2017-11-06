@@ -2,7 +2,8 @@
 Description=Software speech output for Speakup via the GPU on the Raspberry Pi
 
 [Service]
-Type=forking
+Type=notify
+WatchdogSec=43200
 PIDFile=/run/piespeakup2.pid
 ExecStart=prefix/bin/piespeakup2 --device=local
 ExecReload=/bin/kill -HUP $MAINPID
