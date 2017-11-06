@@ -92,7 +92,8 @@ am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(dist_modulesload_DATA) \
-	$(am__DIST_COMMON)
+	$(dist_piespeakup2restarttimer_DATA) \
+	$(dist_piespeakup2restartunit_DATA) $(am__DIST_COMMON)
 mkinstalldirs = $(install_sh) -d
 CONFIG_HEADER = $(top_builddir)/config.h
 CONFIG_CLEAN_FILES =
@@ -144,10 +145,14 @@ am__uninstall_files_from_dir = { \
          $(am__cd) "$$dir" && rm -f $$files; }; \
   }
 am__installdirs = "$(DESTDIR)$(modulesloaddir)" \
-	"$(DESTDIR)$(piespeakup2unitconfdir)" \
-	"$(DESTDIR)$(systemdunitdir)"
-DATA = $(dist_modulesload_DATA) $(nodist_piespeakup2unitconf_DATA) \
-	$(nodist_systemdunit_DATA)
+	"$(DESTDIR)$(piespeakup2restarttimerdir)" \
+	"$(DESTDIR)$(piespeakup2restartunitdir)" \
+	"$(DESTDIR)$(piespeakup2unitdir)" \
+	"$(DESTDIR)$(piespeakup2unitconfdir)"
+DATA = $(dist_modulesload_DATA) $(dist_piespeakup2restarttimer_DATA) \
+	$(dist_piespeakup2restartunit_DATA) \
+	$(nodist_piespeakup2unit_DATA) \
+	$(nodist_piespeakup2unitconf_DATA)
 am__tagged_files = $(HEADERS) $(SOURCES) $(TAGS_FILES) $(LISP)
 am__DIST_COMMON = $(srcdir)/Makefile.in
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -231,7 +236,10 @@ modulesloaddir = @modulesloaddir@
 oldincludedir = @oldincludedir@
 pdfdir = @pdfdir@
 piespeakup2ldconfigdir = @piespeakup2ldconfigdir@
+piespeakup2restarttimerdir = @piespeakup2restarttimerdir@
+piespeakup2restartunitdir = @piespeakup2restartunitdir@
 piespeakup2unitconfdir = @piespeakup2unitconfdir@
+piespeakup2unitdir = @piespeakup2unitdir@
 prefix = @prefix@
 program_transform_name = @program_transform_name@
 psdir = @psdir@
@@ -239,14 +247,15 @@ sbindir = @sbindir@
 sharedstatedir = @sharedstatedir@
 srcdir = @srcdir@
 sysconfdir = @sysconfdir@
-systemdunitdir = @systemdunitdir@
 target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 dist_modulesload_DATA = speakup_soft.conf
-nodist_systemdunit_DATA = piespeakup2.service
+nodist_piespeakup2unit_DATA = piespeakup2.service
 nodist_piespeakup2unitconf_DATA = piespeakup2.conf
+dist_piespeakup2restarttimer_DATA = piespeakup2restart.timer
+dist_piespeakup2restartunit_DATA = piespeakup2restart.service
 CLEANFILES = piespeakup2.service piespeakup2.conf
 all: all-am
 
@@ -301,6 +310,69 @@ uninstall-dist_modulesloadDATA:
 	@list='$(dist_modulesload_DATA)'; test -n "$(modulesloaddir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(modulesloaddir)'; $(am__uninstall_files_from_dir)
+install-dist_piespeakup2restarttimerDATA: $(dist_piespeakup2restarttimer_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_piespeakup2restarttimer_DATA)'; test -n "$(piespeakup2restarttimerdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(piespeakup2restarttimerdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(piespeakup2restarttimerdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(piespeakup2restarttimerdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(piespeakup2restarttimerdir)" || exit $$?; \
+	done
+
+uninstall-dist_piespeakup2restarttimerDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_piespeakup2restarttimer_DATA)'; test -n "$(piespeakup2restarttimerdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(piespeakup2restarttimerdir)'; $(am__uninstall_files_from_dir)
+install-dist_piespeakup2restartunitDATA: $(dist_piespeakup2restartunit_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(dist_piespeakup2restartunit_DATA)'; test -n "$(piespeakup2restartunitdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(piespeakup2restartunitdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(piespeakup2restartunitdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(piespeakup2restartunitdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(piespeakup2restartunitdir)" || exit $$?; \
+	done
+
+uninstall-dist_piespeakup2restartunitDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(dist_piespeakup2restartunit_DATA)'; test -n "$(piespeakup2restartunitdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(piespeakup2restartunitdir)'; $(am__uninstall_files_from_dir)
+install-nodist_piespeakup2unitDATA: $(nodist_piespeakup2unit_DATA)
+	@$(NORMAL_INSTALL)
+	@list='$(nodist_piespeakup2unit_DATA)'; test -n "$(piespeakup2unitdir)" || list=; \
+	if test -n "$$list"; then \
+	  echo " $(MKDIR_P) '$(DESTDIR)$(piespeakup2unitdir)'"; \
+	  $(MKDIR_P) "$(DESTDIR)$(piespeakup2unitdir)" || exit 1; \
+	fi; \
+	for p in $$list; do \
+	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
+	  echo "$$d$$p"; \
+	done | $(am__base_list) | \
+	while read files; do \
+	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(piespeakup2unitdir)'"; \
+	  $(INSTALL_DATA) $$files "$(DESTDIR)$(piespeakup2unitdir)" || exit $$?; \
+	done
+
+uninstall-nodist_piespeakup2unitDATA:
+	@$(NORMAL_UNINSTALL)
+	@list='$(nodist_piespeakup2unit_DATA)'; test -n "$(piespeakup2unitdir)" || list=; \
+	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
+	dir='$(DESTDIR)$(piespeakup2unitdir)'; $(am__uninstall_files_from_dir)
 install-nodist_piespeakup2unitconfDATA: $(nodist_piespeakup2unitconf_DATA)
 	@$(NORMAL_INSTALL)
 	@list='$(nodist_piespeakup2unitconf_DATA)'; test -n "$(piespeakup2unitconfdir)" || list=; \
@@ -322,27 +394,6 @@ uninstall-nodist_piespeakup2unitconfDATA:
 	@list='$(nodist_piespeakup2unitconf_DATA)'; test -n "$(piespeakup2unitconfdir)" || list=; \
 	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
 	dir='$(DESTDIR)$(piespeakup2unitconfdir)'; $(am__uninstall_files_from_dir)
-install-nodist_systemdunitDATA: $(nodist_systemdunit_DATA)
-	@$(NORMAL_INSTALL)
-	@list='$(nodist_systemdunit_DATA)'; test -n "$(systemdunitdir)" || list=; \
-	if test -n "$$list"; then \
-	  echo " $(MKDIR_P) '$(DESTDIR)$(systemdunitdir)'"; \
-	  $(MKDIR_P) "$(DESTDIR)$(systemdunitdir)" || exit 1; \
-	fi; \
-	for p in $$list; do \
-	  if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
-	  echo "$$d$$p"; \
-	done | $(am__base_list) | \
-	while read files; do \
-	  echo " $(INSTALL_DATA) $$files '$(DESTDIR)$(systemdunitdir)'"; \
-	  $(INSTALL_DATA) $$files "$(DESTDIR)$(systemdunitdir)" || exit $$?; \
-	done
-
-uninstall-nodist_systemdunitDATA:
-	@$(NORMAL_UNINSTALL)
-	@list='$(nodist_systemdunit_DATA)'; test -n "$(systemdunitdir)" || list=; \
-	files=`for p in $$list; do echo $$p; done | sed -e 's|^.*/||'`; \
-	dir='$(DESTDIR)$(systemdunitdir)'; $(am__uninstall_files_from_dir)
 tags TAGS:
 
 ctags CTAGS:
@@ -384,7 +435,7 @@ check-am: all-am
 check: check-am
 all-am: Makefile $(DATA)
 installdirs:
-	for dir in "$(DESTDIR)$(modulesloaddir)" "$(DESTDIR)$(piespeakup2unitconfdir)" "$(DESTDIR)$(systemdunitdir)"; do \
+	for dir in "$(DESTDIR)$(modulesloaddir)" "$(DESTDIR)$(piespeakup2restarttimerdir)" "$(DESTDIR)$(piespeakup2restartunitdir)" "$(DESTDIR)$(piespeakup2unitdir)" "$(DESTDIR)$(piespeakup2unitconfdir)"; do \
 	  test -z "$$dir" || $(MKDIR_P) "$$dir"; \
 	done
 install: install-am
@@ -439,8 +490,10 @@ info: info-am
 info-am:
 
 install-data-am: install-dist_modulesloadDATA \
-	install-nodist_piespeakup2unitconfDATA \
-	install-nodist_systemdunitDATA
+	install-dist_piespeakup2restarttimerDATA \
+	install-dist_piespeakup2restartunitDATA \
+	install-nodist_piespeakup2unitDATA \
+	install-nodist_piespeakup2unitconfDATA
 
 install-dvi: install-dvi-am
 
@@ -485,26 +538,32 @@ ps: ps-am
 ps-am:
 
 uninstall-am: uninstall-dist_modulesloadDATA \
-	uninstall-nodist_piespeakup2unitconfDATA \
-	uninstall-nodist_systemdunitDATA
+	uninstall-dist_piespeakup2restarttimerDATA \
+	uninstall-dist_piespeakup2restartunitDATA \
+	uninstall-nodist_piespeakup2unitDATA \
+	uninstall-nodist_piespeakup2unitconfDATA
 
 .MAKE: install-am install-strip
 
 .PHONY: all all-am check check-am clean clean-generic cscopelist-am \
 	ctags-am distclean distclean-generic distdir dvi dvi-am html \
 	html-am info info-am install install-am install-data \
-	install-data-am install-dist_modulesloadDATA install-dvi \
+	install-data-am install-dist_modulesloadDATA \
+	install-dist_piespeakup2restarttimerDATA \
+	install-dist_piespeakup2restartunitDATA install-dvi \
 	install-dvi-am install-exec install-exec-am install-html \
 	install-html-am install-info install-info-am install-man \
-	install-nodist_piespeakup2unitconfDATA \
-	install-nodist_systemdunitDATA install-pdf install-pdf-am \
-	install-ps install-ps-am install-strip installcheck \
-	installcheck-am installdirs maintainer-clean \
+	install-nodist_piespeakup2unitDATA \
+	install-nodist_piespeakup2unitconfDATA install-pdf \
+	install-pdf-am install-ps install-ps-am install-strip \
+	installcheck installcheck-am installdirs maintainer-clean \
 	maintainer-clean-generic mostlyclean mostlyclean-generic pdf \
 	pdf-am ps ps-am tags-am uninstall uninstall-am \
 	uninstall-dist_modulesloadDATA \
-	uninstall-nodist_piespeakup2unitconfDATA \
-	uninstall-nodist_systemdunitDATA
+	uninstall-dist_piespeakup2restarttimerDATA \
+	uninstall-dist_piespeakup2restartunitDATA \
+	uninstall-nodist_piespeakup2unitDATA \
+	uninstall-nodist_piespeakup2unitconfDATA
 
 .PRECIOUS: Makefile
 
