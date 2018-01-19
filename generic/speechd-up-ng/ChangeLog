@@ -1,3 +1,11 @@
+2017-10-27  Mike Ray <mike.ray@btinternet.com>
+
+* Updated autotools config by separating source from build
+files and introducing configure.ac etc.
+
+* Added volume control to speechd-up.c
+
+
 2006-10-21  Hynek Hanke  <hanke@brailcom.org>
 
 	* AUTHORS: New section CONTRIBUTORS. Added Micheal McDonalds and Gilles Casse.

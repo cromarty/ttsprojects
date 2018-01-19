@@ -1,0 +1,6 @@
+[Unit]
+Description=Restart piespeakup2.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/systemctl try-restart piespeakup2.service

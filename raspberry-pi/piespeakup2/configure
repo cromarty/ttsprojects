@@ -628,7 +628,9 @@ am__EXEEXT_TRUE
 LTLIBOBJS
 piespeakup2ldconfigdir
 piespeakup2unitconfdir
-systemdunitdir
+piespeakup2restartunitdir
+piespeakup2restarttimerdir
+piespeakup2unitdir
 modulesloaddir
 LIBOBJS
 EGREP
@@ -4710,7 +4712,13 @@ done
 modulesloaddir='/etc/modules-load.d'
 
 
-systemdunitdir='/usr/lib/systemd/system'
+piespeakup2unitdir='/usr/lib/systemd/system'
+
+
+piespeakup2restarttimerdir='/usr/lib/systemd/system'
+
+
+piespeakup2restartunitdir='/usr/lib/systemd/system'
 
 
 piespeakup2unitconfdir='/etc/systemd/system'

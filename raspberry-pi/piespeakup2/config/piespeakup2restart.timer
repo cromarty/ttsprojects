@@ -1,0 +1,9 @@
+[Unit]
+Description=Timed restart of piespeakup2.service
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timer.target

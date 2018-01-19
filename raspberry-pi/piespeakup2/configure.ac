@@ -40,8 +40,14 @@ dnl Paths
 modulesloaddir='/etc/modules-load.d'
 AC_SUBST([modulesloaddir])
 
-systemdunitdir='/usr/lib/systemd/system'
-AC_SUBST([systemdunitdir])
+piespeakup2unitdir='/usr/lib/systemd/system'
+AC_SUBST([piespeakup2unitdir])
+
+piespeakup2restarttimerdir='/usr/lib/systemd/system'
+AC_SUBST([piespeakup2restarttimerdir])
+
+piespeakup2restartunitdir='/usr/lib/systemd/system'
+AC_SUBST([piespeakup2restartunitdir])
 
 piespeakup2unitconfdir='/etc/systemd/system'
 AC_SUBST([piespeakup2unitconfdir])
