@@ -1331,7 +1331,7 @@ sub _Lexer {
 			};
 		}
 
-		# lipstick
+		
 		# Parse atom (string with no spaces) for q and tts_say
 		if ($parser->YYData->{STATE} & X_SPEECH ) {
 			s/^([^ {}\n]+)//
