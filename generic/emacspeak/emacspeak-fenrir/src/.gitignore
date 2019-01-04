@@ -1,0 +1,10 @@
+emacspeak-fenrir
+.deps/
+*.log
+*.txt
+
+
+parser.c
+parser.h
+lexer.c
+
