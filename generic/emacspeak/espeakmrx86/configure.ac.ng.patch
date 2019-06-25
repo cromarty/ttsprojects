@@ -1,0 +1,11 @@
+--- configure.ac	2019-06-24 20:35:11.367313336 +0100
++++ configure.ac.ng	2019-06-25 06:59:25.839328486 +0100
+@@ -17,7 +17,7 @@
+ 
+ dnl Checks for libraries.
+ 
+-AC_CHECK_LIB([espeak], [espeak_Initialize], [], [AC_MSG_ERROR([espeak_Initialize was not found in libespeak])])
++AC_CHECK_LIB([espeak-ng], [espeak_Initialize], [], [AC_MSG_ERROR([espeak_Initialize was not found in libespeak-ng])])
+ AC_CHECK_LIB([pthread], [pthread_mutex_init], [], [AC_MSG_ERROR([pthread_mutex_init was not found in libpthread])])
+ AC_CHECK_LIB([pcre], [pcre_compile], [], [AC_MSG_ERROR([pcre_compile was not found in libpcre])])
+ 
