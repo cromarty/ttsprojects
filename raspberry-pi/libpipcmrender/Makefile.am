@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4
 SUBDIRS = src config
-dist_doc_DATA = README
+dist_doc_DATA = README.md
 EXTRA_DIST=BROADCOM NOTES configure libtool m4/ fix-timestamps.sh config/01-libpipcmrender.conf.in
 
 AM_CPPFLAGS = -I$(top_srcdir)/include 
