@@ -1,0 +1,11 @@
+--- espeakup.h	2019-06-24 20:35:11.399313359 +0100
++++ espeakup.ng.h	2019-06-29 01:15:31.416706178 +0100
+@@ -24,7 +24,7 @@
+ #include <stddef.h>
+ #include <pthread.h>
+ 
+-#include <espeak/speak_lib.h>
++#include <espeak-ng/speak_lib.h>
+ 
+ #include <pipcmrender/pipcmrender_lib.h>
+ 
